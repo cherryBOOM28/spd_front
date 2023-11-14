@@ -1,0 +1,126 @@
+[
+    { 
+        "id": 1, 
+        "iin": "123456789123",
+        "name": "Петров Сергей Сергекович", 
+        "gender": "Мужсокй", 
+        "status": "Работает", 
+        "dateOfBirth": "09-01-2000",
+        "admissionDate": "09-01-2000", 
+        "dismissalDate": "-",
+        "photo": "https://images.unsplash.com/photo-1600180758890-6b94519a8ba6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80",
+        "firstname": "Сергей ",
+        "lastName": "Петров",
+        "fatherName": "Сергекович",
+        "nationality": "Русский",
+        "countryOfBirth": "Казахстан",
+        "cityOfBirth": "Алматы",
+        "regionOfBirth": "Жетысу",
+        "documentType": "Удостоверение личности",
+        "id_numbers": "123456789123",
+        "dateOfIssue": "09-01-2000",
+        "validUntil": "09-01-2000",
+        "issuedBy": "МВД РК",
+        "addressOfResidence": "ул. Кунаева 34",
+        "phoneNumber": "7777777777",
+        "pin": "2334343434343",
+
+        "maritalStatusOptions": ["single", "married", "divorced", "widow"],
+        "relative": [
+            {"role": "spouse", "fio": "Wife", "iin": "022234242432", "dateOfBirth": "09-01-2000", "placeOfJov": "место работы"},
+            {"role": "children", "fio": "Son", "iin": "022234242432", "dateOfBirth": "09-01-2000", "placeOfJov": "место работы" },
+            {"role": "parents", "fio": "Son", "iin": "022234242432", "dateOfBirth": "09-01-2000", "placeOfJov": "место работы" }
+
+        ],
+        
+        "educationStatusOptions": ["Выберите вид образования", "высшее", "магистратура"],
+        "education": [{
+            "iin": "32343534545",
+            "education_type": "Bachelor",
+            "education_date_in": "2023-03-02",
+            "education_date_out": "2026-03-02",
+            "education_speciality": "Computer Science",
+            "diploma_number": "1233453464"
+        }],
+        
+        "specialCheckDocNumber": "435345345345",
+        "specialCheckDocDate": "09-01-2000",
+        "certificationPassDate": "09-01-2000",
+        "certificationLastDate": "09-01-2000",
+        "certificationResults": "Passed",
+        "awardsOrderNumber": "34535345345",
+        "awardsOrderDate": "09-01-2000",
+        "office__investigation__order__number": "54353422342",
+        "office__investigation__order__date": "09-01-2000",
+        "ranks": "major",
+        "autobiography": "Once upon a time there was a big green giant named Shrek in a fairy-tale state. He lived in proud solitude in the forest, in the swamp, which he considered his own. But once the evil shorty - Lord Farquad, the ruler of the magical kingdom, mercilessly drove all the fabulous inhabitants to Shrek's swamp",
+        "sick__leave__number": "423413423",
+        "sick__leave__date": "09-01-2000",
+
+
+        "working_history__working_start": "09-01-2000",
+        "working_history__working_end": "10-01-2000",
+        "working_history__working_position": "Director",
+        "working_history__working_department": "Marvel",
+        "working_history__working_institutions": "Avengers",
+        "working_history__working_adress": "New York City",
+
+        
+        "orderType": "order type",
+
+        "aboutAppointmentNumberOfOrder": "876543345678",
+        "aboutAppointmentDateOfOrder": "10-01-2000",
+
+        "movingNumberOfOrder": "876543345678",
+        "movingDateOfOrder": "10-01-2000",
+
+        "vacationNumberOfOrder": "876543345678",
+        "vacationDateOfOrder": "10-01-2000",
+
+        "vacationType": "annual",
+
+        "secondmentNumberOfOrder": "876543345678",
+        "secondmentDateOfOrder": "10-01-2000",
+
+        "aboutTheTitleNumberOfOrder": "876543345678",
+        "aboutTheTitleDateOfOrder": "10-01-2000",
+
+        "imposingADisciplinarySanction__NumberOfOrder": "876543345678",
+        "imposingADisciplinarySanction__DateOfOrder": "10-01-2000",
+
+        "removalOfADisciplinarySanction__NumberOfOrder": "876543345678",
+        "removalOfADisciplinarySanction__DateOfOrder": "10-01-2000",
+
+        "encouragement_Bonus__NumberOfOrder": "876543345678",
+        "encouragement_Bonus__DateOfOrder": "10-01-2000",
+
+        "typeOfPromotion": "annual",
+
+        "enrollmentAtDisposal__NumberOfOrder": "876543345678",
+        "enrollmentAtDisposal__DateOfOrder": "10-01-2000",
+        
+        "officialInvestigations__NumberOfOrder": "876543345678",
+        "officialInvestigations__DateOfOrder": "10-01-2000",
+
+        "aboutDismissal__NumberOfOrder": "876543345678",
+        "aboutDismissal__DateOfOrder": "10-01-2000",
+
+        "dismissalType": "annual"
+
+
+
+
+
+        
+
+    },
+    { 
+        "id": 2, 
+        "iin": "123456789123", 
+        "name": "Jane Smith", 
+        "gender": "Женский", 
+        "status": "Не работает", 
+        "admissionDate": "-", 
+        "dismissalDate": "2023-05-20" }
+]
+  

@@ -1,0 +1,246 @@
+import React, { useState, useEffect } from 'react';
+import cl from './WorkerDetail.module.css';
+import Navigation from '../../components/navigation/Navigation';
+import Header from '../../components/header/Header';
+import { useParams } from 'react-router-dom';
+import TotalInfo from '../../components/tabsPage/totalInfo/TotalInfo';
+// import Cookies from 'js-cookie';
+import BasicInfo from '../../components/tabsPage/basicInfo/BasicInfo';
+import PersonnelData from '../../components/tabsPage/personnelData/PersonnelData';
+import LaborActivity from '../../components/tabsPage/laborActivity/LaborActivity';
+import ReportOrders from '../../components/tabsPage/reportOrders/ReportOrders';
+import Personal from '../../components/tabsPage/personalInfo/personalData/Personal';
+import Education from '../../components/tabsPage/personalInfo/education/Education';
+import Language from '../../components/tabsPage/personalInfo/language/Language';
+import Courses from '../../components/tabsPage/personalInfo/courses/Courses';
+import AcademicDegree from '../../components/tabsPage/personalInfo/academicDegree/AcademicDegree';
+import Sport from '../../components/tabsPage/personalInfo/sport/Sport';
+
+import axios from 'axios';
+import Cookies from 'js-cookie';
+
+
+function WorkerDetail() {
+  const { id, iin } = useParams();
+  // console.log(`id: ${id}`);
+  
+
+  // tabs
+  const [activeTab, setActiveTab] = useState(1);
+
+  useEffect(() => {
+    const savedTab = sessionStorage.getItem('activeTab');
+    if (savedTab) {
+        setActiveTab(parseInt(savedTab));
+    }
+  }, []);
+
+  const handleTabClick = (tabIndex) => {
+      sessionStorage.setItem('activeTab', tabIndex.toString());
+      setActiveTab(tabIndex);
+  };
+
+
+  const [person, setPerson] = useState({});
+  const [birthInfo, setBirthInfo] = useState([]);
+  const [gender, setGender] = useState([]);
+
+  const [identityCardInfo, setIdentityCardInfo] = useState({});
+  const [residentInfo, setResidentInfo] = useState({});
+
+  const [positionInfo, setPositionInfo] = useState({});
+  const [location, setLocation] = useState({});
+  const [receivedDate, setReceivedDate] = useState({});
+  const [positionTitle, setPositionTitle] = useState({});
+  const [departmentName, setDepartmentName] = useState({});
+
+  const [familyStatus, setFamilyStatus] = useState({});
+
+
+  const accessToken = Cookies.get('jwtAccessToken');
+
+  const fetchData = async (id) => {
+    try {
+      const accessToken = Cookies.get('jwtAccessToken');
+      const response = await axios.get(`http://localhost:8000/api/v1/person/${id}`, {
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+        }
+      });
+
+      // const totalInfoResponse = axios.get(`http://localhost:8000/api/v1/identity-card-info/${id}`, {
+      //   headers: {
+      //     'Authorization': `Bearer ${accessToken}`,
+      //   }
+      // })
+
+      console.log("response", response.data);
+  
+      if (response.status === 200) {
+        setPerson(response.data.Person);
+        setBirthInfo(response.data.BirthInfo);
+        setGender(response.data.Person.gender);
+
+        setIdentityCardInfo(response.data.IdentityCardInfo);
+        setResidentInfo(response.data.ResidentInfo);
+
+        setPositionInfo(response.data.Person.positionInfo.department);
+        setLocation(response.data.Person.positionInfo.department.location);
+        setDepartmentName(response.data.Person.positionInfo.department.DepartmentName);
+        setReceivedDate(response.data.Person.positionInfo.receivedDate);
+        setPositionTitle(response.data.Person.positionInfo.position.positionTitle);
+
+
+
+
+      } else {
+        console.log(response.statusText);
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+  
+  useEffect(() => {
+    if (id && accessToken) {
+      fetchData(id, accessToken);
+    }
+  }, [id, accessToken]);
+  
+
+  return (
+    <div className={cl.homeWrapper}>
+        <Navigation className={cl.navigation} /> 
+        <div style={{display: 'flex', flexDirection: 'column', width: '100%'}}>
+            <Header className={cl.header} />
+            <div className={cl.content}>
+                <div className={cl.container}>
+                  <div className={cl.tabContent}>
+                    <div className={cl.tabHeader}>
+                      <div 
+                          className={activeTab === 1 ? cl.btnTab + ' ' + cl.activeTab : cl.btnTab}
+                          onClick={() => handleTabClick(1)}
+                      >
+                        Общие данные
+                      </div>
+                      <div 
+                          className={activeTab === 2 ? cl.btnTab + ' ' + cl.activeTab : cl.btnTab}
+                          onClick={() => handleTabClick(2)}
+                      >
+                        Личные данные
+                      </div>
+                      <div 
+                          className={activeTab === 3 ? cl.btnTab + ' ' + cl.activeTab : cl.btnTab}
+                          onClick={() => handleTabClick(3)}
+                      >
+                          Трудовая деятельность 
+                      </div>
+                      <div 
+                          className={activeTab === 4 ? cl.btnTab + ' ' + cl.activeTab : cl.btnTab}
+                          onClick={() => handleTabClick(4)}
+                      >
+                        Кадровые данные 
+                      </div>
+                      <div 
+                          className={activeTab === 5 ? cl.btnTab + ' ' + cl.activeTab : cl.btnTab}
+                          onClick={() => handleTabClick(5)}
+                      >
+                        Приказы рапорта 
+                      </div>
+                    </div>
+
+                    <div className={cl.tabBody}>
+                      {
+                        activeTab === 1 && 
+
+                        <div className={cl.basic__info}>
+                          <BasicInfo  
+                            id={id} 
+                            person={person} 
+                            birthInfo={birthInfo}
+                            gender={gender}
+                          />
+                          <div className={cl.totalInfo}>
+                            <TotalInfo
+                              id={id}
+                              person={person} 
+                              identityCardInfo={identityCardInfo}
+                              residentInfo={residentInfo}
+                            />
+                          </div>
+                            
+                        </div>
+                      }
+                      {
+                        activeTab === 2 && 
+
+                        <div className={cl.basic__info}>
+                            <BasicInfo id={id}
+                              person={person} 
+                              birthInfo={birthInfo}
+                              gender={gender}
+                            />
+                          <div className={cl.totalInfo}>
+                            <Personal id={id} iin={iin}/>
+                            <Education id={id}/>
+                            <Language id={id}/>
+                            <Courses id={id}/>
+                            <AcademicDegree id={id}/>
+                            <Sport id={id}/>
+                          </div>  
+                        </div>
+                      }
+                      {
+                        activeTab === 3 && 
+
+                        <div className={cl.basic__info}>
+                          <BasicInfo id={id}
+                            person={person} 
+                            birthInfo={birthInfo}
+                            gender={gender}
+                          />
+                          <div className={cl.totalInfo}>
+                            <LaborActivity id={id} />
+                          </div>  
+                            
+                        </div>
+                      }
+                      {
+                        activeTab === 4 && 
+
+                        <div className={cl.basic__info}>
+                          <BasicInfo id={id}
+                            person={person} 
+                            birthInfo={birthInfo}
+                            gender={gender}
+                          />
+                          <div className={cl.totalInfo}>
+                            <PersonnelData id={id} iin={iin} />
+                          </div> 
+                            
+                        </div>
+                      }
+                      {
+                        activeTab === 5 && 
+
+                        <div className={cl.basic__info}>
+                          <BasicInfo id={id}
+                            person={person} 
+                            birthInfo={birthInfo}
+                            gender={gender}
+                          />
+                          <div className={cl.totalInfo}>
+                            <ReportOrders id={id} />
+                          </div>      
+                        </div>
+                      }
+                    </div>
+                  </div>
+                </div>
+            </div>
+        </div>
+    </div>
+  );
+}
+
+export default WorkerDetail;

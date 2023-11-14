@@ -1,0 +1,23 @@
+.btn {
+    padding: 9px 40px;
+    border-radius: 5px;
+    background: #1B3884;
+    color: #FFF;
+    font-family: 'Ubuntu', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    outline: none;
+    border: 1px solid #1B3884;
+    cursor: pointer;
+}
+
+.btn:hover {
+    border-radius: 5px;
+    border: 1px solid #1B3884;
+    background: #FFF;
+    color: #1B3884;
+    font-family: 'Ubuntu', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    transition: .3s;
+}

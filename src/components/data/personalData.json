@@ -1,0 +1,29 @@
+{
+    "personal_data" : {
+        "iin": "32343534545",
+        "family_status": "single",
+        "department": "cs",
+        "jposition": "student"
+    },
+
+    "family_composition": [{
+        "id": 1,
+        "iin": "32343534545",
+        "relative_type": "sister",
+        "fio": "margo robie",
+        "rel_iin": "4234234242",
+        "birth_date": "2000-02-02",
+        "job_place": "industry"
+    }],
+
+    "education": [
+        {
+        "iin": "32343534545",
+        "education_type": "Bachelor",
+        "education_date_in": "2023-03-02",
+        "education_date_out": "2026-03-02",
+        "education_speciality": "Computer Science",
+        "doploma_number": "1233453464"
+        }
+    ]
+}

@@ -1,0 +1,304 @@
+
+.dropdown {
+    /* width: 210px; */
+  }
+  
+  .actionBtn {
+    padding: 9px;
+    width: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .arrow {
+    font-size: 24px;
+  }
+  
+  .dropdown__content {
+    padding: 8px;
+    background: #F8F8F8;
+    width: 185px;
+    border-radius: 5px;
+  }
+  
+  .input__container {
+    margin-top: 40px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    gap: 10px;
+    background: #F8F8F8;
+  }
+  
+  .options__label {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  
+  .wrapper__input {
+    display: flex;
+  }
+  
+  
+  .label__name {
+    display: block;
+    width: 127px;
+    font-size: 16px;
+    margin-right: 10px;
+  }
+  
+  .workerInfo {
+    border-radius: 5px;
+    border: 1px solid #959595;
+    width: 200px;
+    /* height: 30px; */
+    padding: 6px 9px;
+    margin-left: 12px;
+    outline: none;
+    font-family: "Ubuntu", sans-serif;
+    color: #000;
+    font-size: 16px;
+    font-weight: 400;
+  }
+  
+  .workerInfoSelect {
+    border-radius: 5px;
+    border: 1px solid #959595;
+    width: 220px;
+    height: 32px;
+    padding: 4px 9px;
+    margin-left: 12px;
+    outline: none;
+    font-family: "Ubuntu", sans-serif;
+    color: #000;
+    font-size: 16px;
+    font-weight: 400;
+  }
+  
+  .data__wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .workerInfoDate {
+    border-radius: 5px;
+    border: 1px solid #959595;
+    width: 160px;
+    /* height: 32px; */
+    padding: 6px 9px;
+    margin-left: 12px;
+    outline: none;
+    font-family: "Ubuntu", sans-serif;
+    color: #000;
+    font-size: 16px;
+    font-weight: 400;
+  }
+  
+.dropdownFamily {
+  position: relative; 
+}
+
+.subMenuFamily {
+  display: none; 
+  position: absolute;
+  right: -163px; 
+  top: 0; 
+  background-color: #F8F8F8;
+  padding: 8px;
+  border-radius: 5px;
+}
+
+.dropdownFamily:hover .subMenuFamily {
+  display: block; 
+}
+
+.subMenuDropdownFamily {
+  border: none;
+  outline: none;
+  font-family: "Ubuntu", sans-serif;
+  color: #000;
+  font-size: 16px;
+  font-weight: 400;
+  border-radius: 5px;
+  width: 185px;
+  text-align: left;
+  /* height: 32px; */
+  padding: 6px 9px;
+}
+
+
+.dropdownEdu {
+  position: relative; 
+}
+
+.subMenuEdu {
+  display: none; 
+  position: absolute;
+  right: -180px; 
+  top: 0; 
+  background-color: #F8F8F8;
+  padding: 8px;
+  border-radius: 5px;
+}
+
+.dropdownEdu:hover .subMenuEdu {
+  display: block; 
+}
+
+.subMenuDropdownEdu {
+  border: none;
+  outline: none;
+  font-family: "Ubuntu", sans-serif;
+  color: #000;
+  font-size: 16px;
+  font-weight: 400;
+  border-radius: 5px;
+  width: 185px;
+  text-align: left;
+  /* height: 32px; */
+  padding: 6px 9px;
+}
+
+
+.dropdownLang {
+  position: relative; 
+}
+
+.subMenuLang {
+  display: none; 
+  position: absolute;
+  right: -237px; 
+  top: 0; 
+  background-color: #F8F8F8;
+  padding: 8px;
+  border-radius: 5px;
+}
+
+.dropdownLang:hover .subMenuLang {
+  display: block; 
+}
+
+.subMenuDropdownLang {
+  border: none;
+  outline: none;
+  font-family: "Ubuntu", sans-serif;
+  color: #000;
+  font-size: 16px;
+  font-weight: 400;
+  border-radius: 5px;
+  width: 185px;
+  text-align: left;
+  /* height: 32px; */
+  padding: 6px 9px;
+}
+
+
+.dropdownCourse {
+  position: relative; 
+}
+
+.subMenuCourse {
+  display: none; 
+  position: absolute;
+  right: -192px; 
+  top: 0; 
+  background-color: #F8F8F8;
+  padding: 8px;
+  border-radius: 5px;
+}
+
+.dropdownCourse:hover .subMenuCourse {
+  display: block; 
+}
+
+.subMenuDropdownCourse {
+  border: none;
+  outline: none;
+  font-family: "Ubuntu", sans-serif;
+  color: #000;
+  font-size: 16px;
+  font-weight: 400;
+  border-radius: 5px;
+  width: 185px;
+  text-align: left;
+  /* height: 32px; */
+  padding: 6px 9px;
+}
+
+
+.dropdownDegree {
+  position: relative; 
+}
+
+.subMenuDegree {
+  display: none; 
+  position: absolute;
+  right: -185px; 
+  top: 0; 
+  background-color: #F8F8F8;
+  padding: 8px;
+  border-radius: 5px;
+}
+
+.dropdownDegree:hover .subMenuDegree {
+  display: block; 
+}
+
+.subMenuDropdownDegree {
+  border: none;
+  outline: none;
+  font-family: "Ubuntu", sans-serif;
+  color: #000;
+  font-size: 16px;
+  font-weight: 400;
+  border-radius: 5px;
+  width: 185px;
+  text-align: left;
+  /* height: 32px; */
+  padding: 6px 9px;
+}
+
+
+.dropdownSport {
+  position: relative; 
+}
+
+.subMenuSport {
+  display: none; 
+  position: absolute;
+  right: -175px; 
+  top: 0; 
+  background-color: #F8F8F8;
+  padding: 8px;
+  border-radius: 5px;
+}
+
+.dropdownSport:hover .subMenuSport {
+  display: block; 
+}
+
+.subMenuDropdownSport {
+  border: none;
+  outline: none;
+  font-family: "Ubuntu", sans-serif;
+  color: #000;
+  font-size: 16px;
+  font-weight: 400;
+  border-radius: 5px;
+  width: 185px;
+  text-align: left;
+  /* height: 32px; */
+  padding: 6px 9px;
+}
+
+.input__name {
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 15px;
+}

@@ -1,0 +1,727 @@
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import cl from './PersonnelData.module.css';
+import Button from '../../../components/UI/button/Button';
+
+import { getSpecCheck } from '../../../api/personnelData/spec_check/getSpec_check';
+import { deleteSpec } from '../../../api/personnelData/spec_check/deleteSpec';
+import { editSpec_check } from '../../../api/personnelData/spec_check/editSpec_check';
+import { putSpec } from '../../../api/personnelData/spec_check/putSpec';
+
+import Table from './table/Table';
+
+
+function PersonnelData(props) {
+    const iin = props.iin;
+
+    const [personnelData, setPersonnelData] = useState([]); // Данные из бэка
+    const [autobiography, setAutobiography] = useState({}); // Данные из бэка
+
+    useEffect(() => {
+        fetchData()
+    }, [])
+
+        const fetchData = async () => {
+            try {
+                // GET PERSONAL DATA
+                const response = await getSpecCheck() 
+                setPersonnelData(response.data);
+
+                const responseAutobiography = await getSpecCheck() 
+                setAutobiography(responseAutobiography.data);
+
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        }
+
+
+    // СОХРАНИТЬ ИЗМЕНЕНИЯ
+    const handleSaveClick = async () => {
+        try {
+            let newJsonEdited = Object.keys(editedWorker).reduce((result, key) => {
+                if (editedWorker[key] !== personnelData[key]) {
+                    result[key] = editedWorker[key];
+                }
+                return result;
+            }, {});
+            console.log(newJsonEdited)
+
+            //   axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+            const response = await axios.patch(`http://localhost:3002/spec_check/`, editedWorker);
+
+
+            if (response.status === 200) {
+                setEditing(false);
+                window.location.reload();
+            } else {
+                console.error('Error saving data');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
+
+    const [editing, setEditing] = useState(false);
+    const [editedWorker, setEditedWorker] = useState({
+        doc_number: '',
+        doc_date: '',
+        
+        attestation_result: '',
+        last_attestation_date: '',
+        next_attestation_date: '',
+        
+        military_rank: '',
+        received_date: '',
+        type_of_receipt: '',
+        position: '',
+
+        category_type: '',
+
+        autobiography: '',
+
+        sick_dock_numb: '',
+        sick_doc_date: ''
+    });
+
+    // ИЗМЕНИТЬ ПОЛЯ
+    const handleEditClick = () => {
+        setEditing(true);
+        // Initialize editedWorker with the worker's current data
+        setEditedWorker({
+            doc_number: personnelData.doc_number,
+            doc_date: personnelData.doc_date,
+            
+            attestation_result: personnelData.attestation_result,
+            last_attestation_date: personnelData.last_attestation_date,
+            next_attestation_date: personnelData.next_attestation_date,
+            
+            military_rank: personnelData.military_rank,
+            received_date: personnelData.received_date,
+            type_of_receipt: personnelData.type_of_receipt,
+            position: personnelData.position,
+    
+            category_type: personnelData.category_type,
+    
+            autobiography: personnelData.autobiography,
+    
+            sick_dock_numb: personnelData.sick_dock_numb,
+            sick_doc_date: personnelData.sick_doc_date
+        });
+    };
+
+
+    // ИЗМЕНЕНИЯ В INPUT
+    const handleInputChange = (event) => {
+        const { name, value } = event.target;
+        setEditedWorker((prevWorker) => ({ ...prevWorker, [name]: value }));
+    };
+
+
+
+    // TABLE DATA
+
+    // ДОБАВЛЕНИЕ НАГРАДЫ
+    const [showForm, setShowForm] = useState(false);
+
+    const handleShowForm = () => {
+        setShowForm(true);
+    };
+
+    const [inputData, setInputData] = useState({
+        awards_type: '',
+        awards_doc_numb: '',
+        awards_date: '',
+
+        sick_dock_numb: '',
+        sick_doc_date: '',
+    });
+
+    const handleAddNewData = async (e) => {
+        e.preventDefault();
+        try {
+            // Генерируем уникальный id
+            const newId = personnelData.length  + 1;
+
+            if (!inputData.awards_type || !inputData.awards_doc_numb || !inputData.awards_date || !inputData.sick_dock_numb || !inputData.sick_doc_date) {
+                alert('Пожалуйста, заполните все поля!');
+                return;
+            }
+
+            const newData = {
+                id: newId,
+                iin: iin,
+                awards_type: inputData.awards_type,
+                awards_doc_numb: inputData.awards_doc_numb,
+                awards_date: inputData.awards_date,
+
+                sick_dock_numb: inputData.sick_dock_numb,
+                sick_doc_date: inputData.sick_doc_date,
+            };
+
+            console.log(
+                { 'awards': [newData] }
+            )
+
+            const response = await axios.post('http://localhost:3002/sick_leaves', newData);
+
+            if (response.status === 201) {
+                setPersonnelData(prevRecords => [...prevRecords, newData]);
+                setInputData({
+                    awards_type: '',
+                    awards_doc_numb: '',
+                    awards_date: '',
+
+                    sick_dock_numb: '',
+                    sick_doc_date: '',
+                });
+                handleShowForm(false)
+            } else {
+                console.error('Error adding new data');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
+
+    // УДАЛЕНИЕ DATA
+    const handleDelete = async (id) => {
+        try {
+            const response = await deleteSpec(id)
+            if (response.status === 200) {
+                // Успешно удалено, теперь обновляем состояние
+                setPersonnelData(prevData => prevData.filter(tableData => tableData.id !== id));
+                console.log("Successfully deleted");
+            } else {
+                console.log("Error deleting data in table");
+            }
+         
+        } catch(error) {
+            console.log(error)
+        }
+    }
+
+    // EDIT
+    const [editedData, setEditedData] = useState({
+        id: 0,
+        awards_type: '',
+        awards_doc_numb: '',
+        awards_date: '',
+
+        sick_dock_numb: '',
+        sick_doc_date: '',
+    });
+
+    const [editingId, setEditingId] = useState(null);
+
+    const handleEdit = async (id, editedTableData) => {
+        if(editingId === id) {
+            try {
+                const updatedData = {
+                    iin: iin,
+                    awards_type: editedTableData.awards_type,
+                    awards_doc_numb: editedTableData.awards_doc_numb,
+                    awards_date: editedTableData.awards_date,
+
+                    sick_dock_numb: editedTableData.sick_dock_numb,
+                    sick_doc_date: editedTableData.sick_doc_date,
+                };
+
+                await editSpec_check(id, updatedData);
+
+                setPersonnelData(prevData => {
+                    return prevData.map(tableData => {
+                        if(tableData.id === id) {
+                            return {...tableData, ...updatedData}
+                        }
+                        return tableData;
+                    })
+                });
+
+                setEditingId(null);
+                setEditedData({
+                    id: id,
+                    awards_type: '',
+                    awards_doc_numb: '',
+                    awards_date: '',
+
+                    sick_dock_numb: '',
+                    sick_doc_date: '',
+                });
+                console.log('Successfully updated table data')
+            } catch(error) {
+                console.error('Error updating table data:', error);
+            }
+        } else {
+            setEditingId(id)
+            const dataToEdit = personnelData.find(tableData => tableData.id === id);
+            if(dataToEdit) {
+                setEditedData(dataToEdit);
+            }
+        }
+    };
+
+    const handleSaveEdit = async (id) => {
+        try {
+            const updatedData = {
+                id: id,
+                iin: iin,
+                awards_type: editedData.awards_type,
+                awards_doc_numb: editedData.awards_doc_numb,
+                awards_date: editedData.awards_date,
+
+                sick_dock_numb: editedData.sick_dock_numb,
+                sick_doc_date: editedData.sick_doc_date,
+            };
+            console.log(id);
+    
+            const response = await putSpec(id, updatedData);
+    
+            if (response.status === 200) {
+                setPersonnelData((prevData) =>
+                    prevData.map((tableData) => (tableData.id === id ? updatedData : tableData))
+                );
+                setEditingId(null); // Завершаем режим редактирования
+                console.log('Successfully updated table data');
+            } else {
+                console.log('Error updating table data');
+            }
+        } catch (error) {
+            console.error('Error updating table data:', error);
+        }
+    };
+
+    const handleCancelEdit = () => {
+        setEditingId(null);
+        setEditedData({});
+    };
+
+    
+    return (
+        <div className={cl.personalWrapper}>
+            <div className={cl.container}>
+                <div className={cl.totalInfoWrapper}>
+                    <div className={cl.totalInfoContent}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                            <p className={cl.workerCapitalName}>Спец проверка</p>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', gap: '20px' }}>
+                                <Button className={cl.actionBtn} onClick={handleEditClick}>&#9998; Редактировать</Button>
+                                {editing && <Button onClick={handleSaveClick} className={cl.actionBtn}>Сохранить</Button>}
+                            </div>
+                        </div>
+                    </div>
+                    <div className={cl.workerBlock}>
+                        <div className={cl.column}>
+                            <div className={cl.rows}>
+                                <label className={cl.label}>Номер документа</label>
+                                {editing ? (
+                                    <input
+                                        className={cl.workerInfo}
+                                        type="text"
+                                        name="doc_number"
+                                        value={editedWorker.doc_number}
+                                        onChange={handleInputChange}
+                                    />
+                                ) : (
+
+                                    <p className={cl.workerInfo}>{personnelData.doc_number}</p>
+                                )}
+                            </div>
+                            <div className={cl.rows}>
+                            <label className={cl.label}>Дата документа</label>
+                                {editing ? (
+                                    <div className={cl.datePickerContainer}>
+                                         <input
+                                            type="date"
+                                            className={cl.workerInfo}
+                                            value={editedWorker.doc_date || ''}
+                                            onChange={(e) =>
+                                                setEditedWorker((prevWorker) => ({
+                                                ...prevWorker,
+                                                doc_date: e.target.value,
+                                                }))
+                                            }
+                                        />
+                                    </div>
+                                ) : (
+                                    <p className={cl.workerInfo}>{personnelData.doc_date}</p>
+                                )}
+                            </div>
+                        </div>
+                
+                    </div>
+                </div>
+
+                <div className={cl.totalInfoWrapper} style={{ marginTop: '40px' }}>
+                    <div className={cl.totalInfoContent}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                            <p className={cl.workerCapitalName}>Аттестация</p>
+                        </div>
+                    </div>
+                    <div className={cl.workerBlock}>
+                        <div className={cl.column}>
+                            <div className={cl.rows}>
+                                <label className={cl.label}>Дата последннй аттестации</label>
+                                {editing ? (
+                                    <div className={cl.datePickerContainer}>
+                                        <input
+                                            type="date"
+                                            className={cl.workerInfo}
+                                            value={editedWorker.last_attestation_date || ''}
+                                            onChange={(e) =>
+                                                setEditedWorker((prevWorker) => ({
+                                                ...prevWorker,
+                                                last_attestation_date: e.target.value,
+                                                }))
+                                            }
+                                        />
+                                    </div>
+                                ) : (
+                                    <p className={cl.workerInfo}>{personnelData.last_attestation_date}</p>
+                                )}
+                            </div>
+                            <div className={cl.rows}>
+                                <label className={cl.label}>Результат аттестации</label>
+                                {editing ? (
+                                    <input
+                                        className={cl.workerInfo}
+                                        type="text"
+                                        name="attestation_result"
+                                        value={editedWorker.attestation_result}
+                                        onChange={handleInputChange}
+                                    />
+                                ) : (
+
+                                    <p className={cl.workerInfo}>{personnelData.attestation_result}</p>
+                                )}
+                            </div>
+                        </div>
+                        <div className={cl.column}>
+                        <div className={cl.rows}>
+                            <label className={cl.label}>Дата следующей аттестации</label>
+                                {editing ? (
+                                    <div className={cl.datePickerContainer}>
+                                        <input
+                                            type="date"
+                                            className={cl.workerInfo}
+                                            value={editedWorker.next_attestation_date || ''}
+                                            onChange={(e) =>
+                                                setEditedWorker((prevWorker) => ({
+                                                ...prevWorker,
+                                                next_attestation_date: e.target.value,
+                                                }))
+                                            }
+                                        />
+                                    </div>
+                                ) : (
+                                    <p className={cl.workerInfo}>{personnelData.next_attestation_date}</p>
+                                )}
+                            </div>
+                        </div>
+                
+                    </div>
+                </div>
+
+                <div className={cl.totalInfoWrapper} style={{ marginTop: '40px' }}>
+                    <div className={cl.totalInfoContent}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                            <p className={cl.workerCapitalName}>Звания</p>
+                        </div>
+                    </div>
+                    <div className={cl.workerBlock}>
+                        <div className={cl.column}>
+                            <div className={cl.rows}>
+                                <label className={cl.label}>Звание</label>
+                                {editing ? (
+                        
+                                    <select
+                                    className={cl.workerInfoSelect}
+                                    value={editedWorker.military_rank}
+                                    onChange={(e) => setEditedWorker({ ...editedWorker, military_rank: e.target.value })}
+                                >
+                                    <option value="">Выберите звание</option>
+                                    <option value="Рядовой">Рядовой</option>
+                                    <option value="Ефрейтор">Ефрейтор</option>
+                                    <option value="Младший сержант">Младший сержант	</option>
+                                    <option value="Сержант">Сержант</option>
+                                    <option value="Старший сержант">Старший сержант	</option>
+                                    <option value="Сержант третьего класса">Сержант третьего класса</option>
+                                    <option value="Сержант второго класса">Сержант второго класса</option>
+                                    <option value="Сержант первого класса">Сержант первого класса</option>
+                                    <option value="Штаб-сержант">Штаб-сержант</option>
+                                    <option value="Мастер-сержант">Мастер-сержант</option>
+                                    <option value="Лейтенант">Лейтенант</option>
+                                    <option value="Старший лейтенант">Старший лейтенант	</option>
+                                    <option value="Капитан">Капитан</option>
+                                    <option value="Майор">Майор</option>
+                                    <option value="Подполковник">Подполковник</option>
+                                    <option value="Полковник">Полковник</option>
+                                    <option value="Генерал-майор">Генерал-майор</option>
+                                    <option value="Генерал-лейтенант">Генерал-лейтенант	</option>
+                                    <option value="Генерал-полковник">Генерал-полковник</option>
+                                    <option value="Генерал армии">Генерал армии</option>  
+                                </select>
+                                ) : (
+
+                                    <p className={cl.workerInfo}>{personnelData.military_rank}</p>
+                                )}
+                            </div>
+                            <div className={cl.rows}>
+                                <label className={cl.label}>Дата получения</label>
+                                {editing ? (
+                                    <div className={cl.datePickerContainer}>
+                                        <input
+                                            type="date"
+                                            className={cl.workerInfo}
+                                            value={editedWorker.received_date || ''}
+                                            onChange={(e) =>
+                                                setEditedWorker((prevWorker) => ({
+                                                ...prevWorker,
+                                                received_date: e.target.value,
+                                                }))
+                                            }
+                                        />
+                                    </div>
+                                ) : (
+                                    <p className={cl.workerInfo}>{personnelData.received_date}</p>
+                                )}
+                            </div>
+                        </div>
+                        <div className={cl.column}>
+                            <div className={cl.rows}>
+                                <label className={cl.label}>Вид квитанции</label>
+                                {editing ? (
+                                    <input
+                                        className={cl.workerInfo}
+                                        type="text"
+                                        name="type_of_receipt"
+                                        value={editedWorker.type_of_receipt}
+                                        onChange={handleInputChange}
+                                    />
+                                ) : (
+
+                                    <p className={cl.workerInfo}>{personnelData.type_of_receipt}</p>
+                                )}
+                            </div>
+                            <div className={cl.rows}>
+                                <label className={cl.label}>Должность</label>
+                                {editing ? (
+                                    <input
+                                        className={cl.workerInfo}
+                                        type="text"
+                                        name="position"
+                                        value={editedWorker.position}
+                                        onChange={handleInputChange}
+                                    />
+                                ) : (
+
+                                    <p className={cl.workerInfo}>{personnelData.position}</p>
+                                )}
+                            </div>
+                        </div>
+                
+                    </div>
+                </div>
+
+                <div className={cl.totalInfoWrapper} style={{ marginTop: '40px' }}>
+                    <div className={cl.totalInfoContent}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                            <p className={cl.workerCapitalName}>Классные категории</p>
+                        </div>
+                    </div>
+                    <div className={cl.workerBlock}>
+                        <div className={cl.column}>
+                            <div className={cl.rows}>
+                                <label className={cl.label}>Классные категория</label>
+                                {editing ? (
+                        
+                                    <select
+                                    className={cl.workerInfoSelect}
+                                    value={editedWorker.military_rank}
+                                    onChange={(e) => setEditedWorker({ ...editedWorker, military_rank: e.target.value })}
+                                >
+                                    <option value="">Выберите категорию</option>
+                                    <option value="спец 2 категории">Специалист 2 категории</option>
+                                    <option value="спец 1 категории">Специалист 1 категории</option>
+                                    <option value="наставник">Наставник</option>
+                                </select>
+                                ) : (
+
+                                    <p className={cl.workerInfo}>{personnelData.military_rank}</p>
+                                )}
+                            </div>
+                         
+                        </div>
+                        
+                
+                    </div>
+                </div>
+
+
+                <div className={cl.totalInfoWrapper} style={{ marginTop: '40px' }}>
+                    <div className={cl.totalInfoContent}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                            <p className={cl.workerCapitalName}>Автобиография </p>
+                        </div>
+                    </div>
+                    <div className={cl.workerBlock}>
+                        <div className={cl.column}>
+                            <div className={cl.rows}>
+                            <label className={cl.label}>Автобиография</label>
+                                {editing ? (
+                                    <input
+                                        className={cl.workerInfoText}
+                                        type="text"
+                                        name="autobiography"
+                                        value={editedWorker.autobiography}
+                                        onChange={handleInputChange}
+                                    />
+                                ) : (
+
+                                    <p className={cl.workerInfoText}>{autobiography.autobiography}</p>
+                                )}
+                            </div>
+                         
+                        </div>
+                        
+                
+                    </div>
+                </div>
+
+                <div className={cl.totalInfoWrapper} style={{ marginTop: '40px' }}>
+                    <div className={cl.totalInfoContent}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                            <p className={cl.workerCapitalName} style={{ marginBottom: '20px' }}>Награды</p>
+                        </div>
+                    </div>
+                    <div>
+                        <div>
+                        <Button onClick={handleShowForm}>Добавить награду</Button>
+                            {showForm && (
+                                <form onSubmit={handleAddNewData} style={{ marginTop: '10px' }}>
+                                    <table className={cl.customTable}>
+                                        <tbody >
+                                            <tr>
+                                                <td>
+                                                    <select
+                                                        className={cl.formInput}
+                                                        value={inputData.awards_type}
+                                                        onChange={(e) => setInputData({ ...inputData, awards_type: e.target.value })}
+                                                    >
+                                                        <option value="">Выберите тип награды</option>
+                                                        <option value="награда1">награда</option>
+                                                        <option value="награда2">награда2</option>
+                                                        <option value="награда3">награда3</option>
+                                                    </select>
+                                                </td>
+                                                <td>
+                                                    <input
+                                                        type="number"
+                                                        className={cl.formInput}
+                                                        placeholder="Номер приказа"
+                                                        value={inputData.awards_doc_numb}
+                                                        onChange={(e) => setInputData({ ...inputData, awards_doc_numb: e.target.value })}
+                                                    />
+                                                </td>
+                                                <td>
+                                                    <div className={cl.datePickerContainer}>
+
+                                                    <input
+                                                        type="date"
+                                                        className={cl.formInput}
+                                                        placeholder="Дата приказа"
+                                                        value={inputData.birth_date || ''}
+                                                        onChange={(e) => {
+                                                            const newDate = e.target.value;
+                                                            setInputData((prevWorker) => ({
+                                                            ...prevWorker,
+                                                            birth_date: newDate,
+                                                            }));
+                                                        }}
+                                                    />
+                                                    </div>
+                                                </td>
+                                                <td><Button type="submit">Добавить</Button></td>
+                                            </tr>
+                                            
+                                        </tbody>
+                                    </table>
+                                </form>
+                            )}
+                        </div>
+                        <div>
+                            <table className={cl.customTable} style={{ marginTop: '20px' }}>
+                                <thead>
+                                    <tr>
+                                        <td>Тип награды</td>
+                                        <td>Номер приказа</td>
+                                        <td>Дата приказа</td>
+                                        <td>Действие</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {personnelData.map((d, i) => (
+                                        <tr key={i}>
+                                            <td>  
+                                                {editingId === d.id ? (
+                                                    <select
+                                                        className={cl.selectRelative_type}
+                                                        value={editedData.awards_type}
+                                                        onChange={(e) => setEditedData({ ...editedData, awards_type: e.target.value })}
+                                                    >
+                                                        <option value="">Выберите тип награды</option>
+                                                        <option value="награда1">награда</option>
+                                                        <option value="награда2">награда2</option>
+                                                        <option value="награда3">награда3</option>
+                                                    </select>
+                                                ) : (
+                                                    d.awards_type
+                                                )}
+                                            </td>
+                                            <td>{editingId === d.id ? <input type="text" className={cl.editInput} value={editedData.awards_doc_numb} onChange={(e) => setEditedData({ ...editedData, awards_doc_numb: e.target.value })} /> : d.awards_doc_numb}</td>
+                                            <td>
+                                            {editingId === d.id ? (
+                                                <div className={cl.datePickerContainer}>
+                                                    <input
+                                                        type="date"
+                                                        className={cl.formInput}
+                                                        value={editedWorker.awards_date || ''}
+                                                        onChange={(e) =>
+                                                            setEditedWorker((prevWorker) => ({
+                                                            ...prevWorker,
+                                                            awards_date: e.target.value,
+                                                            }))
+                                                        }
+                                                    />
+                                                </div>
+                                            ) : (
+                                                d.awards_date
+                                            )}
+                                            </td>
+                                            <td className={cl.relativesActionBtns} style={{}}>
+                                                {editingId === d.id ? (
+                                                    <>
+                                                        <div onClick={() => handleSaveEdit(d.id)}>&#10003;</div>
+                                                        <div onClick={handleCancelEdit}>&#x2715;</div>
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <div onClick={() => handleEdit(d.id)}>&#9998;</div>
+                                                        <div onClick={() => handleDelete(d.id)}>Удалить</div>
+                                                    </>
+                                                )}
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <Table />
+            </div>
+        </div>
+    );
+}
+
+export default PersonnelData;

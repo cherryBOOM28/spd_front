@@ -1,0 +1,146 @@
+.homeWrapper {
+  display: flex;
+  /* gap: 35px; */
+  min-height: 100vh; 
+  height: 100vh;
+  flex-direction: row;
+  overflow: hidden;
+}
+
+.container {
+  width: 94.5%;
+  margin: 0 auto;
+}
+
+.navigation {
+  flex: 0 0 auto; 
+  width: 264px; 
+}
+
+.content {
+  overflow: scroll;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.header {
+  flex: 0 0 auto; 
+  height: 60px;
+}
+
+.headline {
+  color: #4B4B4B;
+  font-size: 16px;
+  font-weight: 500;
+  margin-top: 10px;
+}
+
+/* TAB CONTENT */
+
+.tabContent {
+  border-radius: 5px;
+  background: #F8F8F8;
+  padding: 10px;
+  margin: 50px 0;
+}
+
+.tabHeader {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border-radius: 5px;
+  background: #F3F3F3;
+}
+
+.activeTab {
+  color: #4B4B4B;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.btnTab {
+  cursor: pointer;
+}
+
+.btnTab:hover {
+  font-weight: 700;
+}
+
+.basicInfo {
+  display: flex;
+}
+
+.info__block {
+  background: #F8F8F8;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.totalInfo {
+  border-radius: 5px;
+  background: #F3F3F3;
+  padding: 14px;
+  margin-top: 15px;
+}
+
+
+.photo__block {
+    display: flex;
+    flex-direction: column;
+    width: 211px;
+}
+
+.workerBlock {
+  display: flex;
+  gap: 30px;
+}
+
+.newBasicInfo {
+    margin-top: 40px;
+}
+
+.workerCapitalName {
+  color: #000;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.newWorkerBlock {
+  display: flex;
+  gap: 30px;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 25px;
+}
+  
+.rows {
+  display: flex;
+}
+
+.label {
+  color: #000;
+  font-size: 16px;
+  font-weight: 400;
+  width: 127px;
+}
+  
+.workerInfo {
+  border-radius: 5px;
+  border: 1px solid #959595;
+  width: 270px;
+  /* height: 30px; */
+  padding: 6px 9px;
+  margin-left: 12px;
+  outline: none;
+  font-family: "Ubuntu";
+  color: #000;
+  font-size: 16px;
+  font-weight: 400;
+}

@@ -1,0 +1,31 @@
+.wrapper {
+    display: flex;
+    /* gap: 35px; */
+    min-height: 100vh; 
+    height: 100vh;
+    flex-direction: row;
+    overflow: hidden;
+  }
+  
+  .container {
+    width: 94.5%;
+    margin: 0 auto;
+  }
+  
+  .navigation {
+    flex: 0 0 auto; 
+    width: 264px; 
+  }
+  
+  .content {
+    overflow: scroll;
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .header {
+    flex: 0 0 auto; 
+    height: 60px;
+  }

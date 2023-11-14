@@ -1,0 +1,88 @@
+.registrationWrapper {
+    background: #1B3884;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    width: 100vw;
+    height: 100vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container {
+    max-width: 940px;
+    margin: 0 auto;
+}
+
+.registrationForm {
+    padding: 20px 25px 25px 25px;
+    width: 322px;
+    border-radius: 5px;
+    background: #FFF;
+    display: flex;
+    flex-direction: column;
+}
+
+.logoImg {
+    width: 58px;
+    height: 58px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logoText {
+    width: 130px;
+    color: #000;
+    font-size: 14px;
+    font-weight: 600;
+    margin-left: 13px;
+}
+
+.registration {
+    color: #8F8F8F;
+    font-size: 16px;
+    font-weight: 500;
+    text-align: center;
+    margin: 18px 0 12px;
+}
+
+.registrationInput {
+    outline: none;
+    border: none;
+    margin-top: 11px;
+    padding: 9px 11px;
+    border-radius: 5px;
+    background: #E3E3E3;
+}
+
+.passw {
+    color: #959595;
+    font-size: 14px;
+    font-weight: 400;
+    display: flex;
+    justify-content: flex-end;
+    margin: 18px 0 23px;
+}
+
+.logIn {
+    color: #505A74;
+    margin-left: 8px;
+}
+
+.button {
+    color: #FFF;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.link {
+    margin-left: 10px;
+    text-decoration: none;
+    color:#1B3884;
+}

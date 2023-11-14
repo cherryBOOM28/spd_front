@@ -1,0 +1,99 @@
+.loginWrapper {
+    background: #1B3884;
+    width: 100vw;
+    height: 100vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.loginForm {
+    padding: 20px 25px 25px 25px;
+    width: 322px;
+    border-radius: 10px;
+    background: #FFF;
+    display: flex;
+    flex-direction: column;
+}
+
+.logoImg {
+    width: 58px;
+    height: 58px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logoText {
+    width: 130px;
+    color: #000;
+    font-size: 14px;
+    font-weight: 600;
+    margin-left: 13px;
+}
+
+.login {
+    font-family: 'Ubuntu';
+    color: #8F8F8F;
+    font-size: 18px;
+    font-weight: 500;
+    text-align: center;
+    margin: 18px 0 12px;
+}
+
+.loginInput {
+    outline: none;
+    border: none;
+    margin-top: 11px;
+    margin-bottom: 25px;
+    padding: 9px 11px;
+    width: 93%;
+    border-radius: 5px;
+    background: #E3E3E3;
+    font-size: 16px;
+}
+
+.passw {
+    color: #959595;
+    font-size: 16px;
+    font-weight: 400;
+    display: flex;
+    justify-content: flex-end;
+    margin: 18px 0 23px;
+}
+
+.button {
+    color: #FFF;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.signInBtn {
+    margin-top: 11px;
+    border-radius: 5px;
+    border: 1px solid #1B3884;
+    background: #FFF;
+    color: #1B3884;
+    font-size: 14px;
+    font-weight: 500;
+    transition: .3s;
+}
+
+.signInBtn:hover {
+    background: #1F3C88;
+    color: #FFF;
+}
+
+.field {
+    position: relative;
+}
+
+.show_password {
+    position: absolute;
+    top: 34px;
+    right: 15px;
+}

@@ -1,0 +1,87 @@
+.info__block {
+    /* display: flex; */
+    margin-top: 10px;
+    gap: 10px;
+}
+
+.workerImg {
+    width: 201px;
+    height: 254px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.workerCapitalName {
+    color: #000;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.edit {
+    font-size: 14px;
+    color:#4B4B4B;
+}
+
+.workerBlock {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0px 30px;
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 25px;
+}
+
+.rows {
+    display: flex;
+}
+
+.label {
+    color: #000;
+    font-size: 16px;
+    font-weight: 400;
+    width: 127px;
+}
+
+.workerInfo {
+    border-radius: 5px;
+    border: 1px solid #959595;
+    width: 270px;
+    /* height: 30px; */
+    padding: 6px 9px;
+    margin-left: 12px;
+    outline: none;
+    font-family: 'Ubuntu';
+    color: #000;
+    font-size: 16px;
+    font-weight: 400;
+}
+
+.workerInfoSelect {
+    border-radius: 5px;
+    border: 1px solid #959595;
+    width: 290px;
+    height: 30px;
+    padding: 2px 9px;
+    margin-left: 12px;
+    outline: none;
+    font-family: 'Ubuntu';
+    color: #000;
+    font-size: 16px;
+    font-weight: 400;
+}
+
+.totalInfo {
+    border-radius: 5px;
+    background: #F3F3F3;
+    padding: 14px;
+    margin-top: 15px;
+}
+
+.actionBtn {
+    padding: 5px 9px;
+    font-weight: 400;
+}

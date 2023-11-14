@@ -1,0 +1,173 @@
+.headerWrapper {
+    background: #F3F3F3;
+    width: 100%;
+    height: 64px;
+    padding: 0 0;
+}
+
+
+.headerContent {
+    display: flex;
+    align-items: center;
+    height: 64px;
+    justify-content: space-between;
+}
+
+.buttons {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+
+    margin-left: 35px;
+}
+
+.btn {
+    border-radius: 5px;
+    height: 36px;
+    background: #E3E3E3;
+    color: #4B4B4B;
+    font-size: 16px;
+    font-weight: 500;
+    padding: 10px 20px;
+    outline: none;
+    border: none;
+    cursor: pointer;
+}
+
+.btn:hover {
+    background: #959595;
+    color: #fff;
+}
+
+.link {
+    text-decoration: none;
+    color: #4B4B4B;
+}
+
+.headerContentRight {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-right: 35px;
+}
+
+.search {
+    position: relative;
+}
+
+.searchInput {
+    border-radius: 5px;
+    background: #E3E3E3;
+    width: 355px;
+    height: 36px;
+    padding: 5px 9px 5px 35px;
+    border: none;
+    
+}
+
+.searchIcon {
+    position: absolute;
+    z-index: 10;
+    top: 5px;
+    left: 5px;
+}
+
+.profile {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.profileName {
+    text-decoration: none;
+    color: #4B4B4B;
+    font-size: 16px;
+    font-weight: 300;
+}
+
+.logout {
+    text-decoration: none;
+    color: #4B4B4B;
+    font-size: 16px;
+    font-weight: 400;
+}
+
+.modal_wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 650px;
+}
+
+.closeBtn {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.closeImg {
+    cursor: pointer;
+    width: 24px;
+}
+
+
+.group_list {
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.create_group_text {
+    font-size: 18px;
+}
+
+.group_name {
+    margin-top: 30px;
+}
+
+.label {
+    color: #000;
+    font-size: 16px;
+    font-weight: 400;
+    width: 127px;
+}
+
+.workerInfo {
+    border-radius: 5px;
+    border: 1px solid #959595;
+    width: 270px;
+    /* height: 30px; */
+    padding: 6px 9px;
+    margin-left: 12px;
+    outline: none;
+    font-family: 'Ubuntu';
+    color: #000;
+    font-size: 16px;
+    font-weight: 400;
+}
+
+.worker {
+    display: flex;
+    justify-content: space-between;
+    border-radius: 5px;
+    padding: 10px;
+    background: #E3E3E3;
+}
+
+.worker_detail {
+    display: flex;
+    gap: 40px
+
+}
+
+.worker_info {
+    display: flex;
+    gap: 8px;
+    width: 290px;
+}
+
+.addBtn {
+    margin-top: 15px;
+    padding: 6px 9px;
+    display: flex;
+    justify-content: flex-end;
+}

@@ -1,0 +1,167 @@
+/* Personal.module.css */
+
+.formInput {
+    padding: 5px;
+    background: #f2f2f2;
+    border: none;
+    outline: none;
+    font-family: "Ubuntu";
+    color: #000;
+    font-size: 14px;
+    font-weight: 400;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  .customTable {
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+  }
+  
+  .customTable th,
+  .customTable td {
+    /* border: 1px solid #ccc; */
+    padding: 8px;
+    text-align: left;
+  }
+  
+  .customTable td {
+    border-bottom: none;
+    border-top: none;
+    border-right: 1px solid #ccc;
+  }
+  
+  .customTable td:first-child {
+    
+    border-left: 1px solid #ccc;
+  }
+  
+  .customTable tr {
+    border-bottom: 1px solid #ccc;
+    height: fit-content !important;
+  }
+  
+  .customTable tr:first-child {
+    border-top: 1px solid #ccc;
+  }
+  
+  .customTable th {
+    background-color: #f2f2f2;
+  }
+  
+  .info__block {
+    display: flex;
+    margin-top: 10px;
+    gap: 10px;
+  }
+  
+  .workerImg {
+    width: 201px;
+    height: 254px;
+    object-fit: cover;
+    border-radius: 5px;
+  }
+  
+  .workerCapitalName {
+    color: #000;
+    font-size: 16px;
+    font-weight: 500;
+  }
+  
+  .edit {
+    font-size: 14px;
+    color: #4b4b4b;
+  }
+  
+  .workerBlock {
+    display: flex;
+    gap: 30px;
+  }
+  
+  .column {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 25px;
+  }
+  
+  .rows {
+    display: flex;
+  }
+  
+  .label {
+    color: #000;
+    font-size: 16px;
+    font-weight: 400;
+    width: 127px;
+  }
+  
+  .workerInfo {
+    border-radius: 5px;
+    border: 1px solid #959595;
+    width: 270px;
+    /* height: 30px; */
+    padding: 6px 9px;
+    margin-left: 12px;
+    outline: none;
+    font-family: "Ubuntu";
+    color: #000;
+    font-size: 16px;
+    font-weight: 400;
+  }
+  
+  .totalInfo {
+    border-radius: 5px;
+    background: #f3f3f3;
+    padding: 14px;
+    margin-top: 15px;
+  }
+  
+  /* calendar */
+  .datePickerContainer {
+    position: relative;
+  }
+  
+  .dateLogo {
+    position: absolute;
+    z-index: 12;
+    right: 9px;
+    top: 9px;
+  }
+  
+  .actionBtn {
+    padding: 5px 9px;
+    font-weight: 400;
+  }
+
+  .submitBtn {
+    padding: 10px;
+  }
+  
+  .relativesActionBtns {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 5px;
+  }
+  
+  .relativesActionBtns > div {
+    padding: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .relativesActionBtns > div:first-child {
+    background-color: #ccc;
+  }
+  .relativesActionBtns > div:nth-child(2) {
+    background-color: #d36666;
+  }
+  
+  .editInput {
+    border: none;
+    outline: none;
+    background: none;
+    width: 100%;
+  }
