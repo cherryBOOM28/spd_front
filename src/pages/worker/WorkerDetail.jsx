@@ -55,7 +55,27 @@ function WorkerDetail() {
   const [departmentName, setDepartmentName] = useState({});
 
   const [familyStatus, setFamilyStatus] = useState({});
+  const [familyComposition, setFamilyComposition] = useState({});
+  const [education, setEducation] = useState({});
+  const [languageSkill, setLanguageSkill] = useState({});
+  const [course, setCourse] = useState({});
+  const [academicDegree, setAcademicDegree] = useState({});
+  const [sportSkill, setSportSkill] = useState({});
 
+  const [workingHistory, setWorkingHistory] = useState({});
+
+  const [autobiographyInfo, setAutobiographyInfo] = useState({});
+  const [specCheckInfo, setSpecCheckInfo] = useState({});
+  const [attestationInfo, setAttestationInfo] = useState({});
+  const [classCategoriesInfo, setClassCategoriesInfo] = useState({});
+  const [rewardsInfo, setRewardsInfo] = useState({});
+  const [sickLeavesInfo, setSickLeavesInfo] = useState({});
+  const [investigationsInfo, setInvestigationsInfo] = useState({});
+  const [rankInfo, setRankInfo] = useState({});
+  const [militaryRank, setMilitaryRank] = useState({});
+
+
+  const [decreeListInfo, setDecreeListInfo] = useState({});
 
   const accessToken = Cookies.get('jwtAccessToken');
 
@@ -85,10 +105,37 @@ function WorkerDetail() {
         setResidentInfo(response.data.ResidentInfo);
 
         setPositionInfo(response.data.Person.positionInfo.department);
-        setLocation(response.data.Person.positionInfo.department.location);
+        setLocation(response.data.Person.positionInfo.department.Location);
         setDepartmentName(response.data.Person.positionInfo.department.DepartmentName);
-        setReceivedDate(response.data.Person.positionInfo.receivedDate);
-        setPositionTitle(response.data.Person.positionInfo.position.positionTitle);
+        setReceivedDate(response.data.Person.positionInfo);
+        setPositionTitle(response.data.Person.positionInfo.position);
+
+        setFamilyStatus(response.data.Person.familyStatus);
+
+        setFamilyComposition(response.data.FamilyComposition);
+        setEducation(response.data.Education);
+        setLanguageSkill(response.data.LanguageSkill);
+        setCourse(response.data.Course);
+        setAcademicDegree(response.data.AcademicDegree);
+        setSportSkill(response.data.SportSkill);
+
+        setWorkingHistory(response.data.WorkingHistory);
+
+        setAutobiographyInfo(response.data.AutobiographyInfo);
+        setSpecCheckInfo(response.data.SpecCheckInfo);
+        setAttestationInfo(response.data.AttestationInfo);
+        setClassCategoriesInfo(response.data.ClassCategoriesInfo);
+        setRewardsInfo(response.data.RewardsInfo);
+        setSickLeavesInfo(response.data.SickLeavesInfo);
+        setInvestigationsInfo(response.data.InvestigationsInfo);
+        setRankInfo(response.data.Person.rankInfo);
+        setMilitaryRank(response.data.Person.rankInfo.militaryRank);
+
+        setDecreeListInfo(response.data.DecreeListInfo);
+
+
+
+        console.log(response.data.Person.rankInfo.militaryRank);
 
 
 
@@ -181,12 +228,37 @@ function WorkerDetail() {
                               gender={gender}
                             />
                           <div className={cl.totalInfo}>
-                            <Personal id={id} iin={iin}/>
-                            <Education id={id}/>
-                            <Language id={id}/>
-                            <Courses id={id}/>
-                            <AcademicDegree id={id}/>
-                            <Sport id={id}/>
+                            <Personal 
+                              id={id} 
+                              iin={iin}
+                              positionInfo={positionInfo}
+                              location={location}
+                              receivedDate={receivedDate}
+                              positionTitle={positionTitle}
+                              departmentName={departmentName}
+                              familyStatus={familyStatus}
+                              familyComposition={familyComposition}
+                            />
+                            <Education 
+                              id={id}
+                              education={education}
+                            />
+                            <Language 
+                              id={id}
+                              languageSkill={languageSkill}
+                            />
+                            <Courses 
+                              id={id}
+                              course={course}
+                            />
+                            <AcademicDegree 
+                              id={id}
+                              academicDegree={academicDegree}
+                            />
+                            <Sport 
+                              id={id}
+                              sportSkill={sportSkill}
+                            />
                           </div>  
                         </div>
                       }
@@ -200,7 +272,10 @@ function WorkerDetail() {
                             gender={gender}
                           />
                           <div className={cl.totalInfo}>
-                            <LaborActivity id={id} />
+                            <LaborActivity 
+                              id={id} 
+                              workingHistory={workingHistory}
+                            />
                           </div>  
                             
                         </div>
@@ -215,7 +290,19 @@ function WorkerDetail() {
                             gender={gender}
                           />
                           <div className={cl.totalInfo}>
-                            <PersonnelData id={id} iin={iin} />
+                            <PersonnelData 
+                              id={id} 
+                              iin={iin} 
+                              autobiographyInfo={autobiographyInfo}
+                              specCheckInfo={specCheckInfo}
+                              attestationInfo={attestationInfo}
+                              classCategoriesInfo={classCategoriesInfo}
+                              rewardsInfo={rewardsInfo}
+                              sickLeavesInfo={sickLeavesInfo}
+                              investigationsInfo={investigationsInfo}
+                              rankInfo={rankInfo}
+                              militaryRank={militaryRank}
+                            />
                           </div> 
                             
                         </div>
@@ -230,7 +317,10 @@ function WorkerDetail() {
                             gender={gender}
                           />
                           <div className={cl.totalInfo}>
-                            <ReportOrders id={id} />
+                            <ReportOrders 
+                              id={id} 
+                              decreeListInfo={decreeListInfo}
+                            />
                           </div>      
                         </div>
                       }

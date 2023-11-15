@@ -8,7 +8,7 @@ import { getStaffInfo } from '../../../../api/staff_info/getStaffInfo';
 import { deleteSickLeaves } from '../../../../api/staff_info/sick_leaves/deleteSickLeaves';
 import { updateSickLeaves } from '../../../../api/staff_info/sick_leaves/updateSickLeaves';
 
-function Table(props) {
+function Table({ sickLeavesInfo }, props) {
     // const iin = props.iin;
     const { id } = useParams();
 
@@ -244,9 +244,9 @@ function Table(props) {
                         </tr>
                     </thead>
                     <tbody>
-                        {personnelData.sick_leaves.map((d, i) => (
+                        {sickLeavesInfo && sickLeavesInfo.sickLeaves && sickLeavesInfo.sickLeaves.map((d, i) => (
                             <tr key={i}>
-                                <td>{editingId === d.id ? <input type="number" className={cl.editInput} name='sick_doc_numb' value={editedData.sick_doc_numb} onChange={(e) => setEditedData({ ...editedData, sick_doc_numb: e.target.value })} /> : d.sick_doc_numb}</td>
+                                <td>{editingId === d.id ? <input type="number" className={cl.editInput} name='sickDocNumber' value={editedData.sickDocNumber} onChange={(e) => setEditedData({ ...editedData, sickDocNumber: e.target.value })} /> : d.sickDocNumber}</td>
                                 <td>
                                 {editingId === d.id ? (
                                     <div className={cl.datePickerContainer}>
@@ -254,19 +254,19 @@ function Table(props) {
                                             type="date"
                                             className={cl.formInput}
                                             placeholder="Дата приказа"
-                                            name='sick_doc_date'
-                                            value={editedData.sick_doc_date || ''}
+                                            name='sickDocDate'
+                                            value={editedData.sickDocDate || ''}
                                             onChange={(e) => {
                                                 const newDate = e.target.value;
                                                 setEditedData((prevData) => ({
                                                 ...prevData,
-                                                sick_doc_date: newDate,
+                                                sickDocDate: newDate,
                                                 }));
                                             }}
                                         />
                                     </div>
                                 ) : (
-                                    d.sick_doc_date
+                                    d.sickDocDate
                                 )}
                                 </td>
                                 <td className={cl.relativesActionBtns} style={{}}>

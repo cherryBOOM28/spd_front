@@ -8,7 +8,7 @@ import { getStaffInfo } from '../../../../api/staff_info/getStaffInfo';
 import { deleteInvestigation_retrievals } from '../../../../api/staff_info/investigation_retrievals/deleteInvestigation_retrievals';
 import { updateInvestigation_retrievals } from '../../../../api/staff_info/investigation_retrievals/updateInvestigation_retrievals';
 
-function InvestigationRetrievals(props) {
+function InvestigationRetrievals({ investigationsInfo }, props) {
     const { id } = useParams();
 
     const [personnelData, setPersonnelData] = useState({
@@ -266,14 +266,14 @@ function InvestigationRetrievals(props) {
                         </tr>
                     </thead>
                     <tbody>
-                        {personnelData.investigation_retrievals.map((d, i) => (
+                        {investigationsInfo && investigationsInfo.investigations && investigationsInfo.investigations.map((d, i) => (
                             <tr key={i}>
                                 <td>  
                                     {editingId === d.id ? (
                                         <select
                                             className={cl.selectRelative_type}
-                                            value={editedData.order_type_investigation}
-                                            onChange={(e) => setEditedData({ ...editedData, order_type_investigation: e.target.value })}
+                                            value={editedData.investigation_decree_type}
+                                            onChange={(e) => setEditedData({ ...editedData, investigation_decree_type: e.target.value })}
                                         >
                                             <option value="">Выберите вид взыскания</option>
                                             <option value="замечания">Замечания</option>
@@ -283,27 +283,27 @@ function InvestigationRetrievals(props) {
                                             <option value="Увольнение">Увольнение</option>
                                         </select>
                                     ) : (
-                                        d.order_type_investigation
+                                        d.investigation_decree_type
                                     )}
                                 </td>
-                                <td>{editingId === d.id ? <input type="text" className={cl.editInput} name='order_doc_numb' value={editedData.order_doc_numb} onChange={(e) => setEditedData({ ...editedData, order_doc_numb: e.target.value })} /> : d.order_doc_numb}</td>
+                                <td>{editingId === d.id ? <input type="text" className={cl.editInput} name='investigation_decree_type' value={editedData.investigation_decree_type} onChange={(e) => setEditedData({ ...editedData, investigation_decree_type: e.target.value })} /> : d.investigation_decree_type}</td>
                                 <td>
                                 {editingId === d.id ? (
                                     <div className={cl.datePickerContainer}>
                                         <input
                                             type="date"
                                             className={cl.formInput}
-                                            value={editedData.order_date_investigation || ''}
+                                            value={editedData.investigation_date || ''}
                                             onChange={(e) =>
                                                 setEditedData((prevWorker) => ({
                                                 ...prevWorker,
-                                                order_date_investigation: e.target.value,
+                                                investigation_date: e.target.value,
                                                 }))
                                             }
                                         />
                                     </div>
                                 ) : (
-                                    d.order_date_investigation
+                                    d.investigation_date
                                 )}
                                 </td>
                                 <td className={cl.relativesActionBtns} style={{}}>

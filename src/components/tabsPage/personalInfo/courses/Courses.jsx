@@ -8,7 +8,7 @@ import { getPersonalInfo } from '../../../../api/persona_info/getPersonalInfo';
 import { deleteCourse } from '../../../../api/persona_info/courses/deleteCourse';
 import { updateCourse } from '../../../../api/persona_info/courses/updateCourse';
 
-function Courses(props) {
+function Courses({ course }, props) {
     const { id } = useParams();
 
     const [courses, setCourses] = useState({
@@ -318,34 +318,35 @@ function Courses(props) {
                             <table className={cl.customTable} style={{ marginTop: '20px' }}>
                                 <thead>
                                     <tr>
+                                        <td>Название курса</td>
                                         <td>Вид переподготовки</td>
                                         <td>Учебное заведение </td>
                                         <td>Дата начала</td>
                                         <td>Дата окончания</td>
                                         <td>Вид документа</td>
-                                        <td>Название курса</td>
                                         <td>Действие</td>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {courses.courses.map((d, i) => (
+                                    {course && course.courses && course.courses.map((d, i) => (
                                         <tr key={i}>
+                                            <td>{editingId === d.id ? <input type='text' className={cl.editInput}  value={editedData.courseName} onChange={(e) => setEditedData({ ...editedData, courseName: e.target.value })} /> : d.courseName}</td>
                                             <td>  
                                                 {editingId === d.id ? (
                                                     <select
                                                         className={cl.selectRelative_type}
-                                                        value={editedData.course_type}
-                                                        onChange={(e) => setEditedData({ ...editedData, course_type: e.target.value })}
+                                                        value={editedData.courseType}
+                                                        onChange={(e) => setEditedData({ ...editedData, courseType: e.target.value })}
                                                     >
                                                         <option value="">Выберите переподготовки</option>
                                                         <option value="Повышение">Повышение</option>
                                                         <option value="Подготовка">Подготовка</option>
                                                     </select>
                                                 ) : (
-                                                    d.course_type
+                                                    d.courseType
                                                 )}
                                             </td>
-                                            <td>{editingId === d.id ? <input type="text" className={cl.editInput} value={editedData.course_organization} onChange={(e) => setEditedData({ ...editedData, course_organization: e.target.value })} /> : d.course_organization}</td>
+                                            <td>{editingId === d.id ? <input type="text" className={cl.editInput} value={editedData.courseOrg} onChange={(e) => setEditedData({ ...editedData, courseOrg: e.target.value })} /> : d.courseOrg}</td>
                                             <td>
                                                 {editingId === d.id ? (
                                                     <div className={cl.datePickerContainer}>
@@ -353,18 +354,18 @@ function Courses(props) {
                                                             type="date"
                                                             className={cl.formInput}
                                                             placeholder="Дата начала"
-                                                            value={editedData.course_start_date || ''}
+                                                            value={editedData.startDate || ''}
                                                             onChange={(e) => {
                                                                 const newDate = e.target.value;
                                                                 setEditedData((prevData) => ({
                                                                 ...prevData,
-                                                                course_start_date: newDate,
+                                                                startDate: newDate,
                                                                 }));
                                                             }}
                                                         />
                                                     </div>
                                                 ) : (
-                                                    d.course_start_date
+                                                    d.startDate
                                                 )}
                                             </td>
                                             <td>
@@ -374,22 +375,21 @@ function Courses(props) {
                                                             type="date"
                                                             className={cl.formInput}
                                                             placeholder="Дата окончания"
-                                                            value={editedData.course_end_date || ''}
+                                                            value={editedData.endDate || ''}
                                                             onChange={(e) => {
                                                                 const newDate = e.target.value;
                                                                 setEditedData((prevData) => ({
                                                                 ...prevData,
-                                                                course_end_date: newDate,
+                                                                endDate: newDate,
                                                                 }));
                                                             }}
                                                         />
                                                     </div>
                                                 ) : (
-                                                    d.course_end_date
+                                                    d.endDate
                                                 )}
                                             </td>
-                                            <td>{editingId === d.id ? <input type='text' className={cl.editInput}  value={editedData.document_type} onChange={(e) => setEditedData({ ...editedData, document_type: e.target.value })} /> : d.document_type}</td>
-                                            <td>{editingId === d.id ? <input type='text' className={cl.editInput}  value={editedData.course_name} onChange={(e) => setEditedData({ ...editedData, course_name: e.target.value })} /> : d.course_name}</td>
+                                            <td>{editingId === d.id ? <input type='text' className={cl.editInput}  value={editedData.documentType} onChange={(e) => setEditedData({ ...editedData, documentType: e.target.value })} /> : d.documentType}</td>
                                             <td className={cl.relativesActionBtns} style={{}}>
                                                 {editingId === d.id ? (
                                                     <>

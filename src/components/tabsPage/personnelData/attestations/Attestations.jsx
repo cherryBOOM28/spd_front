@@ -230,7 +230,7 @@ import { getStaffInfo } from '../../../../api/staff_info/getStaffInfo';
 import { deleteAttestations } from '../../../../api/staff_info/attestations/deleteAttestations';
 import { updateAttestations } from '../../../../api/staff_info/attestations/updateAttestations';
 
-function Attestations(props) {
+function Attestations({ attestationInfo }, props) {
     // const iin = props.iin;
     const { id } = useParams();
 
@@ -471,16 +471,16 @@ function Attestations(props) {
                         </tr>
                     </thead>
                     <tbody>
-                        {personnelData.attestations.map((d, i) => (
+                        {attestationInfo && attestationInfo.attestations && attestationInfo.attestations.map((d, i) => (
                             <tr key={i}>
                                 <td>{editingId === d.id ? 
                                     <input 
                                         type="text" 
                                         className={cl.editInput} 
-                                        name='attestation_result' 
-                                        value={editedData.attestation_result} 
-                                        onChange={(e) => setEditedData({ ...editedData, attestation_result: e.target.value })} 
-                                    /> : d.attestation_result}
+                                        name='attResult' 
+                                        value={editedData.attResult} 
+                                        onChange={(e) => setEditedData({ ...editedData, attResult: e.target.value })} 
+                                    /> : d.attResult}
                                 </td>
                                 <td>
                                 {editingId === d.id ? (
@@ -489,23 +489,23 @@ function Attestations(props) {
                                             type="date"
                                             className={cl.formInput}
                                             placeholder="Дата приказа"
-                                            name='last_attestation_date'
-                                            value={editedData.last_attestation_date || ''}
+                                            name='lastAttDate'
+                                            value={editedData.lastAttDate || ''}
                                             onChange={(e) => {
                                                 const newDate = e.target.value;
                                                 setEditedData((prevData) => ({
                                                 ...prevData,
-                                                last_attestation_date: newDate,
+                                                lastAttDate: newDate,
                                                 }));
                                             }}
                                         />
                                     </div>
                                 ) : (
-                                    d.last_attestation_date
+                                    d.lastAttDate
                                 )}
                                 
                                 </td>
-                                <td>{d.next_attestation_date}
+                                <td>{d.nextAttDateMin}
                                 </td>
                                 <td className={cl.relativesActionBtns} style={{}}>
                                     {editingId === d.id ? (

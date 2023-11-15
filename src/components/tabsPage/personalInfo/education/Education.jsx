@@ -8,26 +8,26 @@ import { getPersonalInfo } from '../../../../api/persona_info/getPersonalInfo';
 import { deleteEducation } from '../../../../api/persona_info/educations/deleteEducation';
 import { updateEducation } from '../../../../api/persona_info/educations/updateEducation';
 
-function Education(props) {
+function Education({ education }) {
     const { id } = useParams();
 
-    const [education, setEducation] = useState({
-        "educations" : []
-    }); // Данные из бэка
+    // const [education, setEducation] = useState({
+    //     "educations" : []
+    // }); // Данные из бэка
 
     useEffect(() => {
         fetchData()
     }, [])
 
     const fetchData = async () => {
-        try {
-            // GET Education info
-            // console.log("educationResponse ID", id)
-            const educationResponse = await getPersonalInfo(id);
-            setEducation(educationResponse.data);
-        } catch (error) {
-            console.error("Error fetching data:", error);
-        }
+        // try {
+        //     // GET Education info
+        //     // console.log("educationResponse ID", id)
+        //     const educationResponse = await getPersonalInfo(id);
+        //     setEducation(educationResponse.data);
+        // } catch (error) {
+        //     console.error("Error fetching data:", error);
+        // }
     }
 
     // ДОБАВЛЕНИЕ ДАННЫХ
@@ -47,75 +47,75 @@ function Education(props) {
     });
 
     const handleAddEducation = async (e) => {
-        e.preventDefault();
-        try {
-            console.log(inputData)
-            if (!inputData.education_type || !inputData.education_place || !inputData.education_date_in || !inputData.education_date_out || !inputData.education_speciality || !inputData.diploma_number) {
-                alert('Пожалуйста, заполните все поля!');
-                return;
-            }
+        // e.preventDefault();
+        // try {
+        //     console.log(inputData)
+        //     if (!inputData.education_type || !inputData.education_place || !inputData.education_date_in || !inputData.education_date_out || !inputData.education_speciality || !inputData.diploma_number) {
+        //         alert('Пожалуйста, заполните все поля!');
+        //         return;
+        //     }
 
-            const newEducation = {
-                iin: props.id,
-                education_type: inputData.education_type,
-                education_place: inputData.education_place,
-                education_date_in: inputData.education_date_in,
-                education_date_out: inputData.education_date_out,
-                education_speciality: inputData.education_speciality,
-                diploma_number: inputData.diploma_number
-            };
+        //     const newEducation = {
+        //         iin: props.id,
+        //         education_type: inputData.education_type,
+        //         education_place: inputData.education_place,
+        //         education_date_in: inputData.education_date_in,
+        //         education_date_out: inputData.education_date_out,
+        //         education_speciality: inputData.education_speciality,
+        //         diploma_number: inputData.diploma_number
+        //     };
 
-            // console.log(
-            //     { 'education': [newEducation] }
-            // )
+        //     // console.log(
+        //     //     { 'education': [newEducation] }
+        //     // )
 
-            const body = { "educations": [newEducation] }
+        //     const body = { "educations": [newEducation] }
 
-            const response = await axios.post('http://localhost:8000/personal_info/create/', body);
+        //     const response = await axios.post('http://localhost:8000/personal_info/create/', body);
 
-            if (response.status === 201) {
-                const updatedEducation = {
-                    ...education,
-                    educations: [
-                        ...education.educations,
-                        newEducation
-                    ]
-                };
+        //     if (response.status === 201) {
+        //         const updatedEducation = {
+        //             ...education,
+        //             educations: [
+        //                 ...education.educations,
+        //                 newEducation
+        //             ]
+        //         };
 
-                setEducation(updatedEducation);
-                setInputData({
-                    iin: id,
-                    education_type: '',
-                    education_place: '',
-                    education_date_in: '',
-                    education_date_out: '',
-                    education_speciality: '',
-                    diploma_number: ''
-                });
-                handleShowForm(false)
-            } else {
-                console.error('Error adding education');
-            }
-        } catch (error) {
-            console.error('Error:', error);
-        }
+        //         setEducation(updatedEducation);
+        //         setInputData({
+        //             iin: id,
+        //             education_type: '',
+        //             education_place: '',
+        //             education_date_in: '',
+        //             education_date_out: '',
+        //             education_speciality: '',
+        //             diploma_number: ''
+        //         });
+        //         handleShowForm(false)
+        //     } else {
+        //         console.error('Error adding education');
+        //     }
+        // } catch (error) {
+        //     console.error('Error:', error);
+        // }
     };
 
     // УДАЛЕНИЕ EDUCATION
     const handleDelete = async (id) => {
-        try {
-            const response = await deleteEducation(id)
-            if (response === 200) {
-                // Успешно удалено, теперь обновляем состояние
-                setEducation(prevEducation => prevEducation.filter(educationType => educationType.id !== id));
-                console.log("Successfully deleted");
-            } else {
-                console.log("Error deleting education type");
-            }
-            window.location.reload();
-        } catch(error) {
-            console.log(error)
-        }
+        // try {
+        //     const response = await deleteEducation(id)
+        //     if (response === 200) {
+        //         // Успешно удалено, теперь обновляем состояние
+        //         setEducation(prevEducation => prevEducation.filter(educationType => educationType.id !== id));
+        //         console.log("Successfully deleted");
+        //     } else {
+        //         console.log("Error deleting education type");
+        //     }
+        //     window.location.reload();
+        // } catch(error) {
+        //     console.log(error)
+        // }
     }
 
     // EDIT
@@ -132,82 +132,82 @@ function Education(props) {
     const [editingId, setEditingId] = useState(null);
 
     const handleEdit = async (id, editedDataEdu) => {
-        if(editingId === id) {
-            try {
-                const updatedData = {
-                    id: id,
-                    iin: props.id,
-                    education_type: editedDataEdu.education_type,
-                    education_place: editedDataEdu.education_place,
-                    education_date_in: editedDataEdu.education_date_in,
-                    education_date_out: editedDataEdu.education_date_out,
-                    education_speciality: editedDataEdu.education_speciality,
-                    diploma_number: editedDataEdu.diploma_number
-                };
+        // if(editingId === id) {
+        //     try {
+        //         const updatedData = {
+        //             id: id,
+        //             iin: props.id,
+        //             education_type: editedDataEdu.education_type,
+        //             education_place: editedDataEdu.education_place,
+        //             education_date_in: editedDataEdu.education_date_in,
+        //             education_date_out: editedDataEdu.education_date_out,
+        //             education_speciality: editedDataEdu.education_speciality,
+        //             diploma_number: editedDataEdu.diploma_number
+        //         };
 
-                await updateEducation(id, updatedData);
+        //         await updateEducation(id, updatedData);
 
-                setEducation(prevEducation => {
-                    return prevEducation.map(educationType => {
-                        if(educationType.iin === id) {
-                            return {...educationType, ...editedDataEdu}
-                        }
-                        return educationType;
-                    })
-                });
+        //         setEducation(prevEducation => {
+        //             return prevEducation.map(educationType => {
+        //                 if(educationType.iin === id) {
+        //                     return {...educationType, ...editedDataEdu}
+        //                 }
+        //                 return educationType;
+        //             })
+        //         });
 
-                setEditingId(null);
-                setEditedData({
-                    id: id,
-                    education_type: '',
-                    education_place: '',
-                    education_date_in: '',
-                    education_date_out: '',
-                    education_speciality: '',
-                    diploma_number: ''
-                });
-                console.log('Successfully updated education')
-            } catch(error) {
-                console.error('Error updating education:', error);
-            }
-        } else {
-            setEditingId(id)
-            const educationToEdit = education.educations.find(educationType => educationType.id === id);
-            if(educationToEdit) {
-                setEditedData(educationToEdit);
-            }
-        }
+        //         setEditingId(null);
+        //         setEditedData({
+        //             id: id,
+        //             education_type: '',
+        //             education_place: '',
+        //             education_date_in: '',
+        //             education_date_out: '',
+        //             education_speciality: '',
+        //             diploma_number: ''
+        //         });
+        //         console.log('Successfully updated education')
+        //     } catch(error) {
+        //         console.error('Error updating education:', error);
+        //     }
+        // } else {
+        //     setEditingId(id)
+        //     const educationToEdit = education.educations.find(educationType => educationType.id === id);
+        //     if(educationToEdit) {
+        //         setEditedData(educationToEdit);
+        //     }
+        // }
     };
 
     const handleSaveEdit = async (id) => {
-        try {
-            const updatedData = {
-                id: id,
-                iin: props.id,
-                education_type: editedData.education_type,
-                education_place: editedData.education_place,
-                education_date_in: editedData.education_date_in,
-                education_date_out: editedData.education_date_out,
-                education_speciality: editedData.education_speciality,
-                diploma_number: editedData.diploma_number
-            };
-            console.log(id);
+        // try {
+        //     const updatedData = {
+        //         id: id,
+        //         iin: props.id,
+        //         education_type: editedData.education_type,
+        //         education_place: editedData.education_place,
+        //         education_date_in: editedData.education_date_in,
+        //         education_date_out: editedData.education_date_out,
+        //         education_speciality: editedData.education_speciality,
+        //         diploma_number: editedData.diploma_number
+        //     };
+        //     console.log(id);
     
-            const response = await updateEducation(id, updatedData);
+        //     const response = await updateEducation(id, updatedData);
     
-            if (response === 200) {
-                setEducation((prevEducation) =>
-                prevEducation.map((educationType) => (educationType.id === id ? updatedData : educationType))
-                );
-                setEditingId(null); // Завершаем режим редактирования
-                console.log('Successfully updated education');
-            } else {
-                console.log('Error updating education');
-            }
-            window.location.reload();
-        } catch (error) {
-            console.error('Error updating education:', error);
-        }
+        //     if (response === 200) {
+        //         setEducation((prevEducation) =>
+        //         prevEducation.map((educationType) => (educationType.id === id ? updatedData : educationType))
+        //         );
+        //         setEditingId(null); // Завершаем режим редактирования
+        //         console.log('Successfully updated education');
+        //     } else {
+        //         console.log('Error updating education');
+        //     }
+        //     window.location.reload();
+        // } catch (error) {
+        //     console.error('Error updating education:', error);
+        // }
     };
 
     const handleCancelEdit = () => {
@@ -330,24 +330,24 @@ function Education(props) {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {education.educations.map((d, i) => (
+                                    {education && education.educations && education.educations.map((d, i) => (
                                         <tr key={i}>
                                             <td>  
                                                 {editingId === d.id ? (
                                                     <select
                                                         className={cl.selectRelative_type}
-                                                        value={editedData.education_type}
-                                                        onChange={(e) => setEditedData({ ...editedData, education_type: e.target.value })}
+                                                        value={editedData.educationType}
+                                                        onChange={(e) => setEditedData({ ...editedData, educationType: e.target.value })}
                                                     >
                                                         <option value="">Выберите тип образования</option>
                                                         <option value="Высшее">Высшее</option>
                                                         <option value="Магистратура">Магистратура</option>
                                                     </select>
                                                 ) : (
-                                                    d.education_type
+                                                    d.educationType
                                                 )}
                                             </td>
-                                            <td>{editingId === d.id ? <input type="text" className={cl.editInput} value={editedData.education_place} onChange={(e) => setEditedData({ ...editedData, education_place: e.target.value })} /> : d.education_place}</td>
+                                            <td>{editingId === d.id ? <input type="text" className={cl.editInput} value={editedData.educationPlace} onChange={(e) => setEditedData({ ...editedData, educationPlace: e.target.value })} /> : d.educationPlace}</td>
                                             <td>
                                                 {editingId === d.id ? (
                                                     <div className={cl.datePickerContainer}>
@@ -355,18 +355,18 @@ function Education(props) {
                                                             type="date"
                                                             className={cl.formInput}
                                                             placeholder='Дата поступления'
-                                                            value={editedData.education_date_in || ''}
+                                                            value={editedData.educationDateIn || ''}
                                                             onChange={(e) => {
                                                                 const newData = e.target.value;
                                                                 setEditedData((prevData) => ({
                                                                     ...prevData,
-                                                                    education_date_in: newData,
+                                                                    educationDateIn: newData,
                                                                 }));
                                                             }}
                                                         />
                                                     </div>
                                                 ) : (
-                                                    d.education_date_in
+                                                    d.educationDateIn
                                                 )}
                                             </td>
                                             <td>
@@ -376,22 +376,22 @@ function Education(props) {
                                                             type="date"
                                                             className={cl.formInput}
                                                             placeholder='Дата окончания'
-                                                            value={editedData.education_date_out || ''}
+                                                            value={editedData.educationDateOut || ''}
                                                             onChange={(e) => {
                                                                 const newData = e.target.value;
                                                                 setEditedData((prevData) => ({
                                                                     ...prevData,
-                                                                    education_date_out: newData,
+                                                                    educationDateOut: newData,
                                                                 }));
                                                             }}
                                                         />
                                                     </div>
                                                 ) : (
-                                                    d.education_date_out
+                                                    d.educationDateOut
                                                 )}
                                             </td>
-                                            <td>{editingId === d.id ? <input type='text' className={cl.editInput}  value={editedData.education_speciality} onChange={(e) => setEditedData({ ...editedData, education_speciality: e.target.value })} /> : d.education_speciality}</td>
-                                            <td>{editingId === d.id ? <input type='number' className={cl.editInput}  value={editedData.diploma_number} onChange={(e) => setEditedData({ ...editedData, diploma_number: e.target.value })} /> : d.diploma_number}</td>
+                                            <td>{editingId === d.id ? <input type='text' className={cl.editInput}  value={editedData.speciality} onChange={(e) => setEditedData({ ...editedData, speciality: e.target.value })} /> : d.speciality}</td>
+                                            <td>{editingId === d.id ? <input type='number' className={cl.editInput}  value={editedData.diplomaNumber} onChange={(e) => setEditedData({ ...editedData, diplomaNumber: e.target.value })} /> : d.diplomaNumber}</td>
                                             <td className={cl.relativesActionBtns} style={{}}>
                                                 {editingId === d.id ? (
                                                     <>

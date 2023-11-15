@@ -11,21 +11,48 @@ import InvestigationRetrievals from './investigationRetrievals/InvestigationRetr
 import Autobiography from './autobiography/Autobiography';
 
 
-function PersonnelData(props) {
+function PersonnelData({ autobiographyInfo, specCheckInfo, attestationInfo, classCategoriesInfo, rewardsInfo, sickLeavesInfo, investigationsInfo, rankInfo, militaryRank }) {
     const { id, iin } = useParams();
     
+                            
     
     return (
         <div className={cl.personalWrapper}>
             <div className={cl.container}>
-            <SpecChecks id={id} />
-            <ClassCategories id={id} />
-            <Autobiography id={id} iin={iin} />
-            <Attestations id={id} />
-            <MilitaryRank id={id} />
-            <Awards id={id} />
-            <Table id={id} />
-            <InvestigationRetrievals id={id}/>
+            <SpecChecks 
+                id={id} 
+                specCheckInfo={specCheckInfo}
+            />
+            <ClassCategories 
+                id={id} 
+                classCategoriesInfo={classCategoriesInfo}
+            />
+            <Autobiography 
+                id={id} 
+                iin={iin} 
+                autobiographyInfo={autobiographyInfo}
+            />
+            <Attestations  
+                id={id} 
+                attestationInfo={attestationInfo}
+            />
+            <MilitaryRank 
+                id={id} 
+                rankInfo={rankInfo}
+                militaryRank={militaryRank}
+            />
+            <Awards 
+                id={id} 
+                rewardsInfo={rewardsInfo}
+            />
+            <Table 
+                id={id} 
+                sickLeavesInfo={sickLeavesInfo}
+            />
+            <InvestigationRetrievals   
+                id={id}
+                investigationsInfo={investigationsInfo}
+            />
             </div>
         </div>
     );

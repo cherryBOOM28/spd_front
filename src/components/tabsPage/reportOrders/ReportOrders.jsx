@@ -9,7 +9,7 @@ import { deleteOrdersList } from '../../../api/orders_list/deleteOrdersList';
 import { updateOrdersList } from '../../../api/orders_list/updateOrdersList';
 
 
-function ReportOrders(props) {
+function ReportOrders({ decreeListInfo }, props) {
     const { id } = useParams();
     // const iin = props.iin;
 
@@ -317,14 +317,14 @@ function ReportOrders(props) {
                         </tr>
                     </thead>
                     <tbody>
-                        {personnelData.map((d, i) => (
+                        {decreeListInfo && decreeListInfo.decrees && decreeListInfo.decrees.map((d, i) => (
                             <tr key={i}>
                                 <td>
                                     {editingId === d.id ? (
                                         <select
                                          className={cl.formInput}
-                                         value={editedData.order_type}
-                                         onChange={(e) => setEditedData({ ...editedData, order_type: e.target.value })}
+                                         value={editedData.decreeType}
+                                         onChange={(e) => setEditedData({ ...editedData, decreeType: e.target.value })}
                                         >
                                             <option value="">Выберите вид приказa</option>
                                             <option value="О назначение">О назначение</option>
@@ -340,15 +340,15 @@ function ReportOrders(props) {
                                             <option value="resОб увольнениignation">Об увольнени</option>
                                      </select> 
                                     ) : (
-                                        d.order_type
+                                        d.decreeType
                                     )}
                                 </td>
                                 <td>
                                     {editingId === d.id ? (
                                         <select
                                          className={cl.formInput}
-                                         value={editedData.types_of_order_types}
-                                         onChange={(e) => setEditedData({ ...editedData, types_of_order_types: e.target.value })}
+                                         value={editedData.decreeSubType}
+                                         onChange={(e) => setEditedData({ ...editedData, decreeSubType: e.target.value })}
                                         >
                                             <option value="">Выберите вид приказa</option>
                                             <option value="Годовой трудовой">Годовой трудовой</option>
@@ -359,14 +359,14 @@ function ReportOrders(props) {
                                             <option value="С усыновлением (удочерением) новорожденного ребенка (детей)">С усыновлением (удочерением) новорожденного ребенка (детей)</option>
                                      </select> 
                                     ) : (
-                                        d.types_of_order_types
+                                        d.decreeSubType
                                     )}
                                     {editingId === d.id && editedData.types_of_order_types === 'vacation' && (
                                         <td>
                                             <select
                                                 className={cl.formInput}
                                                 value={editedData.types_of_order_types}
-                                                onChange={(e) => setEditedData({ ...editedData, types_of_order_types: e.target.value })}
+                                                onChange={(e) => setEditedData({ ...editedData, decreeSubType: e.target.value })}
                                             >
                                                 <option value="">Выберите тип отпуска</option>
                                                 <option value="Годовой трудовой">Годовой трудовой</option>
@@ -378,12 +378,12 @@ function ReportOrders(props) {
                                             </select>
                                         </td>
                                     )}
-                                    {editingId === d.id && editedData.types_of_order_types === 'sincentive__bonus' && (
+                                    {editingId === d.id && editedData.decreeSubType === 'sincentive__bonus' && (
                                         <td>
                                             <select
                                                 className={cl.formInput}
-                                                value={editedData.vacation_subtype}
-                                                onChange={(e) => setEditedData({ ...editedData, types_of_order_types: e.target.value })}
+                                                value={editedData.decreeSubType}
+                                                onChange={(e) => setEditedData({ ...editedData, decreeSubType: e.target.value })}
                                             >
                                                 <option value="">Выберите вид поощерения</option>
                                                 <option value="sincentive__bonus1">Выберите вил поощерения 1</option>
@@ -391,12 +391,12 @@ function ReportOrders(props) {
                                             </select>
                                         </td>
                                     )}
-                                    {editingId === d.id && editedData.types_of_order_types === 'resignation' && (
+                                    {editingId === d.id && editedData.decreeSubType === 'resignation' && (
                                         <td>
                                             <select
                                                 className={cl.formInput}
-                                                value={editedData.types_of_order_types}
-                                                onChange={(e) => setEditedData({ ...editedData, types_of_order_types: e.target.value })}
+                                                value={editedData.decreeSubType}
+                                                onChange={(e) => setEditedData({ ...editedData, decreeSubType: e.target.value })}
                                             >
                                                 <option value="">Выберите вид увольнения</option>
                                                 <option value="По собственной инициативе">По собственной инициативе</option>
@@ -414,18 +414,18 @@ function ReportOrders(props) {
                                             type="date"
                                             className={cl.formInput}
                                             placeholder="Дата приказа"
-                                            value={editedData.order_date || ''}
+                                            value={editedData.decreeDate || ''}
                                             onChange={(e) => {
                                                 const newDate = e.target.value;
                                                 setEditedData((prevData) => ({
                                                 ...prevData,
-                                                order_date: newDate,
+                                                decreeDate: newDate,
                                                 }));
                                             }}
                                         />
                                     </div>
                                 ) : (
-                                    d.order_date
+                                    d.decreeDate
                                 )}
                                 </td>
                                 <td className={cl.relativesActionBtns} style={{}}>

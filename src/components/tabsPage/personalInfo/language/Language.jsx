@@ -11,7 +11,7 @@ import { updateLanguages } from '../../../../api/persona_info/languages/updateLa
 
 import list from '../../../data/languages';
 
-function Language(props) {
+function Language({ languageSkill }, props) {
 
     const { id } = useParams();
     const [apiLanguages, setApiLanguages] = useState([]);
@@ -286,14 +286,14 @@ function Language(props) {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {language.owning_languages.map((d, i) => (
+                                    {languageSkill && languageSkill.languageSkills && languageSkill.languageSkills.map((d, i) => (
                                         <tr key={i}>
                                             <td>  
                                                 {editingId === d.id ? (
                                                     <select
                                                         className={cl.selectRelative_type}
-                                                        value={editedData.language_name}
-                                                        onChange={(e) => setEditedData({ ...editedData, language_name: e.target.value })}
+                                                        value={editedData.langName}
+                                                        onChange={(e) => setEditedData({ ...editedData, langName: e.target.value })}
                                                     >
                                                         <option value="">Выберите тип образования</option>
                                                         {Object.keys(apiLanguages).map((languageCode) => (
@@ -303,15 +303,15 @@ function Language(props) {
                                                         ))}
                                                     </select>
                                                 ) : (
-                                                    d.language_name
+                                                    d.langName
                                                 )}
                                             </td>
                                             <td>  
                                                 {editingId === d.id ? (
                                                     <select
                                                         className={cl.selectRelative_type}
-                                                        value={editedData.owning_lvl_language}
-                                                        onChange={(e) => setEditedData({ ...editedData, owning_lvl_language: e.target.value })}
+                                                        value={editedData.skillLvl}
+                                                        onChange={(e) => setEditedData({ ...editedData, skillLvl: e.target.value })}
                                                     >
                                                         <option value="">Выберите уровень владения</option>
                                                         <option value="начальный">Начальный</option>
@@ -322,7 +322,7 @@ function Language(props) {
                                                         <option value="профессиональный">Профессиональный уровень владения</option>
                                                     </select>
                                                 ) : (
-                                                    d.owning_lvl_language
+                                                    d.skillLvl
                                                 )}
                                             </td>
                                            

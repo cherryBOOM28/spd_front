@@ -5,7 +5,7 @@ import { getStaffInfo } from '../../../../api/staff_info/getStaffInfo';
 import { updateSpecCheck } from '../../../../api/staff_info/spec_checks/updateSpecCheck';
 
 
-function SpecChecks(props) {
+function SpecChecks({ specCheckInfo }, props) {
     const { id } = useParams();
 
     const [personnelData, setPersonnelData] = useState({
@@ -128,7 +128,7 @@ function SpecChecks(props) {
                         </div>
                     </div>
                     <div>
-                        {personnelData.spec_checks.map((d, i) => (
+                        {specCheckInfo && specCheckInfo.specChecks && specCheckInfo.specChecks.map((d, i) => (
                             <div key={i} className={cl.workerBlock}>
                                 <div className={cl.column}>
                                     <div className={cl.rows}>
@@ -137,11 +137,11 @@ function SpecChecks(props) {
                                             <input 
                                                 type="number" 
                                                 className={cl.workerInfo} 
-                                                name='doc_number' 
-                                                value={editedData.doc_number} 
-                                                onChange={(e) => setEditedData({ ...editedData, doc_number: e.target.value })} 
+                                                name='docNumber' 
+                                                value={editedData.docNumber} 
+                                                onChange={(e) => setEditedData({ ...editedData, docNumber: e.target.value })} 
                                             /> : 
-                                            <p className={cl.workerInfoP}>{d.doc_number}</p>      
+                                            <p className={cl.workerInfoP}>{d.docNumber}</p>      
                                         }
                                     </div>
                                 </div>
@@ -154,18 +154,18 @@ function SpecChecks(props) {
                                                     type="date"
                                                     className={cl.workerInfo}
                                                     placeholder='Дата окончания'
-                                                    value={editedData.doc_date || ''}
+                                                    value={editedData.docDate || ''}
                                                     onChange={(e) => {
                                                         const newData = e.target.value;
                                                         setEditedData((prevData) => ({
                                                             ...prevData,
-                                                            doc_date: newData,
+                                                            docDate: newData,
                                                         }));
                                                     }}
                                                 />
                                                 
                                             </div> : 
-                                            <p className={cl.workerInfoP}>{d.doc_date}</p>           
+                                            <p className={cl.workerInfoP}>{d.docDate}</p>           
                                         }
                                     </div>
                                 </div>

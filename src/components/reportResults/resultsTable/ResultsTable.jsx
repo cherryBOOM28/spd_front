@@ -11,12 +11,11 @@ import axios from 'axios';
 
 
 const ResultTable = ({results, setResults, formData, selected, columns, count, next, previous }) => {
-    const generalInfoRequest = ["surname", "firstname", "patronymic"];
+    const generalInfoRequest = ["surname", "firstName", "patronymic"];
     const columnNames = Object.keys(generalInfoRequest)
-    // const tableHead = {"firstname" : "Имя", "surname": "Фамилия", "patronymic": "Отчество"};
     const fieldNames = generalInfoRequest.concat(Object.keys(formData));
-    // const fieldNames = Object.keys(formData)
-    const [table, setTable] = useState([])
+    const [table, setTable] = useState([]);
+
     useEffect(()=> {
         setTable(results)
         setPrevious(previous)
@@ -29,6 +28,14 @@ const ResultTable = ({results, setResults, formData, selected, columns, count, n
         // console.log(selected);
         
     })
+
+    useEffect(() => {
+        if (results) {
+          setTable(results);
+          // Other state updates...
+        }
+        console.log("results", results);
+      }, [results]);
     // const [countLocal, setCount] = useState(count)
     const [prevLocal, setPrevious] = useState('')
     const [nextLocal, setNext] = useState('')
@@ -73,30 +80,34 @@ const ResultTable = ({results, setResults, formData, selected, columns, count, n
 
                     <TableBody>
                         {table.map((person) => (
-                            <TableRow  key={person.general_info.id}>
+                            <TableRow  key={person.Person && person.Person.id}>
                                 <TableCell style={{ minWidth: 50 }}>
-                                    {person.general_info['firstname']}
+                                    {/* {person['firstName']} */}
+                                    {person.Person && person.Person['firstName']}
+                                    
                                 </TableCell>
                                 <TableCell style={{ minWidth: 50 }}>
-                                    {person.general_info['surname']}
+                                    {/* {person['surname']} */}
+                                    {person.Person && person.Person['surname']}
                                 </TableCell>
                                 <TableCell style={{ minWidth: 50 }}>
-                                    {person.general_info['patronymic']}
+                                    {/* {person['patronymic']} */}
+                                    {person.Person && person.Person['patronymic']}
                                 </TableCell>
 
                                 {selected
-                                    .filter(item => item !== 'firstname' && item !== 'surname' && item !== 'patronymic')
+                                    .filter(item => item !== 'firstName' && item !== 'surname' && item !== 'patronymic')
                                     .map((fieldName) => {
                                     return (
                                         <TableCell key={fieldName} style={{ minWidth: 50 }}>
-                                            {person.general_info[fieldName]}
+                                            {person.Person[fieldName]}
 
-                                            {person.personal_data &&
-                                                person.personal_data[0] &&
-                                                person.personal_data[0][fieldName]
+                                            {person.Person &&
+                                                person.Person[0] &&
+                                                person.Person[0][fieldName]
                                             }
 
-                                            {person.family_compositions && person.family_compositions.map((relative, index) => (
+                                            {person.FamilyComposition && person.family_compositions.map((relative, index) => (
                                                 // <TableRow>
                                                     <div style={{ minWidth: 50 }} key={fieldName}>
                                                         {fieldName in relative && relative[fieldName]}

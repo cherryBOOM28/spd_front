@@ -8,7 +8,7 @@ import { getStaffInfo } from '../../../../api/staff_info/getStaffInfo';
 import { deleteAward } from '../../../../api/staff_info/awards/deleteAward';
 import { updateAward } from '../../../../api/staff_info/awards/updateAward';
 
-function Awards(props) {
+function Awards({ rewardsInfo }, props) {
     // const iin = props.iin;
     const { id } = useParams();
 
@@ -266,14 +266,14 @@ function Awards(props) {
                         </tr>
                     </thead>
                     <tbody>
-                        {personnelData.awards.map((d, i) => (
+                        {rewardsInfo && rewardsInfo.rewards && rewardsInfo.rewards.map((d, i) => (
                             <tr key={i}>
                                 <td>  
                                     {editingId === d.id ? (
                                         <select
                                             className={cl.selectRelative_type}
-                                            value={editedData.awards_type}
-                                            onChange={(e) => setEditedData({ ...editedData, awards_type: e.target.value })}
+                                            value={editedData.rewardType}
+                                            onChange={(e) => setEditedData({ ...editedData, rewardType: e.target.value })}
                                         >
                                             <option value="">Выберите тип награды</option>
                                             <option value="награда1">награда</option>
@@ -281,27 +281,27 @@ function Awards(props) {
                                             <option value="награда3">награда3</option>
                                         </select>
                                     ) : (
-                                        d.awards_type
+                                        d.rewardType
                                     )}
                                 </td>
-                                <td>{editingId === d.id ? <input type="text" className={cl.editInput} name='awards_doc_numb' value={editedData.awards_doc_numb} onChange={(e) => setEditedData({ ...editedData, awards_doc_numb: e.target.value })} /> : d.awards_doc_numb}</td>
+                                <td>{editingId === d.id ? <input type="text" className={cl.editInput} name='rewardDocNumber' value={editedData.rewardDocNumber} onChange={(e) => setEditedData({ ...editedData, awards_dorewardDocNumberc_numb: e.target.value })} /> : d.rewardDocNumber}</td>
                                 <td>
                                 {editingId === d.id ? (
                                     <div className={cl.datePickerContainer}>
                                         <input
                                             type="date"
                                             className={cl.formInput}
-                                            value={editedData.awards_date || ''}
+                                            value={editedData.rewardDate || ''}
                                             onChange={(e) =>
                                                 setEditedData((prevWorker) => ({
                                                 ...prevWorker,
-                                                awards_date: e.target.value,
+                                                rewardDate: e.target.value,
                                                 }))
                                             }
                                         />
                                     </div>
                                 ) : (
-                                    d.awards_date
+                                    d.rewardDate
                                 )}
                                 </td>
                                 <td className={cl.relativesActionBtns} style={{}}>

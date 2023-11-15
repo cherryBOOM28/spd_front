@@ -14,7 +14,7 @@ import { updateSport } from '../../../../api/persona_info/sport/updateSport';
 
 import list from '../../../data/kindsOfSports';
 
-function Sport(props) {
+function Sport({sportSkill}, props) {
     const { id } = useParams();
 
     const [sport, setSport] = useState({
@@ -288,14 +288,14 @@ function Sport(props) {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {sport.sport_results.map((d, i) => (
+                                    {sportSkill && sportSkill.sportSkills && sportSkill.sportSkills.map((d, i) => (
                                         <tr key={i}>
                                             <td>  
                                                 {editingId === d.id ? (
                                                     <select
                                                         className={cl.selectRelative_type}
-                                                        value={editedData.sport_type}
-                                                        onChange={(e) => setEditedData({ ...editedData, sport_type: e.target.value })}
+                                                        value={editedData.sportType}
+                                                        onChange={(e) => setEditedData({ ...editedData, sportType: e.target.value })}
                                                     >
                                                         <option value="">Выберите вил спорта</option>
                                                         {Object.keys(kindsOfSport).map((sportKind, index) => (
@@ -305,15 +305,15 @@ function Sport(props) {
                                                         ))}
                                                     </select>
                                                 ) : (
-                                                    d.sport_type
+                                                    d.sportType
                                                 )}
                                             </td>
                                             <td>  
                                                 {editingId === d.id ? (
                                                     <select
                                                         className={cl.selectRelative_type}
-                                                        value={editedData.owning_lvl_sport_results}
-                                                        onChange={(e) => setEditedData({ ...editedData, owning_lvl_sport_results: e.target.value })}
+                                                        value={editedData.sportSkillLvl}
+                                                        onChange={(e) => setEditedData({ ...editedData, sportSkillLvl: e.target.value })}
                                                     >
                                                         <option value="">Выберите степень владения</option>
                                                         <option value="Любитель">Любитель</option>
@@ -324,7 +324,7 @@ function Sport(props) {
                                                         <option value="Мастер спорта">Мастер спорта</option>   
                                                     </select>
                                                 ) : (
-                                                    d.owning_lvl_sport_results
+                                                    d.sportSkillLvl
                                                 )}
                                             </td>
                                            

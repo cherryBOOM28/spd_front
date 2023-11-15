@@ -10,34 +10,34 @@ import { getPersonalInfo } from '../../../../api/persona_info/getPersonalInfo';
 import { deleteFamilyCompositions } from '../../../../api/persona_info/family_compositions/deleteFamilyCompositions';
 import { updateFamilyCompositions } from '../../../../api/persona_info/family_compositions/updateFamilyCompositions';
 
-function Personal(props) {
+function Personal({ positionInfo, location, receivedDate, positionTitle, departmentName, familyStatus, familyComposition }, props) {
     const { id } = useParams();
     // const id = props.id;
 
     const [personalData, setPersonalData] = useState({}); // Данные из бэка
-    const [familyComposition, setFamilyComposition] = useState({
-        "family_compositions": []
-    }); // Данные из бэка
+    // const [familyComposition, setFamilyComposition] = useState({
+    //     "family_compositions": []
+    // }); // Данные из бэка
 
-    useEffect(() => {
-        // console.log(id)
-        fetchData()
-    }, []);
+    // useEffect(() => {
+    //     // console.log(id)
+    //     fetchData()
+    // }, []);
 
-        const fetchData = async () => {
-            try {
-                // GET PERSONAL DATA\
-                const personalResponse = await getPersonalInfo(id) 
-                setPersonalData(personalResponse.data.personal_data);
+    //     const fetchData = async () => {
+    //         try {
+    //             // GET PERSONAL DATA\
+    //             const personalResponse = await getPersonalInfo(id) 
+    //             setPersonalData(personalResponse.data.personal_data);
 
-                // GET FAMILY COMPOSITION
-                const familyResponse = await getPersonalInfo(id);
-                setFamilyComposition(familyResponse.data); 
+    //             // GET FAMILY COMPOSITION
+    //             const familyResponse = await getPersonalInfo(id);
+    //             setFamilyComposition(familyResponse.data); 
                 
-            } catch (error) {
-                console.error("Error fetching personal data:");
-            }
-        }
+    //         } catch (error) {
+    //             console.error("Error fetching personal data:");
+    //         }
+    //     }
 
     // СОХРАНИТЬ ИЗМЕНЕНИЯ
     const handleSaveClick = async () => {
@@ -115,79 +115,79 @@ function Personal(props) {
 
     const handleAddMember = async (e, id) => {
         e.preventDefault();
-        try {
+        // try {
 
-            if (!inputData.relative_type || !inputData.fio || !inputData.rel_iin || !inputData.birth_date_family || !inputData.job_place) {
-                alert('Пожалуйста, заполните все поля!');
-                return;
-            }
-            // console.log("id rel:", id)
-            const newFamilyMember = {
-                iin: props.id,
-                relative_type: inputData.relative_type,
-                fio: inputData.fio,
-                rel_iin: inputData.rel_iin,
-                birth_date_family: inputData.birth_date_family,
-                job_place: inputData.job_place
-            };
+        //     if (!inputData.relative_type || !inputData.fio || !inputData.rel_iin || !inputData.birth_date_family || !inputData.job_place) {
+        //         alert('Пожалуйста, заполните все поля!');
+        //         return;
+        //     }
+        //     // console.log("id rel:", id)
+        //     const newFamilyMember = {
+        //         iin: props.id,
+        //         relative_type: inputData.relative_type,
+        //         fio: inputData.fio,
+        //         rel_iin: inputData.rel_iin,
+        //         birth_date_family: inputData.birth_date_family,
+        //         job_place: inputData.job_place
+        //     };
             
-            // console.log(newFamilyMember)
+        //     // console.log(newFamilyMember)
 
-            const body = { "family_compositions": [newFamilyMember] };
+        //     const body = { "family_compositions": [newFamilyMember] };
             
-            const response = await axios.post(`http://localhost:8000/personal_info/create/`, body);
-            // console.log(`response data: ${response.data}`)
+        //     const response = await axios.post(`http://localhost:8000/personal_info/create/`, body);
+        //     // console.log(`response data: ${response.data}`)
             
-            if (response.status === 201) {
+        //     if (response.status === 201) {
 
-                const updatedFamilyComposition = {
-                    ...familyComposition,
-                    family_compositions: [
-                        ...familyComposition.family_compositions,
-                        newFamilyMember
-                    ]
-                }
+        //         const updatedFamilyComposition = {
+        //             ...familyComposition,
+        //             family_compositions: [
+        //                 ...familyComposition.family_compositions,
+        //                 newFamilyMember
+        //             ]
+        //         }
 
-                setFamilyComposition(updatedFamilyComposition);
-                setInputData({
-                    iin: id,
-                    relative_type: '',
-                    fio: '',
-                    rel_iin: '',
-                    birth_date_family: '',
-                    job_place: '',
-                });
-                handleShowForm(false)
-                // console.log(setInputData)
-            } else {
-                console.error('Error adding family member');
-            }
-        } catch (error) {
-            console.error('Error:', error);
-        }
+        //         setFamilyComposition(updatedFamilyComposition);
+        //         setInputData({
+        //             iin: id,
+        //             relative_type: '',
+        //             fio: '',
+        //             rel_iin: '',
+        //             birth_date_family: '',
+        //             job_place: '',
+        //         });
+        //         handleShowForm(false)
+        //         // console.log(setInputData)
+        //     } else {
+        //         console.error('Error adding family member');
+        //     }
+        // } catch (error) {
+        //     console.error('Error:', error);
+        // }
     };
 
     // УДАЛЕНИЕ РОДСТВЕННИКА
     const handleDelete = async (id) => {
   
-        try {
-            const response = await deleteFamilyCompositions(id)
-            // console.log("delete", id)
-            if (response === 200) {
+        // try {
+        //     const response = await deleteFamilyCompositions(id)
+        //     // console.log("delete", id)
+        //     if (response === 200) {
                
-                // setFamilyComposition(prevFamily => prevFamily.filter(member => member.id !== id));
+        //         // setFamilyComposition(prevFamily => prevFamily.filter(member => member.id !== id));
 
-                setFamilyComposition((prevFamily) =>
-                prevFamily.filter((member) => member.id !== id)
-            );
+        //         setFamilyComposition((prevFamily) =>
+        //         prevFamily.filter((member) => member.id !== id)
+        //     );
             
-            } else {
-                console.log("Error deleting family member");
-            }
-            window.location.reload();
-        } catch(error) {
-            console.log(error)
-        }
+        //     } else {
+        //         console.log("Error deleting family member");
+        //     }
+        //     window.location.reload();
+        // } catch(error) {
+        //     console.log(error)
+        // }
     }
 
     // EDIT
@@ -203,88 +203,93 @@ function Personal(props) {
 
 
     const handleEdit = async (id, editedDataq) => {
-        if(editingId === id) {
-            try {
-                const updatedData = {
-                    id: id,
-                    iin: props.id,
-                    relative_type: editedDataq.relative_type,
-                    fio: editedDataq.fio,
-                    rel_iin: editedDataq.rel_iin,
-                    birth_date_family: editedDataq.birth_date_family,
-                    job_place: editedDataq.job_place,
-                };
+        // if(editingId === id) {
+        //     try {
+        //         const updatedData = {
+        //             id: id,
+        //             iin: props.id,
+        //             relative_type: editedDataq.relative_type,
+        //             fio: editedDataq.fio,
+        //             rel_iin: editedDataq.rel_iin,
+        //             birth_date_family: editedDataq.birth_date_family,
+        //             job_place: editedDataq.job_place,
+        //         };
               
 
-                await updateFamilyCompositions(id, updatedData);
-                // console.log("rel id g:", id)
-                // console.log(updatedData)
-                setFamilyComposition(prevFamily => {
-                    return prevFamily.map(member => {
-                        if(member.iin === id) {
-                            return {...member, ...updatedData}
-                        }
-                        return member;
-                    })
-                });
+        //         await updateFamilyCompositions(id, updatedData);
+        //         // console.log("rel id g:", id)
+        //         // console.log(updatedData)
+        //         setFamilyComposition(prevFamily => {
+        //             return prevFamily.map(member => {
+        //                 if(member.iin === id) {
+        //                     return {...member, ...updatedData}
+        //                 }
+        //                 return member;
+        //             })
+        //         });
 
-                setEditingId(null);
-                setEditedData({
-                    id: id,
-                    relative_type: '',
-                    fio: '',
-                    rel_iin: '',
-                    birth_date_family: '',
-                    job_place: '',
-                });
+        //         setEditingId(null);
+        //         setEditedData({
+        //             id: id,
+        //             relative_type: '',
+        //             fio: '',
+        //             rel_iin: '',
+        //             birth_date_family: '',
+        //             job_place: '',
+        //         });
                
-                console.log('Successfully updated family member')
-            } catch(error) {
-                console.error('Error updating family member:', error);
-            }
-        } else {
-            setEditingId(id);
-            const memberToEdit = familyComposition.family_compositions.find(member => member.id === id);
-            if(memberToEdit) {
-                setEditedData(memberToEdit);
-            };
-        }
+        //         console.log('Successfully updated family member')
+        //     } catch(error) {
+        //         console.error('Error updating family member:', error);
+        //     }
+        // } else {
+        //     setEditingId(id);
+        //     const memberToEdit = familyComposition.family_compositions.find(member => member.id === id);
+        //     if(memberToEdit) {
+        //         setEditedData(memberToEdit);
+        //     };
+        // }
     };
 
     const handleSaveEdit = async (id) => {
-        try {
-            const updatedData = {
-                id: id,
-                iin: props.id,
-                relative_type: editedData.relative_type,
-                fio: editedData.fio,
-                rel_iin: editedData.rel_iin,
-                birth_date_family: editedData.birth_date_family,
-                job_place: editedData.job_place,
-            };
-            console.log("rel id:", id);
+        // try {
+        //     const updatedData = {
+        //         id: id,
+        //         iin: props.id,
+        //         relative_type: editedData.relative_type,
+        //         fio: editedData.fio,
+        //         rel_iin: editedData.rel_iin,
+        //         birth_date_family: editedData.birth_date_family,
+        //         job_place: editedData.job_place,
+        //     };
+        //     console.log("rel id:", id);
     
-            const response = await updateFamilyCompositions(id, updatedData);
+        //     const response = await updateFamilyCompositions(id, updatedData);
     
-            if (response === 200) {
-                setFamilyComposition((prevFamily) =>
-                    prevFamily.map((member) => (member.id === id ? updatedData : member))
-                );
-                setEditingId(null); // Завершаем режим редактирования
-                console.log('Successfully updated family member');
-            } else {
-                console.log('Error updating family member');
-            }
-            // console.log(updatedData)
-            window.location.reload();
-        } catch (error) {
-            console.error('Error updating family member:', error);
-        }
+        //     if (response === 200) {
+        //         setFamilyComposition((prevFamily) =>
+        //             prevFamily.map((member) => (member.id === id ? updatedData : member))
+        //         );
+        //         setEditingId(null); // Завершаем режим редактирования
+        //         console.log('Successfully updated family member');
+        //     } else {
+        //         console.log('Error updating family member');
+        //     }
+        //     // console.log(updatedData)
+        //     window.location.reload();
+        // } catch (error) {
+        //     console.error('Error updating family member:', error);
+        // }
     };
 
     const handleCancelEdit = () => {
         setEditingId(null);
         setEditedData({});
+    };
+
+    const handleCancelClick = () => {
+        // Отменяем редактирование
+        setEditing(false);
     };
     
     return (
@@ -294,9 +299,20 @@ function Personal(props) {
                     <div className={cl.totalInfoContent}>
                         <div style={{ display: 'flex', justifyContent: 'space-between'}}>
                             <p className={cl.workerCapitalName}>Семейное положение</p>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', gap: '20px' }}>
-                                <Button className={cl.actionBtn} onClick={handleEditClick}>&#9998; Редактировать</Button>
-                                {editing && <Button onClick={handleSaveClick} className={cl.actionBtn}>Сохранить</Button>}
+                            <div style={{ display: 'flex', justifyContent: 'space-between', gap: '5px' }}>
+                                {!editing ? (
+                                <Button className={cl.actionBtn} onClick={handleEditClick}>
+                                    &#9998; Редактировать
+                                </Button>
+                                ) : (
+
+                                <div style={{ display: 'flex', gap: '10px' }}> 
+                                    <Button onClick={handleSaveClick} className={cl.actionBtn}>
+                                    Сохранить
+                                    </Button>
+                                    <Button className={cl.actionBtn} onClick={handleCancelClick}>Отмена</Button>
+                                </div>
+                                )}
                             </div>
                         </div>
                     </div>
@@ -308,13 +324,12 @@ function Personal(props) {
                                     <input
                                         className={cl.workerInfo}
                                         type="text"
-                                        name="departament"
-                                        value={editedWorker.departament  || ''}
+                                        name="DepartmentName"
+                                        value={editedWorker.departmentName  || ''}
                                         onChange={handleInputChange}
                                     />
                                 ) : (
-
-                                    <p className={cl.workerInfo}>{personalData.departament  || ''}</p>
+                                    <p className={cl.workerInfo}>{positionInfo.DepartmentName  || ''}</p>
                                 )}
                             </div>
                             <div className={cl.rows}>
@@ -323,15 +338,37 @@ function Personal(props) {
                                     <input
                                         className={cl.workerInfo}
                                         type="text"
-                                        name="jposition"
-                                        value={editedWorker.jposition || ''}
+                                        name="positionTitle"
+                                        value={editedWorker.positionTitle || ''}
                                         onChange={handleInputChange}
                                     />
                                 ) : (
 
-                                    <p className={cl.workerInfo}>{personalData.jposition || ''}</p>
+                                    <p className={cl.workerInfo}>{positionTitle.positionTitle || ''}</p>
                                 )}
                             </div>
+                            <div className={cl.rows}>
+                                <label className={cl.label}>Дата зачисления</label>
+                                {editing ? (
+                                    <div className={cl.datePickerContainer}>
+                                    <input
+                                        type="date"
+                                        name='receivedDate'
+                                        className={cl.workerInfo}
+                                        value={editedWorker.receivedDate || ''}
+                                        onChange={(e) =>
+                                        setEditedWorker((prevWorker) => ({
+                                            ...prevWorker,
+                                            receivedDate: e.target.value,
+                                        }))
+                                        }
+                                    />
+                                    </div>
+                                ) : (
+                                    <p className={cl.workerInfo}>{receivedDate.receivedDate}</p>
+                                )}
+                            </div>
+                            
                         </div>
                         <div className={cl.column}>
                             <div className={cl.rows}>
@@ -339,8 +376,8 @@ function Personal(props) {
                                 {editing ? (
                                     <select
                                     className={cl.workerInfoSelect}
-                                     value={editedWorker.family_status}
-                                     onChange={(e) => setEditedWorker({ ...editedWorker, family_status: e.target.value })}
+                                     value={editedWorker.statusName}
+                                     onChange={(e) => setEditedWorker({ ...editedWorker, statusName: e.target.value })}
                                      >
                                         <option value="">Выберите семейное положение</option>
                                         <option value="Не женат/не замужем">Не женат/не замужем</option>
@@ -351,7 +388,7 @@ function Personal(props) {
                                     
                                 ) : (
 
-                                    <p className={cl.workerInfo}>{personalData.family_status || ''}</p>
+                                    <p className={cl.workerInfo}>{familyStatus.statusName || ''}</p>
                                 )}
                             </div>
                             <div className={cl.rows}>
@@ -360,15 +397,16 @@ function Personal(props) {
                                     <input
                                         className={cl.workerInfo}
                                         type="text"
-                                        name="city"
-                                        value={editedWorker.city  || ''}
+                                        name="LocationName"
+                                        value={editedWorker.LocationName  || ''}
                                         onChange={handleInputChange}
                                     />
                                 ) : (
 
-                                    <p className={cl.workerInfo}>{personalData.city  || ''}</p>
+                                    <p className={cl.workerInfo}>{location.LocationName  || ''}</p>
                                 )}
                             </div>
+                            
                         </div>
                     </div>
                 </div>
@@ -461,7 +499,9 @@ function Personal(props) {
                                 <thead>
                                     <tr>
                                         <td>Степень родства</td>
-                                        <td>ФИО</td>
+                                        <td>Имя</td>
+                                        <td>Фамилия</td>
+                                        <td>Отчество</td>
                                         <td>ИИН</td>
                                         <td>Дата рождения</td>
                                         <td>Место работы</td>
@@ -469,15 +509,15 @@ function Personal(props) {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {familyComposition.family_compositions.map((d, i) => (
+                                    {familyComposition && familyComposition.relatives && familyComposition.relatives.map((d, i) => (
                                         <tr key={i}>
                                             <td>  
                                                 {editingId === d.id ? (
                                                     <select
                                                         className={cl.selectRelative_type}
                                                         name='relative_type'
-                                                        value={editedData.relative_type}
-                                                        onChange={(e) => setEditedData({ ...editedData, relative_type: e.target.value })}
+                                                        value={editedData.relativeName}
+                                                        onChange={(e) => setEditedData({ ...editedData, relativeName: e.target.value })}
                                                     >
                                                         <option value="">Выберите тип родственника</option>
                                                         <option value="супруг/супруга">супруг/супруга</option>
@@ -486,42 +526,60 @@ function Personal(props) {
                                                         <option value="брат/сестра">брат/сестра</option>
                                                     </select>
                                                 ) : (
-                                                    d.relative_type
+                                                    d.relativeType.relativeName
                                                 )}
                                             </td>
                                             <td>{editingId === d.id ? 
                                                 <input 
                                                     type="text" 
                                                     className={cl.editInput} 
-                                                    name='fio' 
-                                                    value={editedData.fio} 
-                                                    onChange={(e) => setEditedData({ ...editedData, fio: e.target.value })} 
-                                                /> : d.fio}
+                                                    name='relName' 
+                                                    value={editedData.relName} 
+                                                    onChange={(e) => setEditedData({ ...editedData, relName: e.target.value })} 
+                                                /> : d.relName}
                                             </td>
-                                            <td>{editingId === d.id ? <input type='number' className={cl.editInput} name='rel_iin'  value={editedData.rel_iin} onChange={(e) => setEditedData({ ...editedData, rel_iin: e.target.value })} /> : d.rel_iin}</td>
+                                            <td>{editingId === d.id ? 
+                                                <input 
+                                                    type="text" 
+                                                    className={cl.editInput} 
+                                                    name='relSurname' 
+                                                    value={editedData.relSurname} 
+                                                    onChange={(e) => setEditedData({ ...editedData, relSurname: e.target.value })} 
+                                                /> : d.relSurname}
+                                            </td>
+                                            <td>{editingId === d.id ? 
+                                                <input 
+                                                    type="text" 
+                                                    className={cl.editInput} 
+                                                    name='relPatronymic' 
+                                                    value={editedData.relPatronymic} 
+                                                    onChange={(e) => setEditedData({ ...editedData, relPatronymic: e.target.value })} 
+                                                /> : d.relPatronymic}
+                                            </td>
+                                            <td>{editingId === d.id ? <input type='number' className={cl.editInput} name='relIin'  value={editedData.relIin} onChange={(e) => setEditedData({ ...editedData, relIin: e.target.value })} /> : d.relIin}</td>
                                             <td>
                                             {editingId === d.id ? (
                                                 <div className={cl.datePickerContainer}>
                                                     <input
                                                         type="date"
                                                         className={cl.formInput}
-                                                        name='birth_date_family'
+                                                        name='relBirthDate'
                                                         placeholder="Дата рождения"
-                                                        value={editedData.birth_date_family || ''}
+                                                        value={editedData.relBirthDate || ''}
                                                         onChange={(e) => {
                                                             const newDate = e.target.value;
                                                             setEditedData((prevData) => ({
                                                             ...prevData,
-                                                            birth_date_family: newDate,
+                                                            relBirthDate: newDate,
                                                             }));
                                                         }}
                                                     />
                                                 </div>
                                             ) : (
-                                                d.birth_date_family
+                                                d.relBirthDate
                                             )}
                                             </td>
-                                            <td>{editingId === d.id ? <input type='text' className={cl.editInput} name='job_place' value={editedData.job_place} onChange={(e) => setEditedData({ ...editedData, job_place: e.target.value })} /> : d.job_place}</td>
+                                            <td>{editingId === d.id ? <input type='text' className={cl.editInput} name='relJobPlace' value={editedData.relJobPlace} onChange={(e) => setEditedData({ ...editedData, relJobPlace: e.target.value })} /> : d.relJobPlace}</td>
                                             <td className={cl.relativesActionBtns} style={{}}>
                                                 {editingId === d.id ? (
                                                     <>

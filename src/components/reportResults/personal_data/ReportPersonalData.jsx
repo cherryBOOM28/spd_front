@@ -47,55 +47,56 @@ function ReportPersonalData(props) {
     }, [selectedSportOptions]);
 
 
-
     const personal_data_options = [
-        { id: "family_status", label: "Семейное положение", selectOptions: ["Выберите семейное положение", "Не женат/не замужем", "Женат/замужем", "Вдова/вдовец", "Разведена/разведен"], isRange: false },
-        { id: "departament", label: "Подразделение", isRange: false },
-        { id: "jposition", label: "Должность", isRange: false },
-        { id: "city", label: "Город", isRange: false },
-    ]; 
+        { id: "statusName", label: "Семейное положение", selectOptions: ["Выберите семейное положение", "Не женат/не замужем", "Женат/замужем", "Вдова/вдовец", "Разведена/разведен"], isRange: false },
+        { id: "DepartmentName", label: "Подразделение", isRange: false },
+        { id: "positionTitle", label: "Должность", isRange: false },
+        { id: "LocationName", label: "Город", isRange: false },
+    ];
 
     const family_compositions_options = [
         { id: "relative_type", label: "Степень родства", selectOptions: ["Выберите", "супруг/супруга", "сын/дочь", "мать/отец", "брат/сестра"], isRange: false },
-        { id: "fio", label: "ФИО", isRange: false },
-        { id: "rel_iin", label: "ИИН", isRange: false },
-        { id: "birth_date_family", label: "Дата рождения", isRange: false },
-        { id: "job_place", label: "Место работы", isRange: false },
+        { id: "relName", label: "Имя", isRange: false },
+        { id: "relSurname", label: "Фамилия", isRange: false },
+        { id: "relPatronymic", label: "Отчество", isRange: false },
+        { id: "relIin", label: "ИИН", isRange: false },
+        { id: "relBirthDate", label: "Дата рождения", isRange: false },
+        { id: "relJobPlace", label: "Место работы", isRange: false },
     ];
 
     const educations_options = [
-        { id: "education_type", label: "Вид образования", selectOptions: ["Выберите вид образования", "Бакалавр", "Магистратура"], isRange: false },
-        { id: "education_place_academic", label: "Учебное заведение", isRange: false },
-        { id: "education_date_in", label: "Дата поступления", isRange: false },
-        { id: "education_date_out", label: "Дата окончания", isRange: false },
-        { id: "education_speciality", label: "Специальность", isRange: false },
-        { id: "diploma_number_academic", label: "Номер диплома", isRange: false },
+        { id: "educationType", label: "Вид образования", selectOptions: ["Выберите вид образования", "Высшее", "Магистратура"], isRange: false },
+        { id: "educationPlace", label: "Учебное заведение", isRange: false },
+        { id: "educationDateIn", label: "Дата поступления", isRange: false },
+        { id: "educationDateOut", label: "Дата окончания", isRange: false },
+        { id: "speciality", label: "Специальность", isRange: false },
+        { id: "diplomaNumber", label: "Номер диплома", isRange: false },
     ];
 
     const owning_languages_options = [
-        { id: "language_name", label: "Язык", isRange: false },
-        { id: "owning_lvl_language", label: "Уровень владения языком", selectOptions: ["Выберите уровень", "Cо словарем", "Начальный", "Ниже среднего", "Средний", "Выше среднего", "Продвинутый", "Профессиональный", "Родной"], isRange: false },
+        { id: "langName", label: "Язык", isRange: false },
+        { id: "skillLvl", label: "Уровень владения языком", selectOptions: ["Выберите уровень", "Cо словарем", "Начальный", "Ниже среднего", "Средний", "Выше среднего", "Продвинутый", "Профессиональный", "Родной"], isRange: false },
     ];
 
     const courses_options = [
-        { id: "course_type", label: "Вид переподготовки", selectOptions: ["Выберите вид переподготовки", "Повышение", "Подготовка"], isRange: false },
-        { id: "course_organization", label: "Учебное заведение", isRange: false },
-        { id: "course_start_date", label: "Дата начала", isRange: false },
-        { id: "course_end_date", label: "Дата окончания", isRange: false },
-        { id: "document_type", label: "Вид документа", isRange: false },
-        { id: "course_name", label: "Название курса", isRange: false },
+        { id: "courseType", label: "Вид переподготовки", selectOptions: ["Выберите вид переподготовки", "Повышение", "Подготовка"], isRange: false },
+        { id: "courseOrg", label: "Учебное заведение", isRange: false },
+        { id: "startDate", label: "Дата начала", isRange: false },
+        { id: "endDate", label: "Дата окончания", isRange: false },
+        { id: "documentType", label: "Вид документа", isRange: false },
+        { id: "courseName", label: "Название курса", isRange: false },
     ];
 
     const academic_degree_options = [
-        { id: "education_place", label: "Учебное заведение", isRange: false },
-        { id: "academic_degree", label: "Вид образования", selectOptions: ["Выберите вид образования", "Бакалавр", "Магистр", "Кандидат", "Доктор"], isRange: false },
-        { id: "diploma_number", label: "Номер диплома", isRange: false },
-        { id: "diploma_date", label: "Дата диплома", isRange: false },
+        { id: "academicPlace", label: "Учебное заведение", isRange: false },
+        { id: "academicDegree", label: "Вид образования", selectOptions: ["Выберите вид образования", "Бакалавр", "Магистр", "Кандидат", "Доктор"], isRange: false },
+        { id: "academicDiplomaNumber", label: "Номер диплома", isRange: false },
+        { id: "academicDiplomaDate", label: "Дата диплома", isRange: false },
     ];
 
     const sport_results_options = [
-        { id: "sport_type", label: "Вид спорта", isRange: false },
-        { id: "owning_lvl_sport_results", label: "Степень владения", selectOptions: ["Выберите степень владения", "Любитель", "Первый спортивный разряд", "Второй спортивный разряд", "Третий спортивный разряд", "Кандидат мастера спорта", "Мастер спорта"], isRange: false },
+        { id: "sportType", label: "Вид спорта", isRange: false },
+        { id: "sportSkillLvl", label: "Степень владения", selectOptions: ["Выберите степень владения", "Любитель", "Первый спортивный разряд", "Второй спортивный разряд", "Третий спортивный разряд", "Кандидат мастера спорта", "Мастер спорта"], isRange: false },
     ];
 
 

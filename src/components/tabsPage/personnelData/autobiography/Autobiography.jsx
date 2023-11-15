@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import cl from './Autobiography.module.css';
 
-function Autobiography(props) {
+function Autobiography({ autobiographyInfo }) {
     const { id } = useParams();
 
     const [personnelData, setPersonnelData] = useState([]); // Данные из бэка
@@ -120,7 +120,7 @@ function Autobiography(props) {
                             />
                            
                         ) : (
-                            <p className={cl.workerInfoText}>{personnelData.autobiography}</p>
+                            <p className={cl.workerInfoText}></p>
                         )}
                     </div>
                 </div>

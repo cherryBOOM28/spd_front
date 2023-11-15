@@ -14,9 +14,9 @@ function OrdersListData(props) {
     }, [selectedOrderListOptions]);
 
     const orders_list_options = [
-        { id: "order_type", label: "Вид приказа", selectOptions: ["Выберите вид приказа", "О назначение", "Перемещение", "Отпуск", "Командирование", "О присвоение звания", "Наложение дисциплинарного взыскания", "Снятие дисциплинарного взыскания", "Поощерение/Премирование", "Зачисление в распоряжение", "Служебные расследования", "Об увольнении"], isRange: false },
-        { id: "order_date", label: "Дата приказа", isRange: false },
-        { id: "order_subtype", label: "	Вид подприказа", isRange: false },
+        { id: "decreeType", label: "Вид приказа", selectOptions: ["Выберите вид приказа", "О назначение", "Перемещение", "Отпуск", "Командирование", "О присвоение звания", "Наложение дисциплинарного взыскания", "Снятие дисциплинарного взыскания", "Поощерение/Премирование", "Зачисление в распоряжение", "Служебные расследования", "Об увольнении"], isRange: false },
+        { id: "decreeSubType", label: "Дата приказа", isRange: false },
+        { id: "decreeDate", label: "Вид подприказа", isRange: false },
     ];
 
     const [isOpenOrderList, setIsOpenOrderList] = useState(false);

@@ -13,13 +13,14 @@ function WorkingHistoryData(props) {
     }, [selectedWorkingHistoryOptions]);
 
     const working_history_options = [
-        { id: "working_start", label: "Начало периода", isRange: false },
-        { id: "working_end", label: "Конец периода", isRange: false },
-        { id: "departament_work", label: "Подразделение", isRange: false },
-        { id: "jposition_work", label: "Должность", isRange: false },
-        { id: "orfanization_name", label: "Учреждение", isRange: false },
-        { id: "organization_addres", label: "Местонахождение организации", isRange: false },
+        { id: "startDate", label: "Начало периода", isRange: false },
+        { id: "endDate", label: "Конец периода", isRange: false },
+        { id: "department", label: "Подразделение", isRange: false },
+        { id: "positionName", label: "Должность", isRange: false },
+        { id: "organizationName", label: "Учреждение", isRange: false },
+        { id: "organizationAddress", label: "Местонахождение организации", isRange: false },
     ];
+
     
     selectedWorkingHistoryOptions.forEach((option) => {
         if (!formData.hasOwnProperty(option)) {

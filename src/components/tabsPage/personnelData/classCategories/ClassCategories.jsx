@@ -6,7 +6,7 @@ import { getStaffInfo } from '../../../../api/staff_info/getStaffInfo';
 import { updateClassCategories } from '../../../../api/staff_info/class_categories/updateClassCategories';
 
 
-function ClassCategories(props) {
+function ClassCategories({ classCategoriesInfo }, props) {
     const { id } = useParams();
 
     const [personnelData, setPersonnelData] = useState({
@@ -124,7 +124,7 @@ function ClassCategories(props) {
                         </div>
                     </div>
                     <div>
-                        {personnelData.class_categories.map((d, i) => (
+                        {classCategoriesInfo && classCategoriesInfo.classCategories && classCategoriesInfo.classCategories.map((d, i) => (
                             <div key={i} className={cl.workerBlock}>
                                 <div className={cl.column}>
                                     <div className={cl.rows}>
@@ -132,8 +132,8 @@ function ClassCategories(props) {
                                         {editingId === d.id ? 
                                            <select
                                            className={cl.selectRelative_type}
-                                            value={editedData.category_type}
-                                            onChange={(e) => setEditedData({ ...editedData, category_type: e.target.value })}
+                                            value={editedData.categoryType}
+                                            onChange={(e) => setEditedData({ ...editedData, categoryType: e.target.value })}
                                             >
                                                 <option value="">Выберите категорию</option>
                                                 <option value="Спец 2 категории">Специалист 2 категории</option>
@@ -141,7 +141,7 @@ function ClassCategories(props) {
                                                 <option value="Наставник">Наставник</option>
                                             </select>  
                                             : 
-                                            <p className={cl.workerInfoP}>{d.category_type}</p>      
+                                            <p className={cl.workerInfoP}>{d.categoryType}</p>      
                                         }
                                     </div>
                                 </div>

@@ -8,7 +8,7 @@ import { getWorkingHistory } from '../../../api/working_history/getWorkingHistot
 import { deleteWorkingHistory } from '../../../api/working_history/deleteWorkingHistory';
 import { UpdateWorkingHistory } from '../../../api/working_history/updateWorkingHistory';
 
-function LaborActivity(props) {
+function LaborActivity({ workingHistory }, props) {
     const { id } = useParams();
 
     // const id = props.id;
@@ -324,7 +324,7 @@ function LaborActivity(props) {
                         </tr>
                     </thead>
                     <tbody>
-                        {personnelData.map((d, i) => (
+                        {workingHistory && workingHistory.workingHistories && workingHistory.workingHistories.map((d, i) => (
                             <tr key={i}> 
                                 <td>
                                   {editingId === d.id ? (
@@ -333,19 +333,19 @@ function LaborActivity(props) {
                                             type="date"
                                             className={cl.formInput}
                                             placeholder="Начало периода"
-                                            name='working_start'
-                                            value={editedData.working_start || ''}
+                                            name='startDate'
+                                            value={editedData.startDate || ''}
                                             onChange={(e) => {
                                                 const newDate = e.target.value;
                                                 setEditedData((prevData) => ({
                                                 ...prevData,
-                                                working_start: newDate,
+                                                startDate: newDate,
                                                 }));
                                             }}
                                         />
                                     </div>
                                 ) : (
-                                    d.working_start
+                                    d.startDate
                                 )}
                                 </td>
                                 <td>
@@ -355,25 +355,25 @@ function LaborActivity(props) {
                                             type="date"
                                             className={cl.formInput}
                                             placeholder="Конец периода"
-                                            name='working_end'
-                                            value={editedData.working_end || ''}
+                                            name='endDate'
+                                            value={editedData.endDate || ''}
                                             onChange={(e) => {
                                                 const newDate = e.target.value;
                                                 setEditedData((prevData) => ({
                                                 ...prevData,
-                                                working_end: newDate,
+                                                endDate: newDate,
                                                 }));
                                             }}
                                         />
                                     </div>
                                 ) : (
-                                    d.working_end
+                                    d.endDate
                                 )}
                                 </td>
-                                <td>{editingId === d.id ? <input type="text" className={cl.editInput} name='departament_work' value={editedData.departament_work} onChange={(e) => setEditedData({ ...editedData, departament_work: e.target.value })} /> : d.departament_work}</td>
-                                <td>{editingId === d.id ? <input type="text" className={cl.editInput} name='jposition_work' value={editedData.jposition_work} onChange={(e) => setEditedData({ ...editedData, jposition_work: e.target.value })} /> : d.jposition_work}</td>
-                                <td>{editingId === d.id ? <input type="text" className={cl.editInput} name='orfanization_name' value={editedData.orfanization_name} onChange={(e) => setEditedData({ ...editedData, orfanization_name: e.target.value })} /> : d.orfanization_name}</td>
-                                <td>{editingId === d.id ? <input type="text" className={cl.editInput} name='organization_addres' value={editedData.organization_addres} onChange={(e) => setEditedData({ ...editedData, organization_addres: e.target.value })} /> : d.organization_addres}</td>
+                                <td>{editingId === d.id ? <input type="text" className={cl.editInput} name='department' value={editedData.department} onChange={(e) => setEditedData({ ...editedData, department: e.target.value })} /> : d.department}</td>
+                                <td>{editingId === d.id ? <input type="text" className={cl.editInput} name='positionName' value={editedData.positionName} onChange={(e) => setEditedData({ ...editedData, positionName: e.target.value })} /> : d.positionName}</td>
+                                <td>{editingId === d.id ? <input type="text" className={cl.editInput} name='organizationName' value={editedData.organizationName} onChange={(e) => setEditedData({ ...editedData, organizationName: e.target.value })} /> : d.organizationName}</td>
+                                <td>{editingId === d.id ? <input type="text" className={cl.editInput} name='organizationAddress' value={editedData.organizationAddress} onChange={(e) => setEditedData({ ...editedData, organizationAddress: e.target.value })} /> : d.organizationAddress}</td>
                                 <td className={cl.relativesActionBtns} style={{}}>
                                     {editingId === d.id ? (
                                         <>

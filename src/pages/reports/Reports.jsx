@@ -168,132 +168,151 @@ function Reports(props, queryParams) {
     });
 
     const options = [
-        { id: "iin_general", label: "ИИН", isRange: false },
+        { id: "iin", label: "ИИН", isRange: false },
         { id: "surname", label: "Фамилия", isRange: false },
-        { id: "firstname", label: "Имя", isRange: false },
+        { id: "firstName", label: "Имя", isRange: false },
         { id: "patronymic", label: "Отчество", isRange: false },
-        { id: "gender", label: "Пол", selectOptions: ["Выберите пол", "Мужской", "Женский"], isRange: false },
-        { id: "birth_date", label: "Дата рождения", isRange: true },
-        { id: "birth_country", label: "Страна рождения", isRange: false },
-        { id: "birth_city", label: "Город рождения", isRange: false },
-        { id: "birth_region", label: "Регион рождения", isRange: false },
         { id: "nationality", label: " Национальность", isRange: false },
-        { id: "id_numbers", label: "Номер удостоверения", isRange: false },
-        { id: "id_from", label: "Выдан", isRange: false },
-        { id: "id_date", label: "Дата выдачи", isRange: true },
-        { id: "resid_country", label: "Страна прожвания", isRange: false },
-        { id: "resid_city", label: "Город прожвания", isRange: false },
-        { id: "resid_region", label: "Регион/район проживания", isRange: false  },
-        { id: "phone_number", label: "Номер телефона", isRange: false  },
+        // { id: "phone_number", label: "Номер телефона", isRange: false  },
         { id: "pin", label: "ПИН", isRange: false  },
         { id: "group", label: "Группа", isRange: false  },
     ];
 
+    // внутри person
+    const gender = [
+        { id: "genderName", label: "Пол", selectOptions: ["Выберите пол", "Мужской", "Женский"], isRange: false },
+    ];
+
+     // отдельная таблица
+    const residInfo = [
+        { id: "resCountry", label: "Страна прожвания", isRange: false },
+        { id: "resCity", label: "Город прожвания", isRange: false },
+        { id: "resRegion", label: "Регион/район проживания", isRange: false  },
+    ];
+
+     // отдельная таблица
+    const idInfo = [
+        { id: "identityCardNumber", label: "Номер удостоверения", isRange: false },
+        { id: "issuedBy", label: "Выдан", isRange: false },
+        { id: "dateOfIssue", label: "Дата выдачи", isRange: true },
+    ];
+
+    // отдельная таблица
+    const birthIngo = [
+        { id: "birth_date", label: "Дата рождения", isRange: true },
+        { id: "country", label: "Страна рождения", isRange: false },
+        { id: "city", label: "Город рождения", isRange: false },
+        { id: "region", label: "Регион рождения", isRange: false },
+    ];
+
+    
+
     const personal_data_options = [
-        { id: "family_status", label: "Семейное положение", selectOptions: ["Выберите семейное положение", "Не женат/не замужем", "Женат/замужем", "Вдова/вдовец", "Разведена/разведен"], isRange: false },
-        { id: "departament", label: "Подразделение", isRange: false },
-        { id: "jposition", label: "Должность", isRange: false },
-        { id: "city", label: "Город", isRange: false },
+        { id: "statusName", label: "Семейное положение", selectOptions: ["Выберите семейное положение", "Не женат/не замужем", "Женат/замужем", "Вдова/вдовец", "Разведена/разведен"], isRange: false },
+        { id: "DepartmentName", label: "Подразделение", isRange: false },
+        { id: "positionTitle", label: "Должность", isRange: false },
+        { id: "LocationName", label: "Город", isRange: false },
     ];
 
     const family_compositions_options = [
         { id: "relative_type", label: "Степень родства", selectOptions: ["Выберите", "супруг/супруга", "сын/дочь", "мать/отец", "брат/сестра"], isRange: false },
-        { id: "fio", label: "ФИО", isRange: false },
-        { id: "rel_iin", label: "ИИН", isRange: false },
-        { id: "birth_date_family", label: "Дата рождения", isRange: false },
-        { id: "job_place", label: "Место работы", isRange: false },
+        { id: "relName", label: "Имя", isRange: false },
+        { id: "relSurname", label: "Фамилия", isRange: false },
+        { id: "relPatronymic", label: "Отчество", isRange: false },
+        { id: "relIin", label: "ИИН", isRange: false },
+        { id: "relBirthDate", label: "Дата рождения", isRange: false },
+        { id: "relJobPlace", label: "Место работы", isRange: false },
     ];
 
     const educations_options = [
-        { id: "education_type", label: "Вид образования", selectOptions: ["Выберите вид образования", "Высшее", "Магистратура"], isRange: false },
-        { id: "education_place_academic", label: "Учебное заведение", isRange: false },
-        { id: "education_date_in", label: "Дата поступления", isRange: false },
-        { id: "education_date_out", label: "Дата окончания", isRange: false },
-        { id: "education_speciality", label: "Специальность", isRange: false },
-        { id: "diploma_number_academic", label: "Номер диплома", isRange: false },
+        { id: "educationType", label: "Вид образования", selectOptions: ["Выберите вид образования", "Высшее", "Магистратура"], isRange: false },
+        { id: "educationPlace", label: "Учебное заведение", isRange: false },
+        { id: "educationDateIn", label: "Дата поступления", isRange: false },
+        { id: "educationDateOut", label: "Дата окончания", isRange: false },
+        { id: "speciality", label: "Специальность", isRange: false },
+        { id: "diplomaNumber", label: "Номер диплома", isRange: false },
     ];
 
     const owning_languages_options = [
-        { id: "language_name", label: "Язык", isRange: false },
-        { id: "owning_lvl_language", label: "Уровень владения языком", selectOptions: ["Выберите уровень", "Cо словарем", "Начальный", "Ниже среднего", "Средний", "Выше среднего", "Продвинутый", "Профессиональный", "Родной"], isRange: false },
+        { id: "langName", label: "Язык", isRange: false },
+        { id: "skillLvl", label: "Уровень владения языком", selectOptions: ["Выберите уровень", "Cо словарем", "Начальный", "Ниже среднего", "Средний", "Выше среднего", "Продвинутый", "Профессиональный", "Родной"], isRange: false },
     ];
 
     const courses_options = [
-        { id: "course_type", label: "Вид переподготовки", selectOptions: ["Выберите вид переподготовки", "Повышение", "Подготовка"], isRange: false },
-        { id: "course_organization", label: "Учебное заведение", isRange: false },
-        { id: "course_start_date", label: "Дата начала", isRange: false },
-        { id: "course_end_date", label: "Дата окончания", isRange: false },
-        { id: "document_type", label: "Вид документа", isRange: false },
-        { id: "course_name", label: "Название курса", isRange: false },
+        { id: "courseType", label: "Вид переподготовки", selectOptions: ["Выберите вид переподготовки", "Повышение", "Подготовка"], isRange: false },
+        { id: "courseOrg", label: "Учебное заведение", isRange: false },
+        { id: "startDate", label: "Дата начала", isRange: false },
+        { id: "endDate", label: "Дата окончания", isRange: false },
+        { id: "documentType", label: "Вид документа", isRange: false },
+        { id: "courseName", label: "Название курса", isRange: false },
     ];
 
     const academic_degree_options = [
-        { id: "education_place", label: "Учебное заведение", isRange: false },
-        { id: "academic_degree", label: "Вид образования", selectOptions: ["Выберите вид образования", "Бакалавр", "Магистр", "Кандидат", "Доктор"], isRange: false },
-        { id: "diploma_number", label: "Номер диплома", isRange: false },
-        { id: "diploma_date", label: "Дата диплома", isRange: false },
+        { id: "academicPlace", label: "Учебное заведение", isRange: false },
+        { id: "academicDegree", label: "Вид образования", selectOptions: ["Выберите вид образования", "Бакалавр", "Магистр", "Кандидат", "Доктор"], isRange: false },
+        { id: "academicDiplomaNumber", label: "Номер диплома", isRange: false },
+        { id: "academicDiplomaDate", label: "Дата диплома", isRange: false },
     ];
 
     const sport_results_options = [
-        { id: "sport_type", label: "Вид спорта", isRange: false },
-        { id: "owning_lvl_sport_results", label: "Степень владения", selectOptions: ["Выберите степень владения", "Любитель", "Первый спортивный разряд", "Второй спортивный разряд", "Третий спортивный разряд", "Кандидат мастера спорта", "Мастер спорта"], isRange: false },
+        { id: "sportType", label: "Вид спорта", isRange: false },
+        { id: "sportSkillLvl", label: "Степень владения", selectOptions: ["Выберите степень владения", "Любитель", "Первый спортивный разряд", "Второй спортивный разряд", "Третий спортивный разряд", "Кандидат мастера спорта", "Мастер спорта"], isRange: false },
     ];
 
     const working_history_options = [
-        { id: "working_start", label: "Начало периода", isRange: false },
-        { id: "working_end", label: "Конец периода", isRange: false },
-        { id: "departament_work", label: "Подразделение", isRange: false },
-        { id: "jposition_work", label: "Должность", isRange: false },
-        { id: "orfanization_name", label: "Учреждение", isRange: false },
-        { id: "organization_addres", label: "Местонахождение организации", isRange: false },
+        { id: "startDate", label: "Начало периода", isRange: false },
+        { id: "endDate", label: "Конец периода", isRange: false },
+        { id: "department", label: "Подразделение", isRange: false },
+        { id: "positionName", label: "Должность", isRange: false },
+        { id: "organizationName", label: "Учреждение", isRange: false },
+        { id: "organizationAddress", label: "Местонахождение организации", isRange: false },
     ];
 
     const spec_checks_options = [
-        { id: "doc_number", label: "Номер документа", isRange: false },
-        { id: "doc_date", label: "Дата документа", isRange: false },
+        { id: "docNumber", label: "Номер документа", isRange: false },
+        { id: "docDate", label: "Дата документа", isRange: false },
     ];
 
     const attestations_options = [
-        { id: "attestation_result", label: "Номер документа", isRange: false },
-        { id: "last_attestation_date", label: "Дата начала", isRange: false },
-        { id: "next_attestation_date", label: "Дата окончания", isRange: false },
+        { id: "attResult", label: "Номер документа", isRange: false },
+        { id: "lastAttDate", label: "Дата начала", isRange: false },
+        { id: "nextAttDateMin", label: "Дата окончания", isRange: false },
     ];
 
     const class_categories_options = [
-        { id: "category_type", label: "Классная категория", selectOptions:["Выберите категорию", "Спец 2 категории", "Спец 1 категории", "Наставник"], isRange: false },
+        { id: "categoryType", label: "Классная категория", selectOptions:["Выберите категорию", "Спец 2 категории", "Спец 1 категории", "Наставник"], isRange: false },
     ]
 
     const military_rank_options = [
-        { id: "military_rank", label: "Звание", 
+        { id: "rankTitle", label: "Звание", 
         selectOptions:["Выберите звание", "Рядовой", "Ефрейтор", "Наставник", "Младший сержант", "Сержант", "Старший сержант", "Сержант третьего класса",
         "Сержант второго класса", "Сержант первого класса", "Штаб-сержант", "Мастер-сержант", "Лейтенант", "Старший лейтенант", "Капитан",
         "Майор", "Подполковник", "Полковник", "Генерал-майор", "Генерал-лейтенант", "Генерал-полковник", "Генерал армии"], isRange: false },
-        { id: "received_date", label: "Дата получения", isRange: false },
-        { id: "type_of_receipt", label: "Вид квитанции", isRange: false },
-        { id: "position", label: "Должность", isRange: false },
+        { id: "receivedDate", label: "Дата получения", isRange: false },
+        { id: "receivedType", label: "Вид квитанции", isRange: false },
     ];
 
     const awards_options = [
-        { id: "awards_type", label: "Тип награды", isRange: false },
-        { id: "awards_doc_numb", label: "Номер приказа", isRange: false },
-        { id: "awards_date", label: "Дата приказа", isRange: false },
+        { id: "rewardType", label: "Тип награды", isRange: false },
+        { id: "rewardDocNumber", label: "Номер приказа", isRange: false },
+        { id: "rewardDate", label: "Дата приказа", isRange: false },
     ];
 
     const sick_leaves_options = [
-        { id: "sick_doc_numb", label: "Номер приказа", isRange: false },
-        { id: "sick_doc_date", label: "Дата приказа", isRange: false },
+        { id: "sickDocNumber", label: "Номер приказа", isRange: false },
+        { id: "sickDocDate", label: "Дата приказа", isRange: false },
     ];
 
     const investigation_retrievals_options = [
-        { id: "order_type_investigation", label: "Тип приказа", isRange: false },
-        { id: "order_doc_numb", label: "Номер приказа служебного расследования", isRange: false },
-        { id: "order_date_investigation", label: "Дата приказа", isRange: false },
+        { id: "investigation_decree_type", label: "Тип приказа", isRange: false },
+        { id: "investigation_decree_number", label: "Номер приказа служебного расследования", isRange: false },
+        { id: "investigation_date", label: "Дата приказа", isRange: false },
     ];
 
     const orders_list_options = [
-        { id: "order_type", label: "Вид приказа", selectOptions: ["Выберите вид приказа", "О назначение", "Перемещение", "Отпуск", "Командирование", "О присвоение звания", "Наложение дисциплинарного взыскания", "Снятие дисциплинарного взыскания", "Поощерение/Премирование", "Зачисление в распоряжение", "Служебные расследования", "Об увольнении"], isRange: false },
-        { id: "order_date", label: "Дата приказа", isRange: false },
-        { id: "order_subtype", label: "Вид подприказа", isRange: false },
+        { id: "decreeType", label: "Вид приказа", selectOptions: ["Выберите вид приказа", "О назначение", "Перемещение", "Отпуск", "Командирование", "О присвоение звания", "Наложение дисциплинарного взыскания", "Снятие дисциплинарного взыскания", "Поощерение/Премирование", "Зачисление в распоряжение", "Служебные расследования", "Об увольнении"], isRange: false },
+        { id: "decreeSubType", label: "Дата приказа", isRange: false },
+        { id: "decreeDate", label: "Вид подприказа", isRange: false },
     ];
 
     const [isOpenGeneral, setIsOpenGeneral] = useState(false);
@@ -406,15 +425,15 @@ function Reports(props, queryParams) {
 
         const queryString = new URLSearchParams(queryParams).toString();
         // console.log(formData);
-        
-        const url = `http://localhost:8000/report_list/?${queryString}`;
+        // const queryString = queryParams.join('&');
+        const url = `http://localhost:8000/api/v1/filter?${queryString}`;
         // const url = `http://localhost:8000/report_list/?birth_date=:`;
 
 
         axios
             .get(url)
             .then((response) => {
-            setResults(response.data.results);
+            setResults(response.data);
             setCount(response.data.count);
             setPrevious(response.data.previous);
             setNext(response.data.next);
@@ -425,8 +444,8 @@ function Reports(props, queryParams) {
             setIsOpenFamily(false);
 
             // setSelectedOptions([]);
-            console.log(response.data.next);
-            console.log("response",response);
+            console.log(response);
+            console.log("response",response.data.results);
             // console.log("setResults",results);
             console.log("queryParams",formData);
             })
