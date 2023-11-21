@@ -5,11 +5,15 @@ import defaultPhoto from '../../../assets/images/default.jpeg';
 import { useForm } from '../formProvider/FormProvider';
 import { eventWrapper } from '@testing-library/user-event/dist/utils';
 import { red } from '@mui/material/colors';
+import TextField from '@mui/material/TextField';
 
 
 function NewBasicInfo() {
-
-  const { generalInfo, setGeneralInfo } = useForm();
+  const { emptyInputs, handleInputChange, handleSubmit } = useForm();
+  const { person, setPerson } = useForm();
+  const { birthInfo, setBirthInfo } = useForm();
+  const { identityCardInfo, setIdentityCardInfo } = useForm();
+  const { residentInfo, setResidentInfo } = useForm();
   const { photo, setPhoto } = useForm();
   const [selectedPhoto, setSelectedPhoto] = useState(null);
   const [useDefaultPhoto, setUseDefaultPhoto] = useState(false);
@@ -35,38 +39,28 @@ function NewBasicInfo() {
         }
     };
 
+    // const handleSubmit = async (event) => {
+    //     event.preventDefault();
+    //     try {
+    //       const infoResponse = await axios.post('http://localhost:8000/api/v1/person/', {
+    //         Person: person,
+    //         BirthInfo: birthInfo,
+    //         IdentityCardInfo: identityCardInfo,
+    //         ResidentInfo: residentInfo,
+    //         Photo: { photoBinary: photo },
+    //       });
+    //       console.log('Ответ от сервера (данные):', infoResponse.data);
+    //     } catch (error) {
+    //       console.error('Ошибка при отправке данных:', error);
+    //     }
+    // };
 
-
-
-  const handleSubmit = async(event) => {
-    event.preventDefault();
-    try {
-        // eslint-disable-next-line 
-        const infoResponse = await axios.post('http://localhost:8000/general_info/all', generalInfo);
-        // console.log('Ответ от сервера (данные):', infoResponse.data);
-    } catch(error) {
-        console.error('Ошибка при отправке данных:', error);
-    }
-  };
-
-
-  // ИЗМЕНЕНИЯ В INPUT
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-
-    if (/^\d{0,12}$/.test(value)) {
-        setGeneralInfo({
-          ...generalInfo,
-          [name]: value,
-        });
-      }
-
-    setGeneralInfo((prevData) => ({
-        ...prevData,
-        [name]: value,
-    }));
-};
-
+    // const handleInputChange = (stateUpdater, name, value) => {
+    //     stateUpdater((prevState) => ({
+    //     ...prevState,
+    //     [name]: value,
+    //     }));
+    // };
 
 
   return (
@@ -93,25 +87,27 @@ function NewBasicInfo() {
 
                 <div className={cl.column}>
                 <div className={cl.rows}>
-                    <label className={cl.label}>Имя</label>
+                    <label className={cl.label}>Имя*</label>
                         <input
                             type="text"
                             className={cl.workerInfo}
-                            name="firstname"
+                            name="firstName"
                             required
-                            value={generalInfo.firstname}
-                            onChange={handleInputChange}
+                            value={person.firstName}
+                            onChange={(e) => handleInputChange(setPerson, 'firstName', e.target.value)}
                         />
+                        {emptyInputs && <p style={{ color: 'red' }}>Пожалуйста, заполните все поля.</p>}
+           
                 </div>
                 <div className={cl.rows}>
-                    <label className={cl.label}>Фамилия</label>
+                    <label className={cl.label}>Фамилия*</label>
                         <input
                             type="text"
                             className={cl.workerInfo}
                             name="surname"
                             required
-                            value={generalInfo.surname}
-                            onChange={handleInputChange}
+                            value={person.surname}
+                            onChange={(e) => handleInputChange(setPerson, 'surname', e.target.value)}
                         />
                 </div>
                 <div className={cl.rows}>
@@ -120,18 +116,18 @@ function NewBasicInfo() {
                             type="text"
                             className={cl.workerInfo}
                             name="patronymic"
-                            value={generalInfo.patronymic}
-                            onChange={handleInputChange}
+                            value={person.patronymic}
+                            onChange={(e) => handleInputChange(setPerson, 'patronymic', e.target.value)}
                         />
                 </div>
                 <div className={cl.rows}>
-                    <label className={cl.label}>Пол</label>
+                    <label className={cl.label}>Пол*</label>
                         <select
                         className={cl.workerInfoSelect}
                         name="gender"
                         required
-                        value={generalInfo.gender}
-                        onChange={handleInputChange}
+                        value={person.gender}
+                        onChange={(e) => handleInputChange(setPerson, 'gender', e.target.value)}
                         >
                         <option value="">Выберите пол</option>
                         <option value="Женский">Женский</option>
@@ -139,73 +135,73 @@ function NewBasicInfo() {
                         </select>
                 </div>
                 <div className={cl.rows}>
-                    <label className={cl.label}>Национальность</label>
+                    <label className={cl.label}>Национальность*</label>
                         <input
                             type="text"
                             className={cl.workerInfo}
                             name="nationality"
                             required
-                            value={generalInfo.nationality}
-                            onChange={handleInputChange}
+                            value={person.nationality}
+                            onChange={(e) => handleInputChange(setPerson, 'nationality', e.target.value)}
                         />
                 </div>
 
                 </div>
                 <div className={cl.column}>
                 <div className={cl.rows}>
-                    <label className={cl.label}>Дата рождения</label>
+                    <label className={cl.label}>Дата рождения*</label>
                         <input
                         type="date"
                         className={cl.workerInfo}
                         name="birth_date"
                         required
-                        value={generalInfo.birth_date}
-                        onChange={handleInputChange}
+                        value={birthInfo.birth_date}
+                        onChange={(e) => handleInputChange(setBirthInfo, 'birth_date', e.target.value)}
                         />
                 </div>
                 <div className={cl.rows}>
-                    <label className={cl.label}>Страна</label>
+                    <label className={cl.label}>Страна*</label>
                         <input
                             type="text"
                             className={cl.workerInfo}
-                            name="birth_country"
+                            name="country"
                             required
-                            value={generalInfo.birth_country}
-                            onChange={handleInputChange}
+                            value={birthInfo.country}
+                            onChange={(e) => handleInputChange(setBirthInfo, 'country', e.target.value)}
                         />
                 </div>
                 <div className={cl.rows}>
-                    <label className={cl.label}>Город</label>
+                    <label className={cl.label}>Город*</label>
                         <input
                             type="text"
                             className={cl.workerInfo}
-                            name="birth_city"
+                            name="city"
                             required
-                            value={generalInfo.birth_city}
-                            onChange={handleInputChange}
+                            value={birthInfo.city}
+                            onChange={(e) => handleInputChange(setBirthInfo, 'city', e.target.value)}
                         />
                 </div>
                 <div className={cl.rows}>
-                    <label className={cl.label}>Регион</label>
+                    <label className={cl.label}>Регион*</label>
                         <input
                             type="text"
                             className={cl.workerInfo}
-                            name="birth_region"
+                            name="region"
                             required
-                            value={generalInfo.birth_region}
-                            onChange={handleInputChange}
+                            value={birthInfo.region}
+                            onChange={(e) => handleInputChange(setBirthInfo, 'region', e.target.value)}
                         />
                 </div>
                 <div className={cl.rows}>
-                    <label className={cl.label}>ИИН</label>
+                    <label className={cl.label}>ИИН*</label>
                         <input
                             type="number"
                             className={cl.workerInfo}
                             required
-                            name="iin_general"
+                            name="iin"
                             minLength="12"
-                            value={generalInfo.iin_general}
-                            onChange={handleInputChange}
+                            value={person.iin}
+                            onChange={(e) => handleInputChange(setPerson, 'iin', e.target.value)}
                         />
                 </div>
                 </div>
@@ -213,98 +209,87 @@ function NewBasicInfo() {
             <div className={cl.workerBlock}>
                 <div className={cl.column}>
                     <div className={cl.rows}>
-                        <label className={cl.label}>Номер удостоверения</label>
+                        <label className={cl.label}>Номер удостоверения*</label>
                             <input
                                 type="number"
                                 className={cl.workerInfo}
                                 required
-                                name="id_numbers"
-                                value={generalInfo.id_numbers}
-                                onChange={handleInputChange}
+                                name="identityCardNumber"
+                                value={identityCardInfo.identityCardNumber}
+                                onChange={(e) => handleInputChange(setIdentityCardInfo, 'identityCardNumber', e.target.value)}
                             />
                     </div>
                     <div className={cl.rows}>
-                        <label className={cl.label}>Дата выдачи</label>
+                        <label className={cl.label}>Дата выдачи*</label>
                             <input
                             type="date"
                             className={cl.workerInfo}
                             required
-                            name="id_date"
-                            value={generalInfo.id_date}
-                            onChange={handleInputChange}
+                            name="dateOfIssue"
+                            value={identityCardInfo.dateOfIssue}
+                            onChange={(e) => handleInputChange(setIdentityCardInfo, 'dateOfIssue', e.target.value)}
                             />
                     </div>
                     <div className={cl.rows}>
-                        <label className={cl.label}>Выдан</label>
+                        <label className={cl.label}>Выдан*</label>
                             <input
                                 type="text"
                                 className={cl.workerInfo}
                                 required
-                                name="id_from"
-                                value={generalInfo.id_from}
-                                onChange={handleInputChange}
+                                name="issuedBy"
+                                value={identityCardInfo.issuedBy} 
+                                onChange={(e) => handleInputChange(setIdentityCardInfo, 'issuedBy', e.target.value)}
                             />
                     </div>
                     <div className={cl.rows}>
-                        <label className={cl.label}>ПИН</label>
+                        <label className={cl.label}>ПИН*</label>
                             <input
                                 type="text"
                                 className={cl.workerInfo}
                                 required
                                 name="pin"
-                                value={generalInfo.pin}
-                                onChange={handleInputChange}
+                                value={person.pin}
+                                onChange={(e) => handleInputChange(setPerson, 'pin', e.target.value)}
                             />
                     </div>
                 </div>
                 <div className={cl.column}> 
                     <div className={cl.rows}>
-                        <label className={cl.label}>Страна проживания</label>
+                        <label className={cl.label}>Страна проживания*</label>
                             <input
                                 type="text"
                                 className={cl.workerInfo}
                                 required
-                                name="resid_country"
-                                value={generalInfo.resid_country}
-                                onChange={handleInputChange}
+                                name="resCountry"
+                                value={residentInfo.resCountry}
+                                onChange={(e) => handleInputChange(setResidentInfo, 'resCountry', e.target.value)}
                             />
                     </div>
                     <div className={cl.rows}>
-                        <label className={cl.label}>Город проживания</label>
+                        <label className={cl.label}>Город проживания*</label>
                             <input
                                 type="text"
                                 className={cl.workerInfo}
                                 required
-                                name="resid_city"
-                                value={generalInfo.resid_city}
-                                onChange={handleInputChange}
+                                name="resCity"
+                                value={residentInfo.resCity}
+                                onChange={(e) => handleInputChange(setResidentInfo, 'resCity', e.target.value)}
                             />
                     </div>
                     <div className={cl.rows}>
-                        <label className={cl.label}>Регион проживания</label>
+                        <label className={cl.label}>Регион проживания*</label>
                             <input
                                 type="text"
                                 className={cl.workerInfo}
                                 required
-                                name="resid_region"
-                                value={generalInfo.resid_region}
-                                onChange={handleInputChange}
-                            />
-                    </div>
-                    <div className={cl.rows}>
-                        <label className={cl.label}>Номер телефона</label>
-                            <input
-                                type="number"
-                                className={cl.workerInfo}
-                                required
-                                name="phone_number"
-                                value={generalInfo.phone_number}
-                                onChange={handleInputChange}
+                                name="resRegion"
+                                value={residentInfo.resRegion}
+                                onChange={(e) => handleInputChange(setResidentInfo, 'resRegion', e.target.value)}
                             />
                     </div>
                 </div>
             </div>
-            {/* <Button onClick={handleSubmit} type="submit" className={cl.actionBtn}>Сохранить</Button> */}
+            {/* <button type="submit">Отправить</button> */}
         </form>
     </div>
 

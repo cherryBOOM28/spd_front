@@ -14,9 +14,9 @@ function OrdersListData(props) {
     }, [selectedOrderListOptions]);
 
     const orders_list_options = [
-        { id: "decreeType", label: "Вид приказа", selectOptions: ["Выберите вид приказа", "О назначение", "Перемещение", "Отпуск", "Командирование", "О присвоение звания", "Наложение дисциплинарного взыскания", "Снятие дисциплинарного взыскания", "Поощерение/Премирование", "Зачисление в распоряжение", "Служебные расследования", "Об увольнении"], isRange: false },
-        { id: "decreeSubType", label: "Дата приказа", isRange: false },
-        { id: "decreeDate", label: "Вид подприказа", isRange: false },
+        { id: "decreelist:decrees:decreeType", label: "Вид приказа", selectOptions: ["Выберите вид приказа", "О назначение", "Перемещение", "Отпуск", "Командирование", "О присвоение звания", "Наложение дисциплинарного взыскания", "Снятие дисциплинарного взыскания", "Поощерение/Премирование", "Зачисление в распоряжение", "Служебные расследования", "Об увольнении"], isRange: false },
+        { id: "decreelist:decrees:decreeSubType", label: "Дата приказа", isRange: false },
+        { id: "decreelist:decrees:decreeDate", label: "Вид подприказа", isRange: false },
     ];
 
     const [isOpenOrderList, setIsOpenOrderList] = useState(false);
@@ -33,10 +33,10 @@ function OrdersListData(props) {
             setSelectedOrderListOptions([...selectedOrderListOptions, option]);
             // Если пользователь выбрал "Пол", "Дата рождения" или другие опции, 
             // то сразу устанавливаем их значения в formData
-            if (option === "order_type") {
+            if (option === "decreelist:decrees:decreeType") {
                 setFormData({
                   ...formData,
-                  [option]: option === "order_type" ? orders_list_options.find((o) => o.id === option).selectOptions[0] : {start_date: '', end_date: ''},
+                  [option]: option === "decreelist:decrees:decreeType" ? orders_list_options.find((o) => o.id === option).selectOptions[0] : {start_date: '', end_date: ''},
                 });
             }
         }
@@ -88,7 +88,7 @@ function OrdersListData(props) {
 export default OrdersListData;
 
 export function renderOrderListOptions(selectedOrderListOptions, formData, handleInputChange, orders_list_options) {
-    const selectedOrderType = formData["order_type"]; // Получаем выбранный вид приказа
+    const selectedOrderType = formData["decreelist:decrees:decreeType"]; // Получаем выбранный вид приказа
     return(
         selectedOrderListOptions.length > 0 && (
             <div className={cl.input__container}>
@@ -96,7 +96,7 @@ export function renderOrderListOptions(selectedOrderListOptions, formData, handl
                 {selectedOrderListOptions.map((option) => (
                     <div key={option} className={cl.wrapper__input}>
                         <label className={cl.label__name}>{orders_list_options.find((o) => o.id === option).label}:</label>
-                        {option === "order_type" ? (
+                        {option === "decreelist:decrees:decreeType" ? (
                             <select
                             value={formData[option] || ''}
                             className={cl.workerInfoSelect}
@@ -110,7 +110,7 @@ export function renderOrderListOptions(selectedOrderListOptions, formData, handl
                             </select>
                 
                         ) : 
-                            option === "order_date" ? (
+                            option === "decreelist:decrees:decreeDate" ? (
                             <div className={cl.data__wrapper}>
                                 <div>
                                 <label style={{ marginRight: '5px', marginLeft: '13px' }}>От</label>
@@ -147,9 +147,9 @@ export function renderOrderListOptions(selectedOrderListOptions, formData, handl
                     <div style={{ display: 'flex' }}>
                         <label className={cl.label__name}>Тип отпуска:</label>
                         <select
-                            value={formData["types_of_order_types"] || ''}
+                            value={formData["decreelist:decrees:decreeSubType"] || ''}
                             className={cl.workerInfoSelect}
-                            onChange={(e) => handleInputChange("types_of_order_types", e.target.value)}
+                            onChange={(e) => handleInputChange("decreelist:decrees:decreeSubType", e.target.value)}
                         >
                             <option value="Годовой трудовой">Годовой трудовой</option>
                             <option value="Краткосрочный">Краткосрочный</option>
@@ -164,9 +164,9 @@ export function renderOrderListOptions(selectedOrderListOptions, formData, handl
                     <div>
                         <label className={cl.label__name}>Вид увольнения:</label>
                         <select
-                            value={formData["types_of_order_types"] || ''}
+                            value={formData["decreelist:decrees:decreeSubType"] || ''}
                             className={cl.workerInfoSelect}
-                            onChange={(e) => handleInputChange("types_of_order_types", e.target.value)}
+                            onChange={(e) => handleInputChange("decreelist:decrees:decreeSubType", e.target.value)}
                         >
                            <option value="">Выберите вид увольнения</option>
                             <option value="По собственной инициативе">По собственной инициативе</option>

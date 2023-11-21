@@ -4,6 +4,7 @@ import Button from '../../UI/button/Button';
 import { NotificationContainer, NotificationManager } from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
 import { useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
 
 const FormContext = createContext();
 
@@ -11,30 +12,42 @@ export const FormProvider = ({ children }) => {
 
   const [photo, setPhoto] = useState([
     {
-      photo: ''
+      photoBinary: ''
     }
   ])
 
-  const [generalInfo, setGeneralInfo] = useState({
-    firstname: '',
+  const [person, setPerson] = useState({
+    firstName: '',
     surname: '',
     patronymic: '',
     gender: '',
     nationality: '',
-    birth_date: '',
-    birth_country: '',
-    birth_city: '',
-    birth_region: '',
-    iin_general: '',
-    id_numbers: '',
-    id_date: '',
-    id_from: '',
-    resid_country: '',
-    resid_city: '',
-    resid_region: '',
-    phone_number: '',
+    iin: '',
     pin: ''
   });
+
+
+  const [birthInfo, setBirthInfo] = useState({
+    birth_date: '',
+    country: '',
+    region: '',
+    city: '',
+  });
+
+  const [identityCardInfo, setIdentityCardInfo] =useState({
+    identityCardNumber: '',
+    issuedBy: '',
+    dateOfIssue: '',
+  });
+
+  const [residentInfo, setResidentInfo] = useState({
+    resCountry: '',
+    resRegion: '',
+    resCity: '',
+  });
+
+
+
 
   const [personalData, setPersonalData] = useState({
     family_status: "",
@@ -215,24 +228,47 @@ export const FormProvider = ({ children }) => {
   const showNotification = () => {
     NotificationManager.success('Успех!', 'Сохранение данных прошло успешно.');
   };
+
+
   
-  useEffect(() => {
-      console.log(photo.slice(22))
-  }, [photo])
+  // useEffect(() => {
+  //     console.log(photo.slice(22))
+  // }, [photo])
+
+  const [emptyInputs, setEmptyInputs] = useState(false);
+
+  const handleInputChange = (stateUpdater, name, value) => {
+    stateUpdater((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
 
   const handleSubmit = async(event) => {
-    const isAllFieldsFilled = validateFields(generalInfo);
+
+    const isAllFieldsFilled = validateFields(person);
   
     if (!isAllFieldsFilled ) {
       NotificationManager.error('Пожалуйста, заполните все поля!');
       return;
     }
 
+   
+
     event.preventDefault();
 
+
+    const hasEmptyInputs = Object.values(person).some((value) => value === '');
+
+    if (hasEmptyInputs) {
+      setEmptyInputs(true);
+      return;
+    }
+
     try {
-      navigate('/'); 
-      window.location.reload(); 
+      // navigate('/'); 
+      // window.location.reload(); 
       setTimeout(() => {
         showNotification();
       }, 200);
@@ -243,38 +279,46 @@ export const FormProvider = ({ children }) => {
     // const imageData = (base64String) => {};
     // if (photo) {
     //   imageData.append('image', photo);
-    //   await axios.post('http://localhost:8000/photos/', imageData, {
+    //   await axios.post('http://localhost:8000/api/v1/person/photos/', imageData, {
     //     headers: {
     //       'Content-Type': 'application/json', 
     //     },
     //   });
     // }
 
-    event.preventDefault();
-    const myArray = photo.split(",");
-    axios.post('http://localhost:8000/staff_main/create/', {
-      photo: {photo: myArray[1]},
-      personal_data: personalData,
-      general_info: generalInfo,
-      educations: education.slice(1) ? education.slice(1) : [],
-      courses :courses.slice(1) ? courses.slice(1) : [],
-      academic_degree: academicDegree.slice(1) ? academicDegree.slice(1) : [],
-      attestations: attestations,
-      autobiography: autobiography,
-      investigation_retrievals: investigation_retrievals.slice(1) ? investigation_retrievals.slice(1) : [],
-      awards: awards.slice(1) ? awards.slice(1) : [],
-      class_categories: class_category,
-      family_compositions: family_compositions.slice(1) ? family_compositions.slice(1) : [],
-      orders_list: reportOrders.slice(1) ? reportOrders.slice(1) : [],
-      owning_languages:  language.slice(1) ? language.slice(1) : [],
-      sick_leaves: sick_leaves.slice(1) ? sick_leaves.slice(1) : [],
-      spec_checks: spec_checks,
-      sport_results:  sport.slice(1) ? sport.slice(1) : [],
-      working_histories: laborActivity.slice(1) ? laborActivity.slice(1) : [],
-      military_rank: military_rank         
-    })
+    const requestData = {
+      // Photo: {photo},
+      Person: {person},
+      BirthInfo: {birthInfo},
+      IdentityCardInfo: {identityCardInfo},
+      ResidentInfo: {residentInfo},
+      // general_info: generalInfo,
+      // educations: education.slice(1) ? education.slice(1) : [],
+      // courses :courses.slice(1) ? courses.slice(1) : [],
+      // academic_degree: academicDegree.slice(1) ? academicDegree.slice(1) : [],
+      // attestations: attestations,
+      // autobiography: autobiography,
+      // investigation_retrievals: investigation_retrievals.slice(1) ? investigation_retrievals.slice(1) : [],
+      // awards: awards.slice(1) ? awards.slice(1) : [],
+      // class_categories: class_category,
+      // family_compositions: family_compositions.slice(1) ? family_compositions.slice(1) : [],
+      // orders_list: reportOrders.slice(1) ? reportOrders.slice(1) : [],
+      // owning_languages:  language.slice(1) ? language.slice(1) : [],
+      // sick_leaves: sick_leaves.slice(1) ? sick_leaves.slice(1) : [],
+      // spec_checks: spec_checks,
+      // sport_results:  sport.slice(1) ? sport.slice(1) : [],
+      // working_histories: laborActivity.slice(1) ? laborActivity.slice(1) : [],
+      // military_rank: military_rank         
+    }
 
-    
+    event.preventDefault();
+    // const myArray = photo.split(",");
+    const accessToken = Cookies.get('jwtAccessToken');
+    axios.post('http://localhost:8000/api/v1/person/', requestData, {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+      }
+    })
     // eslint-disable-next-line
     .then(() => {
       // console.log('Ответ от сервера:', response.data);
@@ -285,56 +329,49 @@ export const FormProvider = ({ children }) => {
 
     console.log(photo)
 
-    console.log({
-      photo: [{photo}],
-      personal_data: personalData,
-      general_info: generalInfo,
-      educations: education,
-      courses,
-      academic_degree: academicDegree,
-      attestations: attestations,
-      autobiography: autobiography,
-      awards: awards,
-      class_categories: class_category,
-      family_compositions,
-      investigation_retrievals,
-      orders_list: reportOrders,
-      owning_languages: language,
-      sick_leaves,
-      spec_checks: spec_checks,
-      sport_results: sport,
-      working_history: laborActivity,
-      military_rank: military_rank     })
+    console.log("post",{
+      photo: photo,
+      Person: person,
+      BirthInfo: birthInfo,
+      IdentityCardInfo: identityCardInfo,
+      ResidentInfo: residentInfo,   })
   };
+
+  // console.log('Person:', JSON.stringify(person));
 
   return (
     <FormContext.Provider 
       value={{ 
         photo, setPhoto,
-        generalInfo, setGeneralInfo, 
-        personalData, setPersonalData,
-        image, setImage,
-        education, setEducation,
-        language, setLanguage,
-        courses, setCourses,
-        academicDegree, setAcademicDegree,
-        sport, setSport,
-        laborActivity, setLaborActivity,
-        family_compositions, setFamilyCompositions,
-        spec_checks, setSpec_checks,
-        attestations, setAttestations,
-        investigation_retrievals, setInvestigation_retrievals,
-        awards, setAwards,
-        military_rank, setMilitary_rank,
-        class_category, setClass_category,
-        autobiography, setAutobiography,
-        sick_leaves, setSick_leaves,
+        person, setPerson, 
+        birthInfo, setBirthInfo,
+        identityCardInfo, setIdentityCardInfo,
+        residentInfo, setResidentInfo,
+        // personalData, setPersonalData,
+        // image, setImage,
+        // education, setEducation,
+        // language, setLanguage,
+        // courses, setCourses,
+        // academicDegree, setAcademicDegree,
+        // sport, setSport,
+        // laborActivity, setLaborActivity,
+        // family_compositions, setFamilyCompositions,
+        // spec_checks, setSpec_checks,
+        // attestations, setAttestations,
+        // investigation_retrievals, setInvestigation_retrievals,
+        // awards, setAwards,
+        // military_rank, setMilitary_rank,
+        // class_category, setClass_category,
+        // autobiography, setAutobiography,
+        // sick_leaves, setSick_leaves,
 
-        reportOrders, setReportOrders,
+        // reportOrders, setReportOrders,
+        emptyInputs,
+        handleInputChange,
         handleSubmit
       }}>
       {children}
-      <Button onClick={handleSubmit}>Сохранить</Button>
+      <Button type="submit" onClick={handleSubmit}>Сохранить</Button>
       <NotificationContainer />
     </FormContext.Provider>
   );

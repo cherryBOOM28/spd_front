@@ -7,7 +7,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
-import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 
 const ResultTable = ({results, setResults, formData, selected, columns, count, next, previous }) => {
@@ -15,6 +15,8 @@ const ResultTable = ({results, setResults, formData, selected, columns, count, n
     const columnNames = Object.keys(generalInfoRequest)
     const fieldNames = generalInfoRequest.concat(Object.keys(formData));
     const [table, setTable] = useState([]);
+
+    const navigate = useNavigate();
 
     useEffect(()=> {
         setTable(results)
@@ -55,6 +57,9 @@ const ResultTable = ({results, setResults, formData, selected, columns, count, n
         return columns.filter(o => o.id === fieldName)[0].label;
     }
 
+    const handleRowClick = (id) => {
+        navigate(`/${id}`);
+    };
 
 
   return (
@@ -68,34 +73,45 @@ const ResultTable = ({results, setResults, formData, selected, columns, count, n
                             <TableCell style={{ minWidth: 50 }}>Имя</TableCell>
                             <TableCell style={{ minWidth: 50 }}>Фамилия</TableCell>
                             <TableCell style={{ minWidth: 50 }}>Отчество</TableCell>
-                            {selected.filter(item => item !== 'firstname' && item !== 'surname' && item !== 'patronymic').map((fieldName) => {
+                            {/* {selected.filter(item => item !== 'firstname' && item !== 'surname' && item !== 'patronymic').map((fieldName) => {
                                 return (
                                     <TableCell style={{ minWidth: 100 }} key={fieldName}>
                                         {getColumnName(fieldName)}
                                     </TableCell>
                                 )
-                            })}
+                            })} */}
                         </TableRow>
                     </TableHead>
 
                     <TableBody>
                         {table.map((person) => (
-                            <TableRow  key={person.Person && person.Person.id}>
-                                <TableCell style={{ minWidth: 50 }}>
+                            <TableRow 
+                                onClick={() => handleRowClick(person.id)} 
+                                key={person.Person && person.Person.id}
+                                style={{ cursor: 'pointer' }}
+                                sx={{ '&:hover': { backgroundColor: '#f0f0f0' } }}
+                            >
+                        
+                            <TableCell style={{ minWidth: 50 }}>
                                     {/* {person['firstName']} */}
-                                    {person.Person && person.Person['firstName']}
-                                    
+                                    {/* {person.Person && person.Person['firstName']} */}
+                                    {person.firstName}
                                 </TableCell>
                                 <TableCell style={{ minWidth: 50 }}>
                                     {/* {person['surname']} */}
-                                    {person.Person && person.Person['surname']}
+                                    {/* {person.Person && person.Person['surname']} */}
+                                    {person.surname}
                                 </TableCell>
                                 <TableCell style={{ minWidth: 50 }}>
                                     {/* {person['patronymic']} */}
-                                    {person.Person && person.Person['patronymic']}
+                                    {/* {person.Person && person.Person['patronymic']} */}
+                                    {person.patronymic}
                                 </TableCell>
+                               
+           
+                          
 
-                                {selected
+                                {/* {selected
                                     .filter(item => item !== 'firstName' && item !== 'surname' && item !== 'patronymic')
                                     .map((fieldName) => {
                                     return (
@@ -123,12 +139,7 @@ const ResultTable = ({results, setResults, formData, selected, columns, count, n
                                                 // </TableRow>
                                             ))}
 
-                                            {/* {person.educations && person.educations[0][fieldName]} */}
-
-                                            {/* {person.owning_languages &&
-                                                person.owning_languages[0] &&
-                                                person.owning_languages[0][fieldName]} */}
-
+                                        
                                             {person.owning_languages && person.owning_languages.map((data, index) => (
                                                 // <TableRow>
                                                     <div style={{ minWidth: 50 }} key={fieldName}>
@@ -222,29 +233,21 @@ const ResultTable = ({results, setResults, formData, selected, columns, count, n
 
                                         </TableCell> 
                                     )     
-                                })}   
-                                {/* {person.family_compositions && person.family_compositions.map((relative, index) => (
-                                    <TableRow key={index}>
-                                        {selected.map((fieldName) => (
-                                        <TableCell style={{ minWidth: 50 }} key={fieldName}>
-                                            {fieldName in relative && relative[fieldName]}
-                                        </TableCell>
-                                        ))}
-                                    </TableRow>
-                                ))}  */}
+                                })}    */}
+                          
                               
                             </TableRow>  
                         ))}
                     </TableBody>
                 </Table>
             </TableContainer>
-            <TablePagination
+            {/* <TablePagination
                     rowsPerPage={2}
                     component="div"
                     count={count}
                     page={page}
                     onPageChange={handleChangePage}
-                />
+                /> */}
         </div>
        
     </Paper>

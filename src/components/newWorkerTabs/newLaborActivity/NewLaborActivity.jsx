@@ -198,8 +198,8 @@ const NewLaborActivity = (props) => {
                               <td>Местонахождение организации</td>
                             </tr>
                         </thead>
-                        <tbody>
-                            {laborActivity.slice(1).map((d, i) => (
+                        {/* <tbody>
+                            {laborActivity.map((d, i) => (
                                 <tr key={i}> 
                                     <td>
                                       {editingId === d.id ? (
@@ -250,7 +250,7 @@ const NewLaborActivity = (props) => {
                                    
                                 </tr>
                             ))}
-                        </tbody>
+                        </tbody> */}
                     </table>
                 </div>
                 )}

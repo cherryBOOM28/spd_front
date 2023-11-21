@@ -12,17 +12,19 @@ function NewPersonal({ iin, data }) {
   const { personalData, setPersonalData } = useForm();
 
   const handleSubmit = async(event) => {
-    event.preventDefault();
-    axios.post('http://localhost:8000/general_info/', {
-        personal_data: personalData,
-    })
-        .then((response) => {
-        // console.log('Ответ от сервера:', response.data);
-        })
-        .catch((error) => {
-        // console.error('Ошибка при отправке данных:', error);
-        });
+    // event.preventDefault();
+    // axios.post('http://localhost:8000/general_info/', {
+    //     personal_data: personalData,
+    // })
+    //     .then((response) => {
+    //     // console.log('Ответ от сервера:', response.data);
+    //     })
+    //     .catch((error) => {
+    //     // console.error('Ошибка при отправке данных:', error);
+    //     });
     };
+
+
 
   // ИЗМЕНЕНИЯ В INPUT
   const handleInputChange = (event) => {

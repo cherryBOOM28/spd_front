@@ -88,12 +88,12 @@ function Create(props) {
                                 <div className={cl.basic__info}>
                                 <div className={cl.totalInfo}>
                                     <NewPersonal />
-                                    <NewFamilyComposition />
+                                    {/* <NewFamilyComposition />
                                     <NewEducation />
                                     <NewLanguage />
                                     <NewAcademicDegree />
                                     <NewCourses />
-                                    <NewSport />
+                                    <NewSport /> */}
                                 </div>  
                             </div>
                             }
@@ -101,7 +101,7 @@ function Create(props) {
                                 activeTab === 3 &&                       
                                 <div className={cl.basic__info}>
                                 <div className={cl.totalInfo}>
-                                    <NewLaborActivity />
+                                    {/* <NewLaborActivity /> */}
                                 </div>                 
                             </div>
                             }
@@ -109,7 +109,7 @@ function Create(props) {
                                 activeTab === 4 && 
                                 <div className={cl.basic__info}>
                                 <div className={cl.totalInfo}>
-                                    <NewPersonnelData />
+                                    {/* <NewPersonnelData /> */}
                                 </div>         
                             </div>
                             }
@@ -117,7 +117,7 @@ function Create(props) {
                                 activeTab === 5 && 
                                 <div className={cl.basic__info}>
                                 <div className={cl.totalInfo}>
-                                    <NewReportOrders />
+                                    {/* <NewReportOrders /> */}
                                 </div>      
                             </div>
                             }

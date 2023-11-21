@@ -40,6 +40,7 @@ function WorkerDetail() {
       setActiveTab(tabIndex);
   };
 
+  const [photo, setPhoto] = useState({});
 
   const [person, setPerson] = useState({});
   const [birthInfo, setBirthInfo] = useState([]);
@@ -97,6 +98,7 @@ function WorkerDetail() {
       console.log("response", response.data);
   
       if (response.status === 200) {
+        setPhoto(response.data.Person.photo);
         setPerson(response.data.Person);
         setBirthInfo(response.data.BirthInfo);
         setGender(response.data.Person.gender);
@@ -203,6 +205,7 @@ function WorkerDetail() {
                         <div className={cl.basic__info}>
                           <BasicInfo  
                             id={id} 
+                            photo={photo}
                             person={person} 
                             birthInfo={birthInfo}
                             gender={gender}
@@ -223,6 +226,7 @@ function WorkerDetail() {
 
                         <div className={cl.basic__info}>
                             <BasicInfo id={id}
+                              photo={photo}
                               person={person} 
                               birthInfo={birthInfo}
                               gender={gender}
@@ -267,6 +271,7 @@ function WorkerDetail() {
 
                         <div className={cl.basic__info}>
                           <BasicInfo id={id}
+                            photo={photo}
                             person={person} 
                             birthInfo={birthInfo}
                             gender={gender}
@@ -285,6 +290,7 @@ function WorkerDetail() {
 
                         <div className={cl.basic__info}>
                           <BasicInfo id={id}
+                            photo={photo}
                             person={person} 
                             birthInfo={birthInfo}
                             gender={gender}
@@ -312,6 +318,7 @@ function WorkerDetail() {
 
                         <div className={cl.basic__info}>
                           <BasicInfo id={id}
+                            photo={photo}
                             person={person} 
                             birthInfo={birthInfo}
                             gender={gender}

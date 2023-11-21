@@ -48,57 +48,56 @@ function ReportPersonalData(props) {
 
 
     const personal_data_options = [
-        { id: "statusName", label: "Семейное положение", selectOptions: ["Выберите семейное положение", "Не женат/не замужем", "Женат/замужем", "Вдова/вдовец", "Разведена/разведен"], isRange: false },
-        { id: "DepartmentName", label: "Подразделение", isRange: false },
-        { id: "positionTitle", label: "Должность", isRange: false },
-        { id: "LocationName", label: "Город", isRange: false },
+        { id: "familyStatus:statusName", label: "Семейное положение", selectOptions: ["Выберите семейное положение", "Не женат/не замужем", "Женат/замужем", "Вдова/вдовец", "Разведена/разведен"], isRange: false },
+        { id: "positionInfo:department:DepartmentName", label: "Подразделение", isRange: false },
+        { id: "positionTitle:position:positionTitle", label: "Должность", isRange: false },
+        { id: "positionInfo:department:LocationName", label: "Город", isRange: false },
     ];
 
     const family_compositions_options = [
-        { id: "relative_type", label: "Степень родства", selectOptions: ["Выберите", "супруг/супруга", "сын/дочь", "мать/отец", "брат/сестра"], isRange: false },
-        { id: "relName", label: "Имя", isRange: false },
-        { id: "relSurname", label: "Фамилия", isRange: false },
-        { id: "relPatronymic", label: "Отчество", isRange: false },
-        { id: "relIin", label: "ИИН", isRange: false },
-        { id: "relBirthDate", label: "Дата рождения", isRange: false },
-        { id: "relJobPlace", label: "Место работы", isRange: false },
+        { id: "familycomposition:relatives:relativeType", label: "Степень родства", selectOptions: ["Выберите", "супруг/супруга", "сын/дочь", "мать/отец", "брат/сестра"], isRange: false },
+        { id: "familycomposition:relatives:relName", label: "Имя", isRange: false },
+        { id: "familycomposition:relatives:relSurname", label: "Фамилия", isRange: false },
+        { id: "familycomposition:relatives:relPatronymic", label: "Отчество", isRange: false },
+        { id: "familycomposition:relatives:relIin", label: "ИИН", isRange: false },
+        { id: "familycomposition:relatives:relBirthDate", label: "Дата рождения", isRange: false },
+        { id: "familycomposition:relatives:relJobPlace", label: "Место работы", isRange: false },
     ];
 
     const educations_options = [
-        { id: "educationType", label: "Вид образования", selectOptions: ["Выберите вид образования", "Высшее", "Магистратура"], isRange: false },
-        { id: "educationPlace", label: "Учебное заведение", isRange: false },
-        { id: "educationDateIn", label: "Дата поступления", isRange: false },
-        { id: "educationDateOut", label: "Дата окончания", isRange: false },
-        { id: "speciality", label: "Специальность", isRange: false },
-        { id: "diplomaNumber", label: "Номер диплома", isRange: false },
+        { id: "education:educations:educationType", label: "Вид образования", selectOptions: ["Выберите вид образования", "Высшее", "Магистратура"], isRange: false },
+        { id: "education:educations:educationPlace", label: "Учебное заведение", isRange: false },
+        { id: "education:educations:educationDateIn", label: "Дата поступления", isRange: false },
+        { id: "education:educations:educationDateOut", label: "Дата окончания", isRange: false },
+        { id: "education:educations:speciality", label: "Специальность", isRange: false },
+        { id: "education:educations:diplomaNumber", label: "Номер диплома", isRange: false },
     ];
 
     const owning_languages_options = [
-        { id: "langName", label: "Язык", isRange: false },
-        { id: "skillLvl", label: "Уровень владения языком", selectOptions: ["Выберите уровень", "Cо словарем", "Начальный", "Ниже среднего", "Средний", "Выше среднего", "Продвинутый", "Профессиональный", "Родной"], isRange: false },
+        { id: "languageskill:languageSkills:langName", label: "Язык", isRange: false },
+        { id: "languageskill:languageSkills:skillLvl", label: "Уровень владения языком", selectOptions: ["Выберите уровень", "Cо словарем", "Начальный", "Ниже среднего", "Средний", "Выше среднего", "Продвинутый", "Профессиональный", "Родной"], isRange: false },
     ];
 
     const courses_options = [
-        { id: "courseType", label: "Вид переподготовки", selectOptions: ["Выберите вид переподготовки", "Повышение", "Подготовка"], isRange: false },
-        { id: "courseOrg", label: "Учебное заведение", isRange: false },
-        { id: "startDate", label: "Дата начала", isRange: false },
-        { id: "endDate", label: "Дата окончания", isRange: false },
-        { id: "documentType", label: "Вид документа", isRange: false },
-        { id: "courseName", label: "Название курса", isRange: false },
+        { id: "course:courses:courseType", label: "Вид переподготовки", selectOptions: ["Выберите вид переподготовки", "Повышение", "Подготовка"], isRange: false },
+        { id: "course:courses:courseOrg", label: "Учебное заведение", isRange: false },
+        { id: "course:courses:startDate", label: "Дата начала", isRange: false },
+        { id: "course:courses:endDate", label: "Дата окончания", isRange: false },
+        { id: "course:courses:documentType", label: "Вид документа", isRange: false },
+        { id: "course:courses:courseName", label: "Название курса", isRange: false },
     ];
 
     const academic_degree_options = [
-        { id: "academicPlace", label: "Учебное заведение", isRange: false },
-        { id: "academicDegree", label: "Вид образования", selectOptions: ["Выберите вид образования", "Бакалавр", "Магистр", "Кандидат", "Доктор"], isRange: false },
-        { id: "academicDiplomaNumber", label: "Номер диплома", isRange: false },
-        { id: "academicDiplomaDate", label: "Дата диплома", isRange: false },
+        { id: "academicdegree:academicDegrees:academicPlace", label: "Учебное заведение", isRange: false },
+        { id: "academicdegree:academicDegrees:academicDegree", label: "Вид образования", selectOptions: ["Выберите вид образования", "Бакалавр", "Магистр", "Кандидат", "Доктор"], isRange: false },
+        { id: "academicdegree:academicDegrees:academicDiplomaNumber", label: "Номер диплома", isRange: false },
+        { id: "academicdegree:academicDegrees:academicDiplomaDate", label: "Дата диплома", isRange: false },
     ];
 
     const sport_results_options = [
-        { id: "sportType", label: "Вид спорта", isRange: false },
-        { id: "sportSkillLvl", label: "Степень владения", selectOptions: ["Выберите степень владения", "Любитель", "Первый спортивный разряд", "Второй спортивный разряд", "Третий спортивный разряд", "Кандидат мастера спорта", "Мастер спорта"], isRange: false },
+        { id: "sportskill:sportSkills:sportType", label: "Вид спорта", isRange: false },
+        { id: "sportskill:sportSkills:sportSkillLvl", label: "Степень владения", selectOptions: ["Выберите степень владения", "Любитель", "Первый спортивный разряд", "Второй спортивный разряд", "Третий спортивный разряд", "Кандидат мастера спорта", "Мастер спорта"], isRange: false },
     ];
-
 
     const [isOpenPersonal, setIsOpenPersonal] = useState(false);
     const togglePersonalDropdown = () => {
@@ -144,10 +143,10 @@ function ReportPersonalData(props) {
             setSelectedPersonalOptions([...selectedPersonalOptions, option]);
             // Если пользователь выбрал "Пол", "Дата рождения" или другие опции, 
             // то сразу устанавливаем их значения в formData
-            if (option === "family_status") {
+            if (option === "familyStatus:statusName") {
                 setFormData({
                   ...formData,
-                  [option]: option === "family_status" ? personal_data_options.find((o) => o.id === option).selectOptions[0] : {start_date: '', end_date: ''},
+                  [option]: option === "familyStatus:statusName" ? personal_data_options.find((o) => o.id === option).selectOptions[0] : {start_date: '', end_date: ''},
                 });
             }
         }
@@ -161,10 +160,10 @@ function ReportPersonalData(props) {
             setSelectedFamilyOptions([...selectedFamilyOptions, option]);
             // Если пользователь выбрал "Пол", "Дата рождения" или другие опции, 
             // то сразу устанавливаем их значения в formData
-            if (option === "relative_type") {
+            if (option === "familycomposition:relatives:relativeType") {
                 setFormData({
                   ...formData,
-                  [option]: option === "relative_type" ? family_compositions_options.find((o) => o.id === option).selectOptions[0] : {start_date: '', end_date: ''},
+                  [option]: option === "familycomposition:relatives:relativeType" ? family_compositions_options.find((o) => o.id === option).selectOptions[0] : {start_date: '', end_date: ''},
                 });
             }
         }
@@ -176,10 +175,10 @@ function ReportPersonalData(props) {
             delete formData[option];
         } else {
             setSelectedEducationOptions([...selectedEducationOptions, option]);
-            if (option === "education_type") {
+            if (option === "education:educations:educationType") {
                 setFormData({
                   ...formData,
-                  [option]: option === "education_type" ? educations_options.find((o) => o.id === option).selectOptions[0] : {start_date: '', end_date: ''},
+                  [option]: option === "education:educations:educationType" ? educations_options.find((o) => o.id === option).selectOptions[0] : {start_date: '', end_date: ''},
                 });
             }
         }
@@ -191,10 +190,10 @@ function ReportPersonalData(props) {
             delete formData[option];
         } else {
             setSelectedLanguageOptions([...selectedLanguageOptions, option]);
-            if (option === "owning_lvl_language") {
+            if (option === "languageskill:languageSkills:langName") {
                 setFormData({
                   ...formData,
-                  [option]: option === "owning_lvl_language" ? owning_languages_options.find((o) => o.id === option).selectOptions[0] : {start_date: '', end_date: ''},
+                  [option]: option === "languageskill:languageSkills:langName" ? owning_languages_options.find((o) => o.id === option).selectOptions[0] : {start_date: '', end_date: ''},
                 });
             }
         }
@@ -206,10 +205,10 @@ function ReportPersonalData(props) {
             delete formData[option];
         } else {
             setSelectedCoursesOptions([...selectedCoursesOptions, option]);
-            if (option === "course_type") {
+            if (option === "course:courses:courseType") {
                 setFormData({
                   ...formData,
-                  [option]: option === "course_type" ? courses_options.find((o) => o.id === option).selectOptions[0] : {start_date: '', end_date: ''},
+                  [option]: option === "course:courses:courseType" ? courses_options.find((o) => o.id === option).selectOptions[0] : {start_date: '', end_date: ''},
                 });
             }
         }
@@ -221,10 +220,10 @@ function ReportPersonalData(props) {
             delete formData[option];
         } else {
             setSelectedAcademicDegreeOptions([...selectedAcademicDegreeOptions, option]);
-            if (option === "academic_degree") {
+            if (option === "academicdegree:academicDegrees:academicDegree") {
                 setFormData({
                   ...formData,
-                  [option]: option === "academic_degree" ? courses_options.find((o) => o.id === option).selectOptions[0] : {start_date: '', end_date: ''},
+                  [option]: option === "academicdegree:academicDegrees:academicDegree" ? courses_options.find((o) => o.id === option).selectOptions[0] : {start_date: '', end_date: ''},
                 });
             }
         }
@@ -236,10 +235,10 @@ function ReportPersonalData(props) {
             delete formData[option];
         } else {
             setSelectedSportOptions([...selectedSportOptions, option]);
-            if (option === "owning_lvl") {
+            if (option === "sportskill:sportSkills:sportSkillLvl") {
                 setFormData({
                   ...formData,
-                  [option]: option === "owning_lvl" ? sport_results_options.find((o) => o.id === option).selectOptions[0] : {start_date: '', end_date: ''},
+                  [option]: option === "sportskill:sportSkills:sportSkillLvl" ? sport_results_options.find((o) => o.id === option).selectOptions[0] : {start_date: '', end_date: ''},
                 });
             }
         }
@@ -274,7 +273,7 @@ function ReportPersonalData(props) {
                                     />
                                     {option.label}
                                 </label>
-                                {selectedPersonalOptions.includes(option.id) && option.id !== "family_status" && (
+                                {selectedPersonalOptions.includes(option.id) && option.id !== "familyStatus:statusName" && (
                                 <div>
                                 
                                 </div>
@@ -475,7 +474,7 @@ export function renderFamilyOptions(selectedFamilyOptions, formData, handleInput
         {selectedFamilyOptions.map((option) => (
           <div key={option} className={cl.wrapper__input}>
             <label className={cl.label__name}>{family_compositions_options.find((o) => o.id === option).label}:</label>
-            {option === "relative_type" ? (
+            {option === "familycomposition:relatives:relativeType" ? (
               <select
                 value={formData[option] || ''}
                 className={cl.workerInfoSelect}
@@ -487,7 +486,7 @@ export function renderFamilyOptions(selectedFamilyOptions, formData, handleInput
                   </option>
                 ))}
               </select>
-            ) : option === "birth_date_family" ? (
+            ) : option === "familycomposition:relatives:relBirthDate" ? (
               <div className={cl.data__wrapper}>
                 <div>
                   <label style={{ marginRight: '5px', marginLeft: '13px' }}>От</label>
@@ -531,7 +530,7 @@ export function renderPersonalOptions(selectedPersonalOptions, formData, handleI
                 {selectedPersonalOptions.map((option) => (
                     <div key={option} className={cl.wrapper__input}>
                         <label className={cl.label__name}>{personal_data_options.find((o) => o.id === option).label}:</label>
-                        {option === "family_status" ? (
+                        {option === "familyStatus:statusName" ? (
                             <select
                             value={formData[option] || ''}
                             className={cl.workerInfoSelect}
@@ -569,7 +568,7 @@ export function renderEducationOptions(selectedEducationOptions, formData, handl
                 {selectedEducationOptions.map((option) => (
                     <div key={option} className={cl.wrapper__input}>
                         <label className={cl.label__name}>{educations_options.find((o) => o.id === option).label}:</label>
-                        {option === "education_type" ? (
+                        {option === "education:educations:educationType" ? (
                             <select
                             value={formData[option] || ''}
                             className={cl.workerInfoSelect}
@@ -582,7 +581,7 @@ export function renderEducationOptions(selectedEducationOptions, formData, handl
                             ))}
                             </select>
                 
-                        ) : option === "education_date_in" ? (
+                        ) : option === "education:educations:educationDateIn" ? (
                             <div className={cl.data__wrapper}>
                                 <div>
                                 <label style={{ marginRight: '5px', marginLeft: '13px' }}>От</label>
@@ -603,7 +602,7 @@ export function renderEducationOptions(selectedEducationOptions, formData, handl
                                 />
                                 </div>
                             </div>
-                         ) :  option === "education_date_out" ? (
+                         ) :  option === "education:educations:educationDateOut" ? (
                             <div className={cl.data__wrapper}>
                                 <div>
                                 <label style={{ marginRight: '5px', marginLeft: '13px' }}>От</label>
@@ -649,7 +648,7 @@ export function renderLanguageOptions(selectedLanguageOptions, formData, handleI
                 {selectedLanguageOptions.map((option) => (
                     <div key={option} className={cl.wrapper__input}>
                         <label className={cl.label__name}>{owning_languages_options.find((o) => o.id === option).label}:</label>
-                        {option === "owning_lvl_language" ? (
+                        {option === "languageskill:languageSkills:langName" ? (
                             <select
                             value={formData[option] || ''}
                             className={cl.workerInfoSelect}
@@ -687,7 +686,7 @@ export function renderCourseOptions(selectedCoursesOptions, formData, handleInpu
                 {selectedCoursesOptions.map((option) => (
                     <div key={option} className={cl.wrapper__input}>
                         <label className={cl.label__name}>{courses_options.find((o) => o.id === option).label}:</label>
-                        {option === "course_type" ? (
+                        {option === "course:courses:courseType" ? (
                             <select
                             value={formData[option] || ''}
                             className={cl.workerInfoSelect}
@@ -700,7 +699,7 @@ export function renderCourseOptions(selectedCoursesOptions, formData, handleInpu
                             ))}
                             </select>
                 
-                        ) : option === "course_start_date" ? (
+                        ) : option === "course:courses:startDate" ? (
                             <div className={cl.data__wrapper}>
                                 <div>
                                 <label style={{ marginRight: '5px', marginLeft: '13px' }}>От</label>
@@ -721,7 +720,7 @@ export function renderCourseOptions(selectedCoursesOptions, formData, handleInpu
                                 />
                                 </div>
                             </div>
-                         ) :  option === "course_end_date" ? (
+                         ) :  option === "course:courses:endDate" ? (
                             <div className={cl.data__wrapper}>
                                 <div>
                                 <label style={{ marginRight: '5px', marginLeft: '13px' }}>От</label>
@@ -767,7 +766,7 @@ export function renderAcademicDegreeOptions(selectedAcademicDegreeOptions, formD
                 {selectedAcademicDegreeOptions.map((option) => (
                     <div key={option} className={cl.wrapper__input}>
                         <label className={cl.label__name}>{academic_degree_options.find((o) => o.id === option).label}:</label>
-                        {option === "academic_degree" ? (
+                        {option === "academicdegree:academicDegrees:academicDegree" ? (
                             <select
                             value={formData[option] || ''}
                             className={cl.workerInfoSelect}
@@ -780,7 +779,7 @@ export function renderAcademicDegreeOptions(selectedAcademicDegreeOptions, formD
                             ))}
                             </select>
                 
-                        ) : option === "diploma_date" ? (
+                        ) : option === "academicdegree:academicDegrees:academicDiplomaDate" ? (
                             <div className={cl.data__wrapper}>
                                 <div>
                                 <label style={{ marginRight: '5px', marginLeft: '13px' }}>От</label>
@@ -826,7 +825,7 @@ export function renderSportOptions(selectedSportOptions, formData, handleInputCh
                 {selectedSportOptions.map((option) => (
                     <div key={option} className={cl.wrapper__input}>
                         <label className={cl.label__name}>{sport_results_options.find((o) => o.id === option).label}:</label>
-                        {option === "owning_lvl" ? (
+                        {option === "sportskill:sportSkills:sportSkillLvl" ? (
                             <select
                             value={formData[option] || ''}
                             className={cl.workerInfoSelect}

@@ -10,7 +10,7 @@ import { UpdateWorkingHistory } from '../../../api/working_history/updateWorking
 
 function LaborActivity({ workingHistory }, props) {
     const { id } = useParams();
-
+    console.log(`id: ${id}`);
     // const id = props.id;
 
     const [personnelData, setPersonnelData] = useState([]); // Данные из бэка
@@ -217,6 +217,33 @@ function LaborActivity({ workingHistory }, props) {
         setEditingId(null);
         setEditedData({});
     };
+
+    const handleDownload = async () => {
+        try {
+          const response = await axios.get(`http://127.0.0.1:8000/generate_work_reference/${id}/`, {
+            responseType: 'arraybuffer', // Указываем, что ожидаем бинарные данные
+          });
+    
+          // Создаем объект Blob из полученных данных
+          const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
+    
+          // Создаем ссылку для скачивания файла
+          const url = window.URL.createObjectURL(blob);
+    
+          // Создаем временную ссылку, добавляем атрибуты и эмулируем клик
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'work_reference.docx';
+          document.body.appendChild(a);
+          a.click();
+    
+          // Освобождаем ресурсы
+          window.URL.revokeObjectURL(url);
+          document.body.removeChild(a);
+        } catch (error) {
+          console.error('Ошибка при скачивании файла', error);
+        }
+    };
     
     return (
         <div className={cl.totalInfoWrapper}>
@@ -227,7 +254,10 @@ function LaborActivity({ workingHistory }, props) {
         </div>
         <div>
             <div>
-            <Button onClick={handleShowForm}>Добавить трудовую деятельность </Button>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <Button onClick={handleShowForm}>Добавить трудовую деятельность </Button>
+                <Button onClick={handleDownload}>Скачать данные</Button>
+            </div>
                 {showForm && (
                     <form onSubmit={handleAddNewData} style={{ marginTop: '10px' }}>
                         <table className={cl.customTable}>

@@ -85,44 +85,44 @@ function StaffInfoData(props) {
     });
 
     const spec_checks_options = [
-        { id: "docNumber", label: "Номер документа", isRange: false },
-        { id: "docDate", label: "Дата документа", isRange: false },
+        { id: "speccheck:specChecks:docNumber", label: "Номер документа", isRange: false },
+        { id: "speccheck:specChecks:docDate", label: "Дата документа", isRange: false },
     ];
 
     const attestations_options = [
-        { id: "attResult", label: "Номер документа", isRange: false },
-        { id: "lastAttDate", label: "Дата начала", isRange: false },
-        { id: "nextAttDateMin", label: "Дата окончания", isRange: false },
+        { id: "attestation:attestations:attResult", label: "Номер документа", isRange: false },
+        { id: "attestation:attestations:lastAttDate", label: "Дата начала", isRange: false },
+        { id: "attestation:attestations:nextAttDateMin", label: "Дата окончания", isRange: false },
     ];
 
     const class_categories_options = [
-        { id: "categoryType", label: "Классная категория", selectOptions:["Выберите категорию", "Спец 2 категории", "Спец 1 категории", "Наставник"], isRange: false },
+        { id: "classcategory:classCategories:categoryType", label: "Классная категория", selectOptions:["Выберите категорию", "Спец 2 категории", "Спец 1 категории", "Наставник"], isRange: false },
     ]
 
     const military_rank_options = [
-        { id: "rankTitle", label: "Звание", 
+        { id: "rankInfo:militaryRank:rankTitle", label: "Звание", 
         selectOptions:["Выберите звание", "Рядовой", "Ефрейтор", "Наставник", "Младший сержант", "Сержант", "Старший сержант", "Сержант третьего класса",
         "Сержант второго класса", "Сержант первого класса", "Штаб-сержант", "Мастер-сержант", "Лейтенант", "Старший лейтенант", "Капитан",
         "Майор", "Подполковник", "Полковник", "Генерал-майор", "Генерал-лейтенант", "Генерал-полковник", "Генерал армии"], isRange: false },
-        { id: "receivedDate", label: "Дата получения", isRange: false },
-        { id: "receivedType", label: "Вид квитанции", isRange: false },
+        { id: "rankInfo:receivedDate", label: "Дата получения", isRange: false },
+        { id: "rankInfo:receivedType", label: "Вид квитанции", isRange: false },
     ];
 
     const awards_options = [
-        { id: "rewardType", label: "Тип награды", isRange: false },
-        { id: "rewardDocNumber", label: "Номер приказа", isRange: false },
-        { id: "rewardDate", label: "Дата приказа", isRange: false },
+        { id: "reward:rewards:rewardType", label: "Тип награды", isRange: false },
+        { id: "reward:rewards:rewardDocNumber", label: "Номер приказа", isRange: false },
+        { id: "reward:rewards:rewardDate", label: "Дата приказа", isRange: false },
     ];
 
     const sick_leaves_options = [
-        { id: "sickDocNumber", label: "Номер приказа", isRange: false },
-        { id: "sickDocDate", label: "Дата приказа", isRange: false },
+        { id: "sickleave:sickleave:sickDocNumber", label: "Номер приказа", isRange: false },
+        { id: "sickleave:sickleave:sickDocDate", label: "Дата приказа", isRange: false },
     ];
 
     const investigation_retrievals_options = [
-        { id: "investigation_decree_type", label: "Тип приказа", isRange: false },
-        { id: "investigation_decree_number", label: "Номер приказа служебного расследования", isRange: false },
-        { id: "investigation_date", label: "Дата приказа", isRange: false },
+        { id: "investigation:investigations:investigation_decree_type", label: "Тип приказа", isRange: false },
+        { id: "investigation:investigations:investigation_decree_number", label: "Номер приказа служебного расследования", isRange: false },
+        { id: "investigation:investigations:investigation_date", label: "Дата приказа", isRange: false },
     ];
 
     const [isOpenStaffInfo, setIsOpenStaffInfo] = useState(false);

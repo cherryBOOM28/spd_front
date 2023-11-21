@@ -11,17 +11,16 @@ function WorkingHistoryData(props) {
         // console.log(selectedFamilyOptions);
         props.setSelectedWorkingHistoryOptions(selectedWorkingHistoryOptions)
     }, [selectedWorkingHistoryOptions]);
-
+    
     const working_history_options = [
-        { id: "startDate", label: "Начало периода", isRange: false },
-        { id: "endDate", label: "Конец периода", isRange: false },
-        { id: "department", label: "Подразделение", isRange: false },
-        { id: "positionName", label: "Должность", isRange: false },
-        { id: "organizationName", label: "Учреждение", isRange: false },
-        { id: "organizationAddress", label: "Местонахождение организации", isRange: false },
+        { id: "workinghistory:workingHistories:startDate", label: "Начало периода", isRange: false },
+        { id: "workinghistory:workingHistories:endDate", label: "Конец периода", isRange: false },
+        { id: "workinghistory:workingHistories:department", label: "Подразделение", isRange: false },
+        { id: "workinghistory:workingHistories:positionName", label: "Должность", isRange: false },
+        { id: "workinghistory:workingHistories:organizationName", label: "Учреждение", isRange: false },
+        { id: "workinghistory:workingHistories:organizationAddress", label: "Местонахождение организации", isRange: false },
     ];
 
-    
     selectedWorkingHistoryOptions.forEach((option) => {
         if (!formData.hasOwnProperty(option)) {
           formData[option] = '';
@@ -114,7 +113,7 @@ export function renderWorkingHistoryOptions(selectedWorkingHistoryOptions, formD
                             ))}
                             </select>
                 
-                        ) : option === "working_start" ? (
+                        ) : option === "workinghistory:workingHistories:startDate" ? (
                             <div className={cl.data__wrapper}>
                                 <div>
                                 <label style={{ marginRight: '5px', marginLeft: '13px' }}>От</label>
@@ -135,7 +134,7 @@ export function renderWorkingHistoryOptions(selectedWorkingHistoryOptions, formD
                                 />
                                 </div>
                             </div>
-                         ) :  option === "working_end" ? (
+                         ) :  option === "workinghistory:workingHistories:endDate" ? (
                             <div className={cl.data__wrapper}>
                                 <div>
                                 <label style={{ marginRight: '5px', marginLeft: '13px' }}>От</label>

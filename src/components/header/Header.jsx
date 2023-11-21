@@ -8,23 +8,32 @@ import Modal from '../UI/modal/Modal';
 import closeImg from '../../assets/icons/close.svg';
 import Button from '../UI/button/Button';
 import { useAuth } from '../auth/AuthContext';
+import { useParams } from 'react-router-dom';
 
 
 function Header(props) {
+    const { id } = useParams();
     //create group
     const [isClicked, setIsClicked] = useState();
 
     const [ personalData, setPersonalData ] = useState([]);
     const [ selectedIds, setSelectedIds ] = useState([]);
     const [ groupName, setGroupName ] = useState([]);
+    const [ photo, setPhoto ] = useState({});
 
     useEffect(() => {
 
         axios.get(`http://localhost:8000/api/v1/person`)
           .then(response => {
             setPersonalData(response.data);
-            console.log("response", response)
+            console.log("response", response.data.Person)
         })
+
+        // axios.get(`http://localhost:8000/api/v1/person/${id}`)
+        //   .then(response => {
+        //     setPhoto(response.data)
+        //     console.log("response", response.data.Person)
+        // })
         .catch(error => {
             console.error("Error fetching personal data:", error);
         });
@@ -69,9 +78,9 @@ function Header(props) {
                 <div className={cl.headerContent}>
                     <div className={cl.buttons}>
                         <Link to="/create" className={cl.link}>
-                            <button className={cl.btn}>Создать</button>
+                            <button className={cl.btn}>Добавить</button>
                         </Link>
-                        <button  onClick={() => setIsClicked(true)} className={cl.btn}>Создать группу</button>
+                        {/* <button  onClick={() => setIsClicked(true)} className={cl.btn}>Создать группу</button> */}
                         <Modal visible={isClicked}>
                            <div className={cl.modal_wrapper}>
                                 <div className={cl.closeBtn}>
@@ -131,8 +140,8 @@ function Header(props) {
                     <div className={cl.headerContentRight}>
                         <SearchInput />
                         <div className={cl.profile}>
-                            <img src={profilePic} alt="profilePic" />
-                            <Link to="/23" className={cl.profileName}>Ivan Valeev </Link>
+                            {/* <img src={`data:image/jpeg;base64,`} alt="profilePic" /> */}
+                            <Link to="/8" className={cl.profileName}>Louisa Sapina </Link>
                         </div>
                         <div>
                             { user ? (

@@ -137,7 +137,7 @@ const Login = () => {
             Cookies.set('jwtAccessToken', access, { expires: 1, path: '/' }); // куки истекут через 1 дней
             Cookies.set('jwtRefreshToken', refresh, { expires: 1, path: '/' });
     
-            console.log(response.data);
+            console.log("jwtAccessToken",response.data);
             navigate('/');
         } catch (error) {
             // Обработка ошибки

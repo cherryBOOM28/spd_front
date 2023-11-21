@@ -7,14 +7,14 @@ import defaultPic from '../../../assets/images/default.jpeg';
 import Cookies from 'js-cookie';
 
 
-function BasicInfo({  person, birthInfo, gender }) {
+function BasicInfo({  photo, person, birthInfo, gender }) {
     
   const { id } = useParams();
   // console.log(`id: ${id}`);
   
 
   const [personnelData, setPersonnelData] = useState([]); // Данные из бэка
-  const [photo, setPhoto] = useState([]);
+  // const [photo, setPhoto] = useState([]);
   const [editing, setEditing] = useState(false);
   const [editedWorker, setEditedWorker] = useState({
     firstName: '',
@@ -99,12 +99,14 @@ function BasicInfo({  person, birthInfo, gender }) {
       iin: editedWorker.iin
     }
 
-    const personUpdateResponse = await axios.patch(`http://localhost:8000/api/v1/person/${id}/`, personUpdateData, {
-    }, {
-      headers: {
+    const headers = 
+       {
         'Authorization': `Bearer ${accessToken}`,
-      },
+      }
+
+    const personUpdateResponse = await axios.patch(`http://localhost:8000/api/v1/person/${id}/`, personUpdateData, {headers}, {
     });
+    console.log("object", headers);
     console.log("  gender: id", gender.id);
 
 
@@ -187,11 +189,12 @@ function BasicInfo({  person, birthInfo, gender }) {
 
   if (person && gender && birthInfo) {
     return (
-      <div className={cl.info__block}>
-          {/* <img src={`data:image/jpeg;base64,${photo}`} alt="worker" className={cl.workerImg} /> */}
-          
+      <div className={cl.info__block} style={{ display: 'flex' }}>
+          <img src={`data:image/jpeg;base64,${photo.photoBinary}`} alt="worker" className={cl.workerImg} />
           <div className={cl.blocks}>
+            
             <div style={{ display: 'flex', justifyContent: 'space-between'}}>
+              
               <div style={{ display: 'flex', justifyContent: 'space-between', gap: '5px' }}>
                 <p className={cl.workerCapitalName}>{person.firstName}</p>
                 <p className={cl.workerCapitalName}>{person.surname}</p>

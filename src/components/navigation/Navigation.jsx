@@ -24,30 +24,30 @@ const Navigation = () => {
                     Главная
                 </li>
             </NavLink>
-            <NavLink  to="/administration" className={cl.navLink}>
+            {/* <NavLink  to="/administration" className={cl.navLink}>
                 <li className={cl.navLi}>
                     <img src={adminIcon} alt="homeWhightIcon" className={cl.navImg} />
                     Администратирование
                 </li>
-            </NavLink>
-            <NavLink to="/basic-orders" className={cl.navLink}>
+            </NavLink> */}
+            {/* <NavLink to="/basic-orders" className={cl.navLink}>
                 <li className={cl.navLi}>
                     <img src={ordersIcon} alt="ordersIcon" className={cl.navImg} />
                     Основные приказы
                 </li>
-            </NavLink>
+            </NavLink> */}
             <NavLink to="/reports" className={cl.navLink}>
                 <li className={cl.navLi}>
                     <img src={fileIcon} alt="fileIcon" className={cl.navImg} />
                     Отчеты
                 </li>
             </NavLink>
-            <NavLink to="/other-orders" className={cl.navLink}>
+            {/* <NavLink to="/other-orders" className={cl.navLink}>
                 <li className={cl.navLi}>
                     <img src={docIcon} alt="docIcon" className={cl.navImg} />
                     Прочие приказы
                 </li>
-            </NavLink>
+            </NavLink> */}
       </ul>
     </div>
   );
