@@ -10,6 +10,7 @@ const FormContext = createContext();
 
 export const FormProvider = ({ children }) => {
 
+  // Общие данные
   const [photo, setPhoto] = useState([
     {
       photoBinary: ''
@@ -46,18 +47,11 @@ export const FormProvider = ({ children }) => {
     resCity: '',
   });
 
-
-
-
-  const [personalData, setPersonalData] = useState({
-    family_status: "",
-    departament: "",
-    jposition: "",
-    city: '',
-  });
-
-  const [image, setImage] = useState({
-    image: ''
+  // Личные данные
+  const [positionInfo, setPositionInfo] = useState({
+    position: "",
+    department: {},
+    receivedDate: "",
   });
 
   const [education, setEducation] = useState([
@@ -292,7 +286,7 @@ export const FormProvider = ({ children }) => {
       BirthInfo: {birthInfo},
       IdentityCardInfo: {identityCardInfo},
       ResidentInfo: {residentInfo},
-      // general_info: generalInfo,
+      PositionInfo: {positionInfo},
       // educations: education.slice(1) ? education.slice(1) : [],
       // courses :courses.slice(1) ? courses.slice(1) : [],
       // academic_degree: academicDegree.slice(1) ? academicDegree.slice(1) : [],
@@ -334,7 +328,8 @@ export const FormProvider = ({ children }) => {
       Person: person,
       BirthInfo: birthInfo,
       IdentityCardInfo: identityCardInfo,
-      ResidentInfo: residentInfo,   })
+      ResidentInfo: residentInfo, 
+      PositionInfo: positionInfo,  })
   };
 
   // console.log('Person:', JSON.stringify(person));
@@ -347,6 +342,7 @@ export const FormProvider = ({ children }) => {
         birthInfo, setBirthInfo,
         identityCardInfo, setIdentityCardInfo,
         residentInfo, setResidentInfo,
+        positionInfo, setPositionInfo,
         // personalData, setPersonalData,
         // image, setImage,
         // education, setEducation,

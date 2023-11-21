@@ -88,8 +88,8 @@ function Create(props) {
                                 <div className={cl.basic__info}>
                                 <div className={cl.totalInfo}>
                                     <NewPersonal />
-                                    {/* <NewFamilyComposition />
-                                    <NewEducation />
+                                    <NewFamilyComposition />
+                                    {/* <NewEducation />
                                     <NewLanguage />
                                     <NewAcademicDegree />
                                     <NewCourses />

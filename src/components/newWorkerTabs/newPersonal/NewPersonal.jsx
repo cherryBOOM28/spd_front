@@ -1,40 +1,85 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import cl from './NewPersonal.module.css';
 import { useForm } from '../formProvider/FormProvider';
-// import Cookies from 'js-cookie';
+import Cookies from 'js-cookie';
 
 
-function NewPersonal({ iin, data }) {
-  //   const token = Cookies.get('token')
-  // console.log('Received ID:', id);
+function NewPersonal() {
 
-  const { personalData, setPersonalData } = useForm();
+  const { positionInfo, setPositionInfo } = useForm();
+  const { person, setPerson } = useForm();
+  const { emptyInputs, handleInputChange, handleSubmit } = useForm();
+  const [departments, setDepartments] = useState([]);
+  const [positions, setPositions] = useState([]);
+  const [selectedDepartment, setSelectedDepartment] = useState('');
 
-  const handleSubmit = async(event) => {
-    // event.preventDefault();
-    // axios.post('http://localhost:8000/general_info/', {
-    //     personal_data: personalData,
-    // })
-    //     .then((response) => {
-    //     // console.log('Ответ от сервера:', response.data);
-    //     })
-    //     .catch((error) => {
-    //     // console.error('Ошибка при отправке данных:', error);
-    //     });
-    };
+  const fetchData = async (id) => {
+    try {
+      const accessToken = Cookies.get('jwtAccessToken');
+      const response = await axios.get(`http://localhost:8000/api/v1/department`, {
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+        }
+      });
+      console.log("response", response.data);
+  
+      if (response.status === 200) {
+        setDepartments(response.data);
+        // setPerson(response.data.Person);  
+        console.log('Departments:', departments);
 
 
 
-  // ИЗМЕНЕНИЯ В INPUT
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
+      } else {
+        console.log(response.statusText);
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error); 
+    }
+  };
 
-    setPersonalData((prevData) => ({
-        ...prevData,
-        [name]: value,
-    }));
-};
+  useEffect(() => {
+    // Запрос данных о департаментах при загрузке компонента
+    fetchData();
+  }, []);
+
+  const handleDropdownChange = (selectedDepartmentName) => {
+    const selectedDepartment = departments.find(
+      (department) => department.DepartmentName === selectedDepartmentName
+    );
+   
+    if (selectedDepartment) {
+      console.log("Selected Department ID:", selectedDepartment.id);
+      handleInputChange(setPositionInfo, 'department', selectedDepartment);
+      setSelectedDepartment(selectedDepartmentName);
+      handleInputChange(setPositionInfo, 'department', selectedDepartment);
+
+      // Отправка запроса для получения должностей при выборе департамента
+      fetchPositions(selectedDepartment);
+    } else {
+      console.error("Selected department not found");
+    }
+  };
+
+  const fetchPositions = async (departmentId) => {
+    try {
+      const accessToken = Cookies.get('jwtAccessToken');
+      const response = await axios.get(`http://localhost:8000/api/v1/positions_departments/${departmentId.id}`, {
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+        },
+      });
+
+      if (response.status === 200) {
+        setPositions(response.data.positions);
+        console.log('Positions:', response.data.positions);
+      }
+    } catch (error) {
+      console.error('Error fetching positions:', error);
+    }
+  };
+
 
   return (
     <div className={cl.info__block}>
@@ -43,51 +88,62 @@ function NewPersonal({ iin, data }) {
              
                 <div className={cl.column}>
                     <div className={cl.rows}>
-                        <label className={cl.label}>Подразделение</label>
-                            <input
-                                type="text"
-                                className={cl.workerInfo}
-                                name="departament"
-                                value={personalData.departament}
-                                onChange={handleInputChange}
-                            />
+                        <label className={cl.label}>Департамент*</label>
+                        <select 
+                            onChange={(e) => handleDropdownChange(e.target.value)}
+                            className={cl.workerInfoSelect}
+                            value={selectedDepartment}
+                        >
+                        <option value="">Выберите департамент</option>
+                        {departments.map((department) => (
+                            <option key={department.id} value={department.DepartmentName}>
+                            {department.DepartmentName}
+                            </option>
+                        ))}
+                        </select>
                     </div>
                     <div className={cl.rows}>
-                        <label className={cl.label}>Должность</label>
-                            <input
-                                type="text"
-                                className={cl.workerInfo}
-                                name="jposition"
-                                value={personalData.jposition}
-                                onChange={handleInputChange}
-                            />
+                        <label className={cl.label}>Должность*</label>
+                            <select 
+                              onChange={(e) => handleInputChange(setPositionInfo, 'position', e.target.value)}
+                              
+                              className={cl.workerInfoSelect}
+                            >
+                              <option value="">Выберите должность</option>
+                              {positions.map((position) => (
+                                <option key={position.id} value={position.positionTitle}>
+                                  {position.positionTitle}
+                                </option>
+                              ))}
+                          </select>
                     </div>
                 </div>
                 <div className={cl.column}>
                     <div className={cl.rows}>
-                        <label className={cl.label}>Семейное положение</label>
+                        <label className={cl.label}>Семейное положение*</label>
                             <select
                             className={cl.workerInfoSelect}
-                            name="family_status"
-                            value={personalData.family_status}
-                            onChange={handleInputChange}
+                            name="familyStatus"
+                            value={person.familyStatus}
+                            onChange={(e) => handleInputChange(setPerson, 'familyStatus', e.target.value)}
                             >
                                 <option value="">Выберите семейное положение</option>
-                                <option value="Не женат/не замужем">Неженат/незамужем</option>
+                                <option value="Не женат/не замужем">Не женат/не замужем</option>
                                 <option value="Женат/замужем">Женат/замужем</option>
                                 <option value="Вдова/вдовец">Вдова/вдовец</option>
                                 <option value="Разведена/разведен">Разведен/разведена</option>
                             </select>
                     </div>
                     <div className={cl.rows}>
-                        <label className={cl.label}>Город подразделения</label>
-                            <input
-                                type="text"
-                                className={cl.workerInfo}
-                                name="city"
-                                value={personalData.city}
-                                onChange={handleInputChange}
-                            />
+                        <label className={cl.label}>Город подразделения*</label>
+                        <input
+                            type="date"
+                            className={cl.workerInfo}
+                            required
+                            name="receivedDate"
+                            value={positionInfo.dateOfIssue}
+                            onChange={(e) => handleInputChange(setPositionInfo, 'receivedDate', e.target.value)}
+                        />
                     </div>
                 </div>
             </div>
