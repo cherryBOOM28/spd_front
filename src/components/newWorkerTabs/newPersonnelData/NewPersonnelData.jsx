@@ -19,12 +19,11 @@ const NewPersonnelData = (props) => {
 
     // eslint-disable-next-line 
     const [inputData, setInputData] = useState({ 
-        doc_number: '',
-        doc_date: '',
+        docNumber: '',
+        docDate: '',
         
-        attestation_result: '',
-        last_attestation_date: '',
-        next_attestation_date: '',
+        attResult: '',
+        lastAttDate: '',
         
         military_rank: '',
         received_date: '',

@@ -30,26 +30,26 @@ const NewAcademicDegree = (props) => {
     };
 
     const [inputData, setInputData] = useState({
-        education_place_academic: '',
-        academic_degree: '',
-        diploma_number_academic: '',
-        diploma_date: ''
+        academicPlace: '',
+        academicDegree: '',
+        academicDiplomaNumber: '',
+        academicDiplomaDate: ''
     });
 
     const handleAddDegree = async (e) => {
         e.preventDefault();
         try {
             // console.log(inputData)
-            if (!inputData.education_place_academic || !inputData.academic_degree || !inputData.diploma_number_academic || !inputData.diploma_date) {
-                alert('Пожалуйста, заполните все поля!');
-                return;
-            }
+            // if (!inputData.education_place_academic || !inputData.academic_degree || !inputData.diploma_number_academic || !inputData.diploma_date) {
+            //     alert('Пожалуйста, заполните все поля!');
+            //     return;
+            // }
 
             const newAcademicDegree = {
-                education_place_academic: inputData.education_place_academic,
-                academic_degree: inputData.academic_degree,
-                diploma_number_academic: inputData.diploma_number_academic,
-                diploma_date: inputData.diploma_date
+                academicPlace: inputData.academicPlace,
+                academicDegree: inputData.academicDegree,
+                academicDiplomaNumber: inputData.academicDiplomaNumber,
+                academicDiplomaDate: inputData.academicDiplomaDate
             };
 
             // setAcademicDegree(prevRecords => [...prevRecords, newAcademicDegree]);
@@ -58,32 +58,14 @@ const NewAcademicDegree = (props) => {
                 // Create a new array by copying the previous array and adding a new element
                 const updatedArray = [...prevArray, newAcademicDegree];
                 return updatedArray;
-              });
+            });
 
 
-            // console.log(
-            //     { 'academic_degree': [newAcademicDegree] }
-            // )
-
-            // const response = await axios.post('http://localhost:3001/academic_degree', newAcademicDegree);
-
-            // if (response.status === 201) {
-            //     setAcademicDegree(prevRecords => [...prevRecords, newAcademicDegree]);
-            //     setInputData({
-            //         education_place: '',
-            //         academic_degree: '',
-            //         diploma_number: '',
-            //         diploma_date: ''
-            //     });
-            //     handleShowForm(false)
-            // } else {
-            //     console.error('Error adding education');
-            // }
             setInputData({
-                education_place_academic: '',
-                academic_degree: '',
-                diploma_number_academic: '',
-                diploma_date: ''
+                academicPlace: '',
+                academicDegree: '',
+                academicDiplomaNumber: '',
+                academicDiplomaDate: ''
             })
         } catch (error) {
             console.error('Error:', error);
@@ -94,10 +76,10 @@ const NewAcademicDegree = (props) => {
     // EDIT
     const [editedData, setEditedData] = useState({
         id: '',
-        education_place_academic: '',
-        academic_degree: '',
-        diploma_number_academic: '',
-        diploma_date: ''
+        academicPlace: '',
+        academicDegree: '',
+        academicDiplomaNumber: '',
+        academicDiplomaDate: ''
     });
 
     const [editingId, setEditingId] = useState(null);
@@ -126,15 +108,15 @@ const NewAcademicDegree = (props) => {
                                                         type="text"
                                                         className={cl.formInput}
                                                         placeholder="Учебное заведение "
-                                                        value={inputData.education_place_academic}
-                                                        onChange={(e) => setInputData({ ...inputData, education_place_academic: e.target.value })}
+                                                        value={inputData.academicPlace}
+                                                        onChange={(e) => setInputData({ ...inputData, academicPlace: e.target.value })}
                                                     />
                                                 </td>
                                                 <td>
                                                     <select
                                                         className={cl.formInput}
-                                                        value={inputData.academic_degree}
-                                                        onChange={(e) => setInputData({ ...inputData, academic_degree: e.target.value })}
+                                                        value={inputData.academicDegree}
+                                                        onChange={(e) => setInputData({ ...inputData, academicDegree: e.target.value })}
                                                     >
                                                         <option value="">Ученая степень</option>
                                                         <option value="Бакалавр">Бакалавр</option>
@@ -148,8 +130,8 @@ const NewAcademicDegree = (props) => {
                                                         type="number"
                                                         className={cl.formInput}
                                                         placeholder="Номер диплома"
-                                                        value={inputData.diploma_number_academic}
-                                                        onChange={(e) => setInputData({ ...inputData, diploma_number_academic: e.target.value })}
+                                                        value={inputData.academicDiplomaNumber}
+                                                        onChange={(e) => setInputData({ ...inputData, academicDiplomaNumber: e.target.value })}
                                                     />
                                                 </td>
                                                 <td>
@@ -158,12 +140,12 @@ const NewAcademicDegree = (props) => {
                                                         type="date"
                                                         className={cl.formInput}
                                                         placeholder="Дата диплома"
-                                                        value={inputData.diploma_date || ''}
+                                                        value={inputData.academicDiplomaDate || ''}
                                                         onChange={(e) => {
                                                             const newDate = e.target.value;
                                                             setInputData((prevWorker) => ({
                                                             ...prevWorker,
-                                                            diploma_date: newDate,
+                                                            academicDiplomaDate: newDate,
                                                             }));
                                                         }}
                                                     />
@@ -190,13 +172,13 @@ const NewAcademicDegree = (props) => {
                                      <tbody>
                                          {academicDegree.slice(1).map((d, i) => (
                                              <tr key={i}>
-                                                 <td>{editingId === d.id ? <input type="text" className={cl.editInput} value={editedData.education_place_academic} onChange={(e) => setEditedData({ ...editedData, education_place_academic: e.target.value })} /> : d.education_place_academic}</td>
+                                                 <td>{editingId === d.id ? <input type="text" className={cl.editInput} value={editedData.academicPlace} onChange={(e) => setEditedData({ ...editedData, academicPlace: e.target.value })} /> : d.academicPlace}</td>
                                                  <td>  
                                                      {editingId === d.id ? (
                                                          <select
                                                              className={cl.selectRelative_type}
-                                                             value={editedData.academic_degree}
-                                                             onChange={(e) => setEditedData({ ...editedData, academic_degree: e.target.value })}
+                                                             value={editedData.academicDegree}
+                                                             onChange={(e) => setEditedData({ ...editedData, academicDegree: e.target.value })}
                                                          >
                                                               <option value="">Ученая степень</option>
                                                              <option value="Бакалавр">Бакалавр</option>
@@ -205,10 +187,10 @@ const NewAcademicDegree = (props) => {
                                                              <option value="Доктор">Доктор наук</option>
                                                          </select>
                                                      ) : (
-                                                         d.academic_degree
+                                                         d.academicDegree
                                                      )}
                                                  </td>
-                                                 <td>{editingId === d.id ? <input type='number' className={cl.editInput}  value={editedData.diploma_number_academic} onChange={(e) => setEditedData({ ...editedData, diploma_number_academic: e.target.value })} /> : d.diploma_number_academic}</td>
+                                                 <td>{editingId === d.id ? <input type='number' className={cl.editInput}  value={editedData.academicDiplomaNumber} onChange={(e) => setEditedData({ ...editedData, academicDiplomaNumber: e.target.value })} /> : d.academicDiplomaNumber}</td>
                                                  <td>
                                                      {editingId === d.id ? (
                                                          <div className={cl.datePickerContainer}>
@@ -216,34 +198,21 @@ const NewAcademicDegree = (props) => {
                                                                  type="date"
                                                                  className={cl.formInput}
                                                                  placeholder="Дата диплома"
-                                                                 value={editedData.diploma_date || ''}
+                                                                 value={editedData.academicDiplomaDate || ''}
                                                                  onChange={(e) => {
                                                                      const newDate = e.target.value;
                                                                      setEditedData((prevData) => ({
                                                                      ...prevData,
-                                                                     diploma_date: newDate,
+                                                                     academicDiplomaDate: newDate,
                                                                      }));
                                                                  }}
                                                              />
      
                                                          </div>
                                                      ) : (
-                                                         d.diploma_date
+                                                         d.academicDiplomaDate
                                                      )}
                                                  </td>
-                                                 {/* <td className={cl.relativesActionBtns} style={{}}>
-                                                     {editingId === d.id ? (
-                                                         <>
-                                                             <div onClick={() => handleSaveEdit(d.id)}>&#10003;</div>
-                                                             <div onClick={handleCancelEdit}>&#x2715;</div>
-                                                         </>
-                                                     ) : (
-                                                         <>
-                                                             <div onClick={() => handleEdit(d.id)}>&#9998;</div>
-                                                             <div onClick={() => handleDelete(d.id)}>Удалить</div>
-                                                         </>
-                                                     )}
-                                                 </td> */}
                                              </tr>
                                          ))}
                                      </tbody>

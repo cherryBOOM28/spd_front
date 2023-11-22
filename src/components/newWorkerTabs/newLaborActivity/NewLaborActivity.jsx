@@ -6,7 +6,7 @@ import { useForm } from '../formProvider/FormProvider';
 
 const NewLaborActivity = (props) => {
    
-    const {laborActivity, setLaborActivity} = useForm();
+    const { workingHistory, setWorkingHistory } = useForm();
 
 
     // ДОБАВЛЕНИЕ НАГРАДЫ
@@ -17,12 +17,12 @@ const NewLaborActivity = (props) => {
     };
 
     const [inputData, setInputData] = useState({
-        working_start: '',
-        working_end: '',
-        departament_work: '',
-        jposition: '',
-        orfanization_name: '',
-        organization_addres: '',
+        positionName: '',
+        startDate: '',
+        endDate: '',
+        department: '',
+        organizationName: '',
+        organizationAddress: '',
     });
 
     const handleInputChange = (event) => {
@@ -44,12 +44,12 @@ const NewLaborActivity = (props) => {
             // }
 
             const newData = {
-              working_start: inputData.working_start,
-              working_end: inputData.working_end,
-              departament_work: inputData.departament_work,
-              jposition_work: inputData.jposition_work,
-              orfanization_name: inputData.orfanization_name,
-              organization_addres: inputData.organization_addres,
+              positionName: inputData.positionName,
+              startDate: inputData.startDate,
+              endDate: inputData.endDate,
+              department: inputData.department,
+              organizationName: inputData.organizationName,
+              organizationAddress: inputData.organizationAddress,
             };
             // console.log(newData)
 
@@ -59,16 +59,16 @@ const NewLaborActivity = (props) => {
             //     return updatedArray;
             //   });
 
-              setLaborActivity((prevArray) => [...prevArray, newData]);
+              setWorkingHistory((prevArray) => [...prevArray, newData]);
 
             setInputData(
                 {
-                working_start: '',
-                working_end: '',
-                departament_work: '',
-                jposition_work: '',
-                orfanization_name: '',
-                organization_addres: '',
+                positionName: '',
+                startDate: '',
+                endDate: '',
+                department: '',
+                organizationName: '',
+                organizationAddress: '',
             })
         } catch (error) {
             console.error('Error:', error);
@@ -77,12 +77,12 @@ const NewLaborActivity = (props) => {
 
     // EDIT
     const [editedData, setEditedData] = useState({
-      working_start: '',
-      working_end: '',
-      departament_work: '',
-      jposition_work: '',
-      orfanization_name: '',
-      organization_addres: '',
+        positionName: '',
+        startDate: '',
+        endDate: '',
+        department: '',
+        organizationName: '',
+        organizationAddress: '',
     });
 
      // eslint-disable-next-line
@@ -109,13 +109,13 @@ const NewLaborActivity = (props) => {
                                         type="date"
                                         className={cl.formInput}
                                         placeholder="Начало периода"
-                                        name='working_start'
-                                        value={inputData.working_start || ''}
+                                        name='startDate'
+                                        value={inputData.startDate || ''}
                                         onChange={(e) => {
                                             const newDate = e.target.value;
                                             setInputData((prevWorker) => ({
                                             ...prevWorker,
-                                            working_start: newDate,
+                                            startDate: newDate,
                                             }));
                                         }}
                                     />
@@ -126,14 +126,14 @@ const NewLaborActivity = (props) => {
                                     <input
                                         type="date"
                                         className={cl.formInput}
-                                        name='working_end'
+                                        name='endDate'
                                         placeholder="Конец периода"
-                                        value={inputData.working_end || ''}
+                                        value={inputData.endDate || ''}
                                         onChange={(e) => {
                                             const newDate = e.target.value;
                                             setInputData((prevWorker) => ({
                                             ...prevWorker,
-                                            working_end: newDate,
+                                            endDate: newDate,
                                             }));
                                         }}
                                     />
@@ -144,8 +144,8 @@ const NewLaborActivity = (props) => {
                                         type="text"
                                         className={cl.formInput}
                                         placeholder="Должность"
-                                        name='departament_work'
-                                        value={inputData.departament_work}
+                                        name='positionName'
+                                        value={inputData.positionName}
                                         onChange={handleInputChange}
                                     />
                                 </td>
@@ -153,9 +153,9 @@ const NewLaborActivity = (props) => {
                                     <input
                                         type="text"
                                         className={cl.formInput}
-                                        name='jposition_work'
+                                        name='department'
                                         placeholder="Подразделение"
-                                        value={inputData.jposition_work}
+                                        value={inputData.department}
                                         onChange={handleInputChange}
                                     />
                                 </td>
@@ -164,8 +164,8 @@ const NewLaborActivity = (props) => {
                                         type="text"
                                         className={cl.formInput}
                                         placeholder="Учреждение"
-                                        name='orfanization_name'
-                                        value={inputData.orfanization_name}
+                                        name='organizationName'
+                                        value={inputData.organizationName}
                                         onChange={handleInputChange}
                                     />
                                 </td>
@@ -173,9 +173,9 @@ const NewLaborActivity = (props) => {
                                     <input
                                         type="text"
                                         className={cl.formInput}
-                                        name='organization_addres'
+                                        name='organizationAddress'
                                         placeholder="Местонахождение организации"
-                                        value={inputData.organization_addres}
+                                        value={inputData.organizationAddress}
                                         onChange={handleInputChange}
                                     />
                                 </td>
@@ -198,8 +198,8 @@ const NewLaborActivity = (props) => {
                               <td>Местонахождение организации</td>
                             </tr>
                         </thead>
-                        {/* <tbody>
-                            {laborActivity.map((d, i) => (
+                        <tbody>
+                            {workingHistory.slice(1).map((d, i) => (
                                 <tr key={i}> 
                                     <td>
                                       {editingId === d.id ? (
@@ -208,18 +208,18 @@ const NewLaborActivity = (props) => {
                                                 type="date"
                                                 className={cl.formInput}
                                                 placeholder="Начало периода"
-                                                value={editedData.working_start || ''}
+                                                value={editedData.startDate || ''}
                                                 onChange={(e) => {
                                                     const newDate = e.target.value;
                                                     setEditedData((prevData) => ({
                                                     ...prevData,
-                                                    working_start: newDate,
+                                                    startDate: newDate,
                                                     }));
                                                 }}
                                             />
                                         </div>
                                     ) : (
-                                        d.working_start
+                                        d.startDate
                                     )}
                                     </td>
                                     <td>
@@ -229,28 +229,28 @@ const NewLaborActivity = (props) => {
                                                 type="date"
                                                 className={cl.formInput}
                                                 placeholder="Конец периода"
-                                                value={editedData.working_end || ''}
+                                                value={editedData.endDate || ''}
                                                 onChange={(e) => {
                                                     const newDate = e.target.value;
                                                     setEditedData((prevData) => ({
                                                     ...prevData,
-                                                    working_end: newDate,
+                                                    endDate: newDate,
                                                     }));
                                                 }}
                                             />
                                         </div>
                                     ) : (
-                                        d.working_end
+                                        d.endDate
                                     )}
                                     </td>
-                                    <td>{editingId === d.id ? <input type="text" className={cl.editInput} value={editedData.fio} onChange={(e) => setEditedData({ ...editedData, departament_work: e.target.value })} /> : d.departament_work}</td>
-                                    <td>{editingId === d.id ? <input type="text" className={cl.editInput} value={editedData.fio} onChange={(e) => setEditedData({ ...editedData, jposition_work: e.target.value })} /> : d.jposition_work}</td>
-                                    <td>{editingId === d.id ? <input type="text" className={cl.editInput} value={editedData.fio} onChange={(e) => setEditedData({ ...editedData, orfanization_name: e.target.value })} /> : d.orfanization_name}</td>
-                                    <td>{editingId === d.id ? <input type="text" className={cl.editInput} value={editedData.fio} onChange={(e) => setEditedData({ ...editedData, organization_addres: e.target.value })} /> : d.organization_addres}</td>
+                                    <td>{editingId === d.id ? <input type="text" className={cl.editInput} value={editedData.positionName} onChange={(e) => setEditedData({ ...editedData, positionName: e.target.value })} /> : d.positionName}</td>
+                                    <td>{editingId === d.id ? <input type="text" className={cl.editInput} value={editedData.department} onChange={(e) => setEditedData({ ...editedData, department: e.target.value })} /> : d.department}</td>
+                                    <td>{editingId === d.id ? <input type="text" className={cl.editInput} value={editedData.organizationName} onChange={(e) => setEditedData({ ...editedData, organizationName: e.target.value })} /> : d.organizationName}</td>
+                                    <td>{editingId === d.id ? <input type="text" className={cl.editInput} value={editedData.organizationAddress} onChange={(e) => setEditedData({ ...editedData, organizationAddress: e.target.value })} /> : d.organizationAddress}</td>
                                    
                                 </tr>
                             ))}
-                        </tbody> */}
+                        </tbody>
                     </table>
                 </div>
                 )}

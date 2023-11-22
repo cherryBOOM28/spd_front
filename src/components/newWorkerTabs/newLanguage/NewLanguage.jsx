@@ -7,7 +7,7 @@ import list from '../../data/languages';
 
 const NewLanguage = (props) => {
 
-    const {language, setLanguage} = useForm();
+    const { languageSkill, setLanguageSkill } = useForm();
     const [apiLanguages, setApiLanguages] = useState([]);
 
      // eslint-disable-next-line
@@ -60,26 +60,26 @@ const NewLanguage = (props) => {
     };
 
     const [inputData, setInputData] = useState({
-        language_name: '',
-        owning_lvl_language: '',
+        langName: '',
+        skillLvl: '',
     });
 
     const handleAddLanguage = async (e) => {
         e.preventDefault();
         try {
 
-            console.log(inputData)
-            if (!inputData.language_name || !inputData.owning_lvl_language) {
-                alert('Пожалуйста, заполните все поля!');
-                return;
-            }
+            // console.log(inputData)
+            // if (!inputData.language_name || !inputData.owning_lvl_language) {
+            //     alert('Пожалуйста, заполните все поля!');
+            //     return;
+            // }
 
             // Получаем название языка по его коду из объекта apiLanguages
-            const languageName = apiLanguages[inputData.language_name];
+            const languageName = apiLanguages[inputData.langName];
 
             const newLanguage = {
-              language_name: languageName,
-              owning_lvl_language: inputData.owning_lvl_language,
+              langName: languageName,
+              skillLvl: inputData.skillLvl,
             };
 
             // console.log(
@@ -91,7 +91,7 @@ const NewLanguage = (props) => {
 
             // setLanguage(prevRecords => [...prevRecords, newLanguage]);
 
-            setLanguage((prevArray) => {
+            setLanguageSkill((prevArray) => {
                 // Create a new array by copying the previous array and adding a new element
                 const updatedArray = [...prevArray, newLanguage];
                 return updatedArray;
@@ -108,8 +108,8 @@ const NewLanguage = (props) => {
             //     console.error('Error adding education');
             // }
             setInputData({
-                language_name: '',
-                owning_lvl_language: '',
+                langName: '',
+                skillLvl: '',
             })
         } catch (error) {
             console.error('Error:', error);
@@ -118,8 +118,8 @@ const NewLanguage = (props) => {
 
     // EDIT
     const [editedData, setEditedData] = useState({
-      language_name: '',
-      owning_lvl_language: '',
+        langName: '',
+        skillLvl: '',
     });
 
     const [editingId, setEditingId] = useState(null);
@@ -146,8 +146,8 @@ const NewLanguage = (props) => {
                                             <td>
                                                 <select
                                                     className={cl.formInput}
-                                                    value={inputData.language_name}
-                                                    onChange={(e) => setInputData({ ...inputData, language_name: e.target.value })}
+                                                    value={inputData.langName}
+                                                    onChange={(e) => setInputData({ ...inputData, langName: e.target.value })}
                                                 >
                                                     <option value="">Выберите язык</option>
                                                     {Object.keys(apiLanguages).map((languageCode, index) => (
@@ -160,8 +160,8 @@ const NewLanguage = (props) => {
                                             <td>
                                             <select
                                                     className={cl.formInput}
-                                                    value={inputData.owning_lvl_language}
-                                                    onChange={(e) => setInputData({ ...inputData, owning_lvl_language: e.target.value })}
+                                                    value={inputData.skillLvl}
+                                                    onChange={(e) => setInputData({ ...inputData, skillLvl: e.target.value })}
                                                 >
                                                     <option value="">Выберите уровень владения</option>
                                                     <option value="Со словарем">Со словарем</option>
@@ -190,14 +190,14 @@ const NewLanguage = (props) => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {language.slice(1).map((d, i) => (
+                                    {languageSkill.slice(1).map((d, i) => (
                                         <tr key={i}>
                                             <td>  
                                                 {editingId === d.id ? (
                                                     <select
                                                         className={cl.selectRelative_type}
-                                                        value={editedData.language_name}
-                                                        onChange={(e) => setEditedData({ ...editedData, language_name: e.target.value })}
+                                                        value={editedData.langName}
+                                                        onChange={(e) => setEditedData({ ...editedData, langName: e.target.value })}
                                                     >
                                                         <option value="">Выберите тип образования</option>
                                                         {Object.keys(apiLanguages).map((languageCode) => (
@@ -207,15 +207,15 @@ const NewLanguage = (props) => {
                                                         ))}
                                                     </select>
                                                 ) : (
-                                                    d.language_name
+                                                    d.langName
                                                 )}
                                             </td>
                                             <td>  
                                                 {editingId === d.id ? (
                                                     <select
                                                         className={cl.selectRelative_type}
-                                                        value={editedData.owning_lvl_language}
-                                                        onChange={(e) => setEditedData({ ...editedData, owning_lvl_language: e.target.value })}
+                                                        value={editedData.skillLvl}
+                                                        onChange={(e) => setEditedData({ ...editedData, skillLvl: e.target.value })}
                                                     >
                                                         <option value="">Выберите уровень владения</option>
                                                         <option value="начальный">Начальный</option>
@@ -226,7 +226,7 @@ const NewLanguage = (props) => {
                                                         <option value="профессиональный">Профессиональный уровень владения</option>
                                                     </select>
                                                 ) : (
-                                                    d.owning_lvl_language
+                                                    d.skillLvl
                                                 )}
                                             </td>
                                            

@@ -54,71 +54,71 @@ export const FormProvider = ({ children }) => {
     receivedDate: "",
   });
 
+  const [familyComposition, setFamilyComposition] = useState([
+    {
+      relativeType: "",
+      relName: "",
+      relSurname: "",
+      relPatronymic: "",
+      relIin: "",
+      relBirthDate: "",
+      relJobPlace: "",
+    }
+  ]);
+
   const [education, setEducation] = useState([
     {
-      education_type: '',
-      education_place: '',
-      education_date_in: '',
-      education_date_out: '',
-      education_speciality: '',
-      diploma_number: ''
+      educationType: '',
+      educationPlace: '',
+      educationDateIn: '',
+      educationDateOut: '',
+      speciality: '',
+      diplomaNumber: ''
     }
   ]);
 
-  const [family_compositions, setFamilyCompositions] = useState([
+  const [languageSkill, setLanguageSkill] = useState([
     {
-      relative_type: "",
-      fio: "",
-      rel_iin: "",
-      birth_date_family: "",
-      job_place: "",
-    }
-  ])
-
-  const [language, setLanguage] = useState([
-    {
-      // id: '',
-      language_name: '',
-      owning_lvl_language: '',
+      langName: '',
+      skillLvl: '',
     }
   ]);
 
-  const [courses, setCourses] = useState([
+  const [course, setCourse] = useState([
     {
-      // id: '',
-      course_type: '',
-      course_organization: '',
-      course_start_date: '',
-      course_end_date: '',
-      document_type: '',
-      course_name: ''
+      courseName: '',
+      courseType: '',
+      courseOrg: '',
+      startDate: '',
+      endDate: '',
+      documentType: ''
     }
   ]);
 
   const [academicDegree, setAcademicDegree] = useState([
     {
-      education_place_academic: '',
-      academic_degree: '',
-      diploma_number_academic: '',
-      diploma_date: ''
+      academicPlace: '',
+      academicDegree: '',
+      academicDiplomaNumber: '',
+      academicDiplomaDate: ''
     }
   ]);
 
-  const [sport, setSport] = useState([
+  const [sportSkill, setSportSkill] = useState([
     {
-      sport_type: '',
-      owning_lvl_sport_results: '',
+      sportType: '',
+      sportSkillLvl: '',
     }
   ]);
 
-  const [laborActivity, setLaborActivity] = useState([
+  const [workingHistory, setWorkingHistory] = useState([
     {
-      working_start: '',
-      working_end: '',
-      departament_work: '',
-      jposition_work: '',
-      organization_name: '',
-      organization_addres: '',
+      positionName: '',
+      startDate: '',
+      endDate: '',
+      department: '',
+      organizationName: '',
+      organizationAddress: '',
     }
   ]);
 
@@ -287,22 +287,27 @@ export const FormProvider = ({ children }) => {
       IdentityCardInfo: {identityCardInfo},
       ResidentInfo: {residentInfo},
       PositionInfo: {positionInfo},
-      // educations: education.slice(1) ? education.slice(1) : [],
-      // courses :courses.slice(1) ? courses.slice(1) : [],
-      // academic_degree: academicDegree.slice(1) ? academicDegree.slice(1) : [],
-      // attestations: attestations,
-      // autobiography: autobiography,
-      // investigation_retrievals: investigation_retrievals.slice(1) ? investigation_retrievals.slice(1) : [],
-      // awards: awards.slice(1) ? awards.slice(1) : [],
-      // class_categories: class_category,
-      // family_compositions: family_compositions.slice(1) ? family_compositions.slice(1) : [],
-      // orders_list: reportOrders.slice(1) ? reportOrders.slice(1) : [],
-      // owning_languages:  language.slice(1) ? language.slice(1) : [],
-      // sick_leaves: sick_leaves.slice(1) ? sick_leaves.slice(1) : [],
-      // spec_checks: spec_checks,
-      // sport_results:  sport.slice(1) ? sport.slice(1) : [],
-      // working_histories: laborActivity.slice(1) ? laborActivity.slice(1) : [],
-      // military_rank: military_rank         
+      FamilyComposition: {
+        relatives: familyComposition.slice(1) ? familyComposition.slice(1) : [],
+      },
+      Education: {
+        educations: education.slice(1) ? education.slice(1) : [],
+      },
+      LanguageSkill: {
+        languageSkills: languageSkill.slice(1) ? languageSkill.slice(1) : [],
+      },
+      Course: {
+        courses: course.slice(1) ? course.slice(1) : [],
+      },
+      AcademicDegree: {
+        academicDegrees: academicDegree.slice(1) ? academicDegree.slice(1) : [],
+      },
+      SportSkill: {
+        sportSkills: sportSkill.slice(1) ? sportSkill.slice(1) : [],
+      },
+      WorkingHistory: {
+        workingHistories: workingHistory.slice(1) ? workingHistory.slice(1) : [],
+      },
     }
 
     event.preventDefault();
@@ -329,7 +334,29 @@ export const FormProvider = ({ children }) => {
       BirthInfo: birthInfo,
       IdentityCardInfo: identityCardInfo,
       ResidentInfo: residentInfo, 
-      PositionInfo: positionInfo,  })
+      PositionInfo: positionInfo,
+      FamilyComposition: {
+        relatives: familyComposition.slice(1) ? familyComposition.slice(1) : [],
+      },
+      Education: {
+        educations: education.slice(1) ? education.slice(1) : [],
+      },
+      LanguageSkill: {
+        languageSkills: languageSkill.slice(1) ? languageSkill.slice(1) : [],
+      },
+      Course: {
+        courses: course.slice(1) ? course.slice(1) : [],
+      },
+      AcademicDegree: {
+        academicDegrees: academicDegree.slice(1) ? academicDegree.slice(1) : [],
+      },
+      SportSkill: {
+        sportSkills: sportSkill.slice(1) ? sportSkill.slice(1) : [],
+      },
+      WorkingHistory: {
+        workingHistories: workingHistory.slice(1) ? workingHistory.slice(1) : [],
+      },
+    })
   };
 
   // console.log('Person:', JSON.stringify(person));
@@ -343,14 +370,13 @@ export const FormProvider = ({ children }) => {
         identityCardInfo, setIdentityCardInfo,
         residentInfo, setResidentInfo,
         positionInfo, setPositionInfo,
-        // personalData, setPersonalData,
-        // image, setImage,
-        // education, setEducation,
-        // language, setLanguage,
-        // courses, setCourses,
-        // academicDegree, setAcademicDegree,
-        // sport, setSport,
-        // laborActivity, setLaborActivity,
+        familyComposition, setFamilyComposition,
+        education, setEducation,
+        languageSkill, setLanguageSkill,
+        course, setCourse,
+        academicDegree, setAcademicDegree,
+        sportSkill, setSportSkill,
+        workingHistory, setWorkingHistory,
         // family_compositions, setFamilyCompositions,
         // spec_checks, setSpec_checks,
         // attestations, setAttestations,

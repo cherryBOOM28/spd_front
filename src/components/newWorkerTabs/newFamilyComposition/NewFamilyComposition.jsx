@@ -4,7 +4,7 @@ import Button from '../../UI/button/Button';
 import { useForm } from '../formProvider/FormProvider';
 
 const NewFamilyComposition = (props) => {
-    const { family_compositions, setFamilyCompositions } = useForm();
+    const { familyComposition, setFamilyComposition } = useForm();
 
   // ИЗМЕНЕНИЯ В INPUT
     const handleInputChange = (event) => {
@@ -24,14 +24,16 @@ const NewFamilyComposition = (props) => {
     };
 
     const [inputData, setInputData] = useState({
-        relative_type: "",
-        fio: "",
-        rel_iin: "",
-        birth_date_family: "",
-        job_place: "",
+        relativeType: "",
+        relName: "",
+        relSurname: "",
+        relPatronymic: "",
+        relIin: "",
+        relBirthDate: "",
+        relJobPlace: "",
     });
 
-    console.log("inputData", inputData);
+    // console.log("inputData", inputData);
 
     const handleAddFamilyMember = async (e) => {
         e.preventDefault();
@@ -43,25 +45,31 @@ const NewFamilyComposition = (props) => {
             // }
 
             const newFamily = {
-                relative_type: inputData.relative_type,
-                fio: inputData.fio,
-                rel_iin: inputData.rel_iin,
-                birth_date_family: inputData.birth_date_family,
-                job_place: inputData.job_place
+                relativeType: inputData.relativeType,
+                relName: inputData.relName,
+                relSurname: inputData.relSurname,
+                relPatronymic: inputData.relPatronymic,
+                relIin: inputData.relIin,
+                relBirthDate: inputData.relBirthDate,
+                relJobPlace: inputData.relJobPlace
             };
-            // setEducation(prevRecords => [...prevRecords, newEducation]);
-            setFamilyCompositions((prevArray) => {
-                // Create a new array by copying the previous array and adding a new element
-                const updatedArray = [...prevArray, newFamily];
-                return updatedArray;
-                });
+       
+            // setRelatives((prevArray) => {
+            //     // Create a new array by copying the previous array and adding a new element
+            //     const updatedArray = [...prevArray, newFamily];
+            //     return updatedArray;
+            // });
+            
+            setFamilyComposition((prevRelatives) => [...prevRelatives, newFamily]);
 
             setInputData({
-                relative_type: "",
-                fio: "",
-                rel_iin: "",
-                birth_date_family: "",
-                job_place: "",
+                relativeType: "",
+                relName: "",
+                relSurname: "",
+                relPatronymic: "",
+                relIin: "",
+                relBirthDate: "",
+                relJobPlace: "",
             })
         } catch (error) {
             console.error('Error:', error);
@@ -71,11 +79,13 @@ const NewFamilyComposition = (props) => {
     // EDIT
     const [editedData, setEditedData] = useState({
         id: '',
-        relative_type: "",
-        fio: "",
-        rel_iin: "",
-        birth_date_family: "",
-        job_place: "",
+        relativeType: "",
+        relName: "",
+        relSurname: "",
+        relPatronymic: "",
+        relIin: "",
+        relBirthDate: "",
+        relJobPlace: "",
     });
 
     const [editingId, setEditingId] = useState(null);
@@ -101,8 +111,8 @@ const NewFamilyComposition = (props) => {
                                     <td>
                                         <select
                                             className={cl.formInput}
-                                            value={inputData.relative_type}
-                                            onChange={(e) => setInputData({ ...inputData, relative_type: e.target.value })}
+                                            value={inputData.relativeType}
+                                            onChange={(e) => setInputData({ ...inputData, relativeType: e.target.value })}
                                         >
                                             <option value="">Выберите тип родственника</option>
                                             <option value="супруг/супруга">супруг/супруга</option>
@@ -116,8 +126,28 @@ const NewFamilyComposition = (props) => {
                                             type="text"
                                             className={cl.formInput}
                                             placeholder="ФИО"
-                                            name='fio'
-                                            value={inputData.fio}
+                                            name='relName'
+                                            value={inputData.relName}
+                                            onChange={handleInputChange}
+                                        />
+                                    </td>
+                                    <td>
+                                        <input
+                                            type="text"
+                                            className={cl.formInput}
+                                            placeholder="ФИО"
+                                            name='relSurname'
+                                            value={inputData.relSurname}
+                                            onChange={handleInputChange}
+                                        />
+                                    </td>
+                                    <td>
+                                        <input
+                                            type="text"
+                                            className={cl.formInput}
+                                            placeholder="ФИО"
+                                            name='relPatronymic'
+                                            value={inputData.relPatronymic}
                                             onChange={handleInputChange}
                                         />
                                     </td>
@@ -126,9 +156,9 @@ const NewFamilyComposition = (props) => {
                                             <input
                                                 type="number"
                                                 className={cl.formInput}
-                                                name='rel_iin'
+                                                name='relIin'
                                                 placeholder="ИИН родственника"
-                                                value={inputData.rel_iin}
+                                                value={inputData.relIin}
                                                 onChange={handleInputChange}
                                             />
                                         </div>
@@ -138,14 +168,14 @@ const NewFamilyComposition = (props) => {
                                             <input
                                                 type="date"
                                                 className={cl.formInput}
-                                                name='birth_date_family'
+                                                name='relBirthDate'
                                                 placeholder="Дата рождения"
-                                                value={inputData.birth_date_family || ''}
+                                                value={inputData.relBirthDate || ''}
                                                 onChange={(e) => {
                                                 const newDate = e.target.value;
                                                 setInputData((prevWorker) => ({
                                                 ...prevWorker,
-                                                birth_date_family: newDate,
+                                                relBirthDate: newDate,
                                                 }));
                                                 }}
                                             />
@@ -155,9 +185,9 @@ const NewFamilyComposition = (props) => {
                                         <input
                                             type="text"
                                             className={cl.formInput}
-                                            name='job_place'
+                                            name='relJobPlace'
                                             placeholder="Место работы"
-                                            value={inputData.job_place}
+                                            value={inputData.relJobPlace}
                                             onChange={handleInputChange}
                                         />
                                     </td>
@@ -173,22 +203,24 @@ const NewFamilyComposition = (props) => {
                                 <thead>
                                     <tr>
                                         <td>Степень родства</td>
-                                        <td>ФИО</td>
+                                        <td>Имя</td>
+                                        <td>Фамилия</td>
+                                        <td>Отчество</td>
                                         <td>ИИН</td>
                                         <td>Дата рождения</td>
                                         <td>Место работы</td>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {family_compositions.slice(1).map((d, i) => (
+                                    {familyComposition && familyComposition.slice(1).map((d, i) => (
                                         <tr key={i}>
                                             <td>  
                                                 {editingId === d.id ? (
                                                     <select
                                                         className={cl.selectRelative_type}
                                                         name='relative_type'
-                                                        value={editedData.relative_type}
-                                                        onChange={(e) => setEditedData({ ...editedData, relative_type: e.target.value })}
+                                                        value={editedData.relativeType}
+                                                        onChange={(e) => setEditedData({ ...editedData, relativeType: e.target.value })}
                                                     >
                                                         <option value="">Выберите тип родственника</option>
                                                         <option value="супруг/супруга">супруг/супруга</option>
@@ -197,34 +229,37 @@ const NewFamilyComposition = (props) => {
                                                         <option value="брат/сестра">брат/сестра</option>
                                                     </select>
                                                 ) : (
-                                                    d.relative_type
+                                                    d.relativeType
                                                 )}
                                             </td>
-                                            <td>{editingId === d.id ? <input type="text" className={cl.editInput} name='fio' value={editedData.fio} onChange={(e) => setEditedData({ ...editedData, fio: e.target.value })} /> : d.fio}</td>
-                                            <td>{editingId === d.id ? <input type='number' className={cl.editInput} name='rel_iin'  value={editedData.rel_iin} onChange={(e) => setEditedData({ ...editedData, rel_iin: e.target.value })} /> : d.rel_iin}</td>
+                                            <td>{editingId === d.id ? <input type="text" className={cl.editInput} name='relName' value={editedData.relName} onChange={(e) => setEditedData({ ...editedData, relName: e.target.value })} /> : d.relName}</td>
+                                            <td>{editingId === d.id ? <input type="text" className={cl.editInput} name='relSurname' value={editedData.relSurname} onChange={(e) => setEditedData({ ...editedData, relSurname: e.target.value })} /> : d.relSurname}</td>
+                                            <td>{editingId === d.id ? <input type="text" className={cl.editInput} name='relPatronymic' value={editedData.relPatronymic} onChange={(e) => setEditedData({ ...editedData, relPatronymic: e.target.value })} /> : d.relPatronymic}</td>
+
+                                            <td>{editingId === d.id ? <input type='number' className={cl.editInput} name='relIin'  value={editedData.relIin} onChange={(e) => setEditedData({ ...editedData, relIin: e.target.value })} /> : d.relIin}</td>
                                             <td>
                                                 {editingId === d.id ? (
                                                 <div className={cl.datePickerContainer}>
                                                     <input
                                                         type="date"
                                                         className={cl.formInput}
-                                                        name='birth_date_family'
+                                                        name='relBirthDate'
                                                         placeholder="Дата рождения"
-                                                        value={editedData.birth_date_family || ''}
+                                                        value={editedData.relBirthDate || ''}
                                                         onChange={(e) => {
                                                             const newDate = e.target.value;
                                                             setEditedData((prevData) => ({
                                                             ...prevData,
-                                                            birth_date_family: newDate,
+                                                            relBirthDate: newDate,
                                                             }));
                                                         }}
                                                     />
                                                 </div>
                                             ) : (
-                                                d.birth_date_family
+                                                d.relBirthDate
                                             )}
                                             </td>
-                                            <td>{editingId === d.id ? <input type='text' className={cl.editInput} name='job_place' value={editedData.job_place} onChange={(e) => setEditedData({ ...editedData, job_place: e.target.value })} /> : d.job_place}</td>
+                                            <td>{editingId === d.id ? <input type='text' className={cl.editInput} name='relJobPlace' value={editedData.relJobPlace} onChange={(e) => setEditedData({ ...editedData, relJobPlace: e.target.value })} /> : d.relJobPlace}</td>
                                         </tr>
                                     ))}
                                 </tbody>
