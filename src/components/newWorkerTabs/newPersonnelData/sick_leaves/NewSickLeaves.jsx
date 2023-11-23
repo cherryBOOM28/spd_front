@@ -6,7 +6,7 @@ import { useForm } from '../../formProvider/FormProvider';
 
 function NewSickLeaves(props) {
 
-    const {sick_leaves, setSick_leaves} = useForm();;
+    const {sickLeavesInfo, setSickLeavesInfo} = useForm();;
 
     const [showForm, setShowForm] = useState(true);
 
@@ -15,32 +15,30 @@ function NewSickLeaves(props) {
     };
 
     const [inputData, setInputData] = useState({
-        sick_doc_numb: '',
-        sick_doc_date: '',
+        sickDocNumber: '',
+        sickDocDate: '',
     });
 
     const [editedData, setEditedData] = useState({
-        sick_doc_numb: '',
-        sick_doc_date: '',
+        sickDocNumber: '',
+        sickDocDate: '',
     });
 
 
     const handleAddNewData = async (e) => {
         e.preventDefault();
         try {
-            // Генерируем уникальный id
-
-            if (!inputData.sick_doc_numb || !inputData.sick_doc_date) {
-                alert('Пожалуйста, заполните все поля!');
-                return;
-            }
+            // if (!inputData.sick_doc_numb || !inputData.sick_doc_date) {
+            //     alert('Пожалуйста, заполните все поля!');
+            //     return;
+            // }
 
             const newData = {
-                sick_doc_numb: inputData.sick_doc_numb,
-                sick_doc_date: inputData.sick_doc_date,
+                sickDocNumber: inputData.sickDocNumber,
+                sickDocDate: inputData.sickDocDate,
             };
 
-            setSick_leaves((prevArray) => {
+            setSickLeavesInfo((prevArray) => {
                 // Create a new array by copying the previous array and adding a new element
                 const updatedArray = [...prevArray, newData];
                 return updatedArray;
@@ -77,8 +75,9 @@ function NewSickLeaves(props) {
                                             type="number"
                                             className={cl.formInput}
                                             placeholder="Номер приказа"
-                                            value={inputData.sick_doc_numb}
-                                            onChange={(e) => setInputData({ ...inputData, sick_doc_numb: e.target.value })}
+                                            name='sickDocNumber'
+                                            value={inputData.sickDocNumber}
+                                            onChange={(e) => setInputData({ ...inputData, sickDocNumber: e.target.value })}
                                         />
                                     </td>
                                     <td>
@@ -86,13 +85,14 @@ function NewSickLeaves(props) {
                                         <input
                                             type="date"
                                             className={cl.formInput}
+                                            name='sickDocDate'
                                             placeholder="Дата приказа"
-                                            value={inputData.sick_doc_date || ''}
+                                            value={inputData.sickDocDate || ''}
                                             onChange={(e) => {
                                                 const newDate = e.target.value;
                                                 setInputData((prevWorker) => ({
                                                 ...prevWorker,
-                                                sick_doc_date: newDate,
+                                                sickDocDate: newDate,
                                                 }));
                                             }}
                                         />
@@ -115,28 +115,29 @@ function NewSickLeaves(props) {
                             </tr>
                         </thead>
                         <tbody>
-                            {sick_leaves.slice(1).map((d, i) => (
+                            {sickLeavesInfo.slice(1).map((d, i) => (
                                 <tr key={i}>
-                                    <td>{editingId === d.id ? <input type="number" className={cl.editInput} value={editedData.sick_doc_numb} onChange={(e) => setEditedData({ ...editedData, sick_doc_numb: e.target.value })} /> : d.sick_doc_numb}</td>
+                                    <td>{editingId === d.id ? <input type="number" className={cl.editInput} value={editedData.sickDocNumber} onChange={(e) => setEditedData({ ...editedData, sickDocNumber: e.target.value })} /> : d.sickDocNumber}</td>
                                     <td>
                                     {editingId === d.id ? (
                                         <div className={cl.datePickerContainer}>
                                             <input
                                                 type="date"
                                                 className={cl.formInput}
+                                                name='sickDocDate'
                                                 placeholder="Дата приказа"
-                                                value={editedData.sick_doc_date || ''}
+                                                value={editedData.sickDocDate || ''}
                                                 onChange={(e) => {
                                                     const newDate = e.target.value;
                                                     setEditedData((prevData) => ({
                                                     ...prevData,
-                                                    sick_doc_date: newDate,
+                                                    sickDocDate: newDate,
                                                     }));
                                                 }}
                                             />
                                         </div>
                                     ) : (
-                                        d.sick_doc_date
+                                        d.sickDocDate
                                     )}
                                     </td>
                                 

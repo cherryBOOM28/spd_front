@@ -9,6 +9,7 @@ import closeImg from '../../assets/icons/close.svg';
 import Button from '../UI/button/Button';
 import { useAuth } from '../auth/AuthContext';
 import { useParams } from 'react-router-dom';
+import Cookies from 'js-cookie';
 
 
 function Header(props) {
@@ -20,13 +21,19 @@ function Header(props) {
     const [ selectedIds, setSelectedIds ] = useState([]);
     const [ groupName, setGroupName ] = useState([]);
     const [ photo, setPhoto ] = useState({});
+    
+    const accessToken = Cookies.get('jwtAccessToken');
 
     useEffect(() => {
 
-        axios.get(`http://localhost:8000/api/v1/person`)
+        axios.get(`http://localhost:8000/api/v1/person/`, {
+            headers: {
+            'Authorization': `Bearer ${accessToken}`,
+          }
+        })
           .then(response => {
             setPersonalData(response.data);
-            console.log("response", response.data.Person)
+            console.log("response", response.data)
         })
 
         // axios.get(`http://localhost:8000/api/v1/person/${id}`)
@@ -53,22 +60,22 @@ function Header(props) {
         console.log(selectedIds)
     }
 
-    const handleCreateGroup = async () => {
-        try {
-            const data = {
-                'group_name': groupName,
-                'general_info': selectedIds,
-            };
+    // const handleCreateGroup = async () => {
+    //     try {
+    //         const data = {
+    //             'group_name': groupName,
+    //             'general_info': selectedIds,
+    //         };
         
-            // console.log(data)
+    //         // console.log(data)
 
-            const response = await axios.post('http://localhost:8000/group/', data);
+    //         const response = await axios.post('', data);
         
-            // console.log('Response:', response.data);
-        } catch (error) {
-            console.error('Error:', error);
-        }
-    }
+    //         // console.log('Response:', response.data);
+    //     } catch (error) {
+    //         console.error('Error:', error);
+    //     }
+    // }
 
 
 
@@ -128,7 +135,7 @@ function Header(props) {
                                     <div style={{ display: 'flex', justifyContent: 'flex-end'}}>
                                         <Button className={cl.addBtn} onClick={(e) => {
                                             e.preventDefault();
-                                            handleCreateGroup();
+                                            // handleCreateGroup();
                                             setIsClicked(false)
                                         }}>Добавить</Button>
                                     </div>

@@ -11,11 +11,11 @@ import NewInvestigationRetrievals from './investigation_retrievals/NewInvestigat
 
 const NewPersonnelData = (props) => {
     
-    const {spec_checks, setSpec_checks} = useForm();
-    const {attestations, setAttestations} = useForm();
-    const {military_rank, setMilitary_rank} = useForm();
-    const {class_category, setClass_category} = useForm();
-    const {autobiography, setAutobiography} = useForm();
+    const {specCheckInfo, setSpecCheckInfo} = useForm();
+    const {attestationInfo, setAttestationInfo} = useForm();
+    const {rankInfo, setRankInfo} = useForm();
+    const {classCategoriesInfo, setClassCategoriesInfo} = useForm();
+    const {autobiographyInfo, setAutobiographyInfo} = useForm();
 
     // eslint-disable-next-line 
     const [inputData, setInputData] = useState({ 
@@ -25,113 +25,102 @@ const NewPersonnelData = (props) => {
         attResult: '',
         lastAttDate: '',
         
-        military_rank: '',
-        received_date: '',
-        type_of_receipt: '',
-        position: '',
+        militaryRank: '',
+        receivedDate: '',
+        receivedType: '',
 
-        category_type: '',
+        categoryType: '',
 
-        autobiography: '',
+        autobiographyText: '',
     });
 
-    const handleAddEducation = async (e) => {
-        e.preventDefault();
-        try {
-            // console.log(inputData)
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
      
-
-            const newspec_check = [{
-                doc_number: inputData.doc_number,
-                doc_date: inputData.doc_date,
-            }];
-
-            const newattestation_result = [{
-                attestation_result: inputData.attestation_result,
-                last_attestation_date: inputData.last_attestation_date,
-                next_attestation_date: inputData.next_attestation_date,
-                
-            }];
-
-            const newmilitary_rank = [{
-                military_rank: inputData.military_rank,
-                received_date: inputData.received_date,
-                type_of_receipt: inputData.type_of_receipt,
-                position: inputData.position,
-                
-            }];
-
-            const newcategory_type = [{
-                category_type: inputData.category_type,
-            }];
-
-
-            const newautobiography = {
-                autobiography: inputData.autobiography,
-            };
-
-            setSpec_checks(newspec_check);
-            setAttestations(newattestation_result);
-            setMilitary_rank(newmilitary_rank);
-            setClass_category(newcategory_type);
-            setAutobiography(newautobiography);
-      
-        } catch (error) {
-            console.error('Error:', error);
-        }
+        setSpecCheckInfo((prevArray) => {
+            // Check if the field already exists in the array
+            const existingFieldIndex = prevArray.findIndex((item) => item.hasOwnProperty(name));
+        
+            // If the field exists, update its value; otherwise, add a new object
+            if (existingFieldIndex !== -1) {
+              const updatedArray = [...prevArray];
+              updatedArray[existingFieldIndex][name] = value;
+              return updatedArray;
+            } else {
+              const updatedArray = [...prevArray, { [name]: value }];
+              return updatedArray;
+            }
+        });
     };
-
-      const handleInputChange = (event) => {
-        const { name, value } = event.target;
     
-        setSpec_checks((prevData) => {
-            // Клонируем массив spec_checks и берем его нулевой элемент
-            const updatedData = [...prevData];
-            const firstItem = updatedData[0];
+
+    const handleInputChangeAttestation = (e) => {
+        const { name, value } = e.target;
+
+        setAttestationInfo((prevArray) => {
+            // Check if the field already exists in the array
+            const existingFieldIndex = prevArray.findIndex((item) => item.hasOwnProperty(name));
         
-            firstItem[name] = value;
-        
-            return updatedData;
+            // If the field exists, update its value; otherwise, add a new object
+            if (existingFieldIndex !== -1) {
+              const updatedArray = [...prevArray];
+              updatedArray[existingFieldIndex][name] = value;
+              return updatedArray;
+            } else {
+              const updatedArray = [...prevArray, { [name]: value }];
+              return updatedArray;
+            }
         });
-
-        setAttestations((prevData) => {
-            const updatedData = [...prevData];
-            const firstItem = updatedData[0];
-        
-            firstItem[name] = value;
-        
-            return updatedData;
-        });
-
-        setMilitary_rank((prevData) => ({
-            ...prevData,
-            [name]: value,
-            // const updatedData = [...prevData];
-            // const firstItem = updatedData[0];
-        
-            // firstItem[name] = value;
-        
-            // return updatedData;
-        }));
-
-        setClass_category((prevData) => {
-            const updatedData = [...prevData];
-            const firstItem = updatedData[0];
-        
-            firstItem[name] = value;
-        
-            return updatedData;
-        });
-
-        setAutobiography((prevData) => ({
-            [name]: value,
-        }));
     };
+
+    const handleInputChangeRank = (e) => {
+        const { name, value } = e.target;
+        setRankInfo((prevData) => {
+            const newData = { ...prevData, [name]: value };
+            console.log(newData); // Log the updated data
+            return newData;
+        });
+    };
+
+    const handleInputChangeClassCategories = (e) => {
+        const { name, value } = e.target;
+      
+        setClassCategoriesInfo((prevData) => ({
+          ...prevData,
+          classCategories: [
+            {
+              [name]: value
+            }
+          ]
+        }));
+      };
+      
+
+    const handleInputChangeAutobiography = (e) => {
+        const { name, value } = e.target;
+
+        setAutobiographyInfo((prevArray) => {
+            // Check if the field already exists in the array
+            const existingFieldIndex = prevArray.findIndex((item) => item.hasOwnProperty(name));
+        
+            // If the field exists, update its value; otherwise, add a new object
+            if (existingFieldIndex !== -1) {
+              const updatedArray = [...prevArray];
+              updatedArray[existingFieldIndex][name] = value;
+              return updatedArray;
+            } else {
+              const updatedArray = [...prevArray, { [name]: value }];
+              return updatedArray;
+            }
+        });
+    };
+
+
 
     return (
         <div className={cl.personalWrapper}>
         <div className={cl.container}>
-            <form onSubmit={handleAddEducation}>
+            <form>
 
                 <div className={cl.totalInfoWrapper}>
                     <div className={cl.totalInfoContent}>
@@ -146,20 +135,22 @@ const NewPersonnelData = (props) => {
                                 <input
                                     className={cl.workerInfo}
                                     type="text"
-                                    name="doc_number"
-                                    value={spec_checks[0].doc_number}
+                                    name="docNumber"
+                                    value={specCheckInfo.docNumber}
                                     onChange={handleInputChange}
                                 />
-                            </div>
+                            </div>        
+                        </div>
+                        <div className={cl.column}>
                             <div className={cl.rows}>
-                            <label className={cl.label}>Дата документа</label>
-                                <input
-                                type="date"
-                                className={cl.workerInfo}
-                                name='doc_date'
-                                value={spec_checks[0].doc_date}
-                                onChange={handleInputChange}
-                            />
+                                <label className={cl.label}>Дата документа</label>
+                                    <input
+                                    type="date"
+                                    className={cl.workerInfo}
+                                    name='docDate'
+                                    value={specCheckInfo.docDate}
+                                    onChange={handleInputChange}
+                                />
                             </div>
                         </div>
                     </div>
@@ -179,24 +170,26 @@ const NewPersonnelData = (props) => {
                                         <input
                                             type="date"
                                             className={cl.workerInfo}
-                                            name='last_attestation_date'
-                                            value={attestations[0].last_attestation_date}
-                                            onChange={handleInputChange}
+                                            name='lastAttDate'
+                                            value={attestationInfo.lastAttDate}
+                                            onChange={handleInputChangeAttestation}
                                         />
                                     </div>
                             </div>
-                            <div className={cl.rows}>
-                                <label className={cl.label}>Результат аттестации</label>
-                                <input
-                                    className={cl.workerInfo}
-                                    type="text"
-                                    name="attestation_result"
-                                    value={attestations[0].attestation_result}
-                                    onChange={handleInputChange}
-                                />
-                            </div>
                         </div>
                         <div className={cl.column}>
+                                <div className={cl.rows}>
+                                    <label className={cl.label}>Результат аттестации</label>
+                                    <input
+                                        className={cl.workerInfo}
+                                        type="text"
+                                        name="attResult"
+                                        value={attestationInfo.attResult}
+                                        onChange={handleInputChangeAttestation}
+                                    />
+                                </div>
+                            </div>
+                        {/* <div className={cl.column}>
                         <div className={cl.rows}>
                             <label className={cl.label}>Дата следующей аттестации</label>
                             <div className={cl.datePickerContainer}>
@@ -209,7 +202,7 @@ const NewPersonnelData = (props) => {
                                 />
                             </div>
                             </div>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
 
@@ -225,9 +218,9 @@ const NewPersonnelData = (props) => {
                                 <label className={cl.label}>Звание</label>
                                     <select
                                     className={cl.workerInfoSelect}
-                                    value={military_rank.military_rank}
-                                    name='military_rank'
-                                    onChange={handleInputChange}
+                                    value={rankInfo.militaryRank}
+                                    name='militaryRank'
+                                    onChange={handleInputChangeRank}
                                 >
                                     <option value="">Выберите звание</option>
                                     <option value="Рядовой">Рядовой</option>
@@ -258,9 +251,9 @@ const NewPersonnelData = (props) => {
                                     <input
                                         type="date"
                                         className={cl.workerInfo}
-                                        name='received_date'
-                                        value={military_rank.received_date}
-                                        onChange={handleInputChange}
+                                        name='receivedDate'
+                                        value={rankInfo.receivedDate}
+                                        onChange={handleInputChangeRank}
                                     />
                                 </div>
                             </div>
@@ -271,19 +264,9 @@ const NewPersonnelData = (props) => {
                                     <input
                                         className={cl.workerInfo}
                                         type="text"
-                                        name="type_of_receipt"
-                                        value={military_rank.type_of_receipt}
-                                        onChange={handleInputChange}
-                                    />
-                            </div>
-                            <div className={cl.rows}>
-                                <label className={cl.label}>Должность</label>
-                                    <input
-                                        className={cl.workerInfo}
-                                        type="text"
-                                        name="position"
-                                        value={military_rank.position}
-                                        onChange={handleInputChange}
+                                        name="receivedType"
+                                        value={rankInfo.receivedType}
+                                        onChange={handleInputChangeRank}
                                     />
                             </div>
                         </div>
@@ -303,9 +286,9 @@ const NewPersonnelData = (props) => {
                                 <label className={cl.label}>Классные категория</label>
                                     <select
                                     className={cl.workerInfoSelect}
-                                    value={class_category.category_type}
-                                    name='category_type'
-                                    onChange={handleInputChange}
+                                    value={classCategoriesInfo.categoryType}
+                                    name='categoryType'
+                                    onChange={handleInputChangeClassCategories}
                                 >
                                     <option value="">Выберите категорию</option>
                                     <option value="спец 2 категории">Специалист 2 категории</option>
@@ -333,9 +316,9 @@ const NewPersonnelData = (props) => {
                             <input
                                 className={cl.workerInfoText}
                                 type="text"
-                                name="autobiography"
-                                value={autobiography.autobiography}
-                                onChange={handleInputChange}
+                                name="autobiographyText"
+                                value={autobiographyInfo.autobiographyText}
+                                onChange={handleInputChangeAutobiography}
                             />
                             </div>
                         </div>

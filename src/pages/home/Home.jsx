@@ -143,7 +143,7 @@ function Home(props) {
             console.error("Error fetching personal data:", error);
         });
 
-        axios.get(`http://localhost:8000/group/`)
+        axios.get(``)
           .then(response => {
             setGroups(response.data);
         })
@@ -326,7 +326,7 @@ function Home(props) {
                                 onChange={() => handleRadioChange('all')}
                             />
                         </div>
-                        {groups.map(group => (
+                        {/* {groups.map(group => (
                             <div key={group.id} className={cl.group_name} style={{cursor: 'pointer'}} onClick={() => setSelectedGroupId(group.id)}>
                             
                                 <p>{group.group_name}</p>
@@ -339,7 +339,7 @@ function Home(props) {
                                     onChange={() => setSelectedGroupId(group.id)}
                                 />
                             </div>
-                        ))}
+                        ))} */}
 
                         
                     </div>
@@ -372,13 +372,13 @@ function Home(props) {
                                         })
                                     )}
 
-                                {groups.filter(group => group.id === selectedGroupId)[0] && groups.filter(group => group.id === selectedGroupId)[0].general_info.length === 0 ? 
+                                {/* {groups.filter(group => group.id === selectedGroupId)[0] && groups.filter(group => group.id === selectedGroupId)[0].general_info.length === 0 ? 
                                     <tr className={cl.tableRow}>
                                         <td colspan="5" align='center' style={{textAlign: 'center', padding: '20px'}}>Нет сотрудников</td>
                                     </tr>
                                     : ""
-                                }
-                                {groups.filter(group => group.id === selectedGroupId)[0] &&  groups.filter(group => group.id === selectedGroupId)[0].general_info
+                                } */}
+                                {/* {groups.filter(group => group.id === selectedGroupId)[0] &&  groups.filter(group => group.id === selectedGroupId)[0].general_info
                                 .map((data, index) => {
                                     let name = `${data.surname || ''} ${data.firstName || ''} ${data.patronymic || ''}`
                                     // let gender = data.gender === 'M' ? 'Мужской' : 'Женский'
@@ -391,7 +391,7 @@ function Home(props) {
                                             <td>{positionTitle}</td>
                                         </tr>
                                     )
-                                })}
+                                })} */}
                             </tbody>
                         </table>
                 </div>

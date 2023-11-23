@@ -6,7 +6,7 @@ import { useForm } from '../../formProvider/FormProvider';
 
 
 function NewAwards(props) {
-    const {awards, setAwards} = useForm();;
+    const {rewardsInfo, setRewardsInfo} = useForm();;
 
     const [showForm, setShowForm] = useState(true);
 
@@ -15,27 +15,27 @@ function NewAwards(props) {
     };
 
     const [inputData, setInputData] = useState({
-        awards_type: '',
-        awards_doc_numb: '',
-        awards_date: '',
+        rewardType: '',
+        rewardDocNumber: '',
+        rewardDate: '',
     });
 
     const handleAddNewData = async (e) => {
         e.preventDefault();
         try {
 
-            if (!inputData.awards_type || !inputData.awards_doc_numb) {
-                alert('Пожалуйста, заполните все поля!');
-                return;
-            }
+            // if (!inputData.awards_type || !inputData.awards_doc_numb) {
+            //     alert('Пожалуйста, заполните все поля!');
+            //     return;
+            // }
 
             const newData = {
-                awards_type: inputData.awards_type,
-                awards_doc_numb: inputData.awards_doc_numb,
-                awards_date: inputData.awards_date,
+                rewardType: inputData.rewardType,
+                rewardDocNumber: inputData.rewardDocNumber,
+                rewardDate: inputData.rewardDate,
             };
 
-            setAwards((prevArray) => {
+            setRewardsInfo((prevArray) => {
                 // Create a new array by copying the previous array and adding a new element
                 const updatedArray = [...prevArray, newData];
                 return updatedArray;
@@ -43,9 +43,9 @@ function NewAwards(props) {
 
       
             setInputData({
-                awards_type: '',
-                awards_doc_numb: '',
-                awards_date: '',
+                rewardType: '',
+                rewardDocNumber: '',
+                rewardDate: '',
             })
         } catch (error) {
             console.error('Error:', error);
@@ -54,9 +54,9 @@ function NewAwards(props) {
 
     // EDIT
     const [editedData, setEditedData] = useState({
-        awards_type: '',
-        awards_doc_numb: '',
-        awards_date: '',
+        rewardType: '',
+        rewardDocNumber: '',
+        rewardDate: '',
     });
 
     // eslint-disable-next-line 
@@ -81,14 +81,20 @@ function NewAwards(props) {
                                 <td>
                                     <select
                                         className={cl.formInput}
-                                        value={inputData.awards_type}
-                                        name='awards_type'
-                                        onChange={(e) => setInputData({ ...inputData, awards_type: e.target.value })}
+                                        value={inputData.rewardType}
+                                        name='rewardType'
+                                        onChange={(e) => setInputData({ ...inputData, rewardType: e.target.value })}
                                     >
                                         <option value="">Выберите тип награды</option>
-                                        <option value="награда1">награда</option>
-                                        <option value="награда2">награда2</option>
-                                        <option value="награда3">награда3</option>
+                                        <option value="">Выберите тип награды</option>
+                                        <option value="Благодарность">Благодарность </option>
+                                        <option value="Грамота">Грамота </option>
+                                        <option value=" Почетная грамота"> Почетная грамота</option>
+                                        <option value="Нагрудной знак"> <span>Нагрудной знак -</span> Қаржылық мониторинг органдарының үздігі </option>
+                                        <option value="Медаль "><span>медаль -</span> Экономикалық қауіпсіздікті қамтамасыз етуге қосқан үлесі үшін</option>
+                                        <option value=" Мінсіз қызметі үшін ІІІ дәрежелі"> Мінсіз қызметі үшін ІІІ дәрежелі</option>
+                                        <option value="Мінсіз қызметі үшін ІІ дәрежелі ">Мінсіз қызметі үшін ІІ дәрежелі</option>
+                                        <option value="Мінсіз қызметі үшін І дәрежелі">Мінсіз қызметі үшін І дәрежелі</option>
                                     </select>
                                 </td>
                                 <td>
@@ -96,9 +102,9 @@ function NewAwards(props) {
                                         type="number"
                                         className={cl.formInput}
                                         placeholder="Номер приказа"
-                                        name='awards_doc_numb'
-                                        value={inputData.awards_doc_numb}
-                                        onChange={(e) => setInputData({ ...inputData, awards_doc_numb: e.target.value })}
+                                        name='rewardDocNumber'
+                                        value={inputData.rewardDocNumber}
+                                        onChange={(e) => setInputData({ ...inputData, rewardDocNumber: e.target.value })}
                                     />
                                 </td>
                                 <td>
@@ -108,13 +114,13 @@ function NewAwards(props) {
                                         type="date"
                                         className={cl.formInput}
                                         placeholder="Дата приказа"
-                                        name='awards_date'
-                                        value={inputData.awards_date || ''}
+                                        name='rewardDate'
+                                        value={inputData.rewardDate || ''}
                                         onChange={(e) => {
                                             const newDate = e.target.value;
                                             setInputData((prevWorker) => ({
                                             ...prevWorker,
-                                            awards_date: newDate,
+                                            rewardDate: newDate,
                                             }));
                                         }}
                                     />
@@ -138,45 +144,51 @@ function NewAwards(props) {
                                 </tr>
                             </thead>
                             <tbody>
-                                {awards.slice(1).map((d, i) => (
+                                {rewardsInfo.slice(1).map((d, i) => (
                                     <tr key={i}>
                                         <td>  
                                             {editingId === d.id ? (
                                                 <select
                                                     className={cl.selectRelative_type}
-                                                    value={editedData.awards_type}
-                                                    name='awards_type'
-                                                    onChange={(e) => setEditedData({ ...editedData, awards_type: e.target.value })}
+                                                    value={editedData.rewardType}
+                                                    name='rewardType'
+                                                    onChange={(e) => setEditedData({ ...editedData, rewardType: e.target.value })}
                                                 >
                                                     <option value="">Выберите тип награды</option>
-                                                    <option value="награда1">награда</option>
-                                                    <option value="награда2">награда2</option>
-                                                    <option value="награда3">награда3</option>
+                                                    <option value="Благодарность">Благодарность </option>
+                                                    <option value="Грамота">Грамота </option>
+                                                    <option value=" Почетная грамота"> Почетная грамота</option>
+                                                    <option value="Нагрудной знак"> <span>нагрудной знак</span>Қаржылық мониторинг органдарының үздігі </option>
+                                                    <option value="Медаль "> <span>нагрудной знак</span>Экономикалық қауіпсіздікті қамтамасыз етуге қосқан үлесі үшін</option>
+                                                    <option value=" Мінсіз қызметі үшін ІІІ дәрежелі"> Мінсіз қызметі үшін ІІІ дәрежелі</option>
+                                                    <option value="Мінсіз қызметі үшін ІІ дәрежелі ">Мінсіз қызметі үшін ІІ дәрежелі</option>
+                                                    <option value="Мінсіз қызметі үшін І дәрежелі">Мінсіз қызметі үшін І дәрежелі</option>
+
                                                 </select>
                                             ) : (
-                                                d.awards_type
+                                                d.rewardType
                                             )}
                                         </td>
-                                        <td>{editingId === d.id ? <input type="text" className={cl.editInput} value={editedData.awards_doc_numb} onChange={(e) => setEditedData({ ...editedData, awards_doc_numb: e.target.value })} /> : d.awards_doc_numb}</td>
+                                        <td>{editingId === d.id ? <input type="text" className={cl.editInput} value={editedData.rewardDocNumber} onChange={(e) => setEditedData({ ...editedData, rewardDocNumber: e.target.value })} /> : d.rewardDocNumber}</td>
                                         <td>
                                         {editingId === d.id ? (
                                             <div className={cl.datePickerContainer}>
                                                 <input
                                                     type="date"
                                                     className={cl.formInput}
-                                                    name='awards_date'
-                                                    value={editedData.awards_date || ''}
+                                                    name='rewardDate'
+                                                    value={editedData.rewardDate || ''}
                                                     onChange={(e) => {
                                                     const newData = e.target.value;
                                                     setEditedData((prevData) => ({
                                                         ...prevData,
-                                                        education_date_in: newData,
+                                                        rewardDate: newData,
                                                     }));
                                                 }}
                                                 />
                                             </div>
                                         ) : (
-                                            d.awards_date
+                                            d.rewardDate
                                         )}
                                         </td>
                                     

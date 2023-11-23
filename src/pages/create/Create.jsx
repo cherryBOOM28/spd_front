@@ -117,7 +117,7 @@ function Create(props) {
                                 activeTab === 5 && 
                                 <div className={cl.basic__info}>
                                 <div className={cl.totalInfo}>
-                                    {/* <NewReportOrders /> */}
+                                    <NewReportOrders />
                                 </div>      
                             </div>
                             }

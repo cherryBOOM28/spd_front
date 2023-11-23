@@ -11,11 +11,11 @@ const FormContext = createContext();
 export const FormProvider = ({ children }) => {
 
   // Общие данные
-  const [photo, setPhoto] = useState([
+  const [photo, setPhoto] = useState(
     {
       photoBinary: ''
     }
-  ])
+  )
 
   const [person, setPerson] = useState({
     firstName: '',
@@ -111,6 +111,7 @@ export const FormProvider = ({ children }) => {
     }
   ]);
 
+  // Трудовая деятельность
   const [workingHistory, setWorkingHistory] = useState([
     {
       positionName: '',
@@ -122,77 +123,79 @@ export const FormProvider = ({ children }) => {
     }
   ]);
 
-  const [spec_checks, setSpec_checks] = useState([
+  // Кадровые данные
+  const [specCheckInfo, setSpecCheckInfo] = useState([
     {
-      doc_number: '',
-      doc_date: '',
+      docNumber: '',
+      docDate: '',
     }
   ]
   );
 
-  const [attestations, setAttestations] = useState([
+  const [attestationInfo, setAttestationInfo] = useState([
     {
-      attestation_result: '',
-      last_attestation_date: '',
-      next_attestation_date: '',
+      attResult: '',
+      lastAttDate: '',
     }
   ]
   );
 
-  const [awards, setAwards] = useState([
+  const [rewardsInfo, setRewardsInfo] = useState([
     {
-      awards_type: '',
-      awards_doc_numb: '',
-      awards_date: '',
+      rewardType: '',
+      rewardDocNumber: '',
+      rewardDate: '',
     }
   ]
   );
 
-  const [investigation_retrievals, setInvestigation_retrievals] = useState([
+  const [investigationsInfo, setInvestigationsInfo] = useState([
     {
-      order_type_investigation: '',
-      order_doc_numb: '',
-      order_date_investigation: ''
+      investigation_decree_type: '',
+      investigation_decree_number: '',
+      investigation_date: ''
     }
   ]
   );
 
-  const [military_rank, setMilitary_rank] = useState(
+  const [rankInfo, setRankInfo] = useState(
     {
-      military_rank: '',
-      received_date: '',
-      type_of_receipt: '',
-      position: '',
+      militaryRank: '',
+      receivedDate: '',
+      receivedType: '',
     }
   );
 
-  const [class_category, setClass_category] = useState(
+  const [classCategoriesInfo, setClassCategoriesInfo] = useState(
     [
       {
-        category_type: '',
+        categoryType: '',
       }
     ]
   );
 
-  const [autobiography, setAutobiography] = useState(
+  const [autobiographyInfo, setAutobiographyInfo] = useState([
     {
-      autobiography: '',
-    }
-  );
-
-  const [sick_leaves, setSick_leaves] = useState([
-    {
-      sick_dock_numb: '',
-      sick_doc_date: ''
+      autobiographyText: '',
     }
   ]
   );
 
-  const [reportOrders, setReportOrders] = useState([
+  const [sickLeavesInfo, setSickLeavesInfo] = useState([
     {
-      order_type: '',
-      order_subtype: '',
-      order_date: '',
+      sickDocNumber: '',
+      sickDocDate: ''
+    }
+  ]
+  );
+
+
+  // Приказы рапорта
+  const [decreeListInfo, setDecreeListInfo] = useState([
+    {
+      decreeType: '',
+      decreeSubType: '',
+      decreeDate: '',
     }
   ]);
 
@@ -248,11 +251,7 @@ export const FormProvider = ({ children }) => {
       return;
     }
 
-   
-
     event.preventDefault();
-
-
     const hasEmptyInputs = Object.values(person).some((value) => value === '');
 
     if (hasEmptyInputs) {
@@ -281,59 +280,11 @@ export const FormProvider = ({ children }) => {
     // }
 
     const requestData = {
-      // Photo: {photo},
-      Person: {person},
-      BirthInfo: {birthInfo},
-      IdentityCardInfo: {identityCardInfo},
-      ResidentInfo: {residentInfo},
-      PositionInfo: {positionInfo},
-      FamilyComposition: {
-        relatives: familyComposition.slice(1) ? familyComposition.slice(1) : [],
-      },
-      Education: {
-        educations: education.slice(1) ? education.slice(1) : [],
-      },
-      LanguageSkill: {
-        languageSkills: languageSkill.slice(1) ? languageSkill.slice(1) : [],
-      },
-      Course: {
-        courses: course.slice(1) ? course.slice(1) : [],
-      },
-      AcademicDegree: {
-        academicDegrees: academicDegree.slice(1) ? academicDegree.slice(1) : [],
-      },
-      SportSkill: {
-        sportSkills: sportSkill.slice(1) ? sportSkill.slice(1) : [],
-      },
-      WorkingHistory: {
-        workingHistories: workingHistory.slice(1) ? workingHistory.slice(1) : [],
-      },
-    }
-
-    event.preventDefault();
-    // const myArray = photo.split(",");
-    const accessToken = Cookies.get('jwtAccessToken');
-    axios.post('http://localhost:8000/api/v1/person/', requestData, {
-      headers: {
-        'Authorization': `Bearer ${accessToken}`,
-      }
-    })
-    // eslint-disable-next-line
-    .then(() => {
-      // console.log('Ответ от сервера:', response.data);
-    })
-    .catch((error) => {
-      console.error('Ошибка при отправке данных:', error);
-    });
-
-    console.log(photo)
-
-    console.log("post",{
-      photo: photo,
+      Photo: {photoBinary: photo},
       Person: person,
       BirthInfo: birthInfo,
       IdentityCardInfo: identityCardInfo,
-      ResidentInfo: residentInfo, 
+      ResidentInfo: residentInfo,
       PositionInfo: positionInfo,
       FamilyComposition: {
         relatives: familyComposition.slice(1) ? familyComposition.slice(1) : [],
@@ -356,6 +307,104 @@ export const FormProvider = ({ children }) => {
       WorkingHistory: {
         workingHistories: workingHistory.slice(1) ? workingHistory.slice(1) : [],
       },
+      SpecCheckInfo: {
+        specChecks: specCheckInfo,
+      },
+      AttestationInfo: {
+        attestations: attestationInfo,
+      },
+      RankInfo: {rankInfo},
+      ClassCategoriesInfo: {
+        classCategories: classCategoriesInfo,
+      },
+      AutobiographyInfo: {
+        autobiographies: autobiographyInfo,
+      },
+      RewardsInfo: {
+        rewards: rewardsInfo.slice(1) ? rewardsInfo.slice(1) : [],
+      },
+      SickLeavesInfo: {
+        sickLeaves: sickLeavesInfo.slice(1) ? sickLeavesInfo.slice(1) : [],
+      },
+      InvestigationsInfo: {
+        investigations: investigationsInfo.slice(1) ? investigationsInfo.slice(1) : [],
+      },
+      DecreeListInfo: {
+        decrees: decreeListInfo.slice(1) ? decreeListInfo.slice(1) : [],
+      }
+    }
+
+    event.preventDefault();
+    // const myArray = photo.split(",");
+    const accessToken = Cookies.get('jwtAccessToken');
+    axios.post('http://localhost:8000/api/v1/person/', requestData, {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+      }
+    })
+    // eslint-disable-next-line
+    .then(() => {
+      // console.log('Ответ от сервера:', response.data);
+    })
+    .catch((error) => {
+      console.error('Ошибка при отправке данных:', error);
+    });
+
+    console.log(photo)
+
+    console.log("post", {
+      Photo: {photoBinary: photo},
+      Person: person,
+      BirthInfo: birthInfo,
+      IdentityCardInfo: identityCardInfo,
+      ResidentInfo: residentInfo,
+      PositionInfo: positionInfo,
+      FamilyComposition: {
+        relatives: familyComposition.slice(1) ? familyComposition.slice(1) : [],
+      },
+      Education: {
+        educations: education.slice(1) ? education.slice(1) : [],
+      },
+      LanguageSkill: {
+        languageSkills: languageSkill.slice(1) ? languageSkill.slice(1) : [],
+      },
+      Course: {
+        courses: course.slice(1) ? course.slice(1) : [],
+      },
+      AcademicDegree: {
+        academicDegrees: academicDegree.slice(1) ? academicDegree.slice(1) : [],
+      },
+      SportSkill: {
+        sportSkills: sportSkill.slice(1) ? sportSkill.slice(1) : [],
+      },
+      WorkingHistory: {
+        workingHistories: workingHistory.slice(1) ? workingHistory.slice(1) : [],
+      },
+      SpecCheckInfo: {
+        specChecks: specCheckInfo,
+      },
+      AttestationInfo: {
+        attestations: attestationInfo,
+      },
+      RankInfo: rankInfo,
+      ClassCategoriesInfo: {
+        classCategories: classCategoriesInfo,
+      },
+      AutobiographyInfo: {
+        autobiographies: autobiographyInfo,
+      },
+      RewardsInfo: {
+        rewards: rewardsInfo.slice(1) ? rewardsInfo.slice(1) : [],
+      },
+      SickLeavesInfo: {
+        sickLeaves: sickLeavesInfo.slice(1) ? sickLeavesInfo.slice(1) : [],
+      },
+      InvestigationsInfo: {
+        investigations: investigationsInfo.slice(1) ? investigationsInfo.slice(1) : [],
+      },
+      DecreeListInfo: {
+        decrees: decreeListInfo.slice(1) ? decreeListInfo.slice(1) : [],
+      }
     })
   };
 
@@ -377,17 +426,16 @@ export const FormProvider = ({ children }) => {
         academicDegree, setAcademicDegree,
         sportSkill, setSportSkill,
         workingHistory, setWorkingHistory,
-        // family_compositions, setFamilyCompositions,
-        // spec_checks, setSpec_checks,
-        // attestations, setAttestations,
-        // investigation_retrievals, setInvestigation_retrievals,
-        // awards, setAwards,
-        // military_rank, setMilitary_rank,
-        // class_category, setClass_category,
-        // autobiography, setAutobiography,
-        // sick_leaves, setSick_leaves,
+        specCheckInfo, setSpecCheckInfo,
+        attestationInfo, setAttestationInfo,
+        rankInfo, setRankInfo,
+        classCategoriesInfo, setClassCategoriesInfo,
+        autobiographyInfo, setAutobiographyInfo,
+        rewardsInfo, setRewardsInfo,
+        sickLeavesInfo, setSickLeavesInfo,
+        investigationsInfo, setInvestigationsInfo,
+        decreeListInfo, setDecreeListInfo,
 
-        // reportOrders, setReportOrders,
         emptyInputs,
         handleInputChange,
         handleSubmit

@@ -44,23 +44,39 @@ function NewPersonal() {
     fetchData();
   }, []);
 
+  // const handleDropdownChange = (selectedDepartmentName) => {
+  //   const selectedDepartment = departments.find(
+  //     (department) => department.DepartmentName === selectedDepartmentName
+  //   );
+   
+  //   if (selectedDepartment) {
+  //     console.log("Selected Department ID:", selectedDepartment.id);
+  //     handleInputChange(setPositionInfo, 'department', selectedDepartment);
+  //     setSelectedDepartment(selectedDepartmentName);
+  //     handleInputChange(setPositionInfo, 'department', selectedDepartment);
+
+  //     // Отправка запроса для получения должностей при выборе департамента
+  //     fetchPositions(selectedDepartment);
+  //   } else {
+  //     console.error("Selected department not found");
+  //   }
+  // };
+
   const handleDropdownChange = (selectedDepartmentName) => {
     const selectedDepartment = departments.find(
       (department) => department.DepartmentName === selectedDepartmentName
     );
-   
+  
     if (selectedDepartment) {
       console.log("Selected Department ID:", selectedDepartment.id);
-      handleInputChange(setPositionInfo, 'department', selectedDepartment);
+      handleInputChange(setPositionInfo, 'department', selectedDepartment.DepartmentName);
       setSelectedDepartment(selectedDepartmentName);
-      handleInputChange(setPositionInfo, 'department', selectedDepartment);
-
-      // Отправка запроса для получения должностей при выборе департамента
       fetchPositions(selectedDepartment);
     } else {
       console.error("Selected department not found");
     }
   };
+  
 
   const fetchPositions = async (departmentId) => {
     try {

@@ -6,7 +6,7 @@ import { useForm } from '../../formProvider/FormProvider';
 
 
 function NewInvestigationRetrievals(props) {
-    const {investigation_retrievals, setInvestigation_retrievals} = useForm();;
+    const {investigationsInfo, setInvestigationsInfo} = useForm();;
 
     const [showForm, setShowForm] = useState(true);
 
@@ -15,27 +15,27 @@ function NewInvestigationRetrievals(props) {
     };
 
     const [inputData, setInputData] = useState({
-        order_type_investigation: '',
-        order_doc_numb: '',
-        order_date_investigation: '',
+        investigation_decree_type: '',
+        investigation_decree_number: '',
+        investigation_date: '',
     });
 
     const handleAddNewData = async (e) => {
         e.preventDefault();
         try {
 
-            if (!inputData.order_type_investigation || !inputData.order_doc_numb) {
-                alert('Пожалуйста, заполните все поля!');
-                return;
-            }
+            // if (!inputData.order_type_investigation || !inputData.order_doc_numb) {
+            //     alert('Пожалуйста, заполните все поля!');
+            //     return;
+            // }
 
             const newData = {
-                order_type_investigation: inputData.order_type_investigation,
-                order_doc_numb: inputData.order_doc_numb,
-                order_date_investigation: inputData.order_date_investigation,
+                investigation_decree_type: inputData.investigation_decree_type,
+                investigation_decree_number: inputData.investigation_decree_number,
+                investigation_date: inputData.investigation_date,
             };
 
-            setInvestigation_retrievals((prevArray) => {
+            setInvestigationsInfo((prevArray) => {
                 // Create a new array by copying the previous array and adding a new element
                 const updatedArray = [...prevArray, newData];
                 return updatedArray;
@@ -43,9 +43,9 @@ function NewInvestigationRetrievals(props) {
 
       
             setInputData({
-                order_type_investigation: '',
-                order_doc_numb: '',
-                order_date_investigation: '',
+                investigation_decree_type: '',
+                investigation_decree_number: '',
+                investigation_date: '',
             })
         } catch (error) {
             console.error('Error:', error);
@@ -54,9 +54,9 @@ function NewInvestigationRetrievals(props) {
 
     // EDIT
     const [editedData, setEditedData] = useState({
-        order_type_investigation: '',
-        order_doc_numb: '',
-        order_date_investigation: '',
+        investigation_decree_type: '',
+        investigation_decree_number: '',
+        investigation_date: '',
     });
 
     // eslint-disable-next-line 
@@ -80,9 +80,9 @@ function NewInvestigationRetrievals(props) {
                             <td>
                                 <select
                                     className={cl.formInput}
-                                    value={inputData.order_type_investigation}
-                                    name='awards_type'
-                                    onChange={(e) => setInputData({ ...inputData, order_type_investigation: e.target.value })}
+                                    value={inputData.investigation_decree_type}
+                                    name='investigation_decree_type'
+                                    onChange={(e) => setInputData({ ...inputData, investigation_decree_type: e.target.value })}
                                 >
                                     <option value="">Выберите вид взыскания</option>
                                     <option value="замечания">Замечания</option>
@@ -97,25 +97,24 @@ function NewInvestigationRetrievals(props) {
                                     type="number"
                                     className={cl.formInput}
                                     placeholder="Номер приказа"
-                                    name='order_doc_numb'
-                                    value={inputData.order_doc_numb}
-                                    onChange={(e) => setInputData({ ...inputData, order_doc_numb: e.target.value })}
+                                    name='investigation_decree_number'
+                                    value={inputData.investigation_decree_number}
+                                    onChange={(e) => setInputData({ ...inputData, investigation_decree_number: e.target.value })}
                                 />
                             </td>
                             <td>
                                 <div className={cl.datePickerContainer}>
-
                                 <input
                                     type="date"
                                     className={cl.formInput}
                                     placeholder="Дата приказа"
-                                    name='order_date_investigation'
-                                    value={inputData.order_date_investigation || ''}
+                                    name='investigation_date'
+                                    value={inputData.investigation_date || ''}
                                     onChange={(e) => {
                                         const newDate = e.target.value;
                                         setInputData((prevWorker) => ({
                                         ...prevWorker,
-                                        order_date_investigation: newDate,
+                                        investigation_date: newDate,
                                         }));
                                     }}
                                 />
@@ -138,15 +137,15 @@ function NewInvestigationRetrievals(props) {
                              </tr>
                          </thead>
                          <tbody>
-                             {investigation_retrievals.slice(1).map((d, i) => (
+                             {investigationsInfo.slice(1).map((d, i) => (
                                  <tr key={i}>
                                      <td>  
                                          {editingId === d.id ? (
                                              <select
                                                  className={cl.selectRelative_type}
-                                                 value={editedData.order_type_investigation}
-                                                 name='awards_type'
-                                                 onChange={(e) => setEditedData({ ...editedData, order_type_investigation: e.target.value })}
+                                                 value={editedData.investigation_decree_type}
+                                                 name='investigation_decree_type'
+                                                 onChange={(e) => setEditedData({ ...editedData, investigation_decree_type: e.target.value })}
                                              >
                                                  <option value="">Выберите вид взыскания</option>
                                                 <option value="замечания">Замечания</option>
@@ -156,29 +155,29 @@ function NewInvestigationRetrievals(props) {
                                                 <option value="Увольнение">Увольнение</option>
                                              </select>
                                          ) : (
-                                             d.order_type_investigation
+                                             d.investigation_decree_type
                                          )}
                                      </td>
-                                     <td>{editingId === d.id ? <input type="text" className={cl.editInput} value={editedData.order_doc_numb} onChange={(e) => setEditedData({ ...editedData, order_doc_numb: e.target.value })} /> : d.order_doc_numb}</td>
+                                     <td>{editingId === d.id ? <input type="text" className={cl.editInput} value={editedData.investigation_decree_number} onChange={(e) => setEditedData({ ...editedData, investigation_decree_number: e.target.value })} /> : d.investigation_decree_number}</td>
                                      <td>
                                      {editingId === d.id ? (
                                          <div className={cl.datePickerContainer}>
                                              <input
                                                  type="date"
                                                  className={cl.formInput}
-                                                 name='order_date'
-                                                 value={editedData.order_date_investigation || ''}
+                                                 name='investigation_date'
+                                                 value={editedData.investigation_date || ''}
                                                  onChange={(e) => {
                                                     const newData = e.target.value;
                                                     setEditedData((prevData) => ({
                                                         ...prevData,
-                                                        order_date_investigation: newData,
+                                                        investigation_date: newData,
                                                     }));
                                                 }}
                                              />
                                          </div>
                                      ) : (
-                                         d.order_date_investigation
+                                         d.investigation_date
                                      )}
                                      </td>
                                     

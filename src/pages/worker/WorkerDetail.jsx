@@ -88,13 +88,6 @@ function WorkerDetail() {
           'Authorization': `Bearer ${accessToken}`,
         }
       });
-
-      // const totalInfoResponse = axios.get(`http://localhost:8000/api/v1/identity-card-info/${id}`, {
-      //   headers: {
-      //     'Authorization': `Bearer ${accessToken}`,
-      //   }
-      // })
-
       console.log("response", response.data);
   
       if (response.status === 200) {

@@ -16,62 +16,62 @@ const NewEducation = (props) => {
         ...prevData,
         [name]: value,
     }));
-};
+};       
 
-        // ДОБАВЛЕНИЕ ДАННЫХ
-        const [showForm, setShowForm] = useState(true);
+    // ДОБАВЛЕНИЕ ДАННЫХ
+    const [showForm, setShowForm] = useState(true);
 
-        const handleShowForm = () => {
-            setShowForm(true);
-        };
-    
-        const [inputData, setInputData] = useState({
-            educationType: '',
-            educationPlace: '',
-            educationDateIn: '',
-            educationDateOut: '',
-            speciality: '',
-            diplomaNumber: ''
-        });
+    const handleShowForm = () => {
+        setShowForm(true);
+    };
 
-        const handleAddEducation = async (e) => {
-            e.preventDefault();
-            try {
-                // console.log(inputData)
-                // if (!inputData.education_type || !inputData.education_place || !inputData.education_date_in || !inputData.education_date_out || !inputData.education_speciality || !inputData.diploma_number) {
-                //     alert('Пожалуйста, заполните все поля!');
-                //     return;
-                // }
-    
-                const newEducation = {
-                    educationType: inputData.educationType,
-                    educationPlace: inputData.educationPlace,
-                    educationDateIn: inputData.educationDateIn,
-                    educationDateOut: inputData.educationDateOut,
-                    speciality: inputData.speciality,
-                    diplomaNumber: inputData.diplomaNumber
-                };
-                // setEducation(prevRecords => [...prevRecords, newEducation]);
-                setEducation((prevArray) => {
-                    // Create a new array by copying the previous array and adding a new element
-                    const updatedArray = [...prevArray, newEducation];
-                    return updatedArray;
-                  });
+    const [inputData, setInputData] = useState({
+        educationType: '',
+        educationPlace: '',
+        educationDateIn: '',
+        educationDateOut: '',
+        speciality: '',
+        diplomaNumber: ''
+    });
 
-                
-    
-                setInputData({
-                    educationType: '',
-                    educationPlace: '',
-                    educationDateIn: '',
-                    educationDateOut: '',
-                    speciality: '',
-                    diplomaNumber: ''
-                })
-            } catch (error) {
-                console.error('Error:', error);
-            }
-        };
+    const handleAddEducation = async (e) => {
+        e.preventDefault();
+        try {
+            // console.log(inputData)
+            // if (!inputData.education_type || !inputData.education_place || !inputData.education_date_in || !inputData.education_date_out || !inputData.education_speciality || !inputData.diploma_number) {
+            //     alert('Пожалуйста, заполните все поля!');
+            //     return;
+            // }
+
+            const newEducation = {
+                educationType: inputData.educationType,
+                educationPlace: inputData.educationPlace,
+                educationDateIn: inputData.educationDateIn,
+                educationDateOut: inputData.educationDateOut,
+                speciality: inputData.speciality,
+                diplomaNumber: inputData.diplomaNumber
+            };
+            // setEducation(prevRecords => [...prevRecords, newEducation]);
+            setEducation((prevArray) => {
+                // Create a new array by copying the previous array and adding a new element
+                const updatedArray = [...prevArray, newEducation];
+                return updatedArray;
+                });
+
+            
+
+            setInputData({
+                educationType: '',
+                educationPlace: '',
+                educationDateIn: '',
+                educationDateOut: '',
+                speciality: '',
+                diplomaNumber: ''
+            })
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
 
     // EDIT
     const [editedData, setEditedData] = useState({
