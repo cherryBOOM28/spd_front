@@ -246,18 +246,18 @@ export const FormProvider = ({ children }) => {
 
     const isAllFieldsFilled = validateFields(person);
   
-    if (!isAllFieldsFilled ) {
-      NotificationManager.error('Пожалуйста, заполните все поля!');
-      return;
-    }
+    // if (!isAllFieldsFilled ) {
+    //   NotificationManager.error('Пожалуйста, заполните все поля!');
+    //   return;
+    // }
 
-    event.preventDefault();
-    const hasEmptyInputs = Object.values(person).some((value) => value === '');
+    // event.preventDefault();
+    // const hasEmptyInputs = Object.values(person).some((value) => value === '');
 
-    if (hasEmptyInputs) {
-      setEmptyInputs(true);
-      return;
-    }
+    // if (hasEmptyInputs) {
+    //   setEmptyInputs(true);
+    //   return;
+    // }
 
     try {
       // navigate('/'); 
@@ -278,6 +278,8 @@ export const FormProvider = ({ children }) => {
     //     },
     //   });
     // }
+
+    const isEmpty = classCategoriesInfo.some(category => category.categoryType === '');
 
     const requestData = {
       Photo: {photoBinary: photo},
@@ -307,16 +309,12 @@ export const FormProvider = ({ children }) => {
       WorkingHistory: {
         workingHistories: workingHistory.slice(1) ? workingHistory.slice(1) : [],
       },
-      SpecCheckInfo: {
-        specChecks: specCheckInfo,
-      },
+      SpecCheckInfo: {specCheckInfo},
       AttestationInfo: {
         attestations: attestationInfo,
       },
       RankInfo: {rankInfo},
-      ClassCategoriesInfo: {
-        classCategories: classCategoriesInfo,
-      },
+      ClassCategoriesInfo: {classCategoriesInfo},
       AutobiographyInfo: {
         autobiographies: autobiographyInfo,
       },
@@ -333,6 +331,7 @@ export const FormProvider = ({ children }) => {
         decrees: decreeListInfo.slice(1) ? decreeListInfo.slice(1) : [],
       }
     }
+
 
     event.preventDefault();
     // const myArray = photo.split(",");

@@ -34,6 +34,11 @@ const NewPersonnelData = (props) => {
         autobiographyText: '',
     });
 
+    const [inputDataClassCategories, setInputDataClassCategories] = useState({
+        docNumber: '',
+        docDate: '',
+    });
+
     const handleInputChange = (e) => {
         const { name, value } = e.target;
      
@@ -84,17 +89,32 @@ const NewPersonnelData = (props) => {
 
     const handleInputChangeClassCategories = (e) => {
         const { name, value } = e.target;
-      
-        setClassCategoriesInfo((prevData) => ({
-          ...prevData,
-          classCategories: [
-            {
-              [name]: value
+        setClassCategoriesInfo((prevData) => {
+            const newData = { ...prevData, [name]: value };
+            console.log(newData); // Log the updated data
+            return newData;
+        });
+    };
+
+    const handleInputChangeSpecCheck = (e) => {
+        const { name, value } = e.target;
+
+        setSpecCheckInfo((prevArray) => {
+            // Check if the field already exists in the array
+            const existingFieldIndex = prevArray.findIndex((item) => item.hasOwnProperty(name));
+        
+            // If the field exists, update its value; otherwise, add a new object
+            if (existingFieldIndex !== -1) {
+              const updatedArray = [...prevArray];
+              updatedArray[existingFieldIndex][name] = value;
+              return updatedArray;
+            } else {
+              const updatedArray = [...prevArray, { [name]: value }];
+              return updatedArray;
             }
-          ]
-        }));
-      };
-      
+        });
+    };
+
 
     const handleInputChangeAutobiography = (e) => {
         const { name, value } = e.target;
@@ -115,6 +135,9 @@ const NewPersonnelData = (props) => {
         });
     };
 
+    
+
+   
 
 
     return (
@@ -136,8 +159,7 @@ const NewPersonnelData = (props) => {
                                     className={cl.workerInfo}
                                     type="text"
                                     name="docNumber"
-                                    value={specCheckInfo.docNumber}
-                                    onChange={handleInputChange}
+                                    onChange={(e) => handleInputChangeSpecCheck('docNumber', e.target.value)}
                                 />
                             </div>        
                         </div>
@@ -148,8 +170,7 @@ const NewPersonnelData = (props) => {
                                     type="date"
                                     className={cl.workerInfo}
                                     name='docDate'
-                                    value={specCheckInfo.docDate}
-                                    onChange={handleInputChange}
+                                    onChange={(e) => handleInputChangeSpecCheck('docDate', e.target.value)}
                                 />
                             </div>
                         </div>

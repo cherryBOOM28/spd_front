@@ -9,14 +9,14 @@ const NewEducation = (props) => {
     const { education, setEducation } = useForm();
 
   // ИЗМЕНЕНИЯ В INPUT
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
+    const handleInputChange = (event) => {
+        const { name, value } = event.target;
 
-    setInputData((prevData) => ({
-        ...prevData,
-        [name]: value,
-    }));
-};       
+        setInputData((prevData) => ({
+            ...prevData,
+            [name]: value,
+        }));
+    };       
 
     // ДОБАВЛЕНИЕ ДАННЫХ
     const [showForm, setShowForm] = useState(true);
