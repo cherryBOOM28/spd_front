@@ -28,6 +28,8 @@ import { renderInvestigationRetrievalsOptions } from '../../components/reportRes
 import OrdersListData from '../../components/reportResults/orders_list/OrdersListData';
 import { renderOrderListOptions } from '../../components/reportResults/orders_list/OrdersListData';
 import ExcelGenerator from '../../components/excelGenerator/ExcelGenerator';
+import NextAttestations from '../../components/reportResults/nextAttestation/NextAttestations';
+import NextRunkUp from '../../components/reportResults/nextRunkUp/NextRunkUp';
 
 
 
@@ -199,77 +201,77 @@ function Reports(props, queryParams) {
     const personal_data_options = [
         { id: "familyStatus:statusName", label: "Семейное положение", selectOptions: ["Выберите семейное положение", "Не женат/не замужем", "Женат/замужем", "Вдова/вдовец", "Разведена/разведен"], isRange: false },
         { id: "positionInfo:department:DepartmentName", label: "Подразделение", isRange: false },
-        { id: "positionTitle:position:positionTitle", label: "Должность", isRange: false },
+        { id: "positionInfo:position:positionTitle", label: "Должность", isRange: false },
         { id: "positionInfo:department:LocationName", label: "Город", isRange: false },
     ];
 
     const family_compositions_options = [
-        { id: "familycomposition:relatives:relativeType", label: "Степень родства", selectOptions: ["Выберите", "супруг/супруга", "сын/дочь", "мать/отец", "брат/сестра"], isRange: false },
-        { id: "familycomposition:relatives:relName", label: "Имя", isRange: false },
-        { id: "familycomposition:relatives:relSurname", label: "Фамилия", isRange: false },
-        { id: "familycomposition:relatives:relPatronymic", label: "Отчество", isRange: false },
-        { id: "familycomposition:relatives:relIin", label: "ИИН", isRange: false },
-        { id: "familycomposition:relatives:relBirthDate", label: "Дата рождения", isRange: false },
-        { id: "familycomposition:relatives:relJobPlace", label: "Место работы", isRange: false },
+        { id: "familycomposition:relativeType", label: "Степень родства", selectOptions: ["Выберите", "супруг/супруга", "сын/дочь", "мать/отец", "брат/сестра"], isRange: false },
+        { id: "familycomposition:relName", label: "Имя", isRange: false },
+        { id: "familycomposition:relSurname", label: "Фамилия", isRange: false },
+        { id: "familycomposition:relPatronymic", label: "Отчество", isRange: false },
+        { id: "familycomposition:relIin", label: "ИИН", isRange: false },
+        { id: "familycomposition:relBirthDate", label: "Дата рождения", isRange: false },
+        { id: "familycomposition:relJobPlace", label: "Место работы", isRange: false },
     ];
 
     const educations_options = [
-        { id: "education:educations:educationType", label: "Вид образования", selectOptions: ["Выберите вид образования", "Высшее", "Магистратура"], isRange: false },
-        { id: "education:educations:educationPlace", label: "Учебное заведение", isRange: false },
-        { id: "education:educations:educationDateIn", label: "Дата поступления", isRange: false },
-        { id: "education:educations:educationDateOut", label: "Дата окончания", isRange: false },
-        { id: "education:educations:speciality", label: "Специальность", isRange: false },
-        { id: "education:educations:diplomaNumber", label: "Номер диплома", isRange: false },
+        { id: "education:educationType", label: "Вид образования", selectOptions: ["Выберите вид образования", "Высшее", "Магистратура"], isRange: false },
+        { id: "education:educationPlace", label: "Учебное заведение", isRange: false },
+        { id: "education:educationDateIn", label: "Дата поступления", isRange: false },
+        { id: "education:educationDateOut", label: "Дата окончания", isRange: false },
+        { id: "education:speciality", label: "Специальность", isRange: false },
+        { id: "education:diplomaNumber", label: "Номер диплома", isRange: false },
     ];
 
     const owning_languages_options = [
-        { id: "languageskill:languageSkills:langName", label: "Язык", isRange: false },
-        { id: "languageskill:languageSkills:skillLvl", label: "Уровень владения языком", selectOptions: ["Выберите уровень", "Cо словарем", "Начальный", "Ниже среднего", "Средний", "Выше среднего", "Продвинутый", "Профессиональный", "Родной"], isRange: false },
+        { id: "languageskill:langName", label: "Язык", isRange: false },
+        { id: "languageskill:skillLvl", label: "Уровень владения языком", selectOptions: ["Выберите уровень", "Cо словарем", "Начальный", "Ниже среднего", "Средний", "Выше среднего", "Продвинутый", "Профессиональный", "Родной"], isRange: false },
     ];
 
     const courses_options = [
-        { id: "course:courses:courseType", label: "Вид переподготовки", selectOptions: ["Выберите вид переподготовки", "Повышение", "Подготовка"], isRange: false },
-        { id: "course:courses:courseOrg", label: "Учебное заведение", isRange: false },
-        { id: "course:courses:startDate", label: "Дата начала", isRange: false },
-        { id: "course:courses:endDate", label: "Дата окончания", isRange: false },
-        { id: "course:courses:documentType", label: "Вид документа", isRange: false },
-        { id: "course:courses:courseName", label: "Название курса", isRange: false },
+        { id: "course:courseType", label: "Вид переподготовки", selectOptions: ["Выберите вид переподготовки", "Повышение", "Подготовка"], isRange: false },
+        { id: "course:courseOrg", label: "Учебное заведение", isRange: false },
+        { id: "course:startDate", label: "Дата начала", isRange: false },
+        { id: "course:endDate", label: "Дата окончания", isRange: false },
+        { id: "course:documentType", label: "Вид документа", isRange: false },
+        { id: "course:courseName", label: "Название курса", isRange: false },
     ];
 
     const academic_degree_options = [
-        { id: "academicdegree:academicDegrees:academicPlace", label: "Учебное заведение", isRange: false },
-        { id: "academicdegree:academicDegrees:academicDegree", label: "Вид образования", selectOptions: ["Выберите вид образования", "Бакалавр", "Магистр", "Кандидат", "Доктор"], isRange: false },
-        { id: "academicdegree:academicDegrees:academicDiplomaNumber", label: "Номер диплома", isRange: false },
-        { id: "academicdegree:academicDegrees:academicDiplomaDate", label: "Дата диплома", isRange: false },
+        { id: "academicdegree:academicPlace", label: "Учебное заведение", isRange: false },
+        { id: "academicdegree:academicDegree", label: "Вид образования", selectOptions: ["Выберите вид образования", "Бакалавр", "Магистр", "Кандидат", "Доктор"], isRange: false },
+        { id: "academicdegree:academicDiplomaNumber", label: "Номер диплома", isRange: false },
+        { id: "academicdegree:academicDiplomaDate", label: "Дата диплома", isRange: false },
     ];
 
     const sport_results_options = [
-        { id: "sportskill:sportSkills:sportType", label: "Вид спорта", isRange: false },
-        { id: "sportskill:sportSkills:sportSkillLvl", label: "Степень владения", selectOptions: ["Выберите степень владения", "Любитель", "Первый спортивный разряд", "Второй спортивный разряд", "Третий спортивный разряд", "Кандидат мастера спорта", "Мастер спорта"], isRange: false },
+        { id: "sportskill:sportType", label: "Вид спорта", isRange: false },
+        { id: "sportskill:sportSkillLvl", label: "Степень владения", selectOptions: ["Выберите степень владения", "Любитель", "Первый спортивный разряд", "Второй спортивный разряд", "Третий спортивный разряд", "Кандидат мастера спорта", "Мастер спорта"], isRange: false },
     ];
 
     const working_history_options = [
-        { id: "workinghistory:workingHistories:startDate", label: "Начало периода", isRange: false },
-        { id: "workinghistory:workingHistories:endDate", label: "Конец периода", isRange: false },
-        { id: "workinghistory:workingHistories:department", label: "Подразделение", isRange: false },
-        { id: "workinghistory:workingHistories:positionName", label: "Должность", isRange: false },
-        { id: "workinghistory:workingHistories:organizationName", label: "Учреждение", isRange: false },
-        { id: "workinghistory:workingHistories:organizationAddress", label: "Местонахождение организации", isRange: false },
+        { id: "workinghistory:startDate", label: "Начало периода", isRange: false },
+        { id: "workinghistory:endDate", label: "Конец периода", isRange: false },
+        { id: "workinghistory:department", label: "Подразделение", isRange: false },
+        { id: "workinghistory:positionName", label: "Должность", isRange: false },
+        { id: "workinghistory:organizationName", label: "Учреждение", isRange: false },
+        { id: "workinghistory:organizationAddress", label: "Местонахождение организации", isRange: false },
     ];
 
     const spec_checks_options = [
-        { id: "speccheck:specChecks:docNumber", label: "Номер документа", isRange: false },
-        { id: "speccheck:specChecks:docDate", label: "Дата документа", isRange: false },
+        { id: "speccheck:docNumber", label: "Номер документа", isRange: false },
+        { id: "speccheck:docDate", label: "Дата документа", isRange: false },
     ];
 
     const attestations_options = [
-        { id: "attestation:attestations:attResult", label: "Номер документа", isRange: false },
-        { id: "attestation:attestations:lastAttDate", label: "Дата начала", isRange: false },
-        { id: "attestation:attestations:nextAttDateMin", label: "Дата окончания", isRange: false },
+        { id: "attestation:attResult", label: "Номер документа", isRange: false },
+        { id: "attestation:lastAttDate", label: "Дата начала", isRange: false },
+        { id: "attestation:nextAttDateMin", label: "Дата окончания", isRange: false },
     ];
 
     const class_categories_options = [
-        { id: "classcategory:classCategories:categoryType", label: "Классная категория", selectOptions:["Выберите категорию", "Спец 2 категории", "Спец 1 категории", "Наставник"], isRange: false },
+        { id: "classcategory:categoryType", label: "Классная категория", selectOptions:["Выберите категорию", "Спец 2 категории", "Спец 1 категории", "Наставник"], isRange: false },
     ]
 
     const military_rank_options = [
@@ -282,26 +284,26 @@ function Reports(props, queryParams) {
     ];
 
     const awards_options = [
-        { id: "reward:rewards:rewardType", label: "Тип награды", isRange: false },
-        { id: "reward:rewards:rewardDocNumber", label: "Номер приказа", isRange: false },
-        { id: "reward:rewards:rewardDate", label: "Дата приказа", isRange: false },
+        { id: "reward:rewardType", label: "Тип награды", isRange: false, selectOptions: ["Выберите тип награды", 'Благодарность', "Грамота", "Почетная грамота", "Нагрудной знак - Қаржылық мониторинг органдарының үздігі", "Медаль - Экономикалық қауіпсіздікті қамтамасыз етуге қосқан үлесі үшін", 'Мінсіз қызметі үшін ІІІ дәрежелі', 'Мінсіз қызметі үшін ІІ дәрежелі', 'Мінсіз қызметі үшін І дәрежелі' ] },
+        { id: "reward:rewardDocNumber", label: "Номер приказа", isRange: false },
+        { id: "reward:rewardDate", label: "Дата приказа", isRange: false },
     ];
 
     const sick_leaves_options = [
-        { id: "sickleave:sickleave:sickDocNumber", label: "Номер приказа", isRange: false },
-        { id: "sickleave:sickleave:sickDocDate", label: "Дата приказа", isRange: false },
+        { id: "sickleave:sickDocNumber", label: "Номер приказа", isRange: false },
+        { id: "sickleave:sickDocDate", label: "Дата приказа", isRange: false },
     ];
 
     const investigation_retrievals_options = [
-        { id: "investigation:investigations:investigation_decree_type", label: "Тип приказа", isRange: false },
-        { id: "investigation:investigations:investigation_decree_number", label: "Номер приказа служебного расследования", isRange: false },
-        { id: "investigation:investigations:investigation_date", label: "Дата приказа", isRange: false },
+        { id: "investigation:investigation_decree_type", label: "Тип приказа", isRange: false, selectOptions: ["Выберите вид взыскания", "Замечания", 'Выговор', 'Строгий выговор', 'Неполное служебное соответствие', 'Увольнение'] },
+        { id: "investigation:investigation_decree_number", label: "Номер приказа служебного расследования", isRange: false },
+        { id: "investigation:investigation_date", label: "Дата приказа", isRange: false },
     ];
 
     const orders_list_options = [
-        { id: "decreelist:decrees:decreeType", label: "Вид приказа", selectOptions: ["Выберите вид приказа", "О назначение", "Перемещение", "Отпуск", "Командирование", "О присвоение звания", "Наложение дисциплинарного взыскания", "Снятие дисциплинарного взыскания", "Поощерение/Премирование", "Зачисление в распоряжение", "Служебные расследования", "Об увольнении"], isRange: false },
-        { id: "decreelist:decrees:decreeSubType", label: "Дата приказа", isRange: false },
-        { id: "decreelist:decrees:decreeDate", label: "Вид подприказа", isRange: false },
+        { id: "decreelist:decreeType", label: "Вид приказа", selectOptions: ["Выберите вид приказа", "О назначение", "Перемещение", "Отпуск", "Командирование", "О присвоение звания", "Наложение дисциплинарного взыскания", "Снятие дисциплинарного взыскания", "Поощерение/Премирование", "Зачисление в распоряжение", "Служебные расследования", "Об увольнении"], isRange: false },
+        { id: "decreelist:decreeSubType", label: "Вид подприказа", isRange: false },
+        { id: "decreelist:decreeDate", label: "Дата приказа", isRange: false },
     ];
 
     const [isOpenGeneral, setIsOpenGeneral] = useState(false);
@@ -361,7 +363,8 @@ function Reports(props, queryParams) {
               const start = dateRange.start_date || '';
               const end = dateRange.end_date || '';
                 console.log(start, typeof start)
-                const formattedDate = start + '_' + end; 
+                // const formattedDate = start + '_' + end; 
+                const formattedDate = (start && end) ? `${start}_${end}` : (start || end);
                 return formattedDate;
             }
             return '';
@@ -369,21 +372,21 @@ function Reports(props, queryParams) {
 
         const dateRangeParams = [
           'birthinfo:birth_date',
-          'familycomposition:relatives:relBirthDate',
+          'familycomposition:relBirthDate',
           'identitycardinfo:dateOfIssue',
-          'education:educations:educationDateIn',
-          'education:educations:educationDateOut',
-          'course:courses:startDate',
-          'course:courses:endDate',
-          'academicdegree:academicDegrees:academicDiplomaDate',
-          'workinghistory:workingHistories:startDate',
-          'workinghistory:workingHistories:endDate',
-          'speccheck:specChecks:docDate',
-          'attestation:attestations:lastAttDate',
-          'attestation:attestations:nextAttDateMin',
+          'education:educationDateIn',
+          'education:educationDateOut',
+          'course:startDate',
+          'course:endDate',
+          'academicdegree:academicDiplomaDate',
+          'workinghistory:startDate',
+          'workinghistory:endDate',
+          'speccheck:docDate',
+          'attestation:lastAttDate',
+          'attestation:nextAttDateMin',
           'rankInfo:receivedDate',
-          'reward:rewards:rewardDate',
-          'decreelist:decrees:decreeDate',
+          'reward:rewardDate',
+          'decreelist:decreeDate',
         ];
       
         const updatedQueryParams = dateRangeParams.reduce((result, key) => {
@@ -464,6 +467,11 @@ function Reports(props, queryParams) {
     const investigationRetrievalsDataOptions = renderInvestigationRetrievalsOptions(selectedInvestigationRetrievalsOptions, formData, handleInputChange, investigation_retrievals_options);
     const orderListsDataOptions = renderOrderListOptions(selectedOrderListOptions, formData, handleInputChange, orders_list_options);
 
+    const [activeTab, setActiveTab] = useState(1);
+
+    const handleTabClick = (tabIndex) => {
+        setActiveTab(tabIndex);
+    };
    
     return (
         <div className={cl.homeWrapper}>
@@ -473,7 +481,32 @@ function Reports(props, queryParams) {
                 <div className={cl.content}>
                     <div className={cl.container}>
                         <div className={cl.employeeWrapper}>
-                            <div className={cl.employees}>
+                            <div className={cl.tabContent}>
+                                <div className={cl.tabHeader}>
+                                    <div 
+                                        className={activeTab === 1 ? cl.btnTab + ' ' + cl.activeTab : cl.btnTab}
+                                        onClick={() => handleTabClick(1)}
+                                        >
+                                    Общие данные
+                                    </div>
+                                    <div 
+                                        className={activeTab === 2 ? cl.btnTab + ' ' + cl.activeTab : cl.btnTab}
+                                        onClick={() => handleTabClick(2)}
+                                        >
+                                    Предстоящие приказы - аттестация
+                                    </div>
+                                    <div 
+                                        className={activeTab === 3 ? cl.btnTab + ' ' + cl.activeTab : cl.btnTab}
+                                        onClick={() => handleTabClick(3)}
+                                        >
+                                    Предстоящие приказы - звания
+                                    </div>
+                                </div>
+                                <div className={cl.tabBody}>
+                                    {
+                                        activeTab === 1 && 
+                                        <div className={cl.basic__info}>
+                                            <div className={cl.employees}>
                                 <div className={cl.dropdown}>
                                     <Button onClick={toggleGeneralDropdown} className={cl.actionBtn}>
                                         Общие данные
@@ -579,224 +612,239 @@ function Reports(props, queryParams) {
                                     orders_list_options={orders_list_options}
                                 />
                              
-                            </div>
-                            {/* {requestSubmitted && (
-                                
-                            )} */}
-                            <div style={{ display: 'flex', flexWrap: 'wrap', width: '100%' }}>
-                                <div>
-                                    {selectedOptions.length > 0 && (
-                                    <div className={cl.input__container}>
-                                        <p className={cl.input__name}>Общие данные</p>
-                                        {selectedOptions.map((option) => (
-                                            <div key={option} className={cl.wrapper__input}>
-                                                <label className={cl.label__name}>{options.find((o) => o.id === option).label}:</label>
-                                                {option === "gender:genderName" ? (
-                                                    <select
-                                                    value={formData[option] || ''}
-                                                    className={cl.workerInfoSelect}
-                                                    onChange={(e) => handleInputChange(option, e.target.value)}
-                                                    >
-                                                    {options.find((o) => o.id === option).selectOptions.map((genderOption) => (
-                                                        <option key={genderOption} value={genderOption}>
-                                                        {genderOption}
-                                                        </option>
-                                                    ))}
-                                                    </select>
-                                        
-                                                ) :
-                                            
-                                                option === "birthinfo:birth_date" ? ( // Проверяем, является ли опция диапазоном даты рождения
-                                                <div className={cl.data__wrapper}>
-                                                    <div>
-                                                        <label style={{ marginRight: '5px', marginLeft: '13px'}}>От</label>
-                                                        <input
-                                                        type="date"
-                                                        className={cl.workerInfoDate}
-                                                        value={formData[option] != null ? formData[option].start_date : ''}
-                                                        onChange={(e) => {handleInputChange(option, { ...formData[option], start_date: e.target.value })}}
-                                                        />
-                                                    </div>
-                                                    <div>
-                                                        <label style={{ marginRight: '5px', marginLeft: '13px' }}>До</label>
-                                                        <input
-                                                        type="date"
-                                                        className={cl.workerInfoDate}
-
-                                                        value={formData[option] != null ? formData[option].end_date : ''}
-                                                        onChange={(e) => handleInputChange(option, { ...formData[option], end_date: e.target.value })}
-                                                        
-                                                        />
-                                                    </div>
-                                                </div>
-                                                ) : (
-                                                option === "identitycardinfo:dateOfIssue" && options.find((o) => o.id === option).isRange ? (
-                                                    <div className={cl.data__wrapper}>
-                                                        <div>
-                                                        <label style={{ marginRight: '5px', marginLeft: '13px'}}>От</label>
-                                                        <input
-                                                            type="date"
-                                                            className={cl.workerInfoDate}
-                                                            value={formData[option] != null ? formData[option].start_date : ''}
-                                                            onChange={(e) => handleInputChange(option, { ...formData[option], from: e.target.value })}
-                                                        />
-                                                        </div>
-                                                        <div>
-                                                        <label style={{ marginRight: '5px', marginLeft: '13px' }}>До</label>
-                                                        <input
-                                                            type="date"
-                                                            className={cl.workerInfoDate}
-                                                            value={formData[option] != null ? formData[option].end_date : ''}
-                                                            onChange={(e) => handleInputChange(option, { ...formData[option], to: e.target.value })}
-                                                        />
-                                                        </div>
-                                                    </div>
-                                                ) : (
-                                                <input
-                                                    type="text"
-                                                    className={cl.workerInfo}
-                                                    value={formData[option] || ''}
-                                                    placeholder={`${options.find((o) => o.id === option).label}`}
-                                                    onChange={(e) => handleInputChange(option, e.target.value)}
-                                                />
-                                               
-                                                ) 
-                                                
-                                            )}
                                             </div>
-                                        ))}                                 
-                                    </div>     
-                                    )}
-                                </div>
-                                <div>   
-                                    {personalDataOptions}
-                                    {familyOptions}
-                                    {educationsDataOptions}
-                                    {languageDataOptions}
-                                    {courseDataOptions}
-                                    {academicDegreeDataOptions}
-                                    {sportDataOptions}
-                                </div>
-                                <div>
-                                    {workingHistoryDataOptions}
-                                </div>
-                                <div>
-                                    {specChecksDataOptions}
-                                    {attestationsDataOptions}
-                                    {classCategoryDataOptions}
-                                    {militaryRankDataOptions}
-                                    {awardsDataOptions}
-                                    {sickLeavesDataOptions}
-                                    {investigationRetrievalsDataOptions}
-                                </div>
-                                <div>
-                                    {orderListsDataOptions}
-                                </div>
-                                
-                            </div>
+                        
+                                            <div style={{ display: 'flex', flexWrap: 'wrap', width: '100%' }}>
+                                                <div>
+                                                    {selectedOptions.length > 0 && (
+                                                    <div className={cl.input__container}>
+                                                        <p className={cl.input__name}>Общие данные</p>
+                                                        {selectedOptions.map((option) => (
+                                                            <div key={option} className={cl.wrapper__input}>
+                                                                <label className={cl.label__name}>{options.find((o) => o.id === option).label}:</label>
+                                                                {option === "gender:genderName" ? (
+                                                                    <select
+                                                                    value={formData[option] || ''}
+                                                                    className={cl.workerInfoSelect}
+                                                                    onChange={(e) => handleInputChange(option, e.target.value)}
+                                                                    >
+                                                                    {options.find((o) => o.id === option).selectOptions.map((genderOption) => (
+                                                                        <option key={genderOption} value={genderOption}>
+                                                                        {genderOption}
+                                                                        </option>
+                                                                    ))}
+                                                                    </select>
+                                                        
+                                                                ) :
+                                                            
+                                                                option === "birthinfo:birth_date" ? ( // Проверяем, является ли опция диапазоном даты рождения
+                                                                <div className={cl.data__wrapper}>
+                                                                    <div>
+                                                                        <label style={{ marginRight: '5px', marginLeft: '13px'}}>От</label>
+                                                                        <input
+                                                                        type="date"
+                                                                        className={cl.workerInfoDate}
+                                                                        value={formData[option] != null ? formData[option].start_date : ''}
+                                                                        onChange={(e) => {handleInputChange(option, { ...formData[option], start_date: e.target.value })}}
+                                                                        />
+                                                                    </div>
+                                                                    <div>
+                                                                        <label style={{ marginRight: '5px', marginLeft: '13px' }}>До</label>
+                                                                        <input
+                                                                        type="date"
+                                                                        className={cl.workerInfoDate}
+
+                                                                        value={formData[option] != null ? formData[option].end_date : ''}
+                                                                        onChange={(e) => handleInputChange(option, { ...formData[option], end_date: e.target.value })}
+                                                                        
+                                                                        />
+                                                                    </div>
+                                                                </div>
+                                                                ) : (
+                                                                option === "identitycardinfo:dateOfIssue" && options.find((o) => o.id === option).isRange ? (
+                                                                    <div className={cl.data__wrapper}>
+                                                                        <div>
+                                                                        <label style={{ marginRight: '5px', marginLeft: '13px'}}>От</label>
+                                                                        <input
+                                                                            type="date"
+                                                                            className={cl.workerInfoDate}
+                                                                            value={formData[option] != null ? formData[option].start_date : ''}
+                                                                            onChange={(e) => handleInputChange(option, { ...formData[option], from: e.target.value })}
+                                                                        />
+                                                                        </div>
+                                                                        <div>
+                                                                        <label style={{ marginRight: '5px', marginLeft: '13px' }}>До</label>
+                                                                        <input
+                                                                            type="date"
+                                                                            className={cl.workerInfoDate}
+                                                                            value={formData[option] != null ? formData[option].end_date : ''}
+                                                                            onChange={(e) => handleInputChange(option, { ...formData[option], to: e.target.value })}
+                                                                        />
+                                                                        </div>
+                                                                    </div>
+                                                                ) : (
+                                                                <input
+                                                                    type="text"
+                                                                    className={cl.workerInfo}
+                                                                    value={formData[option] || ''}
+                                                                    placeholder={`${options.find((o) => o.id === option).label}`}
+                                                                    onChange={(e) => handleInputChange(option, e.target.value)}
+                                                                />
+                                                            
+                                                                ) 
+                                                                
+                                                            )}
+                                                            </div>
+                                                        ))}                                 
+                                                    </div>     
+                                                    )}
+                                                </div>
+                                                <div>   
+                                                    {personalDataOptions}
+                                                    {familyOptions}
+                                                    {educationsDataOptions}
+                                                    {languageDataOptions}
+                                                    {courseDataOptions}
+                                                    {academicDegreeDataOptions}
+                                                    {sportDataOptions}
+                                                </div>
+                                                <div>
+                                                    {workingHistoryDataOptions}
+                                                </div>
+                                                <div>
+                                                    {specChecksDataOptions}
+                                                    {attestationsDataOptions}
+                                                    {classCategoryDataOptions}
+                                                    {militaryRankDataOptions}
+                                                    {awardsDataOptions}
+                                                    {sickLeavesDataOptions}
+                                                    {investigationRetrievalsDataOptions}
+                                                </div>
+                                                <div>
+                                                    {orderListsDataOptions}
+                                                </div>
+                                                
+                                            </div>
                            
-                            
-                            <div style={{ display: 'flex', gap: '10px', justifyContent: 'space-between' }}>
-                            <Button onClick={handleSubmit} className={cl.submitBtn} >
-                                Поиск
-                            </Button>
-                            {/* {showExcelButton && (
-                                <Button style={{ display: 'flex', gap: "10px" }} >
-                                    <ExcelGenerator
-                                        results={results} 
-                                        selected={[
-                                            ...personalData,
-                                            ...selectedOptions,
-                                            ...selectedPersonalOptions,
-                                            ...selectedFamilyOptions,
-                                            ...selectedEducationOptions,
-                                            ...selectedLanguageOptions,
-                                            ...selectedCoursesOptions,
-                                            ...selectedAcademicDegreeOptions,
-                                            ...selectedSportOptions,
-                                            ...selectedWorkingHistoryOptions,
-                                            ...selectedSpecChecksOptions,
-                                            ...selectedAttestationsOptions,
-                                            ...selectedCategoryOptions,
-                                            ...selectedMilitaryRankOptions,
-                                            ...selectedAwardsOptions,
-                                            ...selectedSickLeavesOptions,
-                                            ...selectedInvestigationRetrievalsOptions,
-                                        ]} 
-                                        optionsData={[
-                                            ...options,
-                                            ...personal_data_options,
-                                            ...family_compositions_options,
-                                            ...educations_options,
-                                            ...owning_languages_options,
-                                            ...courses_options,
-                                            ...academic_degree_options,
-                                            ...sport_results_options,
-                                            ...working_history_options,
-                                            ...spec_checks_options,
-                                            ...attestations_options,
-                                            ...class_categories_options,
-                                            ...military_rank_options,
-                                            ...awards_options,
-                                            ...sick_leaves_options,
-                                            ...investigation_retrievals_options,
-                                            ...orders_list_options,
-                                        ]}
-                                        setResults={setResults} 
-                                        formData={formData}
-                                    />
-                                    <AiFillPrinter style={{ fontSize: '16px' }} />
-                                </Button>
-                            )} */}
-                            </div>
+                                            <div style={{ display: 'flex', gap: '10px', justifyContent: 'space-between' }}>
+                                                <Button onClick={handleSubmit} className={cl.submitBtn} >
+                                                    Поиск
+                                                </Button>
+                                                {showExcelButton && (
+                                                    <Button style={{ display: 'flex', gap: "10px" }} >
+                                                        <ExcelGenerator
+                                                            results={results} 
+                                                            selected={[
+                                                                ...personalData,
+                                                                ...selectedOptions,
+                                                                ...selectedPersonalOptions,
+                                                                ...selectedFamilyOptions,
+                                                                ...selectedEducationOptions,
+                                                                ...selectedLanguageOptions,
+                                                                ...selectedCoursesOptions,
+                                                                ...selectedAcademicDegreeOptions,
+                                                                ...selectedSportOptions,
+                                                                ...selectedWorkingHistoryOptions,
+                                                                ...selectedSpecChecksOptions,
+                                                                ...selectedAttestationsOptions,
+                                                                ...selectedCategoryOptions,
+                                                                ...selectedMilitaryRankOptions,
+                                                                ...selectedAwardsOptions,
+                                                                ...selectedSickLeavesOptions,
+                                                                ...selectedInvestigationRetrievalsOptions,
+                                                            ]} 
+                                                            optionsData={[
+                                                                ...options,
+                                                                ...personal_data_options,
+                                                                ...family_compositions_options,
+                                                                ...educations_options,
+                                                                ...owning_languages_options,
+                                                                ...courses_options,
+                                                                ...academic_degree_options,
+                                                                ...sport_results_options,
+                                                                ...working_history_options,
+                                                                ...spec_checks_options,
+                                                                ...attestations_options,
+                                                                ...class_categories_options,
+                                                                ...military_rank_options,
+                                                                ...awards_options,
+                                                                ...sick_leaves_options,
+                                                                ...investigation_retrievals_options,
+                                                                ...orders_list_options,
+                                                            ]}
+                                                            setResults={setResults} 
+                                                            formData={formData}
+                                                        />
+                                                        <AiFillPrinter style={{ fontSize: '16px' }} />
+                                                    </Button>
+                                                )}
+                                            </div>
                     
                            
-                            {showResults && 
-                                <ResultsTable 
-                                selected={[
-                                    ...personalData,
-                                    ...selectedOptions,
-                                    ...selectedPersonalOptions,
-                                    ...selectedFamilyOptions,
-                                    ...selectedEducationOptions,
-                                    ...selectedLanguageOptions,
-                                    ...selectedCoursesOptions,
-                                    ...selectedAcademicDegreeOptions,
-                                    ...selectedSportOptions,
-                                    ...selectedWorkingHistoryOptions,
-                                    ...selectedSpecChecksOptions,
-                                    ...selectedAttestationsOptions,
-                                    ...selectedCategoryOptions,
-                                    ...selectedMilitaryRankOptions,
-                                    ...selectedAwardsOptions,
-                                    ...selectedSickLeavesOptions,
-                                    ...selectedInvestigationRetrievalsOptions,
-                                ]} 
-                                columns={[
-                                    ...options,
-                                    ...personal_data_options,
-                                    ...family_compositions_options,
-                                    ...educations_options,
-                                    ...owning_languages_options,
-                                    ...courses_options,
-                                    ...academic_degree_options,
-                                    ...sport_results_options,
-                                    ...working_history_options,
-                                    ...spec_checks_options,
-                                    ...attestations_options,
-                                    ...class_categories_options,
-                                    ...military_rank_options,
-                                    ...awards_options,
-                                    ...sick_leaves_options,
-                                    ...investigation_retrievals_options,
-                                    ...orders_list_options,
-                                ]}
-                                results={results} 
-                                count={count}
-                                next={next}
-                                previous={previous}
-                                setResults={setResults} 
-                                formData={formData} />}
+                                            {showResults && 
+                                                <ResultsTable 
+                                                selected={[
+                                                    ...personalData,
+                                                    ...selectedOptions,
+                                                    ...selectedPersonalOptions,
+                                                    ...selectedFamilyOptions,
+                                                    ...selectedEducationOptions,
+                                                    ...selectedLanguageOptions,
+                                                    ...selectedCoursesOptions,
+                                                    ...selectedAcademicDegreeOptions,
+                                                    ...selectedSportOptions,
+                                                    ...selectedWorkingHistoryOptions,
+                                                    ...selectedSpecChecksOptions,
+                                                    ...selectedAttestationsOptions,
+                                                    ...selectedCategoryOptions,
+                                                    ...selectedMilitaryRankOptions,
+                                                    ...selectedAwardsOptions,
+                                                    ...selectedSickLeavesOptions,
+                                                    ...selectedInvestigationRetrievalsOptions,
+                                                ]} 
+                                                columns={[
+                                                    ...options,
+                                                    ...personal_data_options,
+                                                    ...family_compositions_options,
+                                                    ...educations_options,
+                                                    ...owning_languages_options,
+                                                    ...courses_options,
+                                                    ...academic_degree_options,
+                                                    ...sport_results_options,
+                                                    ...working_history_options,
+                                                    ...spec_checks_options,
+                                                    ...attestations_options,
+                                                    ...class_categories_options,
+                                                    ...military_rank_options,
+                                                    ...awards_options,
+                                                    ...sick_leaves_options,
+                                                    ...investigation_retrievals_options,
+                                                    ...orders_list_options,
+                                                ]}
+                                                results={results} 
+                                                count={count}
+                                                next={next}
+                                                previous={previous}
+                                                setResults={setResults} 
+                                                formData={formData} />
+                                            }
+                                        </div>
+                                    }
+                                    {
+                                        activeTab === 2 && 
+                                        <div className={cl.basic__info}>
+                                            <NextAttestations />
+                                        </div>
+                                    }
+                                    {
+                                        activeTab === 3 && 
+                                        <div className={cl.basic__info}>
+                                            <NextRunkUp />
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                            
                         </div>
                     </div>
                 </div>

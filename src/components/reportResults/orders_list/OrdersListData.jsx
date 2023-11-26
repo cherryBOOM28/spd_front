@@ -14,10 +14,11 @@ function OrdersListData(props) {
     }, [selectedOrderListOptions]);
 
     const orders_list_options = [
-        { id: "decreelist:decrees:decreeType", label: "Вид приказа", selectOptions: ["Выберите вид приказа", "О назначение", "Перемещение", "Отпуск", "Командирование", "О присвоение звания", "Наложение дисциплинарного взыскания", "Снятие дисциплинарного взыскания", "Поощерение/Премирование", "Зачисление в распоряжение", "Служебные расследования", "Об увольнении"], isRange: false },
-        { id: "decreelist:decrees:decreeSubType", label: "Дата приказа", isRange: false },
-        { id: "decreelist:decrees:decreeDate", label: "Вид подприказа", isRange: false },
+        { id: "decreelist:decreeType", label: "Вид приказа", selectOptions: ["Выберите вид приказа", "О назначение", "Перемещение", "Отпуск", "Командирование", "О присвоение звания", "Наложение дисциплинарного взыскания", "Снятие дисциплинарного взыскания", "Поощерение/Премирование", "Зачисление в распоряжение", "Служебные расследования", "Об увольнении"], isRange: false },
+        { id: "decreelist:decreeSubType", label: "Вид подприказа", isRange: false },
+        { id: "decreelist:decreeDate", label: "Дата приказа", isRange: false },
     ];
+
 
     const [isOpenOrderList, setIsOpenOrderList] = useState(false);
     const toggleOrderListDropdown = () => {
@@ -88,7 +89,7 @@ function OrdersListData(props) {
 export default OrdersListData;
 
 export function renderOrderListOptions(selectedOrderListOptions, formData, handleInputChange, orders_list_options) {
-    const selectedOrderType = formData["decreelist:decrees:decreeType"]; // Получаем выбранный вид приказа
+    const selectedOrderType = formData["decreelist:decreeType"]; // Получаем выбранный вид приказа
     return(
         selectedOrderListOptions.length > 0 && (
             <div className={cl.input__container}>
@@ -96,7 +97,7 @@ export function renderOrderListOptions(selectedOrderListOptions, formData, handl
                 {selectedOrderListOptions.map((option) => (
                     <div key={option} className={cl.wrapper__input}>
                         <label className={cl.label__name}>{orders_list_options.find((o) => o.id === option).label}:</label>
-                        {option === "decreelist:decrees:decreeType" ? (
+                        {option === "decreelist:decreeType" ? (
                             <select
                             value={formData[option] || ''}
                             className={cl.workerInfoSelect}
@@ -110,7 +111,7 @@ export function renderOrderListOptions(selectedOrderListOptions, formData, handl
                             </select>
                 
                         ) : 
-                            option === "decreelist:decrees:decreeDate" ? (
+                            option === "decreelist:decreeDate" ? (
                             <div className={cl.data__wrapper}>
                                 <div>
                                 <label style={{ marginRight: '5px', marginLeft: '13px' }}>От</label>
@@ -118,7 +119,7 @@ export function renderOrderListOptions(selectedOrderListOptions, formData, handl
                                     type="date"
                                     className={cl.workerInfoDate}
                                     value={formData[option]?.start_date || ''}
-                                    onChange={(e) => handleInputChange(option, { ...formData[option], from: e.target.value })}
+                                    onChange={(e) => handleInputChange(option, { ...formData[option], start_date: e.target.value })}
                                 />
                                 </div>
                                 <div>
@@ -127,7 +128,7 @@ export function renderOrderListOptions(selectedOrderListOptions, formData, handl
                                     type="date"
                                     className={cl.workerInfoDate}
                                     value={formData[option]?.end_date || ''}
-                                    onChange={(e) => handleInputChange(option, { ...formData[option], to: e.target.value })}
+                                    onChange={(e) => handleInputChange(option, { ...formData[option], end_date: e.target.value })}
                                 />
                                 </div>
                             </div>
@@ -147,9 +148,9 @@ export function renderOrderListOptions(selectedOrderListOptions, formData, handl
                     <div style={{ display: 'flex' }}>
                         <label className={cl.label__name}>Тип отпуска:</label>
                         <select
-                            value={formData["decreelist:decrees:decreeSubType"] || ''}
+                            value={formData["decreelist:decreeSubType"] || ''}
                             className={cl.workerInfoSelect}
-                            onChange={(e) => handleInputChange("decreelist:decrees:decreeSubType", e.target.value)}
+                            onChange={(e) => handleInputChange("decreelist:decreeSubType", e.target.value)}
                         >
                             <option value="Годовой трудовой">Годовой трудовой</option>
                             <option value="Краткосрочный">Краткосрочный</option>
@@ -164,9 +165,9 @@ export function renderOrderListOptions(selectedOrderListOptions, formData, handl
                     <div>
                         <label className={cl.label__name}>Вид увольнения:</label>
                         <select
-                            value={formData["decreelist:decrees:decreeSubType"] || ''}
+                            value={formData["decreelist:decreeSubType"] || ''}
                             className={cl.workerInfoSelect}
-                            onChange={(e) => handleInputChange("decreelist:decrees:decreeSubType", e.target.value)}
+                            onChange={(e) => handleInputChange("decreelist:decreeSubType", e.target.value)}
                         >
                            <option value="">Выберите вид увольнения</option>
                             <option value="По собственной инициативе">По собственной инициативе</option>

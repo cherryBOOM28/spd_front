@@ -1,0 +1,25 @@
+.wrapper {
+    margin: 50px 0;
+}
+
+.label {
+    color: #000;
+    font-size: 16px;
+    font-weight: 400;
+    width: 127px;
+}
+
+.workerInfo {
+    border-radius: 5px;
+    border: 1px solid #959595;
+    width: 270px;
+    /* height: 30px; */
+    padding: 6px 9px;
+    margin-left: 12px;
+    outline: none;
+    font-family: 'Ubuntu';
+    color: #000;
+    font-size: 16px;
+    font-weight: 400;
+    margin-bottom: 40px;
+}

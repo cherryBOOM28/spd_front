@@ -61,6 +61,15 @@ const ResultTable = ({results, setResults, formData, selected, columns, count, n
         navigate(`/${id}`);
     };
 
+    // const removePrefix = (fieldName) => {
+    //     const prefixIndex = fieldName.indexOf(':');
+    //     return prefixIndex !== -1 ? fieldName.slice(prefixIndex + 1) : fieldName;
+    // };
+
+    const removePrefix = (fieldName) => {
+        const lastColonIndex = fieldName.lastIndexOf(':');
+        return lastColonIndex !== -1 ? fieldName.slice(lastColonIndex + 1) : fieldName;
+    };
 
   return (
     <Paper style={{ marginTop: '20px', borderRadius: '5px' }} sx={{  width: '77.5vw', overflow: 'hidden' }}>
@@ -73,17 +82,18 @@ const ResultTable = ({results, setResults, formData, selected, columns, count, n
                             <TableCell style={{ minWidth: 50 }}>Имя</TableCell>
                             <TableCell style={{ minWidth: 50 }}>Фамилия</TableCell>
                             <TableCell style={{ minWidth: 50 }}>Отчество</TableCell>
-                            {/* {selected.filter(item => item !== 'firstname' && item !== 'surname' && item !== 'patronymic').map((fieldName) => {
+                            {selected.filter(item => item !== 'firstname' && item !== 'surname' && item !== 'patronymic').map((fieldName) => {
                                 return (
                                     <TableCell style={{ minWidth: 100 }} key={fieldName}>
                                         {getColumnName(fieldName)}
                                     </TableCell>
                                 )
-                            })} */}
+                            })}
                         </TableRow>
                     </TableHead>
 
                     <TableBody>
+                    {console.log('Selected Fields:', selected)}
                         {table.map((person) => (
                             <TableRow 
                                 onClick={() => handleRowClick(person.id)} 
@@ -111,129 +121,19 @@ const ResultTable = ({results, setResults, formData, selected, columns, count, n
            
                           
 
-                                {/* {selected
+                                {selected
                                     .filter(item => item !== 'firstName' && item !== 'surname' && item !== 'patronymic')
                                     .map((fieldName) => {
                                     return (
                                         <TableCell key={fieldName} style={{ minWidth: 50 }}>
-                                            {person.Person[fieldName]}
-
-                                            {person.Person &&
-                                                person.Person[0] &&
-                                                person.Person[0][fieldName]
-                                            }
-
-                                            {person.FamilyComposition && person.family_compositions.map((relative, index) => (
-                                                // <TableRow>
-                                                    <div style={{ minWidth: 50 }} key={fieldName}>
-                                                        {fieldName in relative && relative[fieldName]}
-                                                    </div>
-                                                // </TableRow>
-                                            ))}
-
-                                            {person.educations && person.educations.map((data, index) => (
-                                                // <TableRow>
-                                                    <div style={{ minWidth: 50 }} key={fieldName}>
-                                                        {fieldName in data && data[fieldName]}
-                                                    </div>
-                                                // </TableRow>
-                                            ))}
-
-                                        
-                                            {person.owning_languages && person.owning_languages.map((data, index) => (
-                                                // <TableRow>
-                                                    <div style={{ minWidth: 50 }} key={fieldName}>
-                                                        {fieldName in data && data[fieldName]}
-                                                    </div>
-                                                // </TableRow>
-                                            ))}
-
-                                            {person.courses && person.courses.map((data, index) => (
-                                                // <TableRow>
-                                                    <div style={{ minWidth: 50 }} key={fieldName}>
-                                                        {fieldName in data && data[fieldName]}
-                                                    </div>
-                                                // </TableRow>
-                                            ))}
-
-                                            {person.academic_degree && person.academic_degree.map((data, index) => (
-                                                // <TableRow>
-                                                    <div style={{ minWidth: 50 }} key={fieldName}>
-                                                        {fieldName in data && data[fieldName]}
-                                                    </div>
-                                                // </TableRow>
-                                            ))}
-
-                                            {person.sport_results && person.sport_results.map((data, index) => (
-                                                // <TableRow>
-                                                    <div style={{ minWidth: 50 }} key={fieldName}>
-                                                        {fieldName in data && data[fieldName]}
-                                                    </div>
-                                                // </TableRow>
-                                            ))}
-
-                                            {person.working_histories && person.working_histories.map((data, index) => (
-                                                // <TableRow>
-                                                    <div style={{ minWidth: 50 }} key={fieldName}>
-                                                        {fieldName in data && data[fieldName]}
-                                                    </div>
-                                                // </TableRow
-                                            ))}
-
-                                            {person.awards && person.awards.map((data, index) => (
-                                                // <TableRow>
-                                                    <div style={{ minWidth: 50 }} key={fieldName}>
-                                                        {fieldName in data && data[fieldName]}
-                                                    </div>
-                                                // </TableRow
-                                            ))} 
-
-                                            {person.sick_leaves && person.sick_leaves.map((data, index) => (
-                                                // <TableRow>
-                                                    <div style={{ minWidth: 50 }} key={fieldName}>
-                                                        {fieldName in data && data[fieldName]}
-                                                    </div>
-                                                // </TableRow
-                                            ))} 
-
-                                            {person.investigation_retrievals && person.investigation_retrievals.map((data, index) => (
-                                                // <TableRow>
-                                                    <div style={{ minWidth: 50 }} key={fieldName}>
-                                                        {fieldName in data && data[fieldName]}
-                                                    </div>
-                                                // </TableRow
-                                            ))} 
-
-                                            {person.orders_list && person.investigation_retrievals.map((data, index) => (
-                                                // <TableRow>
-                                                    <div style={{ minWidth: 50 }} key={fieldName}>
-                                                        {fieldName in data && data[fieldName]}
-                                                    </div>
-                                                // </TableRow
-                                            ))}
-                                            {person.military_rank &&
-                                                person.military_rank[0] &&
-                                                person.military_rank[0][fieldName]}
-
-                                            {person.spec_checks &&
-                                                person.spec_checks[0] &&
-                                                person.spec_checks[0][fieldName]}
-
-                                            {person.attestations &&
-                                                person.attestations[0] &&
-                                                person.attestations[0][fieldName]}
-
-                                            {person.class_categories &&
-                                                person.class_categories[0] &&
-                                                person.class_categories[0][fieldName]}
-
-                                            {person.autobiography &&
-                                                person.autobiography[0] &&
-                                                person.autobiography[0][fieldName]}
+                     
+                                        {/* {person[fieldName]} */}
+                                        {person[removePrefix(fieldName)]}
+                                            
 
                                         </TableCell> 
                                     )     
-                                })}    */}
+                                })}   
                           
                               
                             </TableRow>  

@@ -50,53 +50,53 @@ function ReportPersonalData(props) {
     const personal_data_options = [
         { id: "familyStatus:statusName", label: "Семейное положение", selectOptions: ["Выберите семейное положение", "Не женат/не замужем", "Женат/замужем", "Вдова/вдовец", "Разведена/разведен"], isRange: false },
         { id: "positionInfo:department:DepartmentName", label: "Подразделение", isRange: false },
-        { id: "positionTitle:position:positionTitle", label: "Должность", isRange: false },
+        { id: "positionInfo:position:positionTitle", label: "Должность", isRange: false },
         { id: "positionInfo:department:LocationName", label: "Город", isRange: false },
     ];
 
     const family_compositions_options = [
-        { id: "familycomposition:relatives:relativeType", label: "Степень родства", selectOptions: ["Выберите", "супруг/супруга", "сын/дочь", "мать/отец", "брат/сестра"], isRange: false },
-        { id: "familycomposition:relatives:relName", label: "Имя", isRange: false },
-        { id: "familycomposition:relatives:relSurname", label: "Фамилия", isRange: false },
-        { id: "familycomposition:relatives:relPatronymic", label: "Отчество", isRange: false },
-        { id: "familycomposition:relatives:relIin", label: "ИИН", isRange: false },
-        { id: "familycomposition:relatives:relBirthDate", label: "Дата рождения", isRange: false },
-        { id: "familycomposition:relatives:relJobPlace", label: "Место работы", isRange: false },
+        { id: "familycomposition:relativeType", label: "Степень родства", selectOptions: ["Выберите", "супруг/супруга", "сын/дочь", "мать/отец", "брат/сестра"], isRange: false },
+        { id: "familycomposition:relName", label: "Имя", isRange: false },
+        { id: "familycomposition:relSurname", label: "Фамилия", isRange: false },
+        { id: "familycomposition:relPatronymic", label: "Отчество", isRange: false },
+        { id: "familycomposition:relIin", label: "ИИН", isRange: false },
+        { id: "familycomposition:relBirthDate", label: "Дата рождения", isRange: false },
+        { id: "familycomposition:relJobPlace", label: "Место работы", isRange: false },
     ];
 
     const educations_options = [
-        { id: "education:educations:educationType", label: "Вид образования", selectOptions: ["Выберите вид образования", "Высшее", "Магистратура"], isRange: false },
-        { id: "education:educations:educationPlace", label: "Учебное заведение", isRange: false },
-        { id: "education:educations:educationDateIn", label: "Дата поступления", isRange: false },
-        { id: "education:educations:educationDateOut", label: "Дата окончания", isRange: false },
-        { id: "education:educations:speciality", label: "Специальность", isRange: false },
-        { id: "education:educations:diplomaNumber", label: "Номер диплома", isRange: false },
+        { id: "education:educationType", label: "Вид образования", selectOptions: ["Выберите вид образования", "Высшее", "Магистратура"], isRange: false },
+        { id: "education:educationPlace", label: "Учебное заведение", isRange: false },
+        { id: "education:educationDateIn", label: "Дата поступления", isRange: false },
+        { id: "education:educationDateOut", label: "Дата окончания", isRange: false },
+        { id: "education:speciality", label: "Специальность", isRange: false },
+        { id: "education:diplomaNumber", label: "Номер диплома", isRange: false },
     ];
 
     const owning_languages_options = [
-        { id: "languageskill:languageSkills:langName", label: "Язык", isRange: false },
-        { id: "languageskill:languageSkills:skillLvl", label: "Уровень владения языком", selectOptions: ["Выберите уровень", "Cо словарем", "Начальный", "Ниже среднего", "Средний", "Выше среднего", "Продвинутый", "Профессиональный", "Родной"], isRange: false },
+        { id: "languageskill:langName", label: "Язык", isRange: false },
+        { id: "languageskill:skillLvl", label: "Уровень владения языком", selectOptions: ["Выберите уровень", "Cо словарем", "Начальный", "Ниже среднего", "Средний", "Выше среднего", "Продвинутый", "Профессиональный", "Родной"], isRange: false },
     ];
 
     const courses_options = [
-        { id: "course:courses:courseType", label: "Вид переподготовки", selectOptions: ["Выберите вид переподготовки", "Повышение", "Подготовка"], isRange: false },
-        { id: "course:courses:courseOrg", label: "Учебное заведение", isRange: false },
-        { id: "course:courses:startDate", label: "Дата начала", isRange: false },
-        { id: "course:courses:endDate", label: "Дата окончания", isRange: false },
-        { id: "course:courses:documentType", label: "Вид документа", isRange: false },
-        { id: "course:courses:courseName", label: "Название курса", isRange: false },
+        { id: "course:courseType", label: "Вид переподготовки", selectOptions: ["Выберите вид переподготовки", "Повышение", "Подготовка"], isRange: false },
+        { id: "course:courseOrg", label: "Учебное заведение", isRange: false },
+        { id: "course:startDate", label: "Дата начала", isRange: false },
+        { id: "course:endDate", label: "Дата окончания", isRange: false },
+        { id: "course:documentType", label: "Вид документа", isRange: false },
+        { id: "course:courseName", label: "Название курса", isRange: false },
     ];
 
     const academic_degree_options = [
-        { id: "academicdegree:academicDegrees:academicPlace", label: "Учебное заведение", isRange: false },
-        { id: "academicdegree:academicDegrees:academicDegree", label: "Вид образования", selectOptions: ["Выберите вид образования", "Бакалавр", "Магистр", "Кандидат", "Доктор"], isRange: false },
-        { id: "academicdegree:academicDegrees:academicDiplomaNumber", label: "Номер диплома", isRange: false },
-        { id: "academicdegree:academicDegrees:academicDiplomaDate", label: "Дата диплома", isRange: false },
+        { id: "academicdegree:academicPlace", label: "Учебное заведение", isRange: false },
+        { id: "academicdegree:academicDegree", label: "Вид образования", selectOptions: ["Выберите вид образования", "Бакалавр", "Магистр", "Кандидат", "Доктор"], isRange: false },
+        { id: "academicdegree:academicDiplomaNumber", label: "Номер диплома", isRange: false },
+        { id: "academicdegree:academicDiplomaDate", label: "Дата диплома", isRange: false },
     ];
 
     const sport_results_options = [
-        { id: "sportskill:sportSkills:sportType", label: "Вид спорта", isRange: false },
-        { id: "sportskill:sportSkills:sportSkillLvl", label: "Степень владения", selectOptions: ["Выберите степень владения", "Любитель", "Первый спортивный разряд", "Второй спортивный разряд", "Третий спортивный разряд", "Кандидат мастера спорта", "Мастер спорта"], isRange: false },
+        { id: "sportskill:sportType", label: "Вид спорта", isRange: false },
+        { id: "sportskill:sportSkillLvl", label: "Степень владения", selectOptions: ["Выберите степень владения", "Любитель", "Первый спортивный разряд", "Второй спортивный разряд", "Третий спортивный разряд", "Кандидат мастера спорта", "Мастер спорта"], isRange: false },
     ];
 
     const [isOpenPersonal, setIsOpenPersonal] = useState(false);
@@ -474,7 +474,7 @@ export function renderFamilyOptions(selectedFamilyOptions, formData, handleInput
         {selectedFamilyOptions.map((option) => (
           <div key={option} className={cl.wrapper__input}>
             <label className={cl.label__name}>{family_compositions_options.find((o) => o.id === option).label}:</label>
-            {option === "familycomposition:relatives:relativeType" ? (
+            {option === "familycomposition:relativeType" ? (
               <select
                 value={formData[option] || ''}
                 className={cl.workerInfoSelect}
@@ -486,7 +486,7 @@ export function renderFamilyOptions(selectedFamilyOptions, formData, handleInput
                   </option>
                 ))}
               </select>
-            ) : option === "familycomposition:relatives:relBirthDate" ? (
+            ) : option === "familycomposition:relBirthDate" ? (
               <div className={cl.data__wrapper}>
                 <div>
                   <label style={{ marginRight: '5px', marginLeft: '13px' }}>От</label>
@@ -568,7 +568,7 @@ export function renderEducationOptions(selectedEducationOptions, formData, handl
                 {selectedEducationOptions.map((option) => (
                     <div key={option} className={cl.wrapper__input}>
                         <label className={cl.label__name}>{educations_options.find((o) => o.id === option).label}:</label>
-                        {option === "education:educations:educationType" ? (
+                        {option === "education:educationType" ? (
                             <select
                             value={formData[option] || ''}
                             className={cl.workerInfoSelect}
@@ -581,7 +581,7 @@ export function renderEducationOptions(selectedEducationOptions, formData, handl
                             ))}
                             </select>
                 
-                        ) : option === "education:educations:educationDateIn" ? (
+                        ) : option === "education:educationDateIn" ? (
                             <div className={cl.data__wrapper}>
                                 <div>
                                 <label style={{ marginRight: '5px', marginLeft: '13px' }}>От</label>
@@ -602,7 +602,7 @@ export function renderEducationOptions(selectedEducationOptions, formData, handl
                                 />
                                 </div>
                             </div>
-                         ) :  option === "education:educations:educationDateOut" ? (
+                         ) :  option === "education:educationDateOut" ? (
                             <div className={cl.data__wrapper}>
                                 <div>
                                 <label style={{ marginRight: '5px', marginLeft: '13px' }}>От</label>
@@ -648,7 +648,7 @@ export function renderLanguageOptions(selectedLanguageOptions, formData, handleI
                 {selectedLanguageOptions.map((option) => (
                     <div key={option} className={cl.wrapper__input}>
                         <label className={cl.label__name}>{owning_languages_options.find((o) => o.id === option).label}:</label>
-                        {option === "languageskill:languageSkills:langName" ? (
+                        {option === "languageskill:skillLvl" ? (
                             <select
                             value={formData[option] || ''}
                             className={cl.workerInfoSelect}
@@ -686,7 +686,7 @@ export function renderCourseOptions(selectedCoursesOptions, formData, handleInpu
                 {selectedCoursesOptions.map((option) => (
                     <div key={option} className={cl.wrapper__input}>
                         <label className={cl.label__name}>{courses_options.find((o) => o.id === option).label}:</label>
-                        {option === "course:courses:courseType" ? (
+                        {option === "course:courseType" ? (
                             <select
                             value={formData[option] || ''}
                             className={cl.workerInfoSelect}
@@ -699,7 +699,7 @@ export function renderCourseOptions(selectedCoursesOptions, formData, handleInpu
                             ))}
                             </select>
                 
-                        ) : option === "course:courses:startDate" ? (
+                        ) : option === "course:startDate" ? (
                             <div className={cl.data__wrapper}>
                                 <div>
                                 <label style={{ marginRight: '5px', marginLeft: '13px' }}>От</label>
@@ -720,7 +720,7 @@ export function renderCourseOptions(selectedCoursesOptions, formData, handleInpu
                                 />
                                 </div>
                             </div>
-                         ) :  option === "course:courses:endDate" ? (
+                         ) :  option === "course:endDate" ? (
                             <div className={cl.data__wrapper}>
                                 <div>
                                 <label style={{ marginRight: '5px', marginLeft: '13px' }}>От</label>
@@ -766,7 +766,7 @@ export function renderAcademicDegreeOptions(selectedAcademicDegreeOptions, formD
                 {selectedAcademicDegreeOptions.map((option) => (
                     <div key={option} className={cl.wrapper__input}>
                         <label className={cl.label__name}>{academic_degree_options.find((o) => o.id === option).label}:</label>
-                        {option === "academicdegree:academicDegrees:academicDegree" ? (
+                        {option === "academicdegree:academicDegree" ? (
                             <select
                             value={formData[option] || ''}
                             className={cl.workerInfoSelect}
@@ -779,7 +779,7 @@ export function renderAcademicDegreeOptions(selectedAcademicDegreeOptions, formD
                             ))}
                             </select>
                 
-                        ) : option === "academicdegree:academicDegrees:academicDiplomaDate" ? (
+                        ) : option === "academicdegree:academicDiplomaDate" ? (
                             <div className={cl.data__wrapper}>
                                 <div>
                                 <label style={{ marginRight: '5px', marginLeft: '13px' }}>От</label>
@@ -825,7 +825,7 @@ export function renderSportOptions(selectedSportOptions, formData, handleInputCh
                 {selectedSportOptions.map((option) => (
                     <div key={option} className={cl.wrapper__input}>
                         <label className={cl.label__name}>{sport_results_options.find((o) => o.id === option).label}:</label>
-                        {option === "sportskill:sportSkills:sportSkillLvl" ? (
+                        {option === "sportskill:sportSkillLvl" ? (
                             <select
                             value={formData[option] || ''}
                             className={cl.workerInfoSelect}

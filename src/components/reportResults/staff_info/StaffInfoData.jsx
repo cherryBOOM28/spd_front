@@ -85,18 +85,18 @@ function StaffInfoData(props) {
     });
 
     const spec_checks_options = [
-        { id: "speccheck:specChecks:docNumber", label: "Номер документа", isRange: false },
-        { id: "speccheck:specChecks:docDate", label: "Дата документа", isRange: false },
+        { id: "speccheck:docNumber", label: "Номер документа", isRange: false },
+        { id: "speccheck:docDate", label: "Дата документа", isRange: false },
     ];
 
     const attestations_options = [
-        { id: "attestation:attestations:attResult", label: "Номер документа", isRange: false },
-        { id: "attestation:attestations:lastAttDate", label: "Дата начала", isRange: false },
-        { id: "attestation:attestations:nextAttDateMin", label: "Дата окончания", isRange: false },
+        { id: "attestation:attResult", label: "Номер документа", isRange: false },
+        { id: "attestation:lastAttDate", label: "Дата начала", isRange: false },
+        { id: "attestation:nextAttDateMin", label: "Дата окончания", isRange: false },
     ];
 
     const class_categories_options = [
-        { id: "classcategory:classCategories:categoryType", label: "Классная категория", selectOptions:["Выберите категорию", "Спец 2 категории", "Спец 1 категории", "Наставник"], isRange: false },
+        { id: "classcategory:categoryType", label: "Классная категория", selectOptions:["Выберите категорию", "Спец 2 категории", "Спец 1 категории", "Наставник"], isRange: false },
     ]
 
     const military_rank_options = [
@@ -109,20 +109,20 @@ function StaffInfoData(props) {
     ];
 
     const awards_options = [
-        { id: "reward:rewards:rewardType", label: "Тип награды", isRange: false },
-        { id: "reward:rewards:rewardDocNumber", label: "Номер приказа", isRange: false },
-        { id: "reward:rewards:rewardDate", label: "Дата приказа", isRange: false },
+        { id: "reward:rewardType", label: "Тип награды", isRange: false, selectOptions: ["Выберите тип награды", 'Благодарность', "Грамота", "Почетная грамота", "Нагрудной знак - Қаржылық мониторинг органдарының үздігі", "Медаль - Экономикалық қауіпсіздікті қамтамасыз етуге қосқан үлесі үшін", 'Мінсіз қызметі үшін ІІІ дәрежелі', 'Мінсіз қызметі үшін ІІ дәрежелі', 'Мінсіз қызметі үшін І дәрежелі' ] },
+        { id: "reward:rewardDocNumber", label: "Номер приказа", isRange: false },
+        { id: "reward:rewardDate", label: "Дата приказа", isRange: false },
     ];
 
     const sick_leaves_options = [
-        { id: "sickleave:sickleave:sickDocNumber", label: "Номер приказа", isRange: false },
-        { id: "sickleave:sickleave:sickDocDate", label: "Дата приказа", isRange: false },
+        { id: "sickleave:sickDocNumber", label: "Номер приказа", isRange: false },
+        { id: "sickleave:sickDocDate", label: "Дата приказа", isRange: false },
     ];
 
     const investigation_retrievals_options = [
-        { id: "investigation:investigations:investigation_decree_type", label: "Тип приказа", isRange: false },
-        { id: "investigation:investigations:investigation_decree_number", label: "Номер приказа служебного расследования", isRange: false },
-        { id: "investigation:investigations:investigation_date", label: "Дата приказа", isRange: false },
+        { id: "investigation:investigation_decree_type", label: "Тип приказа", isRange: false, selectOptions: ["Выберите вид взыскания", "Замечания", 'Выговор', 'Строгий выговор', 'Неполное служебное соответствие', 'Увольнение'] },
+        { id: "investigation:investigation_decree_number", label: "Номер приказа служебного расследования", isRange: false },
+        { id: "investigation:investigation_date", label: "Дата приказа", isRange: false },
     ];
 
     const [isOpenStaffInfo, setIsOpenStaffInfo] = useState(false);
@@ -503,7 +503,7 @@ export function renderSpecChecksOptions(selectedSpecChecksOptions, formData, han
                             ))}
                             </select>
                 
-                        ) : option === "doc_date" ? (
+                        ) : option === "speccheck:docDate" ? (
                             <div className={cl.data__wrapper}>
                                 <div>
                                 <label style={{ marginRight: '5px', marginLeft: '13px' }}>От</label>
@@ -511,7 +511,7 @@ export function renderSpecChecksOptions(selectedSpecChecksOptions, formData, han
                                     type="date"
                                     className={cl.workerInfoDate}
                                     value={formData[option]?.start_date || ''}
-                                    onChange={(e) => handleInputChange(option, { ...formData[option], from: e.target.value })}
+                                    onChange={(e) => handleInputChange(option, { ...formData[option], start_date: e.target.value })}
                                 />
                                 </div>
                                 <div>
@@ -520,7 +520,7 @@ export function renderSpecChecksOptions(selectedSpecChecksOptions, formData, han
                                     type="date"
                                     className={cl.workerInfoDate}
                                     value={formData[option]?.end_date || ''}
-                                    onChange={(e) => handleInputChange(option, { ...formData[option], to: e.target.value })}
+                                    onChange={(e) => handleInputChange(option, { ...formData[option], end_date: e.target.value })}
                                 />
                                 </div>
                             </div>
@@ -563,7 +563,7 @@ export function renderAttestationOptions(selectedAttestationsOptions, formData, 
                             ))}
                             </select>
                 
-                        ) : option === "last_attestation_date" ? (
+                        ) : option === "attestation:lastAttDate" ? (
                             <div className={cl.data__wrapper}>
                                 <div>
                                 <label style={{ marginRight: '5px', marginLeft: '13px' }}>От</label>
@@ -585,7 +585,7 @@ export function renderAttestationOptions(selectedAttestationsOptions, formData, 
                                 </div>
                             </div>
                          ) : (
-                            option === "next_attestation_date" ? (
+                            option === "attestation:nextAttDateMin" ? (
                                 <div className={cl.data__wrapper}>
                                     <div>
                                     <label style={{ marginRight: '5px', marginLeft: '13px' }}>От</label>
@@ -632,7 +632,7 @@ export function renderCategoryOptions(selectedCategoryOptions, formData, handleI
                 {selectedCategoryOptions.map((option) => (
                     <div key={option} className={cl.wrapper__input}>
                         <label className={cl.label__name}>{class_categories_options.find((o) => o.id === option).label}:</label>
-                        {option === "category_type" ? (
+                        {option === "classcategory:categoryType" ? (
                             <select
                             value={formData[option] || ''}
                             className={cl.workerInfoSelect}
@@ -671,7 +671,7 @@ export function renderMilitaryRankOptions(selectedMilitaryRankOptions, formData,
                 {selectedMilitaryRankOptions.map((option) => (
                     <div key={option} className={cl.wrapper__input}>
                         <label className={cl.label__name}>{military_rank_options.find((o) => o.id === option).label}:</label>
-                        {option === "military_rank" ? (
+                        {option === "rankInfo:militaryRank:rankTitle" ? (
                             <select
                             value={formData[option] || ''}
                             className={cl.workerInfoSelect}
@@ -684,7 +684,7 @@ export function renderMilitaryRankOptions(selectedMilitaryRankOptions, formData,
                             ))}
                             </select>
                 
-                        ) : option === "received_date" ? (
+                        ) : option === "rankInfo:receivedDate" ? (
                             <div className={cl.data__wrapper}>
                                 <div>
                                 <label style={{ marginRight: '5px', marginLeft: '13px' }}>От</label>
@@ -731,7 +731,7 @@ export function renderAwardsOptions(selectedAwardsOptions, formData, handleInput
                 {selectedAwardsOptions.map((option) => (
                     <div key={option} className={cl.wrapper__input}>
                         <label className={cl.label__name}>{awards_options.find((o) => o.id === option).label}:</label>
-                        {option === "" ? (
+                        {option === "reward:rewardType" ? (
                             <select
                             value={formData[option] || ''}
                             className={cl.workerInfoSelect}
@@ -744,7 +744,7 @@ export function renderAwardsOptions(selectedAwardsOptions, formData, handleInput
                             ))}
                             </select>
                 
-                        ) : option === "awards_date" ? (
+                        ) : option === "reward:rewardDate" ? (
                             <div className={cl.data__wrapper}>
                                 <div>
                                 <label style={{ marginRight: '5px', marginLeft: '13px' }}>От</label>
@@ -804,7 +804,7 @@ export function renderSickLeavesOptions(selectedSickLeavesOptions, formData, han
                             ))}
                             </select>
                 
-                        ) : option === "sick_doc_date" ? (
+                        ) : option === "sickleave:sickDocDate" ? (
                             <div className={cl.data__wrapper}>
                                 <div>
                                 <label style={{ marginRight: '5px', marginLeft: '13px' }}>От</label>
@@ -851,7 +851,7 @@ export function renderInvestigationRetrievalsOptions(selectedInvestigationRetrie
                 {selectedInvestigationRetrievalsOptions.map((option) => (
                     <div key={option} className={cl.wrapper__input}>
                         <label className={cl.label__name}>{investigation_retrievals_options.find((o) => o.id === option).label}:</label>
-                        {option === "order" ? (
+                        {option === "investigation:investigation_decree_type" ? (
                             <select
                             value={formData[option] || ''}
                             className={cl.workerInfoSelect}
@@ -864,7 +864,7 @@ export function renderInvestigationRetrievalsOptions(selectedInvestigationRetrie
                             ))}
                             </select>
                 
-                        ) : option === "order_date" ? (
+                        ) : option === "investigation:investigation_date" ? (
                             <div className={cl.data__wrapper}>
                                 <div>
                                 <label style={{ marginRight: '5px', marginLeft: '13px' }}>От</label>

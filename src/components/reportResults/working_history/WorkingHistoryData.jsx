@@ -13,12 +13,12 @@ function WorkingHistoryData(props) {
     }, [selectedWorkingHistoryOptions]);
     
     const working_history_options = [
-        { id: "workinghistory:workingHistories:startDate", label: "Начало периода", isRange: false },
-        { id: "workinghistory:workingHistories:endDate", label: "Конец периода", isRange: false },
-        { id: "workinghistory:workingHistories:department", label: "Подразделение", isRange: false },
-        { id: "workinghistory:workingHistories:positionName", label: "Должность", isRange: false },
-        { id: "workinghistory:workingHistories:organizationName", label: "Учреждение", isRange: false },
-        { id: "workinghistory:workingHistories:organizationAddress", label: "Местонахождение организации", isRange: false },
+        { id: "workinghistory:startDate", label: "Начало периода", isRange: false },
+        { id: "workinghistory:endDate", label: "Конец периода", isRange: false },
+        { id: "workinghistory:department", label: "Подразделение", isRange: false },
+        { id: "workinghistory:positionName", label: "Должность", isRange: false },
+        { id: "workinghistory:organizationName", label: "Учреждение", isRange: false },
+        { id: "workinghistory:organizationAddress", label: "Местонахождение организации", isRange: false },
     ];
 
     selectedWorkingHistoryOptions.forEach((option) => {
