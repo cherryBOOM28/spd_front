@@ -22,7 +22,7 @@ const NextRunkUp = () => {
         if (selectedDate) {
           try {
             setLoading(true);
-            const response = await axios.get(`http://127.0.0.1:8000/api/v1/rank-up-lis/?date=${selectedDate}`);
+            const response = await axios.get(`http://127.0.0.1:8000/api/v1/rank-up-list/?date=${selectedDate}`);
             setData(response.data.data);
           } catch (error) {
             console.error('Ошибка при получении данных:', error);
@@ -88,12 +88,15 @@ const NextRunkUp = () => {
             <Table>
                 <TableHead>
                     <TableRow>
-                    {/* <TableCell>Фото</TableCell> */}
+                    <TableCell></TableCell>
                     <TableCell>Имя</TableCell>
                     <TableCell>Фамилия</TableCell>
                     <TableCell>Отчество</TableCell>
                     <TableCell>Должность</TableCell>
                     <TableCell>Отдел</TableCell>
+                    <TableCell>Текущее звание</TableCell>
+                    <TableCell>Дата повышения звания</TableCell>
+
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -120,6 +123,9 @@ const NextRunkUp = () => {
                         <TableCell>{row.patronymic}</TableCell>
                         <TableCell>{row.position}</TableCell>
                         <TableCell>{row.department}</TableCell>
+                        <TableCell>{row.currentRank}</TableCell>
+                        <TableCell>{row.rankUpDate}</TableCell>
+
                         </TableRow>
                     ))
                     )}

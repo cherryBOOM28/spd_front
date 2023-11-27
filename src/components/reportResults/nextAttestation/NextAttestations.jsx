@@ -88,12 +88,13 @@ const NextAttestations = () => {
             <Table>
                 <TableHead>
                     <TableRow>
-                    {/* <TableCell>Фото</TableCell> */}
+                    <TableCell></TableCell>
                     <TableCell>Имя</TableCell>
                     <TableCell>Фамилия</TableCell>
                     <TableCell>Отчество</TableCell>
                     <TableCell>Должность</TableCell>
                     <TableCell>Отдел</TableCell>
+                    <TableCell>Последняя дата аттестации</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -120,6 +121,8 @@ const NextAttestations = () => {
                         <TableCell>{row.patronymic}</TableCell>
                         <TableCell>{row.position}</TableCell>
                         <TableCell>{row.department}</TableCell>
+                        <TableCell>{row.lastAttDate}</TableCell>
+
                         </TableRow>
                     ))
                     )}
