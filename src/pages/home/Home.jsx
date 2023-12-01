@@ -22,7 +22,7 @@ function Home(props) {
 
     const handleRadioChange = (value) => {
         setSelectedGroupId(value);
-        localStorage.setItem('selectedGroupId', value);
+        // localStorage.setItem('selectedGroupId', value);
     };
 
 
@@ -33,70 +33,30 @@ function Home(props) {
     // calendar
     const [selectedDate, setSelectedDate] = useState(null);
     const [ includeFired, setIncludeFired ] = useState(false);
-
     const [personalData, setPersonalData] = useState([]); 
+    const [groups, setGroups ] = useState([]);
+    const [city, setCity] = useState({});
+    const [showSchedule, setShowSchedule] = useState(false);
+
+    const toggleSchedule = () => {
+        setShowSchedule(!showSchedule);
+    };
+
+    const [cities, setCities] = useState([]);
+    const [selectedCity, setSelectedCity] = useState(null);
+    const [departments, setDepartments] = useState([]);
+    const [selectedDepartment, setSelectedDepartment] = useState(null);
+    const [selectedPosition, setSelectedPosition] = useState(null);
+    const [selectedPositionTitle, setselectedPositionTitle] = useState(null);
 
     const [ selectedGroupId, setSelectedGroupId ] = useState(
         localStorage.getItem('selectedGroupId') || 'all'
     )
+
+    // const [ selectedCityId, setSelectedCityId ] = useState(
+    //     localStorage.getItem('selectedGroupId') || 'DC'
+    // )
     
-    const [groups, setGroups ] = useState([
-        {
-            "id": 9,
-            "group_name": "IT department",
-            "general_info": []
-        },
-        {
-            "id": 10,
-            "group_name": "HR department",
-            "general_info": [
-                {
-                    "id": 14,
-                    "iin": "030409550850",
-                    "surname": "Саткан",
-                    "firstname": "Шынгыс",
-                    "patronymic": "Менсейтулы",
-                    "gender": "M",
-                    "birth_date": "2003-04-09",
-                    "birth_country": "Казахстан",
-                    "birth_city": "Атырау",
-                    "birth_region": "Астана",
-                    "nationality": "казах",
-                    "id_numbers": "541223456",
-                    "id_from": "МВД РК",
-                    "phone_number": "87759346820",
-                    "resid_country": "Казахстан",
-                    "resid_city": "Атырау",
-                    "resid_region": "Астана",
-                    "pin": "123",
-                    "id_date": "2019-04-19",
-                    "group": 10
-                },
-                {
-                    "id": 15,
-                    "iin": "020922550560",
-                    "surname": "Касымбаев",
-                    "firstname": "Куаныш",
-                    "patronymic": "Куанышулы",
-                    "gender": "M",
-                    "birth_date": "2002-04-10",
-                    "birth_country": "Казахстан",
-                    "birth_city": "Астана",
-                    "birth_region": "Астана",
-                    "nationality": "казах",
-                    "id_numbers": "541223456",
-                    "id_from": "МВД РК",
-                    "phone_number": "8777777777",
-                    "resid_country": "Казахстан",
-                    "resid_city": "Астана",
-                    "resid_region": "Астана",
-                    "pin": "1234",
-                    "id_date": "2019-04-20",
-                    "group": 10
-                }
-            ]
-        }
-    ])
 
 
     // checkbox
@@ -118,6 +78,7 @@ function Home(props) {
     const [patronymic, setPatronymic] = useState([]); // Данные из бэка
     const [positionTitle, setPositionTitle] = useState([]); // Данные из бэка
     const [gender, setGender] = useState([]); // Данные из бэка
+    const [departmentPeople, setDepartmentPeople] = useState([]);
 
     useEffect(() => {
         const accessToken = Cookies.get('jwtAccessToken');
@@ -143,27 +104,21 @@ function Home(props) {
             console.error("Error fetching personal data:", error);
         });
 
-        axios.get(``)
-          .then(response => {
-            setGroups(response.data);
+        axios.get(`http://localhost:8000/api/v1/location_departments/Астана/`)
+          .then(responseCity => {
+            setCity(responseCity.data);
+            console.log("responseCity",responseCity.data);
         })
+        
         .catch(error => {
             console.error("Error fetching personal data:", error);
         });
+        
     }, []);
 
-    const [showSchedule, setShowSchedule] = useState(false);
 
-    const toggleSchedule = () => {
-        setShowSchedule(!showSchedule);
-    };
 
-    const [cities, setCities] = useState([]);
-    const [selectedCity, setSelectedCity] = useState(null);
-    const [departments, setDepartments] = useState([]);
-    const [selectedDepartment, setSelectedDepartment] = useState(null);
-    const [selectedPosition, setSelectedPosition] = useState(null);
-    const [selectedPositionTitle, setselectedPositionTitle] = useState(null);
+    
 
     const [persons, setPersons] = useState([]);
 
@@ -223,8 +178,23 @@ function Home(props) {
             console.error('Error fetching departments:', error);
         }
     };
- 
-    
+
+    const [selectedDepartmentId, setSelectedDepartmentId] = useState(null);
+    useEffect(() => {
+        // if (selectedDepartmentId) {
+          axios.get(`http://127.0.0.1:8000/api/v1/persons_by_department/?department=ДЦ`)
+            .then(response => {
+              setDepartmentPeople(response.data.persons);
+              console.log("persons", response.data);
+            })
+            .catch(error => {
+              console.error("Error fetching department people data:", error);
+            });
+        // }
+    }, [selectedDepartmentId]);
+
+
+      
 
     const renderEmployeeWrapper = () => {
     if (showSchedule) {
@@ -326,20 +296,35 @@ function Home(props) {
                                 onChange={() => handleRadioChange('all')}
                             />
                         </div>
-                        {/* {groups.map(group => (
-                            <div key={group.id} className={cl.group_name} style={{cursor: 'pointer'}} onClick={() => setSelectedGroupId(group.id)}>
-                            
-                                <p>{group.group_name}</p>
-                                <input 
-                                    type="radio"
-                                    name="table"
-                                    value={group.group_name}
-                                    key={group.id}
-                                    checked={selectedGroupId === group.id}
-                                    onChange={() => setSelectedGroupId(group.id)}
+                        {/* {city && (
+                            city.departments.map(department => (
+                            <div key={department.id} className={cl.group_name} style={{ cursor: 'pointer' }}>
+                                <p>{department.Location.LocationName}</p>
+                                <input
+                                type="radio"
+                                name="table"
+                                value={department.id}
+                                checked={selectedGroupId === department.id}
+                                onChange={() => handleRadioChange(department.id)}
                                 />
                             </div>
-                        ))} */}
+                            ))
+                        )} */}
+                        {/* {city && city.departments && (
+                            city.departments.map(department => (
+                                <div key={department.id} className={cl.group_name} style={{ cursor: 'pointer' }}>
+                                <p>{department.Location.LocationName}</p>
+                                <input
+                                    type="radio"
+                                    name="table"
+                                    value={department.id}
+                                    checked={selectedGroupId === department.id}
+                                    onChange={() => handleRadioChange(department.id)}
+                                />
+                                </div>
+                            ))
+                        )} */}
+
 
                         
                     </div>
@@ -355,45 +340,25 @@ function Home(props) {
                                 </tr>
                             </thead>
                             <tbody>
-                                
-
-                                {selectedGroupId === 'all' && (
-                                        personalData.map((data, index) => {
-                                        let name = `${data.surname || ''} ${data.firstName || ''} ${data.patronymic || ''}`
-                                
-
-                                        return (
-                                            <tr key={data.id} onClick={() => handleEmployeeClick(data.id, data.iin)} className={cl.tableRow}>
-                                                <td>{name}</td>
-                                                <td>{gender}</td>
-                                                <td>{positionTitle}</td>
-                                            </tr>
-                                        )
-                                        })
-                                    )}
-
-                                {/* {groups.filter(group => group.id === selectedGroupId)[0] && groups.filter(group => group.id === selectedGroupId)[0].general_info.length === 0 ? 
-                                    <tr className={cl.tableRow}>
-                                        <td colspan="5" align='center' style={{textAlign: 'center', padding: '20px'}}>Нет сотрудников</td>
-                                    </tr>
-                                    : ""
-                                } */}
-                                {/* {groups.filter(group => group.id === selectedGroupId)[0] &&  groups.filter(group => group.id === selectedGroupId)[0].general_info
-                                .map((data, index) => {
-                                    let name = `${data.surname || ''} ${data.firstName || ''} ${data.patronymic || ''}`
-                                    // let gender = data.gender === 'M' ? 'Мужской' : 'Женский'
-                            
+       
+                                {selectedGroupId === 'all' && personalData.map((data, index) => {
+                                    let name = `${data.surname || ''} ${data.firstName || ''} ${data.patronymic || ''}`;
 
                                     return (
-                                        <tr key={data.id} onClick={() => {handleEmployeeClick(data.id, data.iin)}} className={cl.tableRow}>
-                                            <td>{name}</td>
-                                            <td>{gender}</td>
-                                            <td>{positionTitle}</td>
-                                        </tr>
-                                    )
-                                })} */}
+                                    <tr key={data.id} onClick={() => handleEmployeeClick(data.id, data.iin)} className={cl.tableRow}>
+                                        <td>{name}</td>
+                                        <td>{gender}</td>
+                                        <td>{positionTitle}</td>
+                                    </tr>
+                                    );
+                                })}
+
+                              
+
                             </tbody>
                         </table>
+                    
+                               
                 </div>
             </div>
         // </div>

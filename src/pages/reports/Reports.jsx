@@ -33,8 +33,6 @@ import NextRunkUp from '../../components/reportResults/nextRunkUp/NextRunkUp';
 
 
 
-
-
 function Reports(props, queryParams) {
     // eslint-disable-next-line
     const [personalData, setPersonalData] = useState([]); 

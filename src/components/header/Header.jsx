@@ -33,7 +33,7 @@ function Header(props) {
         })
           .then(response => {
             setPersonalData(response.data);
-            console.log("response", response.data)
+            // console.log("response", response.data)
         })
 
         // axios.get(`http://localhost:8000/api/v1/person/${id}`)
@@ -42,7 +42,7 @@ function Header(props) {
         //     console.log("response", response.data.Person)
         // })
         .catch(error => {
-            console.error("Error fetching personal data:", error);
+            // console.error("Error fetching personal data:", error);
         });
     }, []);
 

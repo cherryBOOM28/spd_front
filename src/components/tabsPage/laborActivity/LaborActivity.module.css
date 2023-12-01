@@ -187,3 +187,9 @@
   background: none;
   width: 100%;
 }
+
+.experience {
+  display: flex;
+  gap: 15px;
+
+}

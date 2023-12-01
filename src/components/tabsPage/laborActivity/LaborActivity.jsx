@@ -23,7 +23,7 @@ function LaborActivity({ workingHistory }, props) {
             try {
                 // GET PERSONAL DATA
                 const response = await getWorkingHistory(id) 
-                setPersonnelData(response.data);
+                // setPersonnelData(response.data);
                 // console.log(response);
             } catch (error) {
                 console.error("Error fetching data:", error);
@@ -421,7 +421,40 @@ function LaborActivity({ workingHistory }, props) {
                         ))}
                     </tbody>
                 </table>
+             
+                <table className={cl.customTable} style={{ marginTop: '20px' }}>
+                    <thead>
+                        <tr>
+                          <td>Общий стаж</td>
+                          <td>Стаж в правохранительных органах</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                            {workingHistory['Overall experience'] && (
+                                <div className={cl.experience}>
+                                    <p>Год: {workingHistory['Overall experience'].years}</p>
+                                    <p>Месяц: {workingHistory['Overall experience'].months}</p>
+                                    <p>День: {workingHistory['Overall experience'].days}</p>
+                                </div>
+                            )}
+                            </td>
+                            <td>
+                                {workingHistory['PravoOhranka experience'] && (
+                                    <div className={cl.experience}>
+                                        <p>Год: {workingHistory['PravoOhranka experience'].years}</p>
+                                        <p>Месяц: {workingHistory['PravoOhranka experience'].months}</p>
+                                        <p>День: {workingHistory['PravoOhranka experience'].days}</p>
+                                    </div>
+                                )}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
             </div>
+
         </div>
     </div>
     );
