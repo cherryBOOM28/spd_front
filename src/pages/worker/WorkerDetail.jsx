@@ -64,6 +64,7 @@ function WorkerDetail() {
   const [sportSkill, setSportSkill] = useState({});
 
   const [workingHistory, setWorkingHistory] = useState({});
+  const [rankArchive, setRankArchive] = useState({});
 
   const [autobiographyInfo, setAutobiographyInfo] = useState({});
   const [specCheckInfo, setSpecCheckInfo] = useState({});
@@ -115,6 +116,11 @@ function WorkerDetail() {
         setSportSkill(response.data.SportSkill);
 
         setWorkingHistory(response.data.WorkingHistory);
+        setRankArchive(response.data.RankArchive);
+
+        console.log("RankArchive",response.data.RankArchive);
+
+        // console.log(response.data.WorkingHistory);
 
         setAutobiographyInfo(response.data.AutobiographyInfo);
         setSpecCheckInfo(response.data.SpecCheckInfo);
@@ -130,7 +136,7 @@ function WorkerDetail() {
 
 
 
-        console.log(response.data.Person.rankInfo.militaryRank);
+        // console.log(response.data.Person.rankInfo.militaryRank);
 
 
 
@@ -273,6 +279,7 @@ function WorkerDetail() {
                             <LaborActivity 
                               id={id} 
                               workingHistory={workingHistory}
+                              setWorkingHistory={setWorkingHistory}
                             />
                           </div>  
                             
@@ -301,6 +308,7 @@ function WorkerDetail() {
                               investigationsInfo={investigationsInfo}
                               rankInfo={rankInfo}
                               militaryRank={militaryRank}
+                              rankArchive={rankArchive}
                             />
                           </div> 
                             

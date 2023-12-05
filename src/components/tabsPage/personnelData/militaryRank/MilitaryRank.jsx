@@ -9,7 +9,7 @@ import { updateStaffInfo } from '../../../../api/staff_info/updateStaffInfo';
 import { deleteMilitaryRank } from '../../../../api/staff_info/military_rank/deleteMilitaryRank';
 import { updateMilitaryRank } from '../../../../api/staff_info/military_rank/updateMilitaryRank';
 
-function MilitaryRank({ rankInfo, militaryRank }, props) {
+function MilitaryRank({ rankInfo, militaryRank, rankArchive }, props) {
     // const iin = props.iin;
     const { id } = useParams();
 
@@ -328,13 +328,132 @@ function MilitaryRank({ rankInfo, militaryRank }, props) {
                         <p className={cl.workerInfo}>{rankInfo.receivedDate}</p>
                       )}
                     </div>
-                    
+                    <div>
+                {/* <table className={cl.customTable} style={{ marginTop: '20px' }}>
+                    <thead>
+                        <tr>
+                          <td>Начало периода</td>
+                          <td>Конец периода </td>
+                          <td>Должность</td>
+                          <td>Подразделение</td>
+                          <td>Учреждение</td>
+                          <td>Местонахожден. организации</td>
+                          <td>Коэфициент</td>
+                          <td>Правохран. орган</td>
+                          <td>Действие</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {rankArchive && rankArchive.archiveObjects && rankArchive.archiveObjects.map((d, i) => (
+                            <tr key={i}> 
+                                <td>
+                                  {editingId === d.id ? (
+                                    <div className={cl.datePickerContainer}>
+                                        <input
+                                            type="date"
+                                            className={cl.formInput}
+                                            placeholder="Начало периода"
+                                            name='startDate'
+                                            value={editedData.startDate || ''}
+                                            onChange={(e) => {
+                                                const newDate = e.target.value;
+                                                setEditedData((prevData) => ({
+                                                ...prevData,
+                                                startDate: newDate,
+                                                }));
+                                            }}
+                                        />
+                                    </div>
+                                ) : (
+                                    d.startDate
+                                )}
+                                </td>
+                                <td>
+                                  {editingId === d.id ? (
+                                    <div className={cl.datePickerContainer}>
+                                        <input
+                                            type="date"
+                                            className={cl.formInput}
+                                            placeholder="Конец периода"
+                                            name='endDate'
+                                            value={editedData.endDate || ''}
+                                            onChange={(e) => {
+                                                const newDate = e.target.value;
+                                                setEditedData((prevData) => ({
+                                                ...prevData,
+                                                endDate: newDate,
+                                                }));
+                                            }}
+                                        />
+                                    </div>
+                                ) : (
+                                    d.endDate
+                                )}
+                                </td>
+                                <td>{editingId === d.id ? <input type="text" className={cl.editInput} name='receivedType' value={editedData.receivedType} onChange={(e) => setEditedData({ ...editedData, receivedType: e.target.value })} /> : d.receivedType}</td>
+                                <td>{editingId === d.id ? <input type="text" className={cl.editInput} name='decreeNumber' value={editedData.decreeNumber} onChange={(e) => setEditedData({ ...editedData, decreeNumber: e.target.value })} /> : d.decreeNumber}</td>
+                                <td>{editingId === d.id ? <input type="text" className={cl.editInput} name='organizationName' value={editedData.organizationName} onChange={(e) => setEditedData({ ...editedData, organizationName: e.target.value })} /> : d.organizationName}</td>
+                                <td>{editingId === d.id ? <input type="text" className={cl.editInput} name='organizationAddress' value={editedData.organizationAddress} onChange={(e) => setEditedData({ ...editedData, organizationAddress: e.target.value })} /> : d.organizationAddress}</td>
+                                <td>
+                                    {editingId === d.id ? (
+                                        <input
+                                        type="checkbox"
+                                        name="isPravoOhranka"
+                                        checked={editedData.isPravoOhranka || false}
+                                        onChange={(e) =>
+                                            setEditedData((prevData) => ({
+                                            ...prevData,
+                                            isPravoOhranka: e.target.checked,
+                                            }))
+                                        }
+                                        />
+                                    ) : (
+                                        d.isPravoOhranka ? "Да" : "Нет"
+                                    )}
+                                </td>
+                                <td>
+                                    {editingId === d.id ? (
+                                        <input
+                                        type="checkbox"
+                                        name="HaveCoefficient"
+                                        checked={editedData.HaveCoefficient || false}
+                                        onChange={(e) =>
+                                            setEditedData((prevData) => ({
+                                            ...prevData,
+                                            HaveCoefficient: e.target.checked,
+                                            }))
+                                        }
+                                        />
+                                    ) : (
+                                        d.HaveCoefficient ? "Да" : "Нет"
+                                    )}
+                                </td>
+                                <td className={cl.relativesActionBtns} style={{}}>
+                                    {editingId === d.id ? (
+                                        <>
+                                            <div onClick={() => handleSaveEdit(d.id)}>&#10003;</div>
+                                            <div onClick={handleCancelEdit}>&#x2715;</div>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <div onClick={() => handleEdit(d.id)}>&#9998;</div>
+                                            <div onClick={() => handleDelete(d.id)}>Удалить</div>
+                                        </>
+                                    )}
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table> */}
+                
+
+            </div>
                    
                    
                     
   
                   </div>
-              </div>
+        </div>
     </div>
     );
 }

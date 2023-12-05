@@ -11,7 +11,7 @@ import InvestigationRetrievals from './investigationRetrievals/InvestigationRetr
 import Autobiography from './autobiography/Autobiography';
 
 
-function PersonnelData({ autobiographyInfo, specCheckInfo, attestationInfo, classCategoriesInfo, rewardsInfo, sickLeavesInfo, investigationsInfo, rankInfo, militaryRank }) {
+function PersonnelData({ autobiographyInfo, specCheckInfo, attestationInfo, classCategoriesInfo, rewardsInfo, sickLeavesInfo, investigationsInfo, rankInfo, militaryRank, rankArchive }) {
     const { id, iin } = useParams();
     
                             
@@ -40,6 +40,7 @@ function PersonnelData({ autobiographyInfo, specCheckInfo, attestationInfo, clas
                 id={id} 
                 rankInfo={rankInfo}
                 militaryRank={militaryRank}
+                rankArchive={rankArchive}
             />
             <Awards 
                 id={id} 

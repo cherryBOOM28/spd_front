@@ -106,7 +106,7 @@ const NextRunkUp = () => {
                     </TableRow>
                     ) : data.length === 0 ? (
                     <TableRow>
-                        <TableCell colSpan={6} align="center">Ничего не найдено</TableCell>
+                        <TableCell colSpan={9} align="center">Ничего не найдено</TableCell>
                     </TableRow>
                     ) : (
                     data.map((row, index) => (

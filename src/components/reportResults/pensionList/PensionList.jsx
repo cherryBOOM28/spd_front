@@ -5,10 +5,10 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper
 import Button from '../../UI/button/Button';
 import { NotificationContainer, NotificationManager } from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
-import cl from './NextAttestations.module.css';
+import cl from './PensionList.module.css';
 import { AiFillPrinter } from 'react-icons/ai';
 
-const NextAttestations = () => {
+const PensionList = () => {
     const [selectedDate, setSelectedDate] = useState('');
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(false); 
@@ -22,7 +22,7 @@ const NextAttestations = () => {
         if (selectedDate) {
           try {
             setLoading(true);
-            const response = await axios.get(`http://127.0.0.1:8000/api/v1/close_attestations/?date=${selectedDate}`);
+            const response = await axios.get(`http://127.0.0.1:8000/api/v1/pension-list-view/?date=${selectedDate}`);
             setData(response.data.data);
           } catch (error) {
             console.error('Ошибка при получении данных:', error);
@@ -37,7 +37,7 @@ const NextAttestations = () => {
 
     const handleDownloadExcel = () => {
         if (selectedDate) {
-            window.location.href = `http://127.0.0.1:8000/api/v1/close_attestations_download/?date=${selectedDate}`;
+            window.location.href = `http://127.0.0.1:8000/api/v1/pension-list-download/?date=${selectedDate}`;
         } else {
             NotificationManager.error('Выберите дату перед скачиванием файла', 'Ошибка', 2000);
             console.log('Выберите дату перед скачиванием файла.');
@@ -94,7 +94,10 @@ const NextAttestations = () => {
                     <TableCell>Отчество</TableCell>
                     <TableCell>Должность</TableCell>
                     <TableCell>Отдел</TableCell>
-                    <TableCell>Последняя дата аттестации</TableCell>
+                    <TableCell>Звание</TableCell>
+                    <TableCell>Возраст</TableCell>
+                    <TableCell>Дата выхода на пенсию</TableCell>
+
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -111,9 +114,9 @@ const NextAttestations = () => {
                         <TableRow key={index} onClick={() => handleRowClick(row.id)}>
                         <TableCell>
                             <img
-                            src={`data:image/jpeg;base64,${row.photo}`}
-                            alt={`${row.firstName} ${row.lastName}`}
-                            style={{ width: '50px', height: '50px', borderRadius: '50%', objectFit: 'cover' }}
+                                src={`data:image/jpeg;base64,${row.photo}`}
+                                alt={`${row.firstName} ${row.lastName}`}
+                                style={{ width: '50px', height: '50px', borderRadius: '50%', objectFit: 'cover' }}
                             />
                         </TableCell>
                         <TableCell>{row.firstName}</TableCell>
@@ -121,8 +124,9 @@ const NextAttestations = () => {
                         <TableCell>{row.patronymic}</TableCell>
                         <TableCell>{row.position}</TableCell>
                         <TableCell>{row.department}</TableCell>
-                        <TableCell>{row.lastAttDate}</TableCell>
-
+                        <TableCell>{row.currentRank}</TableCell>
+                        <TableCell>{row.age}</TableCell>
+                        <TableCell>{row.pensionDate}</TableCell>
                         </TableRow>
                     ))
                     )}
@@ -135,4 +139,4 @@ const NextAttestations = () => {
     );
 };
   
-export default NextAttestations;
+export default PensionList;

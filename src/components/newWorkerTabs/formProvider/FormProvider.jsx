@@ -10,6 +10,61 @@ const FormContext = createContext();
 
 export const FormProvider = ({ children }) => {
 
+  const getSpecCheckInfo = (specCheckInfo) => {
+    // console.log("fff", specCheckInfo);
+    let newSpecCheckInfo = []
+
+    specCheckInfo.map((item, index) => {
+      let _specCheckItem = {};
+
+      if (item['docDate'].length > 0) _specCheckItem['docDate'] = item['docDate'];
+      if (item['docNumber'].length > 0) _specCheckItem['docNumber'] = item['docNumber'];
+
+      // console.log(_specCheckItem.length);
+      if (Object.keys(_specCheckItem).length > 0) newSpecCheckInfo.push(_specCheckItem);
+    });
+    // console.log(newSpecCheckInfo, newSpecCheckInfo.length);
+    return newSpecCheckInfo;
+  };
+
+  const getAttestationInfo = (attestationInfo) => {
+    let newAttestationInfo = [];
+
+    attestationInfo.map((item, index) => {
+      let _attestationItem = {};
+
+      if (item['lastAttDate'].length > 0) _attestationItem['lastAttDate'] = item['lastAttDate'];
+      if (item['attResult'].length > 0) _attestationItem['attResult'] = item['attResult'];
+
+      if (Object.keys(_attestationItem).length > 0) newAttestationInfo.push(_attestationItem);
+    });
+    return newAttestationInfo;
+  };
+
+  const getClassCategoriesInfo = (classCategoriesInfo) => {
+    let newClasCategoriesInfo = [];
+
+    classCategoriesInfo.map((item, index) => {
+      let _classCategoriesItem = {};
+
+      if (item['categoryType'].length > 0) _classCategoriesItem['categoryType'] = item['categoryType'];
+      if (Object.keys(_classCategoriesItem).length > 0) newClasCategoriesInfo.push(_classCategoriesItem);
+    });
+    return newClasCategoriesInfo;
+  };
+
+  const getAutobiographyInfo = (autobiographyInfo) => {
+    let newAutobiographyInfo = [];
+
+    autobiographyInfo.map((item, index) => {
+      let _autobiographyItem = {};
+
+      if (item['autobiographyText'].length > 0) _autobiographyItem['autobiographyText'] = item['autobiographyText'];
+      if (Object.keys(_autobiographyItem).length > 0) newAutobiographyInfo.push(_autobiographyItem);
+    });
+    return newAutobiographyInfo;
+  };
+
   // Общие данные
   const [photo, setPhoto] = useState(
     {
@@ -26,7 +81,6 @@ export const FormProvider = ({ children }) => {
     iin: '',
     pin: ''
   });
-
 
   const [birthInfo, setBirthInfo] = useState({
     birth_date: '',
@@ -189,7 +243,6 @@ export const FormProvider = ({ children }) => {
   ]
   );
 
-
   // Приказы рапорта
   const [decreeListInfo, setDecreeListInfo] = useState([
     {
@@ -198,7 +251,6 @@ export const FormProvider = ({ children }) => {
       decreeDate: '',
     }
   ]);
-
 
   const navigate = useNavigate();
   // const validateFields = (fields) => {
@@ -279,10 +331,14 @@ export const FormProvider = ({ children }) => {
     //   });
     // }
 
-    const isEmpty = classCategoriesInfo.some(category => category.categoryType === '');
+    // console.log(specCheckInfo);
+    const _specCheckInfo = getSpecCheckInfo(specCheckInfo);
+    const _attestationInfo = getAttestationInfo(attestationInfo);
+    const _classCategoriesInfo = getClassCategoriesInfo(classCategoriesInfo);
+    const _autobiographyInfo = getAutobiographyInfo(autobiographyInfo);
 
     const requestData = {
-      Photo: {photoBinary: photo},
+      Photo: photo,
       Person: person,
       BirthInfo: birthInfo,
       IdentityCardInfo: identityCardInfo,
@@ -309,14 +365,18 @@ export const FormProvider = ({ children }) => {
       WorkingHistory: {
         workingHistories: workingHistory.slice(1) ? workingHistory.slice(1) : [],
       },
-      SpecCheckInfo: {specCheckInfo},
+      SpecCheckInfo: {
+        specChecks: _specCheckInfo,
+      },
       AttestationInfo: {
-        attestations: attestationInfo,
+        attestations: _attestationInfo
       },
       RankInfo: {rankInfo},
-      ClassCategoriesInfo: {classCategoriesInfo},
+      ClassCategoriesInfo: {
+        classCategoriesInfo: _classCategoriesInfo
+      },
       AutobiographyInfo: {
-        autobiographies: autobiographyInfo,
+        autobiographies: _autobiographyInfo,
       },
       RewardsInfo: {
         rewards: rewardsInfo.slice(1) ? rewardsInfo.slice(1) : [],
@@ -351,6 +411,8 @@ export const FormProvider = ({ children }) => {
 
     console.log(photo)
 
+    
+
     console.log("post", {
       Photo: {photoBinary: photo},
       Person: person,
@@ -380,17 +442,17 @@ export const FormProvider = ({ children }) => {
         workingHistories: workingHistory.slice(1) ? workingHistory.slice(1) : [],
       },
       SpecCheckInfo: {
-        specChecks: specCheckInfo,
+        specChecks: _specCheckInfo,
       },
       AttestationInfo: {
-        attestations: attestationInfo,
+        attestations: _attestationInfo,
       },
       RankInfo: rankInfo,
       ClassCategoriesInfo: {
-        classCategories: classCategoriesInfo,
+        classCategories: _classCategoriesInfo,
       },
       AutobiographyInfo: {
-        autobiographies: autobiographyInfo,
+        autobiographies: _autobiographyInfo,
       },
       RewardsInfo: {
         rewards: rewardsInfo.slice(1) ? rewardsInfo.slice(1) : [],

@@ -59,7 +59,7 @@ const NewLaborActivity = (props) => {
             //     return updatedArray;
             //   });
 
-              setWorkingHistory((prevArray) => [...prevArray, newData]);
+            setWorkingHistory((prevArray) => [...prevArray, newData]);
 
             setInputData(
                 {

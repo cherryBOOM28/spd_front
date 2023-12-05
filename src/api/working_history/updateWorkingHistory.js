@@ -1,10 +1,17 @@
 import axios from "axios";
+import Cookies from "js-cookie";
+
+const accessToken = Cookies.get('jwtAccessToken');
 
 export const UpdateWorkingHistory = async (id, updatedData) => {
   try {
     const response = await axios.patch(
-      `http://localhost:8000/working_history/update/${id}/`,
-      updatedData
+      `http://localhost:8000/api/v1/working-history/${id}/`,
+      updatedData, {
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+        }
+      }
       
     );
     // console.log(response)

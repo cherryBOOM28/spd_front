@@ -34,8 +34,8 @@
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.3s ease;
-    padding: 0 45px;
-    margin: 5px;
+    /* margin: 0 25px; */
+    /* margin: 5px; */
 }
   
 .accordion__item.open .accordion__content {
@@ -48,3 +48,23 @@
     padding: 5px;
 }
   
+.dropdown__list {
+    /* padding: 10px 20px; */
+    display: flex;
+    flex-direction: column;
+    /* gap: 10px; */
+    background: #f6f6f6;
+    border-radius: 5px;
+    margin-top: 5px;
+}
+
+.dropdown__item {
+    cursor: pointer;
+    padding: 8px 18px;
+    
+}
+
+.dropdown__item:hover {
+    background: #e8e8e8;
+    border-radius: 5px;
+}

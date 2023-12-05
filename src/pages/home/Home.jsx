@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import cl from './Home.module.css';
 import Navigation from '../../components/navigation/Navigation';
@@ -7,34 +7,24 @@ import employeeList from '../../components/data/employeeList.json';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import Button from '../../components/UI/button/Button';
+import Dropdown from '../../components/dropdown/Dropdown';
 import { FaCaretDown, FaCaretUp } from 'react-icons/fa';
-import defaultPic from '../../assets/images/default.jpeg';
-import DepartmentDropdown from '../../components/departmentDropdown/DepartmentDropdown';
 import { Link } from 'react-router-dom';
-import { useParams } from 'react-router-dom';
+import { NotificationContainer, NotificationManager } from 'react-notifications';
+import 'react-notifications/lib/notifications.css';
+import { MdDownload } from "react-icons/md";
+import NotificationButton from '../../components/notificationButton/NotificationButton';
 
 function Home(props) {
- 
     const navigate = useNavigate();
-
-    // Select optopn(working or not)
-    const [ selectedOption, setSelectedOption ] = useState('');
 
     const handleRadioChange = (value) => {
         setSelectedGroupId(value);
         // localStorage.setItem('selectedGroupId', value);
     };
 
-
-    const handleSelectChange = (event) => {
-        setSelectedOption(event.target.value);
-    }
-
     // calendar
-    const [selectedDate, setSelectedDate] = useState(null);
-    const [ includeFired, setIncludeFired ] = useState(false);
     const [personalData, setPersonalData] = useState([]); 
-    const [groups, setGroups ] = useState([]);
     const [city, setCity] = useState({});
     const [showSchedule, setShowSchedule] = useState(false);
 
@@ -47,22 +37,16 @@ function Home(props) {
     const [departments, setDepartments] = useState([]);
     const [selectedDepartment, setSelectedDepartment] = useState(null);
     const [selectedPosition, setSelectedPosition] = useState(null);
-    const [selectedPositionTitle, setselectedPositionTitle] = useState(null);
+    const [selectedLocation, setSelectedLocation] = useState('wholeCountry');
+
+    const [locations, setLocations] = useState([]);
+    const [groupDepartament, setGroupDepartament] = useState([]);
+    const [groupLocation, setGroupLocation] = useState('Астана');
+
 
     const [ selectedGroupId, setSelectedGroupId ] = useState(
         localStorage.getItem('selectedGroupId') || 'all'
     )
-
-    // const [ selectedCityId, setSelectedCityId ] = useState(
-    //     localStorage.getItem('selectedGroupId') || 'DC'
-    // )
-    
-
-
-    // checkbox
-    const handleCheckboxFiredChange = () => {
-        setIncludeFired(!includeFired);
-    }
 
     // employee
     useEffect(() => {
@@ -80,6 +64,7 @@ function Home(props) {
     const [gender, setGender] = useState([]); // Данные из бэка
     const [departmentPeople, setDepartmentPeople] = useState([]);
 
+    // данные из person
     useEffect(() => {
         const accessToken = Cookies.get('jwtAccessToken');
 
@@ -89,8 +74,10 @@ function Home(props) {
             }
         })
           .then(response => {
-            console.log("response", response);
-            setPersonalData(response.data.sort());
+            // console.log("response", response);
+            // setPersonalData(response.data.sort());
+            setPersonalData(response.data);
+
             setFirstName(response.data[0].firstName);
             setSurname(response.data[0].surname);
             setPatronymic(response.data[0].patronymic);
@@ -98,7 +85,7 @@ function Home(props) {
             setPositionTitle(response.data[0].positionInfo.position.positionTitle);
 
 
-            console.log("data[0][2]",response.data[0].positionInfo.position.positionTitle)
+            // console.log("data[0][2]",response.data[0].positionInfo.position.positionTitle)
         })
         .catch(error => {
             console.error("Error fetching personal data:", error);
@@ -109,30 +96,27 @@ function Home(props) {
             setCity(responseCity.data);
             console.log("responseCity",responseCity.data);
         })
-        
         .catch(error => {
             console.error("Error fetching personal data:", error);
         });
-        
     }, []);
-
-
-
-    
 
     const [persons, setPersons] = useState([]);
 
+    // город
     useEffect(() => {
         // Выполняем запрос к серверу при монтировании компонента
         axios.get('http://127.0.0.1:8000/api/v1/staffing_table/?location_id=1')
-          .then(response => {
-            setCities(response.data.Departments.map(department => department.Location.LocationName));
+          .then(responseCities => {
+            setCities(responseCities.data.Departments.map(department => department.Location.LocationName));
           })
           .catch(error => {
             console.error('Error fetching data:', error);
           });
     }, []); // Пустой массив зависимостей указывает, что эффект должен выполняться только один раз при монтировании
+
     
+    // отображение городов
     const handleCityClick = async (cityName) => {
         if (cityName === selectedCity) {
           // Если выбран тот же город, что и ранее, сбрасываем выбор
@@ -153,6 +137,7 @@ function Home(props) {
         }
     };
 
+    // отображение департаментов
     const handleDepartmentClick = (departmentName) => {
         if (departmentName === selectedDepartment) {
             setSelectedDepartment(null);
@@ -162,6 +147,7 @@ function Home(props) {
         }
     };
 
+    // отображение должностей
     const handlePositionClick = async (positionTitle) => {
         if (positionTitle === selectedPosition) {
           setSelectedPosition(null);
@@ -179,30 +165,70 @@ function Home(props) {
         }
     };
 
+    // отображение списка людей из департаментов
     const [selectedDepartmentId, setSelectedDepartmentId] = useState(null);
     useEffect(() => {
         // if (selectedDepartmentId) {
           axios.get(`http://127.0.0.1:8000/api/v1/persons_by_department/?department=ДЦ`)
-            .then(response => {
-              setDepartmentPeople(response.data.persons);
-              console.log("persons", response.data);
+            .then(responseDepartmentPeople => {
+              setDepartmentPeople(responseDepartmentPeople.data.persons);
+              console.log("persons", responseDepartmentPeople.data);
             })
             .catch(error => {
               console.error("Error fetching department people data:", error);
             });
         // }
     }, [selectedDepartmentId]);
-
-
       
+    // скачать штатное расписание
+    const handleDownload = () => {
+        if (!selectedLocation) {
+            NotificationManager.warning('Please select a location before downloading', 'Warning');
+            return;
+        }
+        window.location.href = `http://127.0.0.1:8000/api/v1/download-staffing-table/?locationName=Весь Казахстан`;
+    };
+    
+    // values для шатаного расписания
+    const dropdownOptions = [
+        { value: 'wholeCountry', label: 'Вся страна' },
+        { value: 'city', label: 'Город' },
+    ];
 
+    // главная страница - отображение городов
+    const accessToken = Cookies.get('jwtAccessToken');
+    const handleLocationChange = async (locationName) => {
+        try {
+          const response = await axios.get(`http://localhost:8000/api/v1/location_departments/Астана/`, {
+            headers: {
+              'Authorization': `Bearer ${accessToken}`,
+            }
+          });
+          setGroupDepartament(response.data.departments);
+          setGroupLocation(locationName);
+          setSelectedGroupId('all');
+          console.log("departments", response.data.departments);
+        } catch (error) {
+          console.error('Error fetching departments:', error);
+        }
+    };
+    
+    useEffect(() => {
+        // Load data for the initial selected location
+        handleLocationChange(groupLocation);
+    }, [groupLocation]);// Пустой массив зависимостей, чтобы эффект вызывался только при монтировании
+
+    const handleClickDepartaments = () => {
+        handleLocationChange('Астана');
+        setSelectedGroupId(null);
+    };
+
+    // отображение tab в штаном расписании 
     const renderEmployeeWrapper = () => {
     if (showSchedule) {
-      // Вместо расписания, вставьте свой код для отображения расписания сотрудников
       return (
         // <div className={cl.container}>
             <div className={cl.employeeWrapper}>
-                {/* Ваш код для отображения расписания сотрудников */}
                 <div className={cl.groups}>
                     <h1 className={cl.headline}>Штатное расписание</h1>
                     <div className={cl.groups_column}>
@@ -267,8 +293,6 @@ function Home(props) {
                                         <h4>Свободные вакансии: 2 {department.available_slots}</h4>
                                     </div>
                                 )}
-                              
-
                                 </li>
                             ))}
                         </ul>
@@ -296,40 +320,17 @@ function Home(props) {
                                 onChange={() => handleRadioChange('all')}
                             />
                         </div>
-                        {/* {city && (
-                            city.departments.map(department => (
-                            <div key={department.id} className={cl.group_name} style={{ cursor: 'pointer' }}>
-                                <p>{department.Location.LocationName}</p>
-                                <input
+                        <div className={cl.group_name} style={{ cursor: 'pointer' }} onClick={() => handleLocationChange('Астана')}>
+                            <p>Астана</p>
+                            <input
                                 type="radio"
                                 name="table"
-                                value={department.id}
-                                checked={selectedGroupId === department.id}
-                                onChange={() => handleRadioChange(department.id)}
-                                />
-                            </div>
-                            ))
-                        )} */}
-                        {/* {city && city.departments && (
-                            city.departments.map(department => (
-                                <div key={department.id} className={cl.group_name} style={{ cursor: 'pointer' }}>
-                                <p>{department.Location.LocationName}</p>
-                                <input
-                                    type="radio"
-                                    name="table"
-                                    value={department.id}
-                                    checked={selectedGroupId === department.id}
-                                    onChange={() => handleRadioChange(department.id)}
-                                />
-                                </div>
-                            ))
-                        )} */}
-
-
-                        
+                                checked={selectedLocation === 'Астана'}
+                                onChange={() => handleRadioChange('all')}
+                            />
+                        </div>
                     </div>
                 </div>
-
                 <div className={cl.employees}>
                         <table className={cl.table}>
                             <thead>
@@ -352,23 +353,16 @@ function Home(props) {
                                     </tr>
                                     );
                                 })}
-
-                              
-
+                             
                             </tbody>
                         </table>
-                    
-                               
                 </div>
             </div>
         // </div>
         
       );
     }
-  };
-
-
-
+    };
 
     return (
         <div className={cl.homeWrapper}>
@@ -380,39 +374,26 @@ function Home(props) {
                         <div className={cl.btn_wrapper}>
                             {/* Filters */}
                             <div className={cl.filters}>
-                                <div className={cl.select}>
-                                    <select value={selectedOption} onChange={handleSelectChange}>
-                                        <option value="" disabled>Выберите...</option>
-                                        <option value="working">Работающие</option>
-                                        <option value="non-working">Неработающие</option>
-                                    </select>
-                                    <div className={cl.select__arrow}>&#9660;</div>
-                                </div>
-
-                                <div className={cl.dateOn}>
-                                    <p className={cl.dateText}>на дату</p>
-                                    <input 
-                                        type="date" 
-                                        name="" 
-                                        id=""
-                                        onChange={(e) => setSelectedDate(new Date(e.target.value))}
-                                        className={cl.calendar}
+                                
+                                <div className={cl.downloaderFile}>
+                                    <Dropdown
+                                        title="Выберите местоположение"
+                                        options={dropdownOptions}
+                                        selected={selectedLocation}
+                                        onSelect={setSelectedLocation}
                                     />
-                                </div>
 
-                                <div className={cl.including}>
-                                    <label className={cl.including__label}>
-                                        <input 
-                                            type='checkbox'    
-                                            checked={includeFired}
-                                            onChange={handleCheckboxFiredChange}
-                                            className={cl.checkbox}
-                                        />
-                                        включая уволенных после  
-                                    </label>
-                                    <p className={cl.selectedDate}>
-                                        {selectedDate ? selectedDate.toLocaleDateString() : 'Выбранная дата'}
-                                    </p>
+                                    <div className={cl.downloader}>
+                                        <Button
+                                            className={cl.download}
+                                            onClick={handleDownload}
+                                            disabled={!selectedLocation}
+                                        >
+                                            {selectedLocation === 'wholeCountry' ? '' : ''}
+                                            <MdDownload />
+                                        </Button>
+                                        <NotificationContainer />
+                                    </div>
                                 </div>
                             </div>
                             <div style={{ display: 'flex' }}>
@@ -422,12 +403,12 @@ function Home(props) {
                             </div>
                         </div>
                         {renderEmployeeWrapper()}
-                        </div>
-                   
+                    </div>
+                    <NotificationButton className={cl.notificationButton} />
                 </div>
             </div>
         </div>
     );
-}
+};
 
 export default Home;

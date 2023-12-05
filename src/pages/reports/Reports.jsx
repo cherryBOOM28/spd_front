@@ -30,6 +30,7 @@ import { renderOrderListOptions } from '../../components/reportResults/orders_li
 import ExcelGenerator from '../../components/excelGenerator/ExcelGenerator';
 import NextAttestations from '../../components/reportResults/nextAttestation/NextAttestations';
 import NextRunkUp from '../../components/reportResults/nextRunkUp/NextRunkUp';
+import PensionList from '../../components/reportResults/pensionList/PensionList';
 
 
 
@@ -499,6 +500,12 @@ function Reports(props, queryParams) {
                                         >
                                     Предстоящие приказы - звания
                                     </div>
+                                    <div 
+                                        className={activeTab === 4 ? cl.btnTab + ' ' + cl.activeTab : cl.btnTab}
+                                        onClick={() => handleTabClick(4)}
+                                        >
+                                    Пенсия
+                                    </div>
                                 </div>
                                 <div className={cl.tabBody}>
                                     {
@@ -838,6 +845,12 @@ function Reports(props, queryParams) {
                                         activeTab === 3 && 
                                         <div className={cl.basic__info}>
                                             <NextRunkUp />
+                                        </div>
+                                    }
+                                    {
+                                        activeTab === 4 && 
+                                        <div className={cl.basic__info}>
+                                            <PensionList />
                                         </div>
                                     }
                                 </div>

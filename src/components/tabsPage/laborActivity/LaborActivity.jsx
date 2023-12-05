@@ -3,36 +3,17 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import cl from './LaborActivity.module.css';
 import Button from '../../../components/UI/button/Button';
+import Cookies from 'js-cookie';
 
 import { getWorkingHistory } from '../../../api/working_history/getWorkingHistotry';
 import { deleteWorkingHistory } from '../../../api/working_history/deleteWorkingHistory';
 import { UpdateWorkingHistory } from '../../../api/working_history/updateWorkingHistory';
 
-function LaborActivity({ workingHistory }, props) {
+function LaborActivity({ workingHistory, setWorkingHistory }, props) {
     const { id } = useParams();
-    console.log(`id: ${id}`);
-    // const id = props.id;
+    // console.log(`id: ${id}`);
 
     const [personnelData, setPersonnelData] = useState([]); // Данные из бэка
-
-    useEffect(() => {
-        fetchData()
-    }, [])
-
-        const fetchData = async () => {
-            try {
-                // GET PERSONAL DATA
-                const response = await getWorkingHistory(id) 
-                // setPersonnelData(response.data);
-                // console.log(response);
-            } catch (error) {
-                console.error("Error fetching data:", error);
-            }
-        }
-
-            // TABLE DATA
-
-    // ДОБАВЛЕНИЕ НАГРАДЫ
     const [showForm, setShowForm] = useState(false);
 
     const handleShowForm = () => {
@@ -40,16 +21,17 @@ function LaborActivity({ workingHistory }, props) {
     };
 
     const [inputData, setInputData] = useState({
-        working_start: '',
-        working_end: '',
-        departament_work: '',
-        jposition_work: '',
-        orfanization_name: '',
-        organization_addres: '',
+        positionName: '',
+        startDate: '',
+        endDate: '',
+        department: '',
+        organizationName: '',
+        organizationAddress: '',
     });
 
     const handleAddNewData = async (e, id) => {
         e.preventDefault();
+        // console.log("Current id:", id); 
         try {
             // if (!inputData.working_start || !inputData.working_end || !inputData.departament || !inputData.jposition || !inputData.orfanization_name || !inputData.organization_addres) {
             //     alert('Пожалуйста, заполните все поля!');
@@ -57,46 +39,54 @@ function LaborActivity({ workingHistory }, props) {
             // }
 
             const newData = {
-              iin: props.id,
-              working_start: inputData.working_start,
-              working_end: inputData.working_end,
-              departament_work: inputData.departament_work,
-              jposition_work: inputData.jposition_work,
-              orfanization_name: inputData.orfanization_name,
-              organization_addres: inputData.organization_addres,
+              personId: id,
+              positionName: inputData.positionName,
+              startDate: inputData.startDate,
+              endDate: inputData.endDate,
+              department: inputData.department,
+              organizationName: inputData.organizationName,
+              organizationAddress: inputData.organizationAddress,
             };
 
-            // console.log(
-            //     { newData }
-            // )
+            console.log(
+                { newData },
+                {id}
+            )
+            const accessToken = Cookies.get('jwtAccessToken');
 
-            const response = await axios.post('http://localhost:8000/working_history/create/', newData);
+            const response = await axios.post('http://localhost:8000/api/v1/working-history/', newData, {
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`,
+                }
+            });
 
-            if (response === 201) {
-                // const updatedWorkingHistory = {
-                //     ...personnelData,
-                //     working_history: [
-                //         ...personnelData.working_history,
-                //         newData
-                //     ]
-                // }
-
-                setPersonnelData(prevRecords => [...prevRecords, newData]);
-                // setPersonnelData(updatedWorkingHistory);
+            if (response.status === 201) {
+                // setWorkingHistory(prevRecords => [...prevRecords, newData]);
+                setWorkingHistory(prevData => {
+                    // Проверяем, что prevData является объектом и содержит workingHistories
+                    if (typeof prevData === 'object' && Array.isArray(prevData.workingHistories)) {
+                      return {
+                        ...prevData,
+                        workingHistories: [...prevData.workingHistories, newData],
+                      };
+                    } else {
+                      console.error("prevData is not an object or does not contain workingHistories");
+                      return prevData; // возвращаем prevData без изменений
+                    }
+                });
                 setInputData({
-                  iin: id,
-                  working_start: '',
-                  working_end: '',
-                  departament_work: '',
-                  jposition_work: '',
-                  orfanization_name: '',
-                  organization_addres: '',
+                  personId: id,
+                  positionName: '',
+                  startDate: '',
+                  endDate: '',
+                  department: '',
+                  organizationName: '',
+                  organizationAddress: '',
                 });
                 handleShowForm(false)
             } else {
                 console.error('Error adding new data');
             }
-            window.location.reload();
         } catch (error) {
             console.error('Error:', error);
         }
@@ -105,28 +95,40 @@ function LaborActivity({ workingHistory }, props) {
     // УДАЛЕНИЕ DATA
     const handleDelete = async (id) => {
         try {
-            const response = await deleteWorkingHistory(id)
-            if (response.status === 200) {
-                // Успешно удалено, теперь обновляем состояние
-                setPersonnelData(prevData => prevData.filter(tableData => tableData.id !== id));
-                // console.log("Successfully deleted");
-            } else {
-                console.log("Error deleting data in table");
-            }
-            window.location.reload();
-        } catch(error) {
-            console.log(error)
+            // Вызываем функцию для удаления данных на сервере
+            await deleteWorkingHistory(id);
+        
+            // Обновляем локальное состояние, исключая удаленный объект
+            setWorkingHistory(prevData => {
+            //   console.log("Type of prevData:", typeof prevData);
+        
+              // Проверяем, что prevData является объектом и содержит workingHistories
+              if (typeof prevData === 'object' && Array.isArray(prevData.workingHistories)) {
+                return {
+                  ...prevData,
+                  workingHistories: prevData.workingHistories.filter(tableData => tableData.id !== id),
+                };
+              } else {
+                // console.error("prevData is not an object or does not contain workingHistories");
+                return prevData; // возвращаем prevData без изменений
+              }
+            });
+        
+            console.log("Successfully deleted");
+          } catch (error) {
+            console.error("Error deleting data in table:", error);
         }
     }
+    
 
     // EDIT
     const [editedData, setEditedData] = useState({
-      working_start: '',
-      working_end: '',
-      departament_work: '',
-      jposition_work: '',
-      orfanization_name: '',
-      organization_addres: '',
+        positionName: '',
+        startDate: '',
+        endDate: '',
+        department: '',
+        organizationName: '',
+        organizationAddress: '',
     });
 
     const [editingId, setEditingId] = useState(null);
@@ -136,20 +138,25 @@ function LaborActivity({ workingHistory }, props) {
             try {
                 const updatedData = {
                   id: id,
-                  iin: props.id,
-                  working_start: editedTableData.working_start,
-                  working_end: editedTableData.working_end,
-                  departament_work: editedTableData.departament_work,
-                  jposition_work: editedTableData.jposition_work,
-                  orfanization_name: editedTableData.orfanization_name,
-                  organization_addres: editedTableData.organization_addres,
+                  personId: id,
+                  positionName: editedTableData.positionName,
+                  startDate: editedTableData.startDate,
+                  endDate: editedTableData.endDate,
+                  department: editedTableData.department,
+                  organizationName: editedTableData.organizationName,
+                  organizationAddress: editedTableData.organizationAddress,
+                  isPravoOhranka: editedTableData.isPravoOhranka,
+                  HaveCoefficient: editedTableData.HaveCoefficient,
+
                 };
+
+                console.log("updatedData", {updatedData});
 
                 await UpdateWorkingHistory(id, updatedData);
 
-                setPersonnelData(prevData => {
+                setWorkingHistory(prevData => {
                     return prevData.map(tableData => {
-                        if(tableData.iin === id) {
+                        if(tableData.id === id) {
                             return {...tableData, ...updatedData}
                         }
                         return tableData;
@@ -159,13 +166,15 @@ function LaborActivity({ workingHistory }, props) {
 
                 setEditingId(null);
                 setEditedData({
-                  id: id,
-                  working_start: '',
-                  working_end: '',
-                  departament_work: '',
-                  jposition_work: '',
-                  orfanization_name: '',
-                  organization_addres: '',
+                    id: id,
+                    positionName: '',
+                    startDate: '',
+                    endDate: '',
+                    department: '',
+                    organizationName: '',
+                    organizationAddress: '',
+                    isPravoOhranka: '',
+                    HaveCoefficient: ''
                 });
                 // console.log('Successfully updated table data')
             } catch(error) {
@@ -174,7 +183,7 @@ function LaborActivity({ workingHistory }, props) {
            
         } else {
             setEditingId(id)
-            const dataToEdit = personnelData.find(tableData => tableData.id === id);
+            const dataToEdit = workingHistory.workingHistories.find(tableData => tableData.id === id);
             if(dataToEdit) {
                 setEditedData(dataToEdit);
             }
@@ -185,29 +194,45 @@ function LaborActivity({ workingHistory }, props) {
     const handleSaveEdit = async (id) => {
         try {
             const updatedData = {
-              id: id,
-              iin: props.id,
-              working_start: editedData.working_start,
-              working_end: editedData.working_end,
-              departament_work: editedData.departament_work,
-              jposition_work: editedData.jposition_work,
-              orfanization_name: editedData.orfanization_name,
-              organization_addres: editedData.organization_addres,
+                id: id,
+                personId: editedData.personId,
+                positionName: editedData.positionName,
+                startDate: editedData.startDate,
+                endDate: editedData.endDate,
+                department: editedData.department,
+                organizationName: editedData.organizationName,
+                organizationAddress: editedData.organizationAddress,
+                isPravoOhranka: editedData.isPravoOhranka,
+                HaveCoefficient: editedData.HaveCoefficient,
             };
-            console.log(id);
+            console.log("personId", id);
+            console.log("updatedData", {updatedData});
+
     
             const response = await UpdateWorkingHistory(id, updatedData);
     
-            if (response === 200) {
-                setPersonnelData((prevData) =>
-                    prevData.map((tableData) => (tableData.id === id ? updatedData : tableData))
-                );
+            // if (response === 200) {
+            //     setWorkingHistory((prevData) =>
+            //         prevData.map((tableData) => (tableData.id === id ? updatedData : tableData))
+            //     );
+            //     setEditingId(null); // Завершаем режим редактирования
+            // } else {
+            //     console.log('Error updating table data');
+            // }
+            if (response.status === 200) {
+                setWorkingHistory((prevData) => ({
+                    ...prevData,
+                    workingHistories: prevData.workingHistories.map((tableData) =>
+                        tableData.id === id ? updatedData : tableData
+                    ),
+                }));
                 setEditingId(null); // Завершаем режим редактирования
+                console.log("Successfully updated table data");
             } else {
-                console.log('Error updating table data');
+                console.error("Error updating table data");
             }
             // console.log(updatedData);
-            window.location.reload();
+            // window.location.reload();
         } catch (error) {
             console.error('Error updating table data:', error);
         }
@@ -259,7 +284,7 @@ function LaborActivity({ workingHistory }, props) {
                 <Button onClick={handleDownload}>Скачать данные</Button>
             </div>
                 {showForm && (
-                    <form onSubmit={handleAddNewData} style={{ marginTop: '10px' }}>
+                    <form onSubmit={(e) => handleAddNewData(e, id)} style={{ marginTop: '10px' }}>
                         <table className={cl.customTable}>
                             <tbody >
                               <tr>   
@@ -269,12 +294,12 @@ function LaborActivity({ workingHistory }, props) {
                                             type="date"
                                             className={cl.formInput}
                                             placeholder="Начало периода"
-                                            value={inputData.working_start || ''}
+                                            value={inputData.startDate || ''}
                                             onChange={(e) => {
                                                 const newDate = e.target.value;
                                                 setInputData((prevWorker) => ({
                                                 ...prevWorker,
-                                                working_start: newDate,
+                                                startDate: newDate,
                                                 }));
                                             }}
                                         />
@@ -286,12 +311,12 @@ function LaborActivity({ workingHistory }, props) {
                                             type="date"
                                             className={cl.formInput}
                                             placeholder="Конец периода"
-                                            value={inputData.working_end || ''}
+                                            value={inputData.endDate || ''}
                                             onChange={(e) => {
                                                 const newDate = e.target.value;
                                                 setInputData((prevWorker) => ({
                                                 ...prevWorker,
-                                                working_end: newDate,
+                                                endDate: newDate,
                                                 }));
                                             }}
                                         />
@@ -302,8 +327,8 @@ function LaborActivity({ workingHistory }, props) {
                                           type="text"
                                           className={cl.formInput}
                                           placeholder="Должность"
-                                          value={inputData.departament_work}
-                                          onChange={(e) => setInputData({ ...inputData, departament_work: e.target.value })}
+                                          value={inputData.positionName}
+                                          onChange={(e) => setInputData({ ...inputData, positionName: e.target.value })}
                                       />
                                   </td>
                                   <td>
@@ -311,8 +336,8 @@ function LaborActivity({ workingHistory }, props) {
                                           type="text"
                                           className={cl.formInput}
                                           placeholder="Подразделение"
-                                          value={inputData.jposition_work}
-                                          onChange={(e) => setInputData({ ...inputData, jposition_work: e.target.value })}
+                                          value={inputData.department}
+                                          onChange={(e) => setInputData({ ...inputData, department: e.target.value })}
                                       />
                                   </td>
                                   <td>
@@ -320,8 +345,8 @@ function LaborActivity({ workingHistory }, props) {
                                           type="text"
                                           className={cl.formInput}
                                           placeholder="Учреждение"
-                                          value={inputData.orfanization_name}
-                                          onChange={(e) => setInputData({ ...inputData, orfanization_name: e.target.value })}
+                                          value={inputData.organizationName}
+                                          onChange={(e) => setInputData({ ...inputData, organizationName: e.target.value })}
                                       />
                                   </td>
                                   <td>
@@ -329,8 +354,8 @@ function LaborActivity({ workingHistory }, props) {
                                           type="text"
                                           className={cl.formInput}
                                           placeholder="Местонахождение организации"
-                                          value={inputData.organization_addres}
-                                          onChange={(e) => setInputData({ ...inputData, organization_addres: e.target.value })}
+                                          value={inputData.organizationAddress}
+                                          onChange={(e) => setInputData({ ...inputData, organizationAddress: e.target.value })}
                                       />
                                   </td>
                                   <td><Button type="submit">Добавить</Button></td>
@@ -350,7 +375,10 @@ function LaborActivity({ workingHistory }, props) {
                           <td>Должность</td>
                           <td>Подразделение</td>
                           <td>Учреждение</td>
-                          <td>Местонахождение организации</td>
+                          <td>Местонахожден. организации</td>
+                          <td>Коэфициент</td>
+                          <td>Правохран. орган</td>
+                          <td>Действие</td>
                         </tr>
                     </thead>
                     <tbody>
@@ -404,6 +432,40 @@ function LaborActivity({ workingHistory }, props) {
                                 <td>{editingId === d.id ? <input type="text" className={cl.editInput} name='positionName' value={editedData.positionName} onChange={(e) => setEditedData({ ...editedData, positionName: e.target.value })} /> : d.positionName}</td>
                                 <td>{editingId === d.id ? <input type="text" className={cl.editInput} name='organizationName' value={editedData.organizationName} onChange={(e) => setEditedData({ ...editedData, organizationName: e.target.value })} /> : d.organizationName}</td>
                                 <td>{editingId === d.id ? <input type="text" className={cl.editInput} name='organizationAddress' value={editedData.organizationAddress} onChange={(e) => setEditedData({ ...editedData, organizationAddress: e.target.value })} /> : d.organizationAddress}</td>
+                                <td>
+                                    {editingId === d.id ? (
+                                        <input
+                                        type="checkbox"
+                                        name="isPravoOhranka"
+                                        checked={editedData.isPravoOhranka || false}
+                                        onChange={(e) =>
+                                            setEditedData((prevData) => ({
+                                            ...prevData,
+                                            isPravoOhranka: e.target.checked,
+                                            }))
+                                        }
+                                        />
+                                    ) : (
+                                        d.isPravoOhranka ? "Да" : "Нет"
+                                    )}
+                                </td>
+                                <td>
+                                    {editingId === d.id ? (
+                                        <input
+                                        type="checkbox"
+                                        name="HaveCoefficient"
+                                        checked={editedData.HaveCoefficient || false}
+                                        onChange={(e) =>
+                                            setEditedData((prevData) => ({
+                                            ...prevData,
+                                            HaveCoefficient: e.target.checked,
+                                            }))
+                                        }
+                                        />
+                                    ) : (
+                                        d.HaveCoefficient ? "Да" : "Нет"
+                                    )}
+                                </td>
                                 <td className={cl.relativesActionBtns} style={{}}>
                                     {editingId === d.id ? (
                                         <>
@@ -421,7 +483,6 @@ function LaborActivity({ workingHistory }, props) {
                         ))}
                     </tbody>
                 </table>
-             
                 <table className={cl.customTable} style={{ marginTop: '20px' }}>
                     <thead>
                         <tr>

@@ -39,42 +39,19 @@ const NewPersonnelData = (props) => {
         docDate: '',
     });
 
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-     
-        setSpecCheckInfo((prevArray) => {
-            // Check if the field already exists in the array
-            const existingFieldIndex = prevArray.findIndex((item) => item.hasOwnProperty(name));
-        
-            // If the field exists, update its value; otherwise, add a new object
-            if (existingFieldIndex !== -1) {
-              const updatedArray = [...prevArray];
-              updatedArray[existingFieldIndex][name] = value;
-              return updatedArray;
-            } else {
-              const updatedArray = [...prevArray, { [name]: value }];
-              return updatedArray;
-            }
+    const handleInputChange = (name, value) => {
+        setSpecCheckInfo((prevData) => {
+            let obj = prevData[0];
+            obj = {...obj, [name]: value}
+            return [obj]
         });
     };
-    
 
-    const handleInputChangeAttestation = (e) => {
-        const { name, value } = e.target;
-
-        setAttestationInfo((prevArray) => {
-            // Check if the field already exists in the array
-            const existingFieldIndex = prevArray.findIndex((item) => item.hasOwnProperty(name));
-        
-            // If the field exists, update its value; otherwise, add a new object
-            if (existingFieldIndex !== -1) {
-              const updatedArray = [...prevArray];
-              updatedArray[existingFieldIndex][name] = value;
-              return updatedArray;
-            } else {
-              const updatedArray = [...prevArray, { [name]: value }];
-              return updatedArray;
-            }
+    const handleInputChangeAttestation = (name, value) => {
+        setAttestationInfo((prevData) => {
+            let obj = prevData[0];
+            obj = {...obj, [name]: value}
+            return [obj]
         });
     };
 
@@ -87,64 +64,28 @@ const NewPersonnelData = (props) => {
         });
     };
 
-    const handleInputChangeClassCategories = (e) => {
-        const { name, value } = e.target;
+    const handleInputChangeClassCategories = (name, value) => {
         setClassCategoriesInfo((prevData) => {
-            const newData = { ...prevData, [name]: value };
-            console.log(newData); // Log the updated data
-            return newData;
-        });
-    };
-
-    const handleInputChangeSpecCheck = (e) => {
-        const { name, value } = e.target;
-
-        setSpecCheckInfo((prevArray) => {
-            // Check if the field already exists in the array
-            const existingFieldIndex = prevArray.findIndex((item) => item.hasOwnProperty(name));
-        
-            // If the field exists, update its value; otherwise, add a new object
-            if (existingFieldIndex !== -1) {
-              const updatedArray = [...prevArray];
-              updatedArray[existingFieldIndex][name] = value;
-              return updatedArray;
-            } else {
-              const updatedArray = [...prevArray, { [name]: value }];
-              return updatedArray;
-            }
+            let obj = prevData[0];
+            obj = {...obj, [name]: value}
+            return [obj]
         });
     };
 
 
-    const handleInputChangeAutobiography = (e) => {
-        const { name, value } = e.target;
-
-        setAutobiographyInfo((prevArray) => {
-            // Check if the field already exists in the array
-            const existingFieldIndex = prevArray.findIndex((item) => item.hasOwnProperty(name));
-        
-            // If the field exists, update its value; otherwise, add a new object
-            if (existingFieldIndex !== -1) {
-              const updatedArray = [...prevArray];
-              updatedArray[existingFieldIndex][name] = value;
-              return updatedArray;
-            } else {
-              const updatedArray = [...prevArray, { [name]: value }];
-              return updatedArray;
-            }
+    const handleInputChangeAutobiography = (name, value) => {
+        setAutobiographyInfo((prevData) => {
+            let obj = prevData[0];
+            obj = {...obj, [name]: value}
+            return [obj]
         });
     };
-
-    
-
    
-
 
     return (
         <div className={cl.personalWrapper}>
         <div className={cl.container}>
             <form>
-
                 <div className={cl.totalInfoWrapper}>
                     <div className={cl.totalInfoContent}>
                         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -159,7 +100,7 @@ const NewPersonnelData = (props) => {
                                     className={cl.workerInfo}
                                     type="text"
                                     name="docNumber"
-                                    onChange={(e) => handleInputChangeSpecCheck('docNumber', e.target.value)}
+                                    onChange={(e) => handleInputChange('docNumber', e.target.value)}
                                 />
                             </div>        
                         </div>
@@ -170,7 +111,7 @@ const NewPersonnelData = (props) => {
                                     type="date"
                                     className={cl.workerInfo}
                                     name='docDate'
-                                    onChange={(e) => handleInputChangeSpecCheck('docDate', e.target.value)}
+                                    onChange={(e) => handleInputChange('docDate', e.target.value)}
                                 />
                             </div>
                         </div>
@@ -192,7 +133,7 @@ const NewPersonnelData = (props) => {
                                             type="date"
                                             className={cl.workerInfo}
                                             name='lastAttDate'
-                                            value={attestationInfo.lastAttDate}
+                                            // value={attestationInfo.lastAttDate}
                                             onChange={handleInputChangeAttestation}
                                         />
                                     </div>
@@ -205,7 +146,7 @@ const NewPersonnelData = (props) => {
                                         className={cl.workerInfo}
                                         type="text"
                                         name="attResult"
-                                        value={attestationInfo.attResult}
+                                        // value={attestationInfo.attResult}
                                         onChange={handleInputChangeAttestation}
                                     />
                                 </div>
@@ -239,7 +180,7 @@ const NewPersonnelData = (props) => {
                                 <label className={cl.label}>Звание</label>
                                     <select
                                     className={cl.workerInfoSelect}
-                                    value={rankInfo.militaryRank}
+                                    // value={rankInfo.militaryRank}
                                     name='militaryRank'
                                     onChange={handleInputChangeRank}
                                 >
@@ -273,7 +214,7 @@ const NewPersonnelData = (props) => {
                                         type="date"
                                         className={cl.workerInfo}
                                         name='receivedDate'
-                                        value={rankInfo.receivedDate}
+                                        // value={rankInfo.receivedDate}
                                         onChange={handleInputChangeRank}
                                     />
                                 </div>
@@ -286,7 +227,7 @@ const NewPersonnelData = (props) => {
                                         className={cl.workerInfo}
                                         type="text"
                                         name="receivedType"
-                                        value={rankInfo.receivedType}
+                                        // value={rankInfo.receivedType}
                                         onChange={handleInputChangeRank}
                                     />
                             </div>
@@ -307,7 +248,7 @@ const NewPersonnelData = (props) => {
                                 <label className={cl.label}>Классные категория</label>
                                     <select
                                     className={cl.workerInfoSelect}
-                                    value={classCategoriesInfo.categoryType}
+                                    // value={classCategoriesInfo.categoryType}
                                     name='categoryType'
                                     onChange={handleInputChangeClassCategories}
                                 >
@@ -338,7 +279,7 @@ const NewPersonnelData = (props) => {
                                 className={cl.workerInfoText}
                                 type="text"
                                 name="autobiographyText"
-                                value={autobiographyInfo.autobiographyText}
+                                // value={autobiographyInfo.autobiographyText}
                                 onChange={handleInputChangeAutobiography}
                             />
                             </div>
