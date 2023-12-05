@@ -130,8 +130,8 @@ function NewBasicInfo() {
                         onChange={(e) => handleInputChange(setPerson, 'gender', e.target.value)}
                         >
                         <option value="">Выберите пол</option>
-                        <option value="Female">Женский</option>
-                        <option value="Male">Мужской</option>
+                        <option value="Женский">Женский</option>
+                        <option value="Мужской">Мужской</option>
                         </select>
                 </div>
                 <div className={cl.rows}>

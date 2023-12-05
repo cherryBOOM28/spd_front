@@ -278,12 +278,6 @@ export const FormProvider = ({ children }) => {
     NotificationManager.success('Успех!', 'Сохранение данных прошло успешно.');
   };
 
-
-  
-  // useEffect(() => {
-  //     console.log(photo.slice(22))
-  // }, [photo])
-
   const [emptyInputs, setEmptyInputs] = useState(false);
 
   const handleInputChange = (stateUpdater, name, value) => {
@@ -293,6 +287,8 @@ export const FormProvider = ({ children }) => {
     }));
   };
 
+  const accessToken = Cookies.get('jwtAccessToken');
+  console.log('AccessToken:', accessToken);
 
   const handleSubmit = async(event) => {
 
@@ -311,15 +307,15 @@ export const FormProvider = ({ children }) => {
     //   return;
     // }
 
-    try {
-      // navigate('/'); 
-      // window.location.reload(); 
-      setTimeout(() => {
-        showNotification();
-      }, 200);
-    } catch (error) {
-        console.error('Ошибка при отправке данных:', error);
-    }
+    // try {
+    //   // navigate('/'); 
+    //   // window.location.reload(); 
+    //   setTimeout(() => {
+    //     showNotification();
+    //   }, 200);
+    // } catch (error) {
+    //     console.error('Ошибка при отправке данных:', error);
+    // }
 
     // const imageData = (base64String) => {};
     // if (photo) {
@@ -331,7 +327,6 @@ export const FormProvider = ({ children }) => {
     //   });
     // }
 
-    // console.log(specCheckInfo);
     const _specCheckInfo = getSpecCheckInfo(specCheckInfo);
     const _attestationInfo = getAttestationInfo(attestationInfo);
     const _classCategoriesInfo = getClassCategoriesInfo(classCategoriesInfo);
@@ -392,29 +387,52 @@ export const FormProvider = ({ children }) => {
       }
     }
 
-
     event.preventDefault();
+
     // const myArray = photo.split(",");
-    const accessToken = Cookies.get('jwtAccessToken');
-    axios.post('http://localhost:8000/api/v1/person/', requestData, {
-      headers: {
-        'Authorization': `Bearer ${accessToken}`,
-      }
-    })
-    // eslint-disable-next-line
-    .then(() => {
-      // console.log('Ответ от сервера:', response.data);
-    })
-    .catch((error) => {
-      console.error('Ошибка при отправке данных:', error);
-    });
-
-    console.log(photo)
-
     
+      const accessToken = Cookies.get('jwtAccessToken');
+
+      // axios.interceptors.request.use(request => {
+      //   console.log('Starting Request', request)
+      //   return request
+      // })
+      
+      // axios.interceptors.response.use(response => {
+      //   console.log('Response:', response)
+      //   return response
+      // })
+   
+      try {
+        const response = await axios.post('http://localhost:8000/api/v1/person/', requestData, {
+          headers: {
+            'Authorization': `Bearer ${accessToken}`,
+          }
+        });
+    
+        // Обработка успешного ответа
+        console.log('Успешный ответ от сервера:', response.data);
+    
+        // Добавьте здесь код для перенаправления или обновления страницы
+        // navigate('/');
+        // window.location.reload();
+    
+        // Показ уведомления после 200 миллисекунд
+        setTimeout(() => {
+          showNotification();
+        }, 200);
+      } catch (error) {
+        // Обработка ошибки
+        console.error('Ошибка при отправке данных:', error);
+        if (error.response) {
+          console.error('Данные ответа сервера:', error.response.data);
+          console.error('Статус ответа сервера:', error.response.status);
+          console.error('Заголовки ответа сервера:', error.response.headers);
+        }
+      }
 
     console.log("post", {
-      Photo: {photoBinary: photo},
+      Photo: photo,
       Person: person,
       BirthInfo: birthInfo,
       IdentityCardInfo: identityCardInfo,
