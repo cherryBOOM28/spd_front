@@ -3,12 +3,13 @@ import { useParams } from 'react-router-dom';
 import cl from './Courses.module.css';
 import axios from 'axios';
 import Button from '../../../UI/button/Button';
+import Cookies from 'js-cookie';
 
 import { getPersonalInfo } from '../../../../api/persona_info/getPersonalInfo';
 import { deleteCourse } from '../../../../api/persona_info/courses/deleteCourse';
 import { updateCourse } from '../../../../api/persona_info/courses/updateCourse';
 
-function Courses({ course }, props) {
+function Courses({ course, setCourse }, props) {
     const { id } = useParams();
 
     const [courses, setCourses] = useState({
@@ -39,61 +40,66 @@ function Courses({ course }, props) {
     };
 
     const [inputData, setInputData] = useState({
-        course_type: '',
-        course_organization: '',
-        course_start_date: '',
-        course_end_date: '',
-        document_type: '',
-        course_name: ''
+        courseName: '',
+        courseType: '',
+        courseOrg: '',
+        startDate: '',
+        endDate: '',
+        documentType: ''
     });
 
     const handleAddCourse = async (e) => {
         e.preventDefault();
         try {
-            if (!inputData.course_type || !inputData.course_organization || !inputData.course_start_date || !inputData.course_end_date || !inputData.document_type || !inputData.course_name) {
-                alert('Пожалуйста, заполните все поля!');
-                return;
-            }
+            // if (!inputData.course_type || !inputData.course_organization || !inputData.course_start_date || !inputData.course_end_date || !inputData.document_type || !inputData.course_name) {
+            //     alert('Пожалуйста, заполните все поля!');
+            //     return;
+            // }
 
             const newCourse = {
-                iin: props.id,
-                course_type: inputData.course_type,
-                course_organization: inputData.course_organization,
-                course_start_date: inputData.course_start_date,
-                course_end_date: inputData.course_end_date,
-                document_type: inputData.document_type,
-                course_name: inputData.course_name
+                personId: id,
+                courseName: inputData.courseName,
+                courseType: inputData.courseType,
+                courseOrg: inputData.courseOrg,
+                startDate: inputData.startDate,
+                endDate: inputData.endDate,
+                documentType: inputData.documentType
             };
 
-            // console.log(
-            //     { 'courses': [newCourse] }
-            // )
+            const accessToken = Cookies.get('jwtAccessToken');
 
-            const body = { "courses": [newCourse] };
+            const response = await axios.post('http://localhost:8000/api/v1/course/', newCourse, {
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`,
+                }
+            });
 
-            const response = await axios.post('http://localhost:8000/personal_info/create/', body);
-
-            if (response === 201) {
-                const updatedCourse = {
-                    ...courses,
-                    courses: [
-                        ...courses.courses,
-                        newCourse
-                    ]
-                };
-
-                setCourses(updatedCourse);
+            if (response.status === 201) {
+                // setWorkingHistory(prevRecords => [...prevRecords, newData]);
+                setCourse(prevData => {
+                    // Проверяем, что prevData является объектом и содержит courses
+                    if (typeof prevData === 'object' && Array.isArray(prevData.courses)) {
+                      return {
+                        ...prevData,
+                        courses: [...prevData.courses, newCourse],
+                      };
+                    } else {
+                      console.error("prevData is not an object or does not contain courses");
+                      return prevData; // возвращаем prevData без изменений
+                    }
+                });
                 setInputData({
-                    course_type: '',
-                    course_organization: '',
-                    course_start_date: '',
-                    course_end_date: '',
-                    document_type: '',
-                    course_name: ''
+                  personId: id,
+                  courseName: '',
+                  courseType: '',
+                  courseOrg: '',
+                  startDate: '',
+                  endDate: '',
+                  documentType: ''
                 });
                 handleShowForm(false)
             } else {
-                console.error('Error adding courses');
+                console.error('Error adding new data');
             }
         } catch (error) {
             console.error('Error:', error);
@@ -103,77 +109,93 @@ function Courses({ course }, props) {
     // УДАЛЕНИЕ EDUCATION
     const handleDelete = async (id) => {
         try {
-            const response = await deleteCourse(id)
-            if (response === 200) {
-                // Успешно удалено, теперь обновляем состояние
-                setCourses(prevCourse => prevCourse.filter(courseType => courseType.id !== id));
-                // console.log("Successfully deleted");
-            } else {
-                console.log("Error deleting courses type");
-            }
-            window.location.reload();
-        } catch(error) {
-            console.log(error)
+            // Вызываем функцию для удаления данных на сервере
+            await deleteCourse(id);
+        
+            // Обновляем локальное состояние, исключая удаленный объект
+            setCourse(prevData => {
+            //   console.log("Type of prevData:", typeof prevData);
+        
+              // Проверяем, что prevData является объектом и содержит courses
+              if (typeof prevData === 'object' && Array.isArray(prevData.courses)) {
+                return {
+                  ...prevData,
+                  courses: prevData.courses.filter(tableData => tableData.id !== id),
+                };
+              } else {
+                // console.error("prevData is not an object or does not contain courses");
+                return prevData; // возвращаем prevData без изменений
+              }
+            });
+        
+            console.log("Successfully deleted");
+          } catch (error) {
+            console.error("Error deleting data in table:", error);
         }
     }
 
     // EDIT
     const [editedData, setEditedData] = useState({
-        course_type: '',
-        course_organization: '',
-        course_start_date: '',
-        course_end_date: '',
-        document_type: '',
-        course_name: ''
+        courseName: '',
+        courseType: '',
+        courseOrg: '',
+        startDate: '',
+        endDate: '',
+        documentType: ''
     });
 
     const [editingId, setEditingId] = useState(null);
 
-    const handleEdit = async (id, editedDataCourse) => {
+    const handleEdit = async (id, editedTableData) => {
         if(editingId === id) {
             try {
                 const updatedData = {
                     id: id,
-                    iin: props.id,
-                    course_type: editedDataCourse.course_type,
-                    course_organization: editedDataCourse.course_organization,
-                    course_start_date: editedDataCourse.course_start_date,
-                    course_end_date: editedDataCourse.course_end_date,
-                    document_type: editedDataCourse.document_type,
-                    course_name: editedDataCourse.course_name
+                    personId: id,
+                    courseName: editedTableData.courseName,
+                    courseType: editedTableData.courseType,
+                    courseOrg: editedTableData.courseOrg,
+                    startDate: editedTableData.startDate,
+                    endDate: editedTableData.endDate,
+                    documentType: editedTableData.documentType,
                 };
+
+                // console.log("updatedData", {updatedData});
 
                 await updateCourse(id, updatedData);
 
-                setCourses(prevCourse => {
-                    return prevCourse.map(courseType => {
-                        if(courseType.iin === id) {
-                            return {...courseType, ...editedDataCourse}
+                setCourse(prevData => {
+                    return prevData.map(tableData => {
+                        if(tableData.id === id) {
+                            return {...tableData, ...updatedData}
                         }
-                        return courseType;
+                        return tableData;
                     })
                 });
+                // console.log(updatedData)
 
                 setEditingId(null);
                 setEditedData({
                     id: id,
-                    course_type: '',
-                    course_organization: '',
-                    course_start_date: '',
-                    course_end_date: '',
-                    document_type: '',
-                    course_name: ''
+                    courseName: '',
+                    courseType: '',
+                    courseOrg: '',
+                    startDate: '',
+                    endDate: '',
+                    documentType: ''
                 });
-                // console.log('Successfully updated course')
+                // console.log('Successfully updated table data')
             } catch(error) {
-                console.error('Error updating course:', error);
+                console.error('Error updating table data:', error);
             }
+           
         } else {
             setEditingId(id)
-            const courseToEdit = courses.courses.find(courseType => courseType.id === id);
-            if(courseToEdit) {
-                setEditedData(courseToEdit);
+            const dataToEdit = course.courses.find(tableData => tableData.id === id);
+            if(dataToEdit) {
+                setEditedData(dataToEdit);
             }
+            // console.log(personnelData)
         }
     };
 
@@ -181,28 +203,30 @@ function Courses({ course }, props) {
         try {
             const updatedData = {
                 id: id,
-                iin: props.id,
-                course_type: editedData.course_type,
-                course_organization: editedData.course_organization,
-                course_start_date: editedData.course_start_date,
-                course_end_date: editedData.course_end_date,
-                document_type: editedData.document_type,
-                course_name: editedData.course_name
+                personId: editedData.personId,
+                courseName: editedData.courseName,
+                courseType: editedData.courseType,
+                courseOrg: editedData.courseOrg,
+                startDate: editedData.startDate,
+                endDate: editedData.endDate,
+                documentType: editedData.documentType,
             };
             // console.log(id);
     
             const response = await updateCourse(id, updatedData);
-    
-            if (response === 200) {
-                setCourses((prevCourse) =>
-                prevCourse.map((courseType) => (courseType.id === id ? updatedData : courseType))
-                );
+  
+            if (response.status === 200) {
+                setCourse((prevData) => ({
+                    ...prevData,
+                    courses: prevData.courses.map((tableData) =>
+                        tableData.id === id ? updatedData : tableData
+                    ),
+                }));
                 setEditingId(null); // Завершаем режим редактирования
-                // console.log('Successfully updated course');
+                console.log("Successfully updated table data");
             } else {
-                console.log('Error updating course');
+                console.error("Error updating table data");
             }
-            window.location.reload();
         } catch (error) {
             console.error('Error updating course:', error);
         }
@@ -229,15 +253,15 @@ function Courses({ course }, props) {
                         <div>
                         <Button onClick={handleShowForm}>Добавить курс</Button>
                             {showForm && (
-                                <form onSubmit={handleAddCourse} style={{ marginTop: '10px' }}>
+                                <form onSubmit={(e) => handleAddCourse(e, id)} style={{ marginTop: '10px' }}>
                                     <table className={cl.customTable}>
                                         <tbody >
                                             <tr>
                                                 <td>
                                                     <select
                                                         className={cl.formInput}
-                                                        value={inputData.course_type}
-                                                        onChange={(e) => setInputData({ ...inputData, course_type: e.target.value })}
+                                                        value={inputData.courseType}
+                                                        onChange={(e) => setInputData({ ...inputData, courseType: e.target.value })}
                                                     >
                                                         <option value="">Выберите переподготовки</option>
                                                         <option value="Повышение">Повышение</option>
@@ -249,8 +273,8 @@ function Courses({ course }, props) {
                                                         type="text"
                                                         className={cl.formInput}
                                                         placeholder="Учебное заведение "
-                                                        value={inputData.course_organization}
-                                                        onChange={(e) => setInputData({ ...inputData, course_organization: e.target.value })}
+                                                        value={inputData.courseOrg}
+                                                        onChange={(e) => setInputData({ ...inputData, courseOrg: e.target.value })}
                                                     />
                                                 </td>
                                                 <td>
@@ -259,12 +283,12 @@ function Courses({ course }, props) {
                                                         type="date"
                                                         className={cl.formInput}
                                                         placeholder="Дата начала"
-                                                        value={inputData.course_start_date || ''}
+                                                        value={inputData.startDate || ''}
                                                         onChange={(e) => {
                                                             const newDate = e.target.value;
                                                             setInputData((prevWorker) => ({
                                                             ...prevWorker,
-                                                            course_start_date: newDate,
+                                                            startDate: newDate,
                                                             }));
                                                         }}
                                                     />
@@ -276,12 +300,12 @@ function Courses({ course }, props) {
                                                         type="date"
                                                         className={cl.formInput}
                                                         placeholder="Дата окончания"
-                                                        value={inputData.course_end_date || ''}
+                                                        value={inputData.endDate || ''}
                                                         onChange={(e) => {
                                                             const newDate = e.target.value;
                                                             setInputData((prevWorker) => ({
                                                             ...prevWorker,
-                                                            course_end_date: newDate,
+                                                            endDate: newDate,
                                                             }));
                                                         }}
                                                     />
@@ -292,8 +316,8 @@ function Courses({ course }, props) {
                                                         type="text"
                                                         className={cl.formInput}
                                                         placeholder="Вид документа"
-                                                        value={inputData.document_type}
-                                                        onChange={(e) => setInputData({ ...inputData, document_type: e.target.value })}
+                                                        value={inputData.documentType}
+                                                        onChange={(e) => setInputData({ ...inputData, documentType: e.target.value })}
                                                     />
                                                 </td>
                                                 <td>
@@ -301,8 +325,8 @@ function Courses({ course }, props) {
                                                         type="text"
                                                         className={cl.formInput}
                                                         placeholder="Название курса"
-                                                        value={inputData.course_name}
-                                                        onChange={(e) => setInputData({ ...inputData, course_name: e.target.value })}
+                                                        value={inputData.courseName}
+                                                        onChange={(e) => setInputData({ ...inputData, courseName: e.target.value })}
                                                     />
                                                 </td>
                                                 

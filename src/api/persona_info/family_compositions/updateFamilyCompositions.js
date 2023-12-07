@@ -1,12 +1,21 @@
 import axios from "axios";
+import Cookies from "js-cookie";
+
+const accessToken = Cookies.get('jwtAccessToken');
 
 export const updateFamilyCompositions = async (id, updatedData) => {
   try {
     const response = await axios.patch(
-      `http://localhost:8000/family_composition/${id}/`,
-      updatedData
+      `http://localhost:8000/api/v1/family-composition/${id}/`,
+      updatedData, {
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+        }
+      }
       
     );
+    // console.log(response)
+
     return response;
   } catch (error) {
     console.log(error);

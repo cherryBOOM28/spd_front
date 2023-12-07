@@ -2,24 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import cl from './Sport.module.css';
 import axios from 'axios';
-
+import Cookies from 'js-cookie';
 import Button from '../../../UI/button/Button';
-
-import { getPersonalInfo } from '../../../../api/persona_info/getPersonalInfo';
-import { deletePersonalInfo } from '../../../../api/persona_info/deletePersonalInfo';
-import { updatePersonalInfo } from '../../../../api/persona_info/updatePersonalInfo';
 
 import { deleteSport } from '../../../../api/persona_info/sport/deleteSport';
 import { updateSport } from '../../../../api/persona_info/sport/updateSport';
 
 import list from '../../../data/kindsOfSports';
 
-function Sport({sportSkill}, props) {
-    const { id } = useParams();
 
-    const [sport, setSport] = useState({
-        "sport_results": []
-    }); // Данные из бэка
+function Sport({sportSkill, setSportSkill}, props) {
+    const { id } = useParams();
 
     const [kindsOfSport, setKindsOfSport] = useState([]);
 
@@ -29,10 +22,6 @@ function Sport({sportSkill}, props) {
 
     const fetchData = async () => {
         try {
-            // GET kind of sport
-            const sportResponse = await getPersonalInfo(id);
-            setSport(sportResponse.data);
-
             fetchListOfSport()
         } catch (error) {
             console.error("Error fetching data:", error);
@@ -63,57 +52,59 @@ function Sport({sportSkill}, props) {
     };
 
     const [inputData, setInputData] = useState({
-        sport_type: '',
-        owning_lvl_sport_results: '',
+        sportType: '',
+        sportSkillLvl: '',
     });
 
     const handleAddSport = async (e) => {
         e.preventDefault();
         try {
-            console.log(inputData)
-            if (!inputData.sport_type || !inputData.owning_lvl_sport_results) {
-                alert('Пожалуйста, заполните все поля!');
-                return;
-            }
+            // console.log(inputData)
+            // if (!inputData.sport_type || !inputData.owning_lvl_sport_results) {
+            //     alert('Пожалуйста, заполните все поля!');
+            //     return;
+            // }
 
             // Получаем название языка по его коду из объекта apiLanguages
-            const sportName = kindsOfSport[inputData.sport_type];
+            const sportName = kindsOfSport[inputData.sportType];
 
             const newSport = {
               iin: props.id,
-              sport_type: sportName,
-              owning_lvl_sport_results: inputData.owning_lvl_sport_results,
+              sportType: sportName,
+              sportSkillLvl: inputData.sportSkillLvl,
             };
 
-            // console.log(
-            //     { 'sport': [newSport] }
-            // )
+            const accessToken = Cookies.get('jwtAccessToken');
 
-            const body = { "sport_results": [newSport] }
+            const response = await axios.post('http://localhost:8000/api/v1/sport-skill/', newSport, {
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`,
+                }
+            });
 
-            const response = await axios.post('http://localhost:8000/personal_info/create/', body);
-            console.log(response)
-
-            if (response === 201) {
-                const updatedSport = {
-                    ...sport,
-                    sport_results: [
-                        ...sport.sport_results,
-                        newSport
-                    ]
-                };
-
-                setSport(updatedSport);
+            if (response.status === 201) {
+                // setWorkingHistory(prevRecords => [...prevRecords, newData]);
+                setSportSkill(prevData => {
+                    // Проверяем, что prevData является объектом и содержит sportSkills
+                    if (typeof prevData === 'object' && Array.isArray(prevData.sportSkills)) {
+                      return {
+                        ...prevData,
+                        sportSkills: [...prevData.sportSkills, newSport],
+                      };
+                    } else {
+                      console.error("prevData is not an object or does not contain sportSkills");
+                      return prevData; // возвращаем prevData без изменений
+                    }
+                });
                 setInputData({
-                    iin: props.id,
-                    sport_type: '',
-                    owning_lvl_sport_results: ''
+                  personId: id,
+                  sportType: '',
+                  sportSkillLvl: '',
                 });
                 handleShowForm(false)
             } else {
-                console.error('Error adding sport');
+                console.error('Error adding new data');
             }
-            window.location.reload(); 
         } catch (error) {
             console.error('Error:', error);
         }
@@ -122,24 +113,35 @@ function Sport({sportSkill}, props) {
     // УДАЛЕНИЕ SPORT TYPE
     const handleDelete = async (id) => {
         try {
-            const response = await deleteSport(id)
-            if (response === 200) {
-                // Успешно удалено, теперь обновляем состояние
-                setSport(prevSport => prevSport.filter(sportType => sportType.id !== id));
-                console.log("Successfully deleted");
-            } else {
-                console.log("Error deleting sport type");
-            }
-            window.location.reload();
-        } catch(error) {
-            console.log(error)
+            // Вызываем функцию для удаления данных на сервере
+            await deleteSport(id);
+        
+            // Обновляем локальное состояние, исключая удаленный объект
+            setSportSkill(prevData => {
+            //   console.log("Type of prevData:", typeof prevData);
+        
+              // Проверяем, что prevData является объектом и содержит sportSkills
+              if (typeof prevData === 'object' && Array.isArray(prevData.sportSkills)) {
+                return {
+                  ...prevData,
+                  sportSkills: prevData.sportSkills.filter(tableData => tableData.id !== id),
+                };
+              } else {
+                // console.error("prevData is not an object or does not contain sportSkills");
+                return prevData; // возвращаем prevData без изменений
+              }
+            });
+        
+            console.log("Successfully deleted");
+          } catch (error) {
+            console.error("Error deleting data in table:", error);
         }
     }
 
     // EDIT
     const [editedData, setEditedData] = useState({
-      sport_type: '',
-      owning_lvl_sport_results: '',
+        sportType: '',
+        sportSkillLvl: '',
     });
 
     const [editingId, setEditingId] = useState(null);
@@ -150,30 +152,30 @@ function Sport({sportSkill}, props) {
             try {
                 const updatedData = {
                     id: id,
-                  iin: props.id,
-                  sport_type: editedDataSport.sport_type,
-                  owning_lvl_sport_results: editedDataSport.owning_lvl_sport_results
+                    personId: id,
+                    sportType: editedDataSport.sportType,
+                    sportSkillLvl: editedDataSport.sportSkillLvl
                 };
 
                 // Преобразование названия языка в код
-                updatedData.sport_type = kindsOfSport[inputData.sport_type];
+                updatedData.sportType = kindsOfSport[inputData.sportType];
 
                 await updateSport(id, updatedData);
 
-                setSport(prevSport => {
-                    return prevSport.map(sportType => {
-                        if(sportType.iin === id) {
-                            return {...sportType, ...editedDataSport}
+                setSportSkill(prevData => {
+                    return prevData.map(tableData => {
+                        if(tableData.id === id) {
+                            return {...tableData, ...updatedData}
                         }
-                        return sportType;
+                        return tableData;
                     })
                 });
 
                 setEditingId(null);
                 setEditedData({
-                    iin: id,
-                    sport_type: '',
-                    owning_lvl_sport_results: ''
+                    id: id,
+                    sportType: '',
+                    sportSkillLvl: '',
                 });
                 console.log('Successfully updated sport type')
             } catch(error) {
@@ -181,7 +183,7 @@ function Sport({sportSkill}, props) {
             }
         } else {
             setEditingId(id)
-            const sportToEdit = sport.sport_results.find(sportType => sportType.id === id);
+            const sportToEdit = sportSkill.sportSkills.find(sportType => sportType.id === id);
             if(sportToEdit) {
                 setEditedData(sportToEdit);
             }
@@ -192,26 +194,43 @@ function Sport({sportSkill}, props) {
         try {
             const updatedData = {
                 id: id,
-                iin: props.id,
-                sport_type: editedData.sport_type,
-                owning_lvl_sport_results: editedData.owning_lvl_sport_results
+   
+                sportType: editedData.sportType,
+                sportSkillLvl: editedData.sportSkillLvl
             };
 
             // Преобразование названия языка в код
-            updatedData.sport_type = kindsOfSport[updatedData.sport_type];
+            updatedData.sportType = kindsOfSport[updatedData.sportType];
     
             const response = await updateSport(id, updatedData);
     
-            if (response === 200) {
-                setSport((prevSport) =>
-                prevSport.map((sportType) => (sportType.id === id ? updatedData : sportType))
-                );
+            if (response.status === 200) {
+                setSportSkill((prevData) => ({
+                    ...prevData,
+                    sportSkills: prevData.sportSkills.map((tableData) =>
+                        tableData.id === id ? updatedData : tableData
+                    ),
+                }));
+                
+                // setSportSkill(prevData => {
+                //     const updatedDataArray = prevData.sportSkills.map(tableData =>
+                //         tableData.id === id ? { ...tableData, ...updatedData } : tableData
+                //     );
+    
+                //     console.log('Prev Data:', prevData.sportSkills);
+                //     console.log('Updated Data:', updatedData);
+    
+                //     return {
+                //         ...prevData,
+                //         sportSkills: updatedDataArray,
+                //     };
+                // });
+
                 setEditingId(null); // Завершаем режим редактирования
-                console.log('Successfully updated sport type');
+                console.log("Successfully updated table data");
             } else {
-                console.log('Error updating sport type');
+                console.error("Error updating table data");
             }
-            window.location.reload();
         } catch (error) {
             console.error('Error updating lansport typeguage:', error);
         }
@@ -238,15 +257,15 @@ function Sport({sportSkill}, props) {
                         <div>
                         <Button onClick={handleShowForm}>Добавить вил спорта</Button>
                             {showForm && (
-                                <form onSubmit={handleAddSport} style={{ marginTop: '10px' }}>
+                                <form onSubmit={(e) => handleAddSport(e, id)} style={{ marginTop: '10px' }}>
                                     <table className={cl.customTable}>
                                         <tbody >
                                             <tr>
                                                 <td>
                                                     <select
                                                         className={cl.formInput}
-                                                        value={inputData.sport_type}
-                                                        onChange={(e) => setInputData({ ...inputData, sport_type: e.target.value })}
+                                                        value={inputData.sportType}
+                                                        onChange={(e) => setInputData({ ...inputData, sportType: e.target.value })}
                                                     >
                                                         <option value="">Выберите вид спорта</option>
                                                         {Object.keys(kindsOfSport).map((sportKind, index) => (
@@ -257,10 +276,10 @@ function Sport({sportSkill}, props) {
                                                     </select>
                                                 </td>
                                                 <td>
-                                                <select
+                                                    <select
                                                         className={cl.formInput}
-                                                        value={inputData.owning_lvl_sport_results}
-                                                        onChange={(e) => setInputData({ ...inputData, owning_lvl_sport_results: e.target.value })}
+                                                        value={inputData.sportSkillLvl}
+                                                        onChange={(e) => setInputData({ ...inputData, sportSkillLvl: e.target.value })}
                                                     >
                                                         <option value="">Выберите степень владения</option>
                                                         <option value="Любитель">Любитель</option>

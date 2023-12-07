@@ -3,32 +3,15 @@ import { useParams } from 'react-router-dom';
 import cl from './Education.module.css';
 import axios from 'axios';
 import Button from '../../../UI/button/Button';
+import Cookies from 'js-cookie';
 
 import { getPersonalInfo } from '../../../../api/persona_info/getPersonalInfo';
 import { deleteEducation } from '../../../../api/persona_info/educations/deleteEducation';
 import { updateEducation } from '../../../../api/persona_info/educations/updateEducation';
 
-function Education({ education }) {
+function Education({ education, setEducation }) {
     const { id } = useParams();
 
-    // const [education, setEducation] = useState({
-    //     "educations" : []
-    // }); // Данные из бэка
-
-    useEffect(() => {
-        fetchData()
-    }, [])
-
-    const fetchData = async () => {
-        // try {
-        //     // GET Education info
-        //     // console.log("educationResponse ID", id)
-        //     const educationResponse = await getPersonalInfo(id);
-        //     setEducation(educationResponse.data);
-        // } catch (error) {
-        //     console.error("Error fetching data:", error);
-        // }
-    }
 
     // ДОБАВЛЕНИЕ ДАННЫХ
     const [showForm, setShowForm] = useState(false);
@@ -38,176 +21,202 @@ function Education({ education }) {
     };
 
     const [inputData, setInputData] = useState({
-        education_type: '',
-        education_place: '',
-        education_date_in: '',
-        education_date_out: '',
-        education_speciality: '',
-        diploma_number: ''
+        educationType: '',
+        educationPlace: '',
+        educationDateIn: '',
+        educationDateOut: '',
+        speciality: '',
+        diplomaNumber: ''
     });
 
     const handleAddEducation = async (e) => {
-        // e.preventDefault();
-        // try {
-        //     console.log(inputData)
-        //     if (!inputData.education_type || !inputData.education_place || !inputData.education_date_in || !inputData.education_date_out || !inputData.education_speciality || !inputData.diploma_number) {
-        //         alert('Пожалуйста, заполните все поля!');
-        //         return;
-        //     }
+        e.preventDefault();
+        try {
+            // console.log(inputData)
+            // if (!inputData.education_type || !inputData.education_place || !inputData.education_date_in || !inputData.education_date_out || !inputData.education_speciality || !inputData.diploma_number) {
+            //     alert('Пожалуйста, заполните все поля!');
+            //     return;
+            // }
 
-        //     const newEducation = {
-        //         iin: props.id,
-        //         education_type: inputData.education_type,
-        //         education_place: inputData.education_place,
-        //         education_date_in: inputData.education_date_in,
-        //         education_date_out: inputData.education_date_out,
-        //         education_speciality: inputData.education_speciality,
-        //         diploma_number: inputData.diploma_number
-        //     };
+            const newEducation = {
+                personId: id,
+                educationType: inputData.educationType,
+                educationPlace: inputData.educationPlace,
+                educationDateIn: inputData.educationDateIn,
+                educationDateOut: inputData.educationDateOut,
+                speciality: inputData.speciality,
+                diplomaNumber: inputData.diplomaNumber
+            };
 
-        //     // console.log(
-        //     //     { 'education': [newEducation] }
-        //     // )
+            const accessToken = Cookies.get('jwtAccessToken');
 
-        //     const body = { "educations": [newEducation] }
+            const response = await axios.post('http://localhost:8000/api/v1/education/', newEducation, {
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`,
+                }
+            });
 
-        //     const response = await axios.post('http://localhost:8000/personal_info/create/', body);
-
-        //     if (response.status === 201) {
-        //         const updatedEducation = {
-        //             ...education,
-        //             educations: [
-        //                 ...education.educations,
-        //                 newEducation
-        //             ]
-        //         };
-
-        //         setEducation(updatedEducation);
-        //         setInputData({
-        //             iin: id,
-        //             education_type: '',
-        //             education_place: '',
-        //             education_date_in: '',
-        //             education_date_out: '',
-        //             education_speciality: '',
-        //             diploma_number: ''
-        //         });
-        //         handleShowForm(false)
-        //     } else {
-        //         console.error('Error adding education');
-        //     }
-        // } catch (error) {
-        //     console.error('Error:', error);
-        // }
+            if (response.status === 201) {
+                setEducation(prevData => {
+                    // Проверяем, что prevData является объектом и содержит educations
+                    if (typeof prevData === 'object' && Array.isArray(prevData.educations)) {
+                      return {
+                        ...prevData,
+                        educations: [...prevData.educations, newEducation],
+                      };
+                    } else {
+                      console.error("prevData is not an object or does not contain educations");
+                      return prevData; // возвращаем prevData без изменений
+                    }
+                });
+                setInputData({
+                  personId: id,
+                  educationType: '',
+                  educationPlace: '',
+                  educationDateIn: '',
+                  educationDateOut: '',
+                  speciality: '',
+                  diplomaNumber: ''
+                });
+                handleShowForm(false)
+            } else {
+                console.error('Error adding new data');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
     };
 
     // УДАЛЕНИЕ EDUCATION
     const handleDelete = async (id) => {
-        // try {
-        //     const response = await deleteEducation(id)
-        //     if (response === 200) {
-        //         // Успешно удалено, теперь обновляем состояние
-        //         setEducation(prevEducation => prevEducation.filter(educationType => educationType.id !== id));
-        //         console.log("Successfully deleted");
-        //     } else {
-        //         console.log("Error deleting education type");
-        //     }
-        //     window.location.reload();
-        // } catch(error) {
-        //     console.log(error)
-        // }
+        try {
+            // Вызываем функцию для удаления данных на сервере
+            await deleteEducation(id);
+        
+            // Обновляем локальное состояние, исключая удаленный объект
+            setEducation(prevData => {
+            //   console.log("Type of prevData:", typeof prevData);
+        
+              // Проверяем, что prevData является объектом и содержит educations
+              if (typeof prevData === 'object' && Array.isArray(prevData.educations)) {
+                return {
+                  ...prevData,
+                  educations: prevData.educations.filter(tableData => tableData.id !== id),
+                };
+              } else {
+                // console.error("prevData is not an object or does not contain educations");
+                return prevData; // возвращаем prevData без изменений
+              }
+            });
+        
+            console.log("Successfully deleted");
+          } catch (error) {
+            console.error("Error deleting data in table:", error);
+        }
     }
 
     // EDIT
     const [editedData, setEditedData] = useState({
         id: '',
-        education_type: '',
-        education_place: '',
-        education_date_in: '',
-        education_date_out: '',
-        education_speciality: '',
-        diploma_number: ''
+        educationType: '',
+        educationPlace: '',
+        educationDateIn: '',
+        educationDateOut: '',
+        speciality: '',
+        diplomaNumber: ''
     });
 
     const [editingId, setEditingId] = useState(null);
 
     const handleEdit = async (id, editedDataEdu) => {
-        // if(editingId === id) {
-        //     try {
-        //         const updatedData = {
-        //             id: id,
-        //             iin: props.id,
-        //             education_type: editedDataEdu.education_type,
-        //             education_place: editedDataEdu.education_place,
-        //             education_date_in: editedDataEdu.education_date_in,
-        //             education_date_out: editedDataEdu.education_date_out,
-        //             education_speciality: editedDataEdu.education_speciality,
-        //             diploma_number: editedDataEdu.diploma_number
-        //         };
+        if(editingId === id) {
+            try {
+                const updatedData = {
+                  id: id,
+                  personId: id,
+                  educationType: inputData.educationType,
+                  educationPlace: inputData.educationPlace,
+                  educationDateIn: inputData.educationDateIn,
+                  educationDateOut: inputData.educationDateOut,
+                  speciality: inputData.speciality,
+                  diplomaNumber: inputData.diplomaNumber
 
-        //         await updateEducation(id, updatedData);
+                };
 
-        //         setEducation(prevEducation => {
-        //             return prevEducation.map(educationType => {
-        //                 if(educationType.iin === id) {
-        //                     return {...educationType, ...editedDataEdu}
-        //                 }
-        //                 return educationType;
-        //             })
-        //         });
+                // console.log("updatedData", {updatedData});
 
-        //         setEditingId(null);
-        //         setEditedData({
-        //             id: id,
-        //             education_type: '',
-        //             education_place: '',
-        //             education_date_in: '',
-        //             education_date_out: '',
-        //             education_speciality: '',
-        //             diploma_number: ''
-        //         });
-        //         console.log('Successfully updated education')
-        //     } catch(error) {
-        //         console.error('Error updating education:', error);
-        //     }
-        // } else {
-        //     setEditingId(id)
-        //     const educationToEdit = education.educations.find(educationType => educationType.id === id);
-        //     if(educationToEdit) {
-        //         setEditedData(educationToEdit);
-        //     }
-        // }
+                await updateEducation(id, updatedData);
+
+                setEducation(prevData => {
+                    return prevData.map(tableData => {
+                        if(tableData.id === id) {
+                            return {...tableData, ...updatedData}
+                        }
+                        return tableData;
+                    })
+                });
+                // console.log(updatedData)
+
+                setEditingId(null);
+                setEditedData({
+                    id: id,
+                    educationType: '',
+                    educationPlace: '',
+                    educationDateIn: '',
+                    educationDateOut: '',
+                    speciality: '',
+                    diplomaNumber: ''
+                });
+                // console.log('Successfully updated table data')
+            } catch(error) {
+                console.error('Error updating table data:', error);
+            }
+           
+        } else {
+            setEditingId(id)
+            const dataToEdit = education.educations.find(tableData => tableData.id === id);
+            if(dataToEdit) {
+                setEditedData(dataToEdit);
+            }
+            // console.log(personnelData)
+        }
     };
 
     const handleSaveEdit = async (id) => {
-        // try {
-        //     const updatedData = {
-        //         id: id,
-        //         iin: props.id,
-        //         education_type: editedData.education_type,
-        //         education_place: editedData.education_place,
-        //         education_date_in: editedData.education_date_in,
-        //         education_date_out: editedData.education_date_out,
-        //         education_speciality: editedData.education_speciality,
-        //         diploma_number: editedData.diploma_number
-        //     };
-        //     console.log(id);
+        try {
+            const updatedData = {
+                id: id,
+                personId: editedData.personId,
+                educationType: editedData.educationType,
+                educationPlace: editedData.educationPlace,
+                educationDateIn: editedData.educationDateIn,
+                educationDateOut: editedData.educationDateOut,
+                speciality: editedData.speciality,
+                diplomaNumber: editedData.diplomaNumber,
+            };
+            // console.log("personId", id);
+            // console.log("updatedData", {updatedData});
+
     
-        //     const response = await updateEducation(id, updatedData);
-    
-        //     if (response === 200) {
-        //         setEducation((prevEducation) =>
-        //         prevEducation.map((educationType) => (educationType.id === id ? updatedData : educationType))
-        //         );
-        //         setEditingId(null); // Завершаем режим редактирования
-        //         console.log('Successfully updated education');
-        //     } else {
-        //         console.log('Error updating education');
-        //     }
-        //     window.location.reload();
-        // } catch (error) {
-        //     console.error('Error updating education:', error);
-        // }
+            const response = await updateEducation(id, updatedData);
+  
+            if (response.status === 200) {
+                setEducation((prevData) => ({
+                    ...prevData,
+                    educations: prevData.educations.map((tableData) =>
+                        tableData.id === id ? updatedData : tableData
+                    ),
+                }));
+                setEditingId(null); // Завершаем режим редактирования
+                console.log("Successfully updated table data");
+            } else {
+                console.error("Error updating table data");
+            }
+            // console.log(updatedData);
+            // window.location.reload();
+        } catch (error) {
+            console.error('Error updating table data:', error);
+        }
     };
 
     const handleCancelEdit = () => {
@@ -231,15 +240,15 @@ function Education({ education }) {
                         <div>
                         <Button onClick={handleShowForm}>Добавить образование</Button>
                             {showForm && (
-                                <form onSubmit={handleAddEducation} style={{ marginTop: '10px' }}>
+                                <form onSubmit={(e) => handleAddEducation(e, id)} style={{ marginTop: '10px' }}>
                                     <table className={cl.customTable}>
                                         <tbody >
                                             <tr>
                                                 <td>
                                                     <select
                                                         className={cl.formInput}
-                                                        value={inputData.education_type}
-                                                        onChange={(e) => setInputData({ ...inputData, education_type: e.target.value })}
+                                                        value={inputData.educationType}
+                                                        onChange={(e) => setInputData({ ...inputData, educationType: e.target.value })}
                                                     >
                                                         <option value="">Вид образование</option>
                                                         <option value="Бакалавр">Высшее</option>
@@ -251,8 +260,8 @@ function Education({ education }) {
                                                         type="text"
                                                         className={cl.formInput}
                                                         placeholder="Учебное заведение "
-                                                        value={inputData.education_place}
-                                                        onChange={(e) => setInputData({ ...inputData, education_place: e.target.value })}
+                                                        value={inputData.educationPlace}
+                                                        onChange={(e) => setInputData({ ...inputData, educationPlace: e.target.value })}
                                                     />
                                                 </td>
                                                 <td>
@@ -261,12 +270,12 @@ function Education({ education }) {
                                                         type="date" 
                                                         className={cl.formInput}
                                                         placeholder="Дата поступления"
-                                                        value={inputData.education_date_in || ''}
+                                                        value={inputData.educationDateIn || ''}
                                                         onChange={(e) => {
                                                             const newDate = e.target.value;
                                                             setInputData((prevWorker) => ({
                                                                 ...prevWorker,
-                                                                education_date_in: newDate,
+                                                                educationDateIn: newDate,
                                                             }));
                                                         }}
                                                     />
@@ -278,12 +287,12 @@ function Education({ education }) {
                                                         type="date" 
                                                         className={cl.formInput}
                                                         placeholder="Дата окончания"
-                                                        value={inputData.education_date_out || ''}
+                                                        value={inputData.educationDateOut || ''}
                                                         onChange={(e) => {
                                                             const newDate = e.target.value;
                                                             setInputData((prevWorker) => ({
                                                                 ...prevWorker,
-                                                                education_date_out: newDate,
+                                                                educationDateOut: newDate,
                                                             }));
                                                         }}
                                                     /> 
@@ -294,8 +303,8 @@ function Education({ education }) {
                                                         type="text"
                                                         className={cl.formInput}
                                                         placeholder="Специальность"
-                                                        value={inputData.education_speciality}
-                                                        onChange={(e) => setInputData({ ...inputData, education_speciality: e.target.value })}
+                                                        value={inputData.speciality}
+                                                        onChange={(e) => setInputData({ ...inputData, speciality: e.target.value })}
                                                     />
                                                 </td>
                                                 <td>
@@ -303,8 +312,8 @@ function Education({ education }) {
                                                         type="number"
                                                         className={cl.formInput}
                                                         placeholder="Номер диплома"
-                                                        value={inputData.diploma_number}
-                                                        onChange={(e) => setInputData({ ...inputData, diploma_number: e.target.value })}
+                                                        value={inputData.diplomaNumber}
+                                                        onChange={(e) => setInputData({ ...inputData, diplomaNumber: e.target.value })}
                                                     />
                                                 </td>
                                                 

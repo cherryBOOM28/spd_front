@@ -2,6 +2,8 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import cl from './Navigation.module.css';
 import logo from '../../assets/icons/logow.svg';
+import logo3 from '../../assets/icons/logo3.svg';
+
 // import homeIcon from '../../assets/icons/home.svg';
 import homeWhightIcon from '../../assets/icons/homew.svg';
 import adminIcon from '../../assets/icons/admin.svg';
@@ -14,8 +16,8 @@ const Navigation = () => {
   return (
     <div className={cl.navigationMenu}>
         <div className={cl.logo}>
-            <img src={logo} alt="logo" />
-            <p className={cl.logoText}>Система кадрового учета</p>
+            <img src={logo3} alt="logo" style={{ width: "80%" }} />
+            {/* <p className={cl.logoText}>Система кадрового учета</p> */}
         </div>
         <ul>
             <NavLink  to="/" className={cl.navLink}>
@@ -30,12 +32,12 @@ const Navigation = () => {
                     Администратирование
                 </li>
             </NavLink> */}
-            {/* <NavLink to="/basic-orders" className={cl.navLink}>
+            <NavLink to="/basic-orders" className={cl.navLink}>
                 <li className={cl.navLi}>
                     <img src={ordersIcon} alt="ordersIcon" className={cl.navImg} />
                     Основные приказы
                 </li>
-            </NavLink> */}
+            </NavLink>
             <NavLink to="/reports" className={cl.navLink}>
                 <li className={cl.navLi}>
                     <img src={fileIcon} alt="fileIcon" className={cl.navImg} />

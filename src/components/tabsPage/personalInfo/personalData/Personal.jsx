@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import cl from './Personal.module.css';
 import Button from '../../../UI/button/Button';
+import Cookies from 'js-cookie';
 
 import { getPersonalInfo } from '../../../../api/persona_info/getPersonalInfo';
 // import { deletePersonalInfo } from '../../../../api/persona_info/deletePersonalInfo';
@@ -10,34 +11,14 @@ import { getPersonalInfo } from '../../../../api/persona_info/getPersonalInfo';
 import { deleteFamilyCompositions } from '../../../../api/persona_info/family_compositions/deleteFamilyCompositions';
 import { updateFamilyCompositions } from '../../../../api/persona_info/family_compositions/updateFamilyCompositions';
 
-function Personal({ positionInfo, location, receivedDate, positionTitle, departmentName, familyStatus, familyComposition }, props) {
+function Personal({ positionInfo, location, receivedDate, positionTitle, departmentName, familyStatus, familyComposition, setFamilyComposition }, props) {
     const { id } = useParams();
+    // console.log(`id: ${id}`);
+
     // const id = props.id;
 
     const [personalData, setPersonalData] = useState({}); // Данные из бэка
-    // const [familyComposition, setFamilyComposition] = useState({
-    //     "family_compositions": []
-    // }); // Данные из бэка
-
-    // useEffect(() => {
-    //     // console.log(id)
-    //     fetchData()
-    // }, []);
-
-    //     const fetchData = async () => {
-    //         try {
-    //             // GET PERSONAL DATA\
-    //             const personalResponse = await getPersonalInfo(id) 
-    //             setPersonalData(personalResponse.data.personal_data);
-
-    //             // GET FAMILY COMPOSITION
-    //             const familyResponse = await getPersonalInfo(id);
-    //             setFamilyComposition(familyResponse.data); 
-                
-    //         } catch (error) {
-    //             console.error("Error fetching personal data:");
-    //         }
-    //     }
+  
 
     // СОХРАНИТЬ ИЗМЕНЕНИЯ
     const handleSaveClick = async () => {
@@ -69,10 +50,11 @@ function Personal({ positionInfo, location, receivedDate, positionTitle, departm
 
     const [editing, setEditing] = useState(false);
     const [editedWorker, setEditedWorker] = useState({
-        family_status: '',
-        departament: '',
-        jposition: '',
-        city: '',
+        familyStatus: '',
+        DepartmentName: '',
+        positionTitle: '',
+        DepartmentName: '',
+        receivedDate: ''
     });
 
 
@@ -106,180 +88,206 @@ function Personal({ positionInfo, location, receivedDate, positionTitle, departm
     };
 
     const [inputData, setInputData] = useState({
-        relative_type: "",
-        fio: "",
-        rel_iin: "",
-        birth_date_family: "",
-        job_place: "",
+        relativeType: "",
+        relName: "",
+        relSurname: "",
+        relPatronymic: "",
+        relIin: "",
+        relBirthDate: "",
+        relJobPlace: "",
     });
 
     const handleAddMember = async (e, id) => {
         e.preventDefault();
-        // try {
-
-        //     if (!inputData.relative_type || !inputData.fio || !inputData.rel_iin || !inputData.birth_date_family || !inputData.job_place) {
-        //         alert('Пожалуйста, заполните все поля!');
-        //         return;
-        //     }
-        //     // console.log("id rel:", id)
-        //     const newFamilyMember = {
-        //         iin: props.id,
-        //         relative_type: inputData.relative_type,
-        //         fio: inputData.fio,
-        //         rel_iin: inputData.rel_iin,
-        //         birth_date_family: inputData.birth_date_family,
-        //         job_place: inputData.job_place
-        //     };
+        try {
+            // if (!inputData.relative_type || !inputData.fio || !inputData.rel_iin || !inputData.birth_date_family || !inputData.job_place) {
+            //     alert('Пожалуйста, заполните все поля!');
+            //     return;
+            // }
+            console.log("Current id:", id); 
+            const newFamilyMember = {
+                personId: id,
+                relativeType: inputData.relativeType,
+                relName: inputData.relName,
+                relSurname: inputData.relSurname,
+                relPatronymic: inputData.relPatronymic,
+                relIin: inputData.relIin,
+                relBirthDate: inputData.relBirthDate,
+                relJobPlace: inputData.relJobPlace
+            };
             
-        //     // console.log(newFamilyMember)
+            console.log(
+                { newFamilyMember },
+                {id}
+            )
+            const accessToken = Cookies.get('jwtAccessToken');
 
-        //     const body = { "family_compositions": [newFamilyMember] };
+            const response = await axios.post('http://localhost:8000/api/v1/family-composition/', newFamilyMember, {
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`,
+                }
+            });
             
-        //     const response = await axios.post(`http://localhost:8000/personal_info/create/`, body);
-        //     // console.log(`response data: ${response.data}`)
-            
-        //     if (response.status === 201) {
-
-        //         const updatedFamilyComposition = {
-        //             ...familyComposition,
-        //             family_compositions: [
-        //                 ...familyComposition.family_compositions,
-        //                 newFamilyMember
-        //             ]
-        //         }
-
-        //         setFamilyComposition(updatedFamilyComposition);
-        //         setInputData({
-        //             iin: id,
-        //             relative_type: '',
-        //             fio: '',
-        //             rel_iin: '',
-        //             birth_date_family: '',
-        //             job_place: '',
-        //         });
-        //         handleShowForm(false)
-        //         // console.log(setInputData)
-        //     } else {
-        //         console.error('Error adding family member');
-        //     }
-        // } catch (error) {
-        //     console.error('Error:', error);
-        // }
+            if (response.status === 201) {
+                setFamilyComposition(prevData => {
+                    // Проверяем, что prevData является объектом и содержит workingHistories
+                    if (typeof prevData === 'object' && Array.isArray(prevData.relatives)) {
+                      return {
+                        ...prevData,
+                        relatives: [...prevData.relatives, newFamilyMember],
+                      };
+                    } else {
+                      console.error("prevData is not an object or does not contain workingHistories");
+                      return prevData; // возвращаем prevData без изменений
+                    }
+                });
+                setInputData({
+                  personId: id,
+                  relativeType: "",
+                  relName: "",
+                  relSurname: "",
+                  relPatronymic: "",
+                  relIin: "",
+                  relBirthDate: "",
+                  relJobPlace: "",
+                });
+                handleShowForm(false)
+            } else {
+                console.error('Error adding new data');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
     };
 
     // УДАЛЕНИЕ РОДСТВЕННИКА
     const handleDelete = async (id) => {
   
-        // try {
-        //     const response = await deleteFamilyCompositions(id)
-        //     // console.log("delete", id)
-        //     if (response === 200) {
-               
-        //         // setFamilyComposition(prevFamily => prevFamily.filter(member => member.id !== id));
-
-        //         setFamilyComposition((prevFamily) =>
-        //         prevFamily.filter((member) => member.id !== id)
-        //     );
-            
-        //     } else {
-        //         console.log("Error deleting family member");
-        //     }
-        //     window.location.reload();
-        // } catch(error) {
-        //     console.log(error)
-        // }
+        try {
+            // Вызываем функцию для удаления данных на сервере
+            await deleteFamilyCompositions(id);
+        
+            // Обновляем локальное состояние, исключая удаленный объект
+            setFamilyComposition(prevData => {
+            //   console.log("Type of prevData:", typeof prevData);
+        
+              // Проверяем, что prevData является объектом и содержит workingHistories
+              if (typeof prevData === 'object' && Array.isArray(prevData.relatives)) {
+                return {
+                  ...prevData,
+                  relatives: prevData.relatives.filter(tableData => tableData.id !== id),
+                };
+              } else {
+                // console.error("prevData is not an object or does not contain workingHistories");
+                return prevData; // возвращаем prevData без изменений
+              }
+            });
+        
+            console.log("Successfully deleted");
+          } catch (error) {
+            console.error("Error deleting data in table:", error);
+        }
     }
 
     // EDIT
     const [editedData, setEditedData] = useState({
-        relative_type: '',
-        fio: '',
-        rel_iin: '',
-        birth_date_family: '',
-        job_place: '',
+        relativeType: "",
+        relName: "",
+        relSurname: "",
+        relPatronymic: "",
+        relIin: "",
+        relBirthDate: "",
+        relJobPlace: "",
     });
 
     const [editingId, setEditingId] = useState(null);
 
 
     const handleEdit = async (id, editedDataq) => {
-        // if(editingId === id) {
-        //     try {
-        //         const updatedData = {
-        //             id: id,
-        //             iin: props.id,
-        //             relative_type: editedDataq.relative_type,
-        //             fio: editedDataq.fio,
-        //             rel_iin: editedDataq.rel_iin,
-        //             birth_date_family: editedDataq.birth_date_family,
-        //             job_place: editedDataq.job_place,
-        //         };
+        if(editingId === id) {
+            try {
+                const updatedData = {
+                    id: id,
+                    personId: editedDataq.personId,
+                    relativeType: editedDataq.relativeType,
+                    relName: editedDataq.relName,
+                    relSurname: editedDataq.relSurname,
+                    relPatronymic: editedDataq.relPatronymic,
+                    relIin: editedDataq.relIin,
+                    relBirthDate: editedDataq.relBirthDate,
+                    relJobPlace: editedDataq.relJobPlace
+                };
               
+                await updateFamilyCompositions(id, updatedData);
 
-        //         await updateFamilyCompositions(id, updatedData);
-        //         // console.log("rel id g:", id)
-        //         // console.log(updatedData)
-        //         setFamilyComposition(prevFamily => {
-        //             return prevFamily.map(member => {
-        //                 if(member.iin === id) {
-        //                     return {...member, ...updatedData}
-        //                 }
-        //                 return member;
-        //             })
-        //         });
+                setFamilyComposition(prevData => {
+                    return prevData.map(tableData => {
+                        if(tableData.id === id) {
+                            return {...tableData, ...updatedData}
+                        }
+                        return tableData;
+                    })
+                });
 
-        //         setEditingId(null);
-        //         setEditedData({
-        //             id: id,
-        //             relative_type: '',
-        //             fio: '',
-        //             rel_iin: '',
-        //             birth_date_family: '',
-        //             job_place: '',
-        //         });
+                setEditingId(null);
+                setEditedData({
+                    id: id,
+                    relativeType: "",
+                    relName: "",
+                    relSurname: "",
+                    relPatronymic: "",
+                    relIin: "",
+                    relBirthDate: "",
+                    relJobPlace: "",
+                });
                
-        //         console.log('Successfully updated family member')
-        //     } catch(error) {
-        //         console.error('Error updating family member:', error);
-        //     }
-        // } else {
-        //     setEditingId(id);
-        //     const memberToEdit = familyComposition.family_compositions.find(member => member.id === id);
-        //     if(memberToEdit) {
-        //         setEditedData(memberToEdit);
-        //     };
-        // }
+                console.log('Successfully updated')
+            } catch(error) {
+                console.error('Error updating', error);
+            }
+        } else {
+            setEditingId(id);
+            const memberToEdit = familyComposition.relatives.find(member => member.id === id);
+            if(memberToEdit) {
+                setEditedData(memberToEdit);
+            };
+        }
     };
 
     const handleSaveEdit = async (id) => {
-        // try {
-        //     const updatedData = {
-        //         id: id,
-        //         iin: props.id,
-        //         relative_type: editedData.relative_type,
-        //         fio: editedData.fio,
-        //         rel_iin: editedData.rel_iin,
-        //         birth_date_family: editedData.birth_date_family,
-        //         job_place: editedData.job_place,
-        //     };
-        //     console.log("rel id:", id);
+        try {
+            const updatedData = {
+                id: id,
+                personId: editedData.personId,
+                relativeType: editedData.relativeType,
+                relName: editedData.relName,
+                relSurname: editedData.relSurname,
+                relPatronymic: editedData.relPatronymic,
+                relIin: editedData.relIin,
+                relBirthDate: editedData.relBirthDate,
+                relJobPlace: editedData.relJobPlace
+            };
+            // console.log("rel id:", id);
     
-        //     const response = await updateFamilyCompositions(id, updatedData);
-    
-        //     if (response === 200) {
-        //         setFamilyComposition((prevFamily) =>
-        //             prevFamily.map((member) => (member.id === id ? updatedData : member))
-        //         );
-        //         setEditingId(null); // Завершаем режим редактирования
-        //         console.log('Successfully updated family member');
-        //     } else {
-        //         console.log('Error updating family member');
-        //     }
-        //     // console.log(updatedData)
-        //     window.location.reload();
-        // } catch (error) {
-        //     console.error('Error updating family member:', error);
-        // }
+            const response = await updateFamilyCompositions(id, updatedData);
+  
+            if (response.status === 200) {
+                setFamilyComposition((prevData) => ({
+                    ...prevData,
+                    relatives: prevData.relatives.map((tableData) =>
+                        tableData.id === id ? updatedData : tableData
+                    ),
+                }));
+                setEditingId(null); // Завершаем режим редактирования
+                // console.log("Successfully updated table data");
+            } else {
+                console.error("Error updating table data");
+            }
+            // console.log(updatedData)
+            // window.location.reload();
+        } catch (error) {
+            console.error('Error updating family member:', error);
+        }
     };
 
     const handleCancelEdit = () => {
@@ -420,15 +428,15 @@ function Personal({ positionInfo, location, receivedDate, positionTitle, departm
                         <div>
                         <Button onClick={handleShowForm}>Добавить родственника</Button>
                             {showForm && (
-                                <form onSubmit={handleAddMember} style={{ marginTop: '10px' }}>
+                                <form onSubmit={(e) => handleAddMember(e, id)} style={{ marginTop: '10px' }}>
                                     <table className={cl.customTable}>
                                         <tbody >
                                             <tr>
                                                 <td>
                                                     <select
                                                         className={cl.formInput}
-                                                        value={inputData.relative_type}
-                                                        onChange={(e) => setInputData({ ...inputData, relative_type: e.target.value })}
+                                                        value={inputData.relativeType}
+                                                        onChange={(e) => setInputData({ ...inputData, relativeType: e.target.value })}
                                                     >
                                                         <option value="">Выберите тип родственника</option>
                                                         <option value="супруг/супруга">супруг/супруга</option>
@@ -441,20 +449,40 @@ function Personal({ positionInfo, location, receivedDate, positionTitle, departm
                                                     <input
                                                         type="text"
                                                         className={cl.formInput}
-                                                        placeholder="ФИО"
-                                                        name='fio'
-                                                        value={inputData.fio}
-                                                        onChange={(e) => setInputData({ ...inputData, fio: e.target.value })}
+                                                        placeholder="Имя"
+                                                        name='relName'
+                                                        value={inputData.relName}
+                                                        onChange={(e) => setInputData({ ...inputData, relName: e.target.value })}
+                                                    />
+                                                </td>
+                                                <td>
+                                                    <input
+                                                        type="text"
+                                                        className={cl.formInput}
+                                                        placeholder="Фамилия"
+                                                        name='relSurname'
+                                                        value={inputData.relSurname}
+                                                        onChange={(e) => setInputData({ ...inputData, relSurname: e.target.value })}
+                                                    />
+                                                </td>
+                                                <td>
+                                                    <input
+                                                        type="text"
+                                                        className={cl.formInput}
+                                                        placeholder="Отчество"
+                                                        name='relPatronymic'
+                                                        value={inputData.relPatronymic}
+                                                        onChange={(e) => setInputData({ ...inputData, relPatronymic: e.target.value })}
                                                     />
                                                 </td>
                                                 <td>
                                                     <input
                                                         type="number"
                                                         className={cl.formInput}
-                                                        name='rel_iin'
+                                                        name='relIin'
                                                         placeholder="ИИН родственника"
-                                                        value={inputData.rel_iin}
-                                                        onChange={(e) => setInputData({ ...inputData, rel_iin: e.target.value })}
+                                                        value={inputData.relIin}
+                                                        onChange={(e) => setInputData({ ...inputData, relIin: e.target.value })}
                                                     />
                                                 </td>
                                                 <td>
@@ -463,14 +491,14 @@ function Personal({ positionInfo, location, receivedDate, positionTitle, departm
                                                     <input
                                                         type="date"
                                                         className={cl.formInput}
-                                                        name='birth_date_family'
+                                                        name='relBirthDate'
                                                         placeholder="Дата рождения"
-                                                        value={inputData.birth_date_family || ''}
+                                                        value={inputData.relBirthDate || ''}
                                                         onChange={(e) => {
                                                             const newDate = e.target.value;
                                                             setInputData((prevWorker) => ({
                                                             ...prevWorker,
-                                                            birth_date_family: newDate,
+                                                            relBirthDate: newDate,
                                                             }));
                                                         }}
                                                         />
@@ -480,10 +508,10 @@ function Personal({ positionInfo, location, receivedDate, positionTitle, departm
                                                     <input
                                                         type="text"
                                                         className={cl.formInput}
-                                                        name='job_place'
+                                                        name='relJobPlace'
                                                         placeholder="Место работы"
-                                                        value={inputData.job_place}
-                                                        onChange={(e) => setInputData({ ...inputData, job_place: e.target.value })}
+                                                        value={inputData.relJobPlace}
+                                                        onChange={(e) => setInputData({ ...inputData, relJobPlace: e.target.value })}
                                                     />
                                                 </td>
                                                 <td><Button type="submit">Добавить</Button></td>
@@ -515,9 +543,9 @@ function Personal({ positionInfo, location, receivedDate, positionTitle, departm
                                                 {editingId === d.id ? (
                                                     <select
                                                         className={cl.selectRelative_type}
-                                                        name='relative_type'
-                                                        value={editedData.relativeName}
-                                                        onChange={(e) => setEditedData({ ...editedData, relativeName: e.target.value })}
+                                                        name='relativeType'
+                                                        value={editedData.relativeType}
+                                                        onChange={(e) => setEditedData({ ...editedData, relativeType: e.target.value })}
                                                     >
                                                         <option value="">Выберите тип родственника</option>
                                                         <option value="супруг/супруга">супруг/супруга</option>
@@ -526,7 +554,7 @@ function Personal({ positionInfo, location, receivedDate, positionTitle, departm
                                                         <option value="брат/сестра">брат/сестра</option>
                                                     </select>
                                                 ) : (
-                                                    d.relativeType.relativeName
+                                                    d.relativeType
                                                 )}
                                             </td>
                                             <td>{editingId === d.id ? 

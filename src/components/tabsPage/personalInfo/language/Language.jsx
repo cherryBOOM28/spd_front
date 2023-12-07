@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import cl from './Language.module.css';
 import axios from 'axios';
-
+import Cookies from 'js-cookie';
 import Button from '../../../UI/button/Button';
 
 import { getPersonalInfo } from '../../../../api/persona_info/getPersonalInfo';
@@ -11,15 +11,10 @@ import { updateLanguages } from '../../../../api/persona_info/languages/updateLa
 
 import list from '../../../data/languages';
 
-function Language({ languageSkill }, props) {
+function Language({ languageSkill, setLanguageSkill }, props) {
 
     const { id } = useParams();
     const [apiLanguages, setApiLanguages] = useState([]);
-    const [language, setLanguage] = useState({
-        "owning_languages": []
-    }); // Данные из бэка
-
-    // const iin = props.iin;
 
     useEffect(() => {
         fetchData()
@@ -27,9 +22,6 @@ function Language({ languageSkill }, props) {
 
     const fetchData = async () => {
         try {
-            // GET Education info
-            const languageResponse = await getPersonalInfo(id);
-            setLanguage(languageResponse.data);
             fetchApiLanguages()
         } catch (error) {
             console.error("Error fetching data:", error);
@@ -39,6 +31,7 @@ function Language({ languageSkill }, props) {
     // Лист языков
     const fetchLanguagesFromApi = async () => {
       try {
+        const lang_name = Object.values(list)
         setApiLanguages(list)
         return list;
  
@@ -61,54 +54,57 @@ function Language({ languageSkill }, props) {
     };
 
     const [inputData, setInputData] = useState({
-        language_name: '',
-        owning_lvl_language: '',
+        langName: '',
+        skillLvl: '',
     });
 
     const handleAddLanguage = async (e) => {
         e.preventDefault();
         try {
-            if (!inputData.language_name || !inputData.owning_lvl_language) {
-                alert('Пожалуйста, заполните все поля!');
-                return;
-            }
+            // if (!inputData.language_name || !inputData.owning_lvl_language) {
+            //     alert('Пожалуйста, заполните все поля!');
+            //     return;
+            // }
 
             // Получаем название языка по его коду из объекта apiLanguages
-            const languageName = apiLanguages[inputData.language_name];
+            const languageName = apiLanguages[inputData.langName];
 
             const newLanguage = {
-              iin: props.id,
-              language_name: languageName,
-              owning_lvl_language: inputData.owning_lvl_language,
+                personId: id,
+                langName: languageName,
+                skillLvl: inputData.skillLvl,
             };
 
-            // console.log(
-            //     { 'language': [newLanguage] }
-            // )
+            const accessToken = Cookies.get('jwtAccessToken');
 
-            const body = { "owning_languages": [newLanguage] }
-
-            const response = await axios.post('http://localhost:8000/personal_info/create/', body);
-            console.log(response)
+            const response = await axios.post('http://localhost:8000/api/v1/language-skill/', newLanguage, {
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`,
+                }
+            });
 
             if (response.status === 201) {
-                const updatedLanguage = {
-                    ...language,
-                    owning_languages: [
-                        ...language.owning_languages,
-                        newLanguage
-                    ]
-                };
-
-                setLanguage(updatedLanguage);
+                // setWorkingHistory(prevRecords => [...prevRecords, newData]);
+                setLanguageSkill(prevData => {
+                    // Проверяем, что prevData является объектом и содержит languageSkills
+                    if (typeof prevData === 'object' && Array.isArray(prevData.languageSkills)) {
+                      return {
+                        ...prevData,
+                        languageSkills: [...prevData.languageSkills, newLanguage],
+                      };
+                    } else {
+                      console.error("prevData is not an object or does not contain languageSkills");
+                      return prevData; // возвращаем prevData без изменений
+                    }
+                });
                 setInputData({
-                  iin: id,
-                  language_name: '',
-                  owning_lvl_language: ''
+                  personId: id,
+                  langName: '',
+                  skillLvl: '',
                 });
                 handleShowForm(false)
             } else {
-                console.error('Error adding education');
+                console.error('Error adding new data');
             }
         } catch (error) {
             console.error('Error:', error);
@@ -118,69 +114,82 @@ function Language({ languageSkill }, props) {
     // УДАЛЕНИЕ ЯЗЫКА
     const handleDelete = async (id) => {
         try {
-            const response = await deleteLanguages(id)
-            if (response === 200) {
-                // Успешно удалено, теперь обновляем состояние
-                setLanguage(prevLang => prevLang.filter(LangName => LangName.id !== id));
-                console.log("Successfully deleted");
-            } else {
-                console.log("Error deleting language type");
-            }
-            window.location.reload();
-        } catch(error) {
-            console.log(error)
+            // Вызываем функцию для удаления данных на сервере
+            await deleteLanguages(id);
+        
+            // Обновляем локальное состояние, исключая удаленный объект
+            setLanguageSkill(prevData => {
+            //   console.log("Type of prevData:", typeof prevData);
+        
+              // Проверяем, что prevData является объектом и содержит languageSkills
+              if (typeof prevData === 'object' && Array.isArray(prevData.languageSkills)) {
+                return {
+                  ...prevData,
+                  languageSkills: prevData.languageSkills.filter(tableData => tableData.id !== id),
+                };
+              } else {
+                // console.error("prevData is not an object or does not contain languageSkills");
+                return prevData; // возвращаем prevData без изменений
+              }
+            });
+        
+            console.log("Successfully deleted");
+          } catch (error) {
+            console.error("Error deleting data in table:", error);
         }
     }
 
     // EDIT
     const [editedData, setEditedData] = useState({
-      language_name: '',
-      owning_lvl_language: '',
+        langName: '',
+        skillLvl: '',
     });
 
     const [editingId, setEditingId] = useState(null);
 
-    const handleEdit = async (id, editedDataLang) => {
+    const handleEdit = async (id, editedTableData) => {
       
         if(editingId === id) {
             try {
                 const updatedData = {
                   id: id,
-                  iin: props.id,
-                  language_name: editedDataLang.language_name,
-                  owning_lvl_language: editedDataLang.owning_lvl_language
+                  personId: id,
+                  langName: editedTableData.langName,
+                  skillLvl: editedTableData.skillLvl
                 };
 
-                // Преобразование названия языка в код
-                updatedData.language_name = apiLanguages[updatedData.language_name];
+                // console.log("updatedData", {updatedData});
 
                 await updateLanguages(id, updatedData);
 
-                setLanguage(prevLang => {
-                    return prevLang.map(LangType => {
-                        if(LangType.iin === id) {
-                            return {...LangType, ...editedDataLang}
+                setLanguageSkill(prevData => {
+                    return prevData.map(tableData => {
+                        if(tableData.id === id) {
+                            return {...tableData, ...updatedData}
                         }
-                        return LangType;
+                        return tableData;
                     })
                 });
+                // console.log(updatedData)
 
                 setEditingId(null);
                 setEditedData({
                     id: id,
-                    language_name: '',
-                    owning_lvl_language: ''
+                    langName: '',
+                    skillLvl: '',
                 });
-                // console.log('Successfully updated language')
+                // console.log('Successfully updated table data')
             } catch(error) {
-                console.error('Error updating language:', error);
+                console.error('Error updating table data:', error);
             }
+           
         } else {
             setEditingId(id)
-            const languageToEdit = language.owning_languages.find(LangType => LangType.id === id);
-            if(languageToEdit) {
-                setEditedData(languageToEdit);
+            const dataToEdit = languageSkill.languageSkills.find(tableData => tableData.id === id);
+            if(dataToEdit) {
+                setEditedData(dataToEdit);
             }
+            // console.log(personnelData)
         }
     };
 
@@ -188,28 +197,31 @@ function Language({ languageSkill }, props) {
         try {
             const updatedData = {
                 id: id,
-                iin: props.id,
-                language_name: editedData.language_name,
-                owning_lvl_language: editedData.owning_lvl_language
+                langName: editedData.langName,
+                skillLvl: editedData.skillLvl,
             };
-
+          
             // Преобразование названия языка в код
-            updatedData.language_name = apiLanguages[updatedData.language_name];
+            updatedData.langName = apiLanguages[updatedData.langName];
     
             const response = await updateLanguages(id, updatedData);
-    
-            if (response === 200) {
-                setLanguage((prevLanguage) =>
-                prevLanguage.map((LangType) => (LangType.id === id ? updatedData : LangType))
-                );
+  
+            if (response.status === 200) {
+                setLanguageSkill((prevData) => ({
+                    ...prevData,
+                    languageSkills: prevData.languageSkills.map((tableData) =>
+                        tableData.id === id ? updatedData : tableData
+                    ),
+                }));
                 setEditingId(null); // Завершаем режим редактирования
-                console.log('Successfully updated language');
+                console.log("Successfully updated table data");
             } else {
-                console.log('Error updating language');
+                console.error("Error updating table data");
             }
-            window.location.reload();
+            // console.log(updatedData);
+            // window.location.reload();
         } catch (error) {
-            console.error('Error updating language:', error);
+            console.error('Error updating table data:', error);
         }
     };
 
@@ -234,20 +246,20 @@ function Language({ languageSkill }, props) {
                         <div>
                         <Button onClick={handleShowForm}>Добавить язык</Button>
                             {showForm && (
-                                <form onSubmit={handleAddLanguage} style={{ marginTop: '10px' }}>
+                                <form onSubmit={(e) => handleAddLanguage(e, id)} style={{ marginTop: '10px' }}>
                                     <table className={cl.customTable}>
                                         <tbody >
                                             <tr>
                                                 <td>
                                                     <select
                                                         className={cl.formInput}
-                                                        value={inputData.language_name}
-                                                        onChange={(e) => setInputData({ ...inputData, language_name: e.target.value })}
+                                                        value={inputData.langName}
+                                                        onChange={(e) => setInputData({ ...inputData, langName: e.target.value })}
                                                     >
                                                         <option value="">Выберите язык</option>
-                                                        {Object.keys(apiLanguages).map((languageCode, index) => (
-                                                          <option key={index} value={languageCode}>
-                                                            {apiLanguages[languageCode]}
+                                                        {Object.keys(apiLanguages).map((languageName, index) => (
+                                                          <option key={index} value={languageName}>
+                                                            {apiLanguages[languageName]}
                                                           </option>
                                                         ))}
                                                     </select>
@@ -255,8 +267,8 @@ function Language({ languageSkill }, props) {
                                                 <td>
                                                 <select
                                                         className={cl.formInput}
-                                                        value={inputData.owning_lvl_language}
-                                                        onChange={(e) => setInputData({ ...inputData, owning_lvl_language: e.target.value })}
+                                                        value={inputData.skillLvl}
+                                                        onChange={(e) => setInputData({ ...inputData, skillLvl: e.target.value })}
                                                     >
                                                         <option value="">Выберите уровень владения</option>
                                                         <option value="со словарем">Со словарем</option>

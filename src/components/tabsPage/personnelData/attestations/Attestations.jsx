@@ -225,22 +225,25 @@ import axios from 'axios';
 import cl from './Attestations.module.css';
 import Button from '../../../../components/UI/button/Button';
 import { useParams } from 'react-router-dom';
+import Cookies from 'js-cookie';
 
 import { getStaffInfo } from '../../../../api/staff_info/getStaffInfo';
 import { deleteAttestations } from '../../../../api/staff_info/attestations/deleteAttestations';
 import { updateAttestations } from '../../../../api/staff_info/attestations/updateAttestations';
 
-function Attestations({ attestationInfo }, props) {
-    // const iin = props.iin;
+function Attestations({ attestationInfo, setAttestationInfo }, props) {
     const { id } = useParams();
+    const [tableData, setTableData] = useState([]);
+
 
     const [personnelData, setPersonnelData] = useState({
         "attestations": []
     }); // Данные из бэка
 
-    useEffect(() => {
-        fetchData()
-    }, [])
+    // useEffect(() => {
+    //     // При изменении attestationInfo обновляем tableData
+    //     setTableData(attestationInfo?.attestations || []);
+    // }, [attestationInfo]);
 
     const fetchData = async () => {
         try {
@@ -265,8 +268,9 @@ function Attestations({ attestationInfo }, props) {
     };
 
     const [inputData, setInputData] = useState({
-        attestation_result: '',
-        last_attestation_date: '',
+        attResult: '',
+        lastAttDate: '',
+        nextAttDateMin: '',
     });
 
     const handleAddNewData = async (e) => {
@@ -278,35 +282,48 @@ function Attestations({ attestationInfo }, props) {
             // }
 
             const newData = {
-                iin: props.id,
-                attestation_result: inputData.attestation_result,
-                last_attestation_date: inputData.last_attestation_date,
+                personId: id,
+                attResult: inputData.attResult,
+                lastAttDate: inputData.lastAttDate,
             };
           
-            const body =  { "attestations": [newData] };
+            console.log(
+                { newData },
+                {id}
+            )
+            const accessToken = Cookies.get('jwtAccessToken');
 
-            const response = await axios.post('http://localhost:8000/staff_info/create/', body);
-
+            const response = await axios.post('http://localhost:8000/api/v1/attestation/', newData, {
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`,
+                }
+            });
             if (response.status === 201) {
-                const updatedPersonnelData = {
-                    ...personnelData,
-                    attestations: [
-                        ...personnelData.attestations,
-                        newData
-                    ]
+                const addedData = {
+                    ...newData,
+                    nextAttDateMin: response.data.nextAttDateMin,
                 };
-
-                setPersonnelData(updatedPersonnelData);
+                setAttestationInfo(prevData => {
+                    // Проверяем, что prevData является объектом и содержит attestations
+                    if (typeof prevData === 'object' && Array.isArray(prevData.attestations)) {
+                      return {
+                        ...prevData,
+                        attestations: [...prevData.attestations, addedData],
+                      };
+                    } else {
+                      console.error("prevData is not an object or does not contain attestations");
+                      return prevData; // возвращаем prevData без изменений
+                    }
+                });
                 setInputData({
-                    iin: id,
-                    attestation_result: '',
-                    last_attestation_date: '',
+                    personId: id,
+                    attResult: '',
+                    lastAttDate: '',
                 });
                 handleShowForm(false)
             } else {
                 console.error('Error adding new data');
             }
-            console.log(newData)
         } catch (error) {
             console.error('Error:', error);
         }
@@ -315,24 +332,36 @@ function Attestations({ attestationInfo }, props) {
     // УДАЛЕНИЕ DATA
     const handleDelete = async (id) => {
         try {
-            const response = await deleteAttestations(id)
-            if (response === 200) {
-                // Успешно удалено, теперь обновляем состояние
-                setPersonnelData(prevData => prevData.filter(tableData => tableData.id !== id));
-                console.log("Successfully deleted");
-            } else {
-                console.log("Error deleting data in table");
-            }
-            window.location.reload();
-        } catch(error) {
-            console.log(error)
+            // Вызываем функцию для удаления данных на сервере
+            await deleteAttestations(id);
+        
+            // Обновляем локальное состояние, исключая удаленный объект
+            setAttestationInfo(prevData => {
+            //   console.log("Type of prevData:", typeof prevData);
+        
+              // Проверяем, что prevData является объектом и содержит attestations
+              if (typeof prevData === 'object' && Array.isArray(prevData.attestations)) {
+                return {
+                  ...prevData,
+                  attestations: prevData.attestations.filter(tableData => tableData.id !== id),
+                };
+              } else {
+                // console.error("prevData is not an object or does not contain attestations");
+                return prevData; // возвращаем prevData без изменений
+              }
+            });
+        
+            console.log("Successfully deleted");
+          } catch (error) {
+            console.error("Error deleting data in table:", error);
         }
     }
 
     // EDIT
     const [editedData, setEditedData] = useState({
-        attestation_result: '',
-        last_attestation_date: '',
+        attResult: '',
+        lastAttDate: '',
+        lastAttDate: '',
     });
 
     const [editingId, setEditingId] = useState(null);
@@ -342,16 +371,16 @@ function Attestations({ attestationInfo }, props) {
             try {
                 const updatedData = {
                     id: id,
-                    iin: props.id,
-                    attestation_result: editedTableData.attestation_result,
-                    last_attestation_date: editedTableData.last_attestation_date,
+                    personId: id,
+                    attResult: editedTableData.attResult,
+                    lastAttDate: editedTableData.lastAttDate,
                 };
 
                 await updateAttestations(id, updatedData);
 
-                setPersonnelData(prevData => {
+                setAttestationInfo(prevData => {
                     return prevData.map(tableData => {
-                        if(tableData.iin === id) {
+                        if(tableData.id === id) {
                             return {...tableData, ...updatedData}
                         }
                         return tableData;
@@ -361,8 +390,8 @@ function Attestations({ attestationInfo }, props) {
                 setEditingId(null);
                 setEditedData({
                     id: id,
-                    attestation_result: '',
-                    last_attestation_date: '',
+                    attResult: '',
+                    lastAttDate: '',
                 });
                 // console.log('Successfully updated table data')
             } catch(error) {
@@ -370,7 +399,7 @@ function Attestations({ attestationInfo }, props) {
             }
         } else {
             setEditingId(id)
-            const dataToEdit = personnelData.sick_leaves.find(tableData => tableData.id === id);
+            const dataToEdit = attestationInfo.attestations.find(tableData => tableData.id === id);
             if(dataToEdit) {
                 setEditedData(dataToEdit);
             }
@@ -381,24 +410,40 @@ function Attestations({ attestationInfo }, props) {
         try {
             const updatedData = {
                 id: id,
-                iin: props.id,
-                attestation_result: editedData.attestation_result,
-                last_attestation_date: editedData.last_attestation_date,
+                attResult: editedData.attResult,
+                lastAttDate: editedData.lastAttDate,
             };
             // console.log(id);
+           
     
             const response = await updateAttestations(id, updatedData);
     
-            if (response === 200) {
-                setPersonnelData((prevData) =>
-                    prevData.map((tableData) => (tableData.id === id ? updatedData : tableData))
-                );
+            if (response.status === 200) {
+                const updatedDataWithNextAttDateMin = {
+                    ...updatedData,
+                    nextAttDateMin: response.data.nextAttDateMin,
+                };
+                setAttestationInfo(prevData => {
+                    const updatedDataArray = prevData.attestations.map(tableData =>
+                        tableData.id === id ? { ...tableData, ...updatedDataWithNextAttDateMin } : tableData
+                    );
+    
+                    console.log('Prev Data:', prevData.attestations);
+                    console.log('Updated Data:', updatedData);
+    
+                    return {
+                        ...prevData,
+                        attestations: updatedDataArray,
+                    };
+                });
+
+               
+                
                 setEditingId(null); // Завершаем режим редактирования
-                // console.log('Successfully updated table data');
+                console.log("Successfully updated table data");
             } else {
-                console.log('Error updating table data');
+                console.error("Error updating table data");
             }
-            window.location.reload();
         } catch (error) {
             console.error('Error updating table data:', error);
         }
@@ -425,14 +470,17 @@ function Attestations({ attestationInfo }, props) {
                             <tbody >
                                 <tr>
                                     <td>
-                                        <input
-                                            type="text"
+                                        <select
                                             className={cl.formInput}
-                                            name='attestation_result'
                                             placeholder="Результат аттестации"
-                                            value={inputData.attestation_result}
-                                            onChange={(e) => setInputData({ ...inputData, attestation_result: e.target.value })}
-                                        />
+                                            name='attResult'
+                                            value={inputData.attResult}
+                                            onChange={(e) => setInputData({ ...inputData, attResult: e.target.value })}
+                                        >
+                                            <option value="">Выберите результат</option>
+                                            <option value="Соответствует">Соответствует</option>
+                                            <option value="Не соответствует"> Не соответствует</option>
+                                        </select>
                                     </td>
                                     <td>
                                         <div className={cl.datePickerContainer}>
@@ -440,13 +488,13 @@ function Attestations({ attestationInfo }, props) {
                                             type="date"
                                             className={cl.formInput}
                                             placeholder="Дата приказа"
-                                            name='last_attestation_date'
-                                            value={inputData.last_attestation_date || ''}
+                                            name='lastAttDate'
+                                            value={inputData.lastAttDate || ''}
                                             onChange={(e) => {
                                                 const newDate = e.target.value;
                                                 setInputData((prevWorker) => ({
                                                 ...prevWorker,
-                                                last_attestation_date: newDate,
+                                                lastAttDate: newDate,
                                                 }));
                                             }}
                                         />
@@ -473,16 +521,22 @@ function Attestations({ attestationInfo }, props) {
                     <tbody>
                         {attestationInfo && attestationInfo.attestations && attestationInfo.attestations.map((d, i) => (
                             <tr key={i}>
-                                <td>{editingId === d.id ? 
-                                    <input 
-                                        type="text" 
-                                        className={cl.editInput} 
-                                        name='attResult' 
-                                        value={editedData.attResult} 
-                                        onChange={(e) => setEditedData({ ...editedData, attResult: e.target.value })} 
-                                    /> : d.attResult}
+                                <td>  
+                                    {editingId === d.id ? (
+                                        <select
+                                            className={cl.selectRelative_type}
+                                            value={editedData.attResult}
+                                            onChange={(e) => setEditedData({ ...editedData, attResult: e.target.value })}
+                                        >
+                                            <option value="">Выберите результат</option>
+                                            <option value="Соответствует">Соответствует</option>
+                                            <option value="Не соответствует"> Не соответствует</option>
+                                        </select>
+                                    ) : (
+                                        d.attResult
+                                    )}
                                 </td>
-                                <td>
+                                 <td>
                                 {editingId === d.id ? (
                                     <div className={cl.datePickerContainer}>
                                         <input
@@ -503,7 +557,6 @@ function Attestations({ attestationInfo }, props) {
                                 ) : (
                                     d.lastAttDate
                                 )}
-                                
                                 </td>
                                 <td>{d.nextAttDateMin}
                                 </td>

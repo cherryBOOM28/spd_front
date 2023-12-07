@@ -1,100 +1,10 @@
-// import React, { useState } from 'react';
-// import { useNavigate } from 'react-router-dom';
-// import cl from './Login.module.css';
-// import logo from '../../assets/icons/logo.svg';
-// import Button from '../../components/UI/button/Button';
-// import axios from 'axios';
-
-// // import axios from 'axios';
-// // import Cookies from 'js-cookie';
-
-// function Login() {
-//     const [username, setUsername] = useState('');
-//     const [password, setPassword] = useState('');
-    
-//     const navigate = useNavigate();
-    
-//     const handleSubmit = async(event) => {
-//         event.preventDefault();
-
-//         try {
-//             const loginData = {
-//                 username,
-//                 password
-//             };
-
-//             const response = await axios.post('http://localhost:8000/api/token/', loginData, {
-//                 headers: {
-//                     'Content-Type': 'application/json'
-//                 }
-//             });
-//             console.log("response", loginData);
-
-//             if(response === 200) {
-//                 const token = response.data.token;
-
-//                 localStorage.setItem('token', token);
-//                 navigate('/');
-//             } else {
-//                 console.log("Error with Login");
-//             }
-//         } catch(error) {
-//             console.log(error);
-//         };
-//     };
-
-
-    
-//     return (
-//         <div className={cl.loginWrapper}>
-//             <div className={cl.container}>
-//                 <form onSubmit={handleSubmit} className={cl.loginForm}>
-//                     <div className={cl.logo}>
-//                         <img src={logo} alt="logo" className={cl.logoImg} />
-//                         <p className={cl.logoText}>Система кадрового учета</p>
-//                     </div>
-//                     <p className={cl.login}>Вход</p>
-//                     <input 
-//                         className={cl.loginInput} 
-//                         value={username} 
-//                         onChange={(e) => setUsername(e.target.value)}
-//                         type="text" 
-//                         name="username"
-//                         required={true} 
-//                         placeholder="Пин" 
-//                     />
-//                     <input 
-//                         className={cl.loginInput} 
-//                         value={password}
-//                         onChange={(e) => setPassword(e.target.value)}
-//                         type="password" 
-//                         name="password"
-//                         required={true} 
-//                         placeholder="Пароль" 
-//                     />
-//                     <p className={cl.passw}>Забыли пароль?</p>
-//                     <Button className={cl.button} onClick={handleSubmit}>Войти</Button>
-                   
-//                 </form>
-//             </div>
-//         </div>
-//     );
-// }
-
-// export default Login;
-
-
 import cl from './Login.module.css';
-import logo from '../../assets/icons/logo.svg';
+import logo from '../../assets/icons/main_logo.svg';
 import React, {useEffect, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
-import {Link} from 'react-router-dom';
-
 import Button from '../../components/UI/button/Button';
 import axios from 'axios';
-
 import {AiFillEye, AiFillEyeInvisible} from 'react-icons/ai';
-
 import base_url from '../../api/base_url/base_url';
 import Cookies from 'js-cookie';
 
@@ -163,7 +73,7 @@ const Login = () => {
                 <form onSubmit={handleSubmit} className={cl.loginForm}>
                     <div className={cl.logo}>
                         <img src={logo} alt="logo" className={cl.logoImg} />
-                        <p className={cl.logoText}>Система кадрового учета</p>
+                        {/* <p className={cl.logoText}>Система кадрового учета</p> */}
                     </div>
                     <p className={cl.login}>Вход</p>
                     <InputField 

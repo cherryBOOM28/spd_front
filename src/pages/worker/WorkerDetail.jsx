@@ -224,12 +224,12 @@ function WorkerDetail() {
                         activeTab === 2 && 
 
                         <div className={cl.basic__info}>
-                            <BasicInfo id={id}
-                              photo={photo}
-                              person={person} 
-                              birthInfo={birthInfo}
-                              gender={gender}
-                            />
+                          <BasicInfo id={id}
+                            photo={photo}
+                            person={person} 
+                            birthInfo={birthInfo}
+                            gender={gender}
+                          />
                           <div className={cl.totalInfo}>
                             <Personal 
                               id={id} 
@@ -241,26 +241,32 @@ function WorkerDetail() {
                               departmentName={departmentName}
                               familyStatus={familyStatus}
                               familyComposition={familyComposition}
+                              setFamilyComposition={setFamilyComposition}
                             />
                             <Education 
                               id={id}
                               education={education}
+                              setEducation={setEducation}
                             />
                             <Language 
                               id={id}
                               languageSkill={languageSkill}
+                              setLanguageSkill={setLanguageSkill}
                             />
                             <Courses 
                               id={id}
                               course={course}
+                              setCourse={setCourse}
                             />
                             <AcademicDegree 
                               id={id}
                               academicDegree={academicDegree}
+                              setAcademicDegree={setAcademicDegree}
                             />
                             <Sport 
                               id={id}
                               sportSkill={sportSkill}
+                              setSportSkill={setSportSkill}
                             />
                           </div>  
                         </div>
@@ -299,11 +305,17 @@ function WorkerDetail() {
                             <PersonnelData 
                               id={id} 
                               iin={iin} 
-                              autobiographyInfo={autobiographyInfo}
+                              autobiographyInfo={autobiographyInfo}       
                               specCheckInfo={specCheckInfo}
+
                               attestationInfo={attestationInfo}
+                              setAttestationInfo={setAttestationInfo}
+
                               classCategoriesInfo={classCategoriesInfo}
+
                               rewardsInfo={rewardsInfo}
+                              setRewardsInfo={setRewardsInfo}
+                              
                               sickLeavesInfo={sickLeavesInfo}
                               investigationsInfo={investigationsInfo}
                               rankInfo={rankInfo}

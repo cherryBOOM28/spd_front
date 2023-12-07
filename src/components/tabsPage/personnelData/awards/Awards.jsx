@@ -8,7 +8,7 @@ import { getStaffInfo } from '../../../../api/staff_info/getStaffInfo';
 import { deleteAward } from '../../../../api/staff_info/awards/deleteAward';
 import { updateAward } from '../../../../api/staff_info/awards/updateAward';
 
-function Awards({ rewardsInfo }, props) {
+function Awards({ rewardsInfo, setRewardsInfo }, props) {
     // const iin = props.iin;
     const { id } = useParams();
 
@@ -41,9 +41,9 @@ function Awards({ rewardsInfo }, props) {
     };
 
     const [inputData, setInputData] = useState({
-        awards_type: '',
-        awards_doc_numb: '',
-        awards_date: '',
+        rewardType: '',
+        rewardDocNumber: '',
+        rewardDate: '',
     });
 
     const handleAddNewData = async (e) => {

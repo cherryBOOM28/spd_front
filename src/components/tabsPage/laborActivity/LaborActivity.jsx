@@ -13,7 +13,6 @@ function LaborActivity({ workingHistory, setWorkingHistory }, props) {
     const { id } = useParams();
     // console.log(`id: ${id}`);
 
-    const [personnelData, setPersonnelData] = useState([]); // Данные из бэка
     const [showForm, setShowForm] = useState(false);
 
     const handleShowForm = () => {
@@ -48,10 +47,10 @@ function LaborActivity({ workingHistory, setWorkingHistory }, props) {
               organizationAddress: inputData.organizationAddress,
             };
 
-            console.log(
-                { newData },
-                {id}
-            )
+            // console.log(
+            //     { newData },
+            //     {id}
+            // )
             const accessToken = Cookies.get('jwtAccessToken');
 
             const response = await axios.post('http://localhost:8000/api/v1/working-history/', newData, {
@@ -61,7 +60,6 @@ function LaborActivity({ workingHistory, setWorkingHistory }, props) {
             });
 
             if (response.status === 201) {
-                // setWorkingHistory(prevRecords => [...prevRecords, newData]);
                 setWorkingHistory(prevData => {
                     // Проверяем, что prevData является объектом и содержит workingHistories
                     if (typeof prevData === 'object' && Array.isArray(prevData.workingHistories)) {
@@ -119,7 +117,6 @@ function LaborActivity({ workingHistory, setWorkingHistory }, props) {
             console.error("Error deleting data in table:", error);
         }
     }
-    
 
     // EDIT
     const [editedData, setEditedData] = useState({
@@ -147,10 +144,9 @@ function LaborActivity({ workingHistory, setWorkingHistory }, props) {
                   organizationAddress: editedTableData.organizationAddress,
                   isPravoOhranka: editedTableData.isPravoOhranka,
                   HaveCoefficient: editedTableData.HaveCoefficient,
-
                 };
 
-                console.log("updatedData", {updatedData});
+                // console.log("updatedData", {updatedData});
 
                 await UpdateWorkingHistory(id, updatedData);
 
@@ -205,20 +201,12 @@ function LaborActivity({ workingHistory, setWorkingHistory }, props) {
                 isPravoOhranka: editedData.isPravoOhranka,
                 HaveCoefficient: editedData.HaveCoefficient,
             };
-            console.log("personId", id);
-            console.log("updatedData", {updatedData});
+            // console.log("personId", id);
+            // console.log("updatedData", {updatedData});
 
     
             const response = await UpdateWorkingHistory(id, updatedData);
-    
-            // if (response === 200) {
-            //     setWorkingHistory((prevData) =>
-            //         prevData.map((tableData) => (tableData.id === id ? updatedData : tableData))
-            //     );
-            //     setEditingId(null); // Завершаем режим редактирования
-            // } else {
-            //     console.log('Error updating table data');
-            // }
+  
             if (response.status === 200) {
                 setWorkingHistory((prevData) => ({
                     ...prevData,
