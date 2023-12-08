@@ -8,6 +8,8 @@ import Cookies from 'js-cookie';
 import { deleteFamilyCompositions } from '../../../../api/persona_info/family_compositions/deleteFamilyCompositions';
 import { updateFamilyCompositions } from '../../../../api/persona_info/family_compositions/updateFamilyCompositions';
 
+import updateFamilyStatus from './api/SaveFamilyStatus';
+
 function Personal({ 
         positionInfo, 
         location, 
@@ -22,39 +24,73 @@ function Personal({
     // console.log(`id: ${id}`);
 
     const [personalData, setPersonalData] = useState({}); // Данные из бэка
+
+    const handleUpdateData = async (updatedFields) => {
+        try {
+            const accessToken = Cookies.get('jwtAccessToken');
+            const response = await axios.patch(`http://localhost:8000/api/v1/position/${id}/`, {
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`,
+                }
+            })
+            console.log('Успешно обновлено:', response.data);
+        } catch (error) {
+            console.log(error)
+        }
+    };
+
+    const handleUpdate = () => {
+        handleUpdateData({
+            familyStatus: positionInfo.statusName,
+            DepartmentName: positionInfo.DepartmentName,
+            positionTitle: positionTitle.positionTitle,
+            receivedDate: receivedDate.receivedDate,
+            LocationName: location.LocationName,
+        });
+    };
   
 
     // СОХРАНИТЬ ИЗМЕНЕНИЯ
+    // const handleSaveClick = async () => {
+    //     try {
+    //         let newJsonEdited = Object.keys(editedWorker).reduce((result, key) => {
+    //             if (editedWorker[key] !== personalData[key]) {
+    //                 result[key] = editedWorker[key];
+    //             }
+    //             return result;
+    //         }, {});
+    //         console.log(newJsonEdited, editedWorker)
+    //         console.log(id)
+
+
+    //         //   axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    //         const response = await axios.patch(`http://localhost:8000/personal_info/update/`, {personal_data: editedWorker});
+
+
+    //         if (response.status === 200) {
+    //             setEditing(false);
+    //             window.location.reload();
+    //         } else {
+    //             console.error('Error saving data');
+    //         }
+    //     } catch (error) {
+    //         console.error('Error:', error);
+    //     }
+    // };
+
     const handleSaveClick = async () => {
         try {
-            let newJsonEdited = Object.keys(editedWorker).reduce((result, key) => {
-                if (editedWorker[key] !== personalData[key]) {
-                    result[key] = editedWorker[key];
-                }
-                return result;
-            }, {});
-            console.log(newJsonEdited, editedWorker)
-            console.log(id)
+            await updateFamilyStatus(editedWorker.id, editedWorker.statusName);
 
-
-            //   axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-            const response = await axios.patch(`http://localhost:8000/personal_info/update/`, {personal_data: editedWorker});
-
-
-            if (response.status === 200) {
-                setEditing(false);
-                window.location.reload();
-            } else {
-                console.error('Error saving data');
-            }
+            setEditing(false);
         } catch (error) {
-            console.error('Error:', error);
+            console.error('Ошибка при сохранении данных:', error.message);
         }
     };
 
     const [editing, setEditing] = useState(false);
     const [editedWorker, setEditedWorker] = useState({
-        familyStatus: '',
+        statusName: '',
         DepartmentName: '',
         positionTitle: '',
         receivedDate: '',
@@ -69,29 +105,36 @@ function Personal({
         setEditedWorker({
             // iin: id,
             id: personalData.id,
-            familyStatus: personalData.familyStatus,
-            DepartmentName: personalData.DepartmentName,
-            positionTitle: personalData.positionTitle,
-            LocationName: personalData.LocationName,
-            receivedDate: personalData.receivedDate
+            statusName: familyStatus.statusName,
+            DepartmentName: positionInfo.DepartmentName,
+            positionTitle: positionTitle.positionTitle,
+            receivedDate: receivedDate.receivedDate,
+            LocationName: location.LocationName,
         });
     };
 
 
+    // 
+
     // ИЗМЕНЕНИЯ В INPUT
-    const handleInputChange = (event) => {
-        const { name, value } = event.target;
-        setEditedWorker((prevWorker) => ({ ...prevWorker, [name]: value }));
+    const handleInputChange = (e) => {
+        // Обработчик изменения значений в инпуте при редактировании
+        const { name, value } = e.target;
+        setEditedWorker((prevWorker) => ({
+            ...prevWorker,
+            [name]: value,
+        }));
     };
 
 
-    // ДОБАВЛЕНИЕ РОДСТВЕННИКА
+    // отображения формы для новых данных
     const [showForm, setShowForm] = useState(false);
 
     const handleShowForm = () => {
         setShowForm(true);
     };
 
+    // input-ы где сохраняютя данные
     const [inputData, setInputData] = useState({
         relativeType: "",
         relName: "",
@@ -102,6 +145,7 @@ function Personal({
         relJobPlace: "",
     });
 
+    // ДОБАВЛЕНИЕ РОДСТВЕННИКА
     const handleAddMember = async (e, id) => {
         e.preventDefault();
         try {
@@ -338,11 +382,11 @@ function Personal({
                                         className={cl.workerInfo}
                                         type="text"
                                         name="DepartmentName"
-                                        value={editedWorker.departmentName  || ''}
+                                        value={editedWorker.DepartmentName !== undefined ? editedWorker.DepartmentName : ''}
                                         onChange={handleInputChange}
                                     />
                                 ) : (
-                                    <p className={cl.workerInfo}>{positionInfo.DepartmentName  || ''}</p>
+                                    <p className={cl.workerInfo}>{positionInfo.DepartmentName}</p>
                                 )}
                             </div>
                             <div className={cl.rows}>
@@ -352,12 +396,12 @@ function Personal({
                                         className={cl.workerInfo}
                                         type="text"
                                         name="positionTitle"
-                                        value={editedWorker.positionTitle || ''}
+                                        value={editedWorker.positionTitle}
                                         onChange={handleInputChange}
                                     />
                                 ) : (
 
-                                    <p className={cl.workerInfo}>{positionTitle.positionTitle || ''}</p>
+                                    <p className={cl.workerInfo}>{positionTitle.positionTitle}</p>
                                 )}
                             </div>
                             <div className={cl.rows}>
@@ -401,7 +445,7 @@ function Personal({
                                     
                                 ) : (
 
-                                    <p className={cl.workerInfo}>{familyStatus.statusName || ''}</p>
+                                    <p className={cl.workerInfo}>{familyStatus.statusName}</p>
                                 )}
                             </div>
                             <div className={cl.rows}>
@@ -411,12 +455,12 @@ function Personal({
                                         className={cl.workerInfo}
                                         type="text"
                                         name="LocationName"
-                                        value={editedWorker.LocationName  || ''}
+                                        value={editedWorker.LocationName}
                                         onChange={handleInputChange}
                                     />
                                 ) : (
 
-                                    <p className={cl.workerInfo}>{location.LocationName  || ''}</p>
+                                    <p className={cl.workerInfo}>{location.LocationName}</p>
                                 )}
                             </div>
                             
