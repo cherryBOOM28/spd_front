@@ -3,37 +3,17 @@ import axios from 'axios';
 import cl from './Table.module.css';
 import Button from '../../../../components/UI/button/Button';
 import { useParams } from 'react-router-dom';
+import Cookies from 'js-cookie';
 
 import { getStaffInfo } from '../../../../api/staff_info/getStaffInfo';
 import { deleteSickLeaves } from '../../../../api/staff_info/sick_leaves/deleteSickLeaves';
 import { updateSickLeaves } from '../../../../api/staff_info/sick_leaves/updateSickLeaves';
 
-function Table({ sickLeavesInfo }, props) {
-    // const iin = props.iin;
+function Table({ sickLeavesInfo, setSickLeavesInfo }) {
     const { id } = useParams();
 
-    const [personnelData, setPersonnelData] = useState({
-        "sick_leaves": []
-    }); // Данные из бэка
-
-    useEffect(() => {
-        fetchData()
-    }, [])
-
-    const fetchData = async () => {
-        try {
-            // GET PERSONAL DATA
-            const response = await getStaffInfo(id) 
-            setPersonnelData(response.data);
-
-        } catch (error) {
-            console.error("Error fetching data:", error);
-        }
-    }
 
     // TABLE DATA
-
-    // ДОБАВЛЕНИЕ 
     const [showForm, setShowForm] = useState(false);
 
     const handleShowForm = () => {
@@ -41,42 +21,50 @@ function Table({ sickLeavesInfo }, props) {
     };
 
     const [inputData, setInputData] = useState({
-        sick_doc_numb: '',
-        sick_doc_date: '',
+        sickDocNumber: '',
+        sickDocDate: '',
     });
 
+    // Добавление данных
     const handleAddNewData = async (e) => {
         e.preventDefault();
         try {
-            if (!inputData.sick_doc_numb || !inputData.sick_doc_date) {
-                alert('Пожалуйста, заполните все поля!');
-                return;
-            }
+            // if (!inputData.sick_doc_numb || !inputData.sick_doc_date) {
+            //     alert('Пожалуйста, заполните все поля!');
+            //     return;
+            // }
 
             const newData = {
-                iin: props.id,
-                sick_doc_numb: inputData.sick_doc_numb,
-                sick_doc_date: inputData.sick_doc_date,
+                personId: id,
+                sickDocNumber: inputData.sickDocNumber,
+                sickDocDate: inputData.sickDocDate,
             };
           
-            const body =  { "sick_leaves": [newData] };
+            const accessToken = Cookies.get('jwtAccessToken');
 
-            const response = await axios.post('http://localhost:8000/staff_info/create/', body);
+            const response = await axios.post('http://localhost:8000/api/v1/sick-leave/', newData, {
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`,
+                }
+            });
 
             if (response.status === 201) {
-                const updatedPersonnelData = {
-                    ...personnelData,
-                    sick_leaves: [
-                        ...personnelData.sick_leaves,
-                        newData
-                    ]
-                };
-
-                setPersonnelData(updatedPersonnelData);
+                setSickLeavesInfo(prevData => {
+                    // Проверяем, что prevData является объектом и содержит sickLeaves
+                    if (typeof prevData === 'object' && Array.isArray(prevData.sickLeaves)) {
+                      return {
+                        ...prevData,
+                        sickLeaves: [...prevData.sickLeaves, newData],
+                      };
+                    } else {
+                      console.error("prevData is not an object or does not contain sickLeaves");
+                      return prevData; // возвращаем prevData без изменений
+                    }
+                });
                 setInputData({
-                    iin: id,
-                    sick_doc_numb: '',
-                    sick_doc_date: '',
+                    personId: id,
+                    sickDocNumber: '',
+                    sickDocDate: '',
                 });
                 handleShowForm(false)
             } else {
@@ -91,41 +79,53 @@ function Table({ sickLeavesInfo }, props) {
     // УДАЛЕНИЕ DATA
     const handleDelete = async (id) => {
         try {
-            const response = await deleteSickLeaves(id)
-            if (response === 200) {
-                // Успешно удалено, теперь обновляем состояние
-                setPersonnelData(prevData => prevData.filter(tableData => tableData.id !== id));
-                console.log("Successfully deleted");
-            } else {
-                console.log("Error deleting data in table");
-            }
-            window.location.reload();
-        } catch(error) {
-            console.log(error)
+            // Вызываем функцию для удаления данных на сервере
+            await deleteSickLeaves(id);
+        
+            // Обновляем локальное состояние, исключая удаленный объект
+            setSickLeavesInfo(prevData => {
+            //   console.log("Type of prevData:", typeof prevData);
+        
+              // Проверяем, что prevData является объектом и содержит sickLeaves
+              if (typeof prevData === 'object' && Array.isArray(prevData.sickLeaves)) {
+                return {
+                  ...prevData,
+                  sickLeaves: prevData.sickLeaves.filter(tableData => tableData.id !== id),
+                };
+              } else {
+                // console.error("prevData is not an object or does not contain sickLeaves");
+                return prevData; // возвращаем prevData без изменений
+              }
+            });
+        
+            console.log("Successfully deleted");
+          } catch (error) {
+            console.error("Error deleting data in table:", error);
         }
     }
 
     // EDIT
     const [editedData, setEditedData] = useState({
-        sick_doc_numb: '',
-        sick_doc_date: '',
+        sickDocNumber: '',
+        sickDocDate: '',
     });
 
     const [editingId, setEditingId] = useState(null);
 
+    // Начало редактирования
     const handleEdit = async (id, editedTableData) => {
         if(editingId === id) {
             try {
                 const updatedData = {
                     id: id,
-                    iin: props.id,
-                    sick_doc_numb: editedTableData.sick_doc_numb,
-                    sick_doc_date: editedTableData.sick_doc_date,
+                    personId: id,
+                    sickDocNumber: editedTableData.sickDocNumber,
+                    sickDocDate: editedTableData.sickDocDate,
                 };
 
                 await updateSickLeaves(id, updatedData);
 
-                setPersonnelData(prevData => {
+                setSickLeavesInfo(prevData => {
                     return prevData.map(tableData => {
                         if(tableData.iin === id) {
                             return {...tableData, ...updatedData}
@@ -137,8 +137,8 @@ function Table({ sickLeavesInfo }, props) {
                 setEditingId(null);
                 setEditedData({
                     id: id,
-                    sick_doc_numb: '',
-                    sick_doc_date: '',
+                    sickDocNumber: '',
+                    sickDocDate: '',
                 });
                 // console.log('Successfully updated table data')
             } catch(error) {
@@ -146,35 +146,38 @@ function Table({ sickLeavesInfo }, props) {
             }
         } else {
             setEditingId(id)
-            const dataToEdit = personnelData.sick_leaves.find(tableData => tableData.id === id);
+            const dataToEdit = sickLeavesInfo.sickLeaves.find(tableData => tableData.id === id);
             if(dataToEdit) {
                 setEditedData(dataToEdit);
             }
         }
     };
 
+    // Сохранение изменении
     const handleSaveEdit = async (id) => {
         try {
             const updatedData = {
                 id: id,
-                iin: props.id,
-                sick_doc_numb: editedData.sick_doc_numb,
-                sick_doc_date: editedData.sick_doc_date,
+                personId: editedData.personId,
+                sickDocNumber: editedData.sickDocNumber,
+                sickDocDate: editedData.sickDocDate,
             };
             // console.log(id);
     
             const response = await updateSickLeaves(id, updatedData);
     
-            if (response === 200) {
-                setPersonnelData((prevData) =>
-                    prevData.map((tableData) => (tableData.id === id ? updatedData : tableData))
-                );
+            if (response.status === 200) {
+                setSickLeavesInfo((prevData) => ({
+                    ...prevData,
+                    sickLeaves: prevData.sickLeaves.map((tableData) =>
+                        tableData.id === id ? updatedData : tableData
+                    ),
+                }));
                 setEditingId(null); // Завершаем режим редактирования
-                // console.log('Successfully updated table data');
+                console.log("Successfully updated table data");
             } else {
-                console.log('Error updating table data');
+                console.error("Error updating table data");
             }
-            window.location.reload();
         } catch (error) {
             console.error('Error updating table data:', error);
         }
@@ -205,8 +208,8 @@ function Table({ sickLeavesInfo }, props) {
                                             type="number"
                                             className={cl.formInput}
                                             placeholder="Номер приказа"
-                                            value={inputData.sick_doc_numb}
-                                            onChange={(e) => setInputData({ ...inputData, sick_doc_numb: e.target.value })}
+                                            value={inputData.sickDocNumber}
+                                            onChange={(e) => setInputData({ ...inputData, sickDocNumber: e.target.value })}
                                         />
                                     </td>
                                     <td>
@@ -215,12 +218,12 @@ function Table({ sickLeavesInfo }, props) {
                                             type="date"
                                             className={cl.formInput}
                                             placeholder="Дата приказа"
-                                            value={inputData.sick_doc_date || ''}
+                                            value={inputData.sickDocDate || ''}
                                             onChange={(e) => {
                                                 const newDate = e.target.value;
                                                 setInputData((prevWorker) => ({
                                                 ...prevWorker,
-                                                sick_doc_date: newDate,
+                                                sickDocDate: newDate,
                                                 }));
                                             }}
                                         />

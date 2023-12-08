@@ -5,17 +5,21 @@ import cl from './Personal.module.css';
 import Button from '../../../UI/button/Button';
 import Cookies from 'js-cookie';
 
-import { getPersonalInfo } from '../../../../api/persona_info/getPersonalInfo';
-// import { deletePersonalInfo } from '../../../../api/persona_info/deletePersonalInfo';
-// import { updatePersonalInfo } from '../../../../api/persona_info/updatePersonalInfo';
 import { deleteFamilyCompositions } from '../../../../api/persona_info/family_compositions/deleteFamilyCompositions';
 import { updateFamilyCompositions } from '../../../../api/persona_info/family_compositions/updateFamilyCompositions';
 
-function Personal({ positionInfo, location, receivedDate, positionTitle, departmentName, familyStatus, familyComposition, setFamilyComposition }, props) {
+function Personal({ 
+        positionInfo, 
+        location, 
+        receivedDate, 
+        positionTitle, 
+        departmentName, 
+        familyStatus, 
+        familyComposition, 
+        setFamilyComposition 
+    }, props) {
     const { id } = useParams();
     // console.log(`id: ${id}`);
-
-    // const id = props.id;
 
     const [personalData, setPersonalData] = useState({}); // Данные из бэка
   
@@ -53,8 +57,8 @@ function Personal({ positionInfo, location, receivedDate, positionTitle, departm
         familyStatus: '',
         DepartmentName: '',
         positionTitle: '',
-        DepartmentName: '',
-        receivedDate: ''
+        receivedDate: '',
+        LocationName: ''
     });
 
 
@@ -65,10 +69,11 @@ function Personal({ positionInfo, location, receivedDate, positionTitle, departm
         setEditedWorker({
             // iin: id,
             id: personalData.id,
-            family_status: personalData.family_status,
-            departament: personalData.departament,
-            jposition: personalData.jposition,
-            city: personalData.city,
+            familyStatus: personalData.familyStatus,
+            DepartmentName: personalData.DepartmentName,
+            positionTitle: personalData.positionTitle,
+            LocationName: personalData.LocationName,
+            receivedDate: personalData.receivedDate
         });
     };
 

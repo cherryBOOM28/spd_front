@@ -5,15 +5,20 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import cl from './Autobiography.module.css';
 
-function Autobiography({ autobiographyInfo }) {
-    const { id } = useParams();
+import { updateAutobiography } from '../../../../api/staff_info/autobiography/updateAutobiography';
 
+function Autobiography({ autobiographyInfo, setAutobiographyInfo }) {
+    const { id } = useParams();
     const [personnelData, setPersonnelData] = useState([]); // Данные из бэка
     const [bioId, setBioId] = useState(null)
+    const [editingId, setEditingId] = useState(null);
+
+    const firstBioText = autobiographyInfo?.autobiographies?.length > 0 ? autobiographyInfo.autobiographies[0]?.autobiographyText : '';
 
     useEffect(() => {
-        fetchData()
+        fetchData() 
     }, [])
+    
     
     const fetchData = async () => {
         try {
@@ -27,56 +32,93 @@ function Autobiography({ autobiographyInfo }) {
             console.error("Error fetching data:", error);
         }
     };
+    
+    // EDIT
+    const [editedData, setEditedData] = useState({
+        autobiographyText: '',
+    });
 
-      // СОХРАНИТЬ ИЗМЕНЕНИЯ
-    const handleSaveClick = async () => {
-        try {
-            const updatedData = {
-                autobiography: {
-                    id: bioId,
-                    autobiography: editedWorker.autobiography, 
-                },
-            };
-    
-            //   axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-            const response = await axios.patch(`http://localhost:8000/staff_info/update/`, updatedData, bioId);
-            // console.log(response.data)
-    
-            if (response.status === 200) {
-                setEditing(false);
-                window.location.reload();
-            } else {
-                console.error('Error saving data');
+    const handleEdit = async (id, editedTableData) => {
+        if(editingId === id) {
+            try {
+                const updatedData = {
+                  id: id,
+                  personId: id,
+                  autobiographyText: editedTableData.autobiographyText,
+                };
+
+                // console.log("updatedData", {updatedData});
+
+                await updateAutobiography(id, updatedData);
+
+                setAutobiographyInfo(prevData => {
+                    return prevData.map(tableData => {
+                        if (tableData.id === id) {
+                            return { ...tableData, ...updatedData };
+                        }
+                        return tableData;
+                    });
+                });
+                // console.log(updatedData)
+
+                setEditingId(null);
+                setEditedData({
+                    id: id,
+                    autobiographyText: '',
+                });
+                // console.log('Successfully updated table data')
+            } catch(error) {
+                console.error('Error updating table data:', error);
             }
-        } catch (error) {
-            console.error('Error:', error);
+           
+        } else {
+            setEditingId(id)
+            const dataToEdit = autobiographyInfo.autobiographies.find(tableData => tableData.id === id);
+            if(dataToEdit) {
+                setEditedData(dataToEdit);
+            }
+            // console.log(personnelData)
         }
     };
-  
-    const [editing, setEditing] = useState(false);
-    const [editedWorker, setEditedWorker] = useState({ 
-        autobiography: '',
-    });
-  
-    // ИЗМЕНИТЬ ПОЛЯ
-    const handleEditClick = () => {
-      setEditing(true);
-      // Initialize editedWorker with the worker's current data
-        setEditedWorker({
-            autobiography: personnelData.autobiography,
-      });
-    };
-  
-    // ИЗМЕНЕНИЯ В INPUT
-    const handleInputChange = (event) => {
-      const { name, value } = event.target;
-      setEditedWorker((prevWorker) => ({ ...prevWorker, [name]: value }));
+
+    // СОХРАНИТЬ ИЗМЕНЕНИЯ
+    const handleSaveEdit = async (id) => {
+    
+            try {
+                const updatedData = {
+                  id: id,
+                  personId: editedData.id,
+                  autobiographyText: editedData.autobiographyText,
+                };
+
+                // console.log("updatedData", {updatedData});
+
+                const response = await updateAutobiography(id, updatedData);
+
+                if (response.status === 200) {
+                    setAutobiographyInfo((prevData) => ({
+                        ...prevData,
+                        autobiographies: prevData.autobiographies.map((tableData) =>
+                            tableData.id === id ? updatedData : tableData
+                        ),
+                    }));
+                    setEditingId(null); // Завершаем режим редактирования
+                    console.log("Successfully updated table data");
+                } else {
+                    console.error("Error updating table data");
+                }
+                // console.log(updatedData)
+                // console.log('Successfully updated table data')
+            } catch(error) {
+                console.error('Error updating table data:', error);
+            }
+        
     };
 
 
     const handleCancelEdit = () => {
-        setEditing(null);
-        // setEditedData({});
+        setEditingId(null);
+        setEditedData({});
     };
 
     return (
@@ -87,15 +129,15 @@ function Autobiography({ autobiographyInfo }) {
                         <div className={cl.wrapper} style={{ display: 'flex', justifyContent: 'space-between', marginTop: '40px' }}>
                             <p className={cl.workerCapitalName}>Автобиография</p>
                             <div className={cl.relativesActionBtns} style={{ display: 'flex', justifyContent: 'space-between', gap: '5px' }}>
-                                {!editing && (
-                                    <div className={cl.actionBtn} onClick={handleEditClick}>
+                                {!editingId && (
+                                    <div className={cl.actionBtn} onClick={() => handleEdit(id)}>
                                         &#9998;
                                     </div>
                                 )}
 
-                                {editing && (
+                                {editingId && (
                                     <>
-                                        <div onClick={handleSaveClick} className={cl.actionBtn}>
+                                        <div onClick={() => handleSaveEdit(id)} className={cl.actionBtn}>
                                             &#10003; 
                                         </div>
                                         <div className={cl.actionBtn} onClick={handleCancelEdit}>
@@ -109,18 +151,20 @@ function Autobiography({ autobiographyInfo }) {
                     </div>
                     
                     <div className={cl.workerBlock}>
-                        {editing ? (
+                        {editingId ? (
                             
                             <input
                                 type="text"
-                                name='autobiography'
+                                name='autobiographyText'
                                 className={cl.workerInfo}
-                                value={editedWorker.autobiography}
-                                onChange={handleInputChange}
+                                value={editedData.autobiographyText}
+                                onChange={(e) => setEditedData({ ...editedData, autobiographyText: e.target.value })}
                             />
                            
                         ) : (
-                            <p className={cl.workerInfoText}></p>
+                            <p className={cl.workerInfoText}>
+                                {firstBioText}
+                            </p>
                         )}
                     </div>
                 </div>

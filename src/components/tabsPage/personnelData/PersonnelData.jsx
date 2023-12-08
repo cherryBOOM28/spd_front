@@ -11,10 +11,20 @@ import InvestigationRetrievals from './investigationRetrievals/InvestigationRetr
 import Autobiography from './autobiography/Autobiography';
 
 
-function PersonnelData({ autobiographyInfo, specCheckInfo, attestationInfo, setAttestationInfo, classCategoriesInfo, rewardsInfo, setRewardsInfo, sickLeavesInfo, investigationsInfo, rankInfo, militaryRank, rankArchive }) {
+function PersonnelData
+    ({ 
+        autobiographyInfo, setAutobiographyInfo,
+        specCheckInfo, setSpecCheckInfo,
+        attestationInfo, setAttestationInfo, 
+        classCategoriesInfo, setClassCategoriesInfo,
+        rewardsInfo, setRewardsInfo, 
+        sickLeavesInfo, setSickLeavesInfo,
+        investigationsInfo, setInvestigationsInfo,
+        rankInfo, 
+        militaryRank, 
+        rankArchive 
+    }) {
     const { id, iin } = useParams();
-    
-                            
     
     return (
         <div className={cl.personalWrapper}>
@@ -22,15 +32,18 @@ function PersonnelData({ autobiographyInfo, specCheckInfo, attestationInfo, setA
             <SpecChecks 
                 id={id} 
                 specCheckInfo={specCheckInfo}
+                setSpecCheckInfo={setSpecCheckInfo}
             />
             <ClassCategories 
                 id={id} 
                 classCategoriesInfo={classCategoriesInfo}
+                setClassCategoriesInfo={setClassCategoriesInfo}
             />
             <Autobiography 
                 id={id} 
                 iin={iin} 
                 autobiographyInfo={autobiographyInfo}
+                setAutobiographyInfo={setAutobiographyInfo}
             />
             <Attestations  
                 id={id} 
@@ -51,10 +64,12 @@ function PersonnelData({ autobiographyInfo, specCheckInfo, attestationInfo, setA
             <Table 
                 id={id} 
                 sickLeavesInfo={sickLeavesInfo}
+                setSickLeavesInfo={setSickLeavesInfo}
             />
             <InvestigationRetrievals   
                 id={id}
                 investigationsInfo={investigationsInfo}
+                setInvestigationsInfo={setInvestigationsInfo}
             />
             </div>
         </div>

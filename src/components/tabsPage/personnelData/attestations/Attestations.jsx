@@ -220,45 +220,19 @@
 
 // export default Attestations;
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import cl from './Attestations.module.css';
 import Button from '../../../../components/UI/button/Button';
 import { useParams } from 'react-router-dom';
 import Cookies from 'js-cookie';
 
-import { getStaffInfo } from '../../../../api/staff_info/getStaffInfo';
 import { deleteAttestations } from '../../../../api/staff_info/attestations/deleteAttestations';
 import { updateAttestations } from '../../../../api/staff_info/attestations/updateAttestations';
 
-function Attestations({ attestationInfo, setAttestationInfo }, props) {
+function Attestations({ attestationInfo, setAttestationInfo }) {
     const { id } = useParams();
-    const [tableData, setTableData] = useState([]);
 
-
-    const [personnelData, setPersonnelData] = useState({
-        "attestations": []
-    }); // Данные из бэка
-
-    // useEffect(() => {
-    //     // При изменении attestationInfo обновляем tableData
-    //     setTableData(attestationInfo?.attestations || []);
-    // }, [attestationInfo]);
-
-    const fetchData = async () => {
-        try {
-            // GET PERSONAL DATA
-            const response = await getStaffInfo(id) 
-            setPersonnelData(response.data);
-
-        } catch (error) {
-            console.error("Error fetching data:", error);
-        }
-    }
-
-    // TABLE DATA
-
-    
 
     // ДОБАВЛЕНИЕ 
     const [showForm, setShowForm] = useState(false);

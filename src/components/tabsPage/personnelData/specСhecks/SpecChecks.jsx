@@ -1,43 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import cl from './SpecChecks.module.css';
 import { useParams } from 'react-router-dom';
-import { getStaffInfo } from '../../../../api/staff_info/getStaffInfo';
 import { updateSpecCheck } from '../../../../api/staff_info/spec_checks/updateSpecCheck';
 
 
-function SpecChecks({ specCheckInfo }, props) {
+function SpecChecks({ specCheckInfo, setSpecCheckInfo }) {
     const { id } = useParams();
 
-    const [personnelData, setPersonnelData] = useState({
-        "spec_checks": []
-    });
-
-    useEffect(() => {
-        fetchData()
-    }, [])
-
-        const fetchData = async () => {
-            try {
-                // GET PERSONAL DATA
-                const response = await getStaffInfo(id) 
-                setPersonnelData(response.data);
-                // console.log(response.data)
-            } catch (error) {
-                console.error("Error fetching data:", error);
-            }
-        }
-    const [editing, setEditing] = useState(false);
-    const [editedWorker, setEditedWorker] = useState({
-        doc_number: '',
-        doc_date: '',
-    });
-
-    // TABLE DATA
 
     // EDIT
     const [editedData, setEditedData] = useState({
-        doc_number: '',
-        doc_date: '',
+        docNumber: '',
+        docDate: '',
     });
 
     const [editingId, setEditingId] = useState(null);
@@ -47,16 +21,16 @@ function SpecChecks({ specCheckInfo }, props) {
             try {
                 const updatedData = {
                     id: id,
-                    iin: props.id,
-                    doc_number: editedTableData.doc_number,
-                    doc_date: editedTableData.doc_date,
+                    personId: id,
+                    docNumber: editedTableData.docNumber,
+                    docDate: editedTableData.docDate,
                 };
 
                 await updateSpecCheck(id, updatedData);
 
-                setPersonnelData(prevData => {
+                setSpecCheckInfo(prevData => {
                     return prevData.map(tableData => {
-                        if(tableData.iin === id) {
+                        if(tableData.id === id) {
                             return {...tableData, ...updatedData}
                         }
                         return tableData;
@@ -66,8 +40,8 @@ function SpecChecks({ specCheckInfo }, props) {
                 setEditingId(null);
                 setEditedData({
                     id: id,
-                    doc_number: '',
-                    doc_date: '',
+                    docNumber: '',
+                    docDate: '',
                 });
                 // console.log('Successfully updated table data')
             } catch(error) {
@@ -75,7 +49,7 @@ function SpecChecks({ specCheckInfo }, props) {
             }
         } else {
             setEditingId(id)
-            const dataToEdit = personnelData.spec_checks.find(tableData => tableData.id === id);
+            const dataToEdit = specCheckInfo.specChecks.find(tableData => tableData.id === id);
             if(dataToEdit) {
                 setEditedData(dataToEdit);
             }
@@ -86,25 +60,27 @@ function SpecChecks({ specCheckInfo }, props) {
         try {
             const updatedData = {
                 id: id,
-                iin: props.id,
-                doc_number: editedData.doc_number,
-                doc_date: editedData.doc_date,
+                personId: editedData.personId,
+                docNumber: editedData.docNumber,
+                docDate: editedData.docDate,
             };
             // console.log(id);
             // console.log(updatedData)
     
             const response = await updateSpecCheck(id, updatedData);
     
-            if (response === 200) {
-                setPersonnelData((prevData) =>
-                    prevData.map((tableData) => (tableData.id === id ? updatedData : tableData))
-                );
+            if (response.status === 200) {
+                setSpecCheckInfo((prevData) => ({
+                    ...prevData,
+                    specChecks: prevData.specChecks.map((tableData) =>
+                        tableData.id === id ? updatedData : tableData
+                    ),
+                }));
                 setEditingId(null); // Завершаем режим редактирования
- 
+                console.log("Successfully updated table data");
             } else {
-                console.log('Error updating table data');
+                console.error("Error updating table data");
             }
-            window.location.reload();
         } catch (error) {
             console.error('Error updating table data:', error);
         }

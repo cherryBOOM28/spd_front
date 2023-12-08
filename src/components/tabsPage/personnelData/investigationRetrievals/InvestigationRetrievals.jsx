@@ -1,36 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import cl from './InvestigationRetrievals.module.css';
 import Button from '../../../../components/UI/button/Button';
 import { useParams } from 'react-router-dom';
+import Cookies from 'js-cookie';
 
-import { getStaffInfo } from '../../../../api/staff_info/getStaffInfo';
 import { deleteInvestigation_retrievals } from '../../../../api/staff_info/investigation_retrievals/deleteInvestigation_retrievals';
 import { updateInvestigation_retrievals } from '../../../../api/staff_info/investigation_retrievals/updateInvestigation_retrievals';
 
-function InvestigationRetrievals({ investigationsInfo }, props) {
+function InvestigationRetrievals({ investigationsInfo, setInvestigationsInfo }) {
     const { id } = useParams();
 
-    const [personnelData, setPersonnelData] = useState({
-        "investigation_retrievals": []
-    }); // Данные из бэка
-
-    useEffect(() => {
-        fetchData()
-    }, [])
-
-    const fetchData = async () => {
-        try {
-            // GET PERSONAL DATA
-            const response = await getStaffInfo(id) 
-            setPersonnelData(response.data);
-
-        } catch (error) {
-            console.error("Error fetching data:", error);
-        }
-    }
-
-        // TABLE DATA
 
     // ДОБАВЛЕНИЕ 
     const [showForm, setShowForm] = useState(false);
@@ -40,46 +20,53 @@ function InvestigationRetrievals({ investigationsInfo }, props) {
     };
 
     const [inputData, setInputData] = useState({
-        order_type_investigation: '',
-        order_doc_numb: '',
-        order_date_investigation: '',
+        investigation_decree_type: '',
+        investigation_decree_number: '',
+        investigation_date: '',
     });
 
+    // Добавление данных
     const handleAddNewData = async (e) => {
         e.preventDefault();
         try {
-            if (!inputData.order_type_investigation || !inputData.order_doc_numb || !inputData.order_date_investigation) {
-                alert('Пожалуйста, заполните все поля!');
-                return;
-            }
+            // if (!inputData.order_type_investigation || !inputData.order_doc_numb || !inputData.order_date_investigation) {
+            //     alert('Пожалуйста, заполните все поля!');
+            //     return;
+            // }
 
             const newData = {
-                iin: props.id,
-                order_type_investigation: inputData.order_type_investigation,
-                order_doc_numb: inputData.order_doc_numb,
-                order_date_investigation: inputData.order_date_investigation,
+                personId: id,
+                investigation_decree_type: inputData.investigation_decree_type,
+                investigation_decree_number: inputData.investigation_decree_number,
+                investigation_date: inputData.investigation_date,
             };
           
-            const body =  { "investigation_retrievals": [newData] };
-            console.log(body)
+            const accessToken = Cookies.get('jwtAccessToken');
 
-            const response = await axios.post('http://localhost:8000/staff_info/create/', body);
+            const response = await axios.post('http://localhost:8000/api/v1/investigation/', newData, {
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`,
+                }
+            });
 
             if (response.status === 201) {
-                const updatedPersonnelData = {
-                    ...personnelData,
-                    awards: [
-                        ...personnelData.awards,
-                        newData
-                    ]
-                };
-
-                setPersonnelData(updatedPersonnelData);
+                setInvestigationsInfo(prevData => {
+                    // Проверяем, что prevData является объектом и содержит investigations
+                    if (typeof prevData === 'object' && Array.isArray(prevData.investigations)) {
+                      return {
+                        ...prevData,
+                        investigations: [...prevData.investigations, newData],
+                      };
+                    } else {
+                      console.error("prevData is not an object or does not contain investigations");
+                      return prevData; // возвращаем prevData без изменений
+                    }
+                });
                 setInputData({
-                    iin: id,
-                    order_type_investigation: '',
-                    order_doc_numb: '',
-                    order_date_investigation: '',
+                    personId: id,
+                    investigation_decree_type: '',
+                    investigation_decree_number: '',
+                    investigation_date: '',
                 });
                 handleShowForm(false)
             } else {
@@ -94,25 +81,36 @@ function InvestigationRetrievals({ investigationsInfo }, props) {
     // УДАЛЕНИЕ DATA
     const handleDelete = async (id) => {
         try {
-            const response = await deleteInvestigation_retrievals(id)
-            if (response === 200) {
-                // Успешно удалено, теперь обновляем состояние
-                setPersonnelData(prevData => prevData.filter(tableData => tableData.id !== id));
-                // console.log("Successfully deleted");
-            } else {
-                console.log("Error deleting data in table");
-            }
-            window.location.reload();
-        } catch(error) {
-            console.log(error)
+            // Вызываем функцию для удаления данных на сервере
+            await deleteInvestigation_retrievals(id);
+        
+            // Обновляем локальное состояние, исключая удаленный объект
+            setInvestigationsInfo(prevData => {
+            //   console.log("Type of prevData:", typeof prevData);
+        
+              // Проверяем, что prevData является объектом и содержит investigations
+              if (typeof prevData === 'object' && Array.isArray(prevData.investigations)) {
+                return {
+                  ...prevData,
+                  investigations: prevData.investigations.filter(tableData => tableData.id !== id),
+                };
+              } else {
+                // console.error("prevData is not an object or does not contain investigations");
+                return prevData; // возвращаем prevData без изменений
+              }
+            });
+        
+            console.log("Successfully deleted");
+          } catch (error) {
+            console.error("Error deleting data in table:", error);
         }
     }
     
     // EDIT
     const [editedData, setEditedData] = useState({
-        order_type_investigation: '',
-        order_doc_numb: '',
-        order_date_investigation: '',
+        investigation_decree_type: '',
+        investigation_decree_number: '',
+        investigation_date: '',
     });
     
     const [editingId, setEditingId] = useState(null);
@@ -122,15 +120,15 @@ function InvestigationRetrievals({ investigationsInfo }, props) {
             try {
                 const updatedData = {
                     id: id,
-                    iin: props.id,
-                    order_type_investigation: editedTableData.order_type_investigation,
-                    order_doc_numb: editedTableData.order_doc_numb,
-                    order_date_investigation: editedTableData.order_date_investigation,
+                    personId: id,
+                    investigation_decree_type: editedTableData.investigation_decree_type,
+                    investigation_decree_number: editedTableData.investigation_decree_number,
+                    investigation_date: editedTableData.investigation_date,
                 };
 
                 await updateInvestigation_retrievals(id, updatedData);
 
-                setPersonnelData(prevData => {
+                setInvestigationsInfo(prevData => {
                     return prevData.map(tableData => {
                         if(tableData.iin === id) {
                             return {...tableData, ...updatedData}
@@ -142,9 +140,9 @@ function InvestigationRetrievals({ investigationsInfo }, props) {
                 setEditingId(null);
                 setEditedData({
                     id: id,
-                    order_type_investigation: '',
-                    order_doc_numb: '',
-                    order_date_investigation: '',
+                    investigation_decree_type: '',
+                    investigation_decree_number: '',
+                    investigation_date: '',
                 });
                 // console.log('Successfully updated table data')
             } catch(error) {
@@ -152,7 +150,7 @@ function InvestigationRetrievals({ investigationsInfo }, props) {
             }
         } else {
             setEditingId(id)
-            const dataToEdit = personnelData.investigation_retrievals.find(tableData => tableData.id === id);
+            const dataToEdit = investigationsInfo.investigations.find(tableData => tableData.id === id);
             if(dataToEdit) {
                 setEditedData(dataToEdit);
             }
@@ -163,25 +161,27 @@ function InvestigationRetrievals({ investigationsInfo }, props) {
         try {
             const updatedData = {
                 id: id,
-                iin: props.id,
-                order_type_investigation: editedData.order_type_investigation,
-                order_doc_numb: editedData.order_doc_numb,
-                order_date_investigation: editedData.order_date_investigation,
+                personId: editedData.personId,
+                investigation_decree_type: editedData.investigation_decree_type,
+                investigation_decree_number: editedData.investigation_decree_number,
+                investigation_date: editedData.investigation_date,
             };
             // console.log(id);
     
             const response = await updateInvestigation_retrievals(id, updatedData);
     
-            if (response === 200) {
-                setPersonnelData((prevData) =>
-                    prevData.map((tableData) => (tableData.id === id ? updatedData : tableData))
-                );
+            if (response.status === 200) {
+                setInvestigationsInfo((prevData) => ({
+                    ...prevData,
+                    investigations: prevData.investigations.map((tableData) =>
+                        tableData.id === id ? updatedData : tableData
+                    ),
+                }));
                 setEditingId(null); // Завершаем режим редактирования
-                // console.log('Successfully updated table data');
+                console.log("Successfully updated table data");
             } else {
-                console.log('Error updating table data');
+                console.error("Error updating table data");
             }
-            window.location.reload();
         } catch (error) {
             console.error('Error updating table data:', error);
         }
@@ -209,11 +209,11 @@ function InvestigationRetrievals({ investigationsInfo }, props) {
                                     <td>
                                         <select
                                             className={cl.formInput}
-                                            value={inputData.awards_type}
-                                            onChange={(e) => setInputData({ ...inputData, awards_type: e.target.value })}
+                                            value={inputData.investigation_decree_type}
+                                            onChange={(e) => setInputData({ ...inputData, investigation_decree_type: e.target.value })}
                                         >
                                             <option value="">Выберите вид взыскания</option>
-                                            <option value="замечания">Замечания</option>
+                                            <option value="Замечания">Замечания</option>
                                             <option value="Выговор">Выговор</option>
                                             <option value="Строгий выговор">Строгий выговор</option>
                                             <option value="Неполное служебное соответствие">Неполное служебное соответствие</option>
@@ -225,8 +225,8 @@ function InvestigationRetrievals({ investigationsInfo }, props) {
                                             type="number"
                                             className={cl.formInput}
                                             placeholder="Номер приказа"
-                                            value={inputData.awards_doc_numb}
-                                            onChange={(e) => setInputData({ ...inputData, awards_doc_numb: e.target.value })}
+                                            value={inputData.investigation_decree_number}
+                                            onChange={(e) => setInputData({ ...inputData, investigation_decree_number: e.target.value })}
                                         />
                                     </td>
                                     <td>
@@ -236,12 +236,12 @@ function InvestigationRetrievals({ investigationsInfo }, props) {
                                             type="date"
                                             className={cl.formInput}
                                             placeholder="Дата приказа"
-                                            value={inputData.awards_date || ''}
+                                            value={inputData.investigation_date || ''}
                                             onChange={(e) => {
                                                 const newDate = e.target.value;
                                                 setInputData((prevWorker) => ({
                                                 ...prevWorker,
-                                                awards_date: newDate,
+                                                investigation_date: newDate,
                                                 }));
                                             }}
                                         />
@@ -286,7 +286,7 @@ function InvestigationRetrievals({ investigationsInfo }, props) {
                                         d.investigation_decree_type
                                     )}
                                 </td>
-                                <td>{editingId === d.id ? <input type="text" className={cl.editInput} name='investigation_decree_type' value={editedData.investigation_decree_type} onChange={(e) => setEditedData({ ...editedData, investigation_decree_type: e.target.value })} /> : d.investigation_decree_type}</td>
+                                <td>{editingId === d.id ? <input type="text" className={cl.editInput} name='investigation_decree_number' value={editedData.investigation_decree_number} onChange={(e) => setEditedData({ ...editedData, investigation_decree_number: e.target.value })} /> : d.investigation_decree_number}</td>
                                 <td>
                                 {editingId === d.id ? (
                                     <div className={cl.datePickerContainer}>

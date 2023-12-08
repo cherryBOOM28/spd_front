@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import cl from './LaborActivity.module.css';
 import Button from '../../../components/UI/button/Button';
 import Cookies from 'js-cookie';
 
-import { getWorkingHistory } from '../../../api/working_history/getWorkingHistotry';
 import { deleteWorkingHistory } from '../../../api/working_history/deleteWorkingHistory';
 import { UpdateWorkingHistory } from '../../../api/working_history/updateWorkingHistory';
 
@@ -28,6 +27,7 @@ function LaborActivity({ workingHistory, setWorkingHistory }, props) {
         organizationAddress: '',
     });
 
+    // Добавление данных
     const handleAddNewData = async (e, id) => {
         e.preventDefault();
         // console.log("Current id:", id); 

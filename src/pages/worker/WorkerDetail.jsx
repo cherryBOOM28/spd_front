@@ -89,7 +89,7 @@ function WorkerDetail() {
           'Authorization': `Bearer ${accessToken}`,
         }
       });
-      console.log("response", response.data);
+      // console.log("response", response.data);
   
       if (response.status === 200) {
         setPhoto(response.data.Person.photo);
@@ -118,7 +118,7 @@ function WorkerDetail() {
         setWorkingHistory(response.data.WorkingHistory);
         setRankArchive(response.data.RankArchive);
 
-        console.log("RankArchive",response.data.RankArchive);
+        // console.log("RankArchive",response.data.RankArchive);
 
         // console.log(response.data.WorkingHistory);
 
@@ -134,13 +134,7 @@ function WorkerDetail() {
 
         setDecreeListInfo(response.data.DecreeListInfo);
 
-
-
         // console.log(response.data.Person.rankInfo.militaryRank);
-
-
-
-
       } else {
         console.log(response.statusText);
       }
@@ -189,12 +183,12 @@ function WorkerDetail() {
                       >
                         Кадровые данные 
                       </div>
-                      <div 
+                      {/* <div 
                           className={activeTab === 5 ? cl.btnTab + ' ' + cl.activeTab : cl.btnTab}
                           onClick={() => handleTabClick(5)}
                       >
                         Приказы рапорта 
-                      </div>
+                      </div> */}
                     </div>
 
                     <div className={cl.tabBody}>
@@ -240,6 +234,7 @@ function WorkerDetail() {
                               positionTitle={positionTitle}
                               departmentName={departmentName}
                               familyStatus={familyStatus}
+                              
                               familyComposition={familyComposition}
                               setFamilyComposition={setFamilyComposition}
                             />
@@ -305,19 +300,28 @@ function WorkerDetail() {
                             <PersonnelData 
                               id={id} 
                               iin={iin} 
-                              autobiographyInfo={autobiographyInfo}       
+
+                              autobiographyInfo={autobiographyInfo}   
+                              setAutobiographyInfo={setAutobiographyInfo} 
+
                               specCheckInfo={specCheckInfo}
+                              setSpecCheckInfo={setSpecCheckInfo}
 
                               attestationInfo={attestationInfo}
                               setAttestationInfo={setAttestationInfo}
 
                               classCategoriesInfo={classCategoriesInfo}
+                              setClassCategoriesInfo={setClassCategoriesInfo}
 
                               rewardsInfo={rewardsInfo}
                               setRewardsInfo={setRewardsInfo}
                               
                               sickLeavesInfo={sickLeavesInfo}
+                              setSickLeavesInfo={setSickLeavesInfo}
+
                               investigationsInfo={investigationsInfo}
+                              setInvestigationsInfo={setInvestigationsInfo}
+
                               rankInfo={rankInfo}
                               militaryRank={militaryRank}
                               rankArchive={rankArchive}
@@ -326,7 +330,7 @@ function WorkerDetail() {
                             
                         </div>
                       }
-                      {
+                      {/* {
                         activeTab === 5 && 
 
                         <div className={cl.basic__info}>
@@ -343,7 +347,7 @@ function WorkerDetail() {
                             />
                           </div>      
                         </div>
-                      }
+                      } */}
                     </div>
                   </div>
                 </div>

@@ -3,8 +3,8 @@ import axios from 'axios';
 import cl from './Awards.module.css';
 import Button from '../../../../components/UI/button/Button';
 import { useParams } from 'react-router-dom';
+import Cookies from 'js-cookie';
 
-import { getStaffInfo } from '../../../../api/staff_info/getStaffInfo';
 import { deleteAward } from '../../../../api/staff_info/awards/deleteAward';
 import { updateAward } from '../../../../api/staff_info/awards/updateAward';
 
@@ -12,26 +12,6 @@ function Awards({ rewardsInfo, setRewardsInfo }, props) {
     // const iin = props.iin;
     const { id } = useParams();
 
-    const [personnelData, setPersonnelData] = useState({
-        "awards": []
-    }); // Данные из бэка
-
-    useEffect(() => {
-        fetchData()
-    }, [])
-
-    const fetchData = async () => {
-        try {
-            // GET PERSONAL DATA
-            const response = await getStaffInfo(id) 
-            setPersonnelData(response.data);
-
-        } catch (error) {
-            console.error("Error fetching data:", error);
-        }
-    }
-
-    // TABLE DATA
 
     // ДОБАВЛЕНИЕ 
     const [showForm, setShowForm] = useState(false);
@@ -49,38 +29,44 @@ function Awards({ rewardsInfo, setRewardsInfo }, props) {
     const handleAddNewData = async (e) => {
         e.preventDefault();
         try {
-            if (!inputData.awards_type || !inputData.awards_doc_numb || !inputData.awards_date) {
-                alert('Пожалуйста, заполните все поля!');
-                return;
-            }
+            // if (!inputData.awards_type || !inputData.awards_doc_numb || !inputData.awards_date) {
+            //     alert('Пожалуйста, заполните все поля!');
+            //     return;
+            // }
 
             const newData = {
-                iin: props.id,
-                awards_type: inputData.awards_type,
-                awards_doc_numb: inputData.awards_doc_numb,
-                awards_date: inputData.awards_date,
+                personId: id,
+                rewardType: inputData.rewardType,
+                rewardDocNumber: inputData.rewardDocNumber,
+                rewardDate: inputData.rewardDate,
             };
           
-            const body =  { "awards": [newData] };
-            console.log(body)
+            const accessToken = Cookies.get('jwtAccessToken');
 
-            const response = await axios.post('http://localhost:8000/staff_info/create/', body);
+            const response = await axios.post('http://localhost:8000/api/v1/reward/', newData, {
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`,
+                }
+            });
 
             if (response.status === 201) {
-                const updatedPersonnelData = {
-                    ...personnelData,
-                    awards: [
-                        ...personnelData.awards,
-                        newData
-                    ]
-                };
-
-                setPersonnelData(updatedPersonnelData);
+                setRewardsInfo(prevData => {
+                    // Проверяем, что prevData является объектом и содержит rewards
+                    if (typeof prevData === 'object' && Array.isArray(prevData.rewards)) {
+                      return {
+                        ...prevData,
+                        rewards: [...prevData.rewards, newData],
+                      };
+                    } else {
+                      console.error("prevData is not an object or does not contain rewards");
+                      return prevData; // возвращаем prevData без изменений
+                    }
+                });
                 setInputData({
-                    iin: id,
-                    awards_type: '',
-                    awards_doc_numb: '',
-                    awards_date: '',
+                    personId: id,
+                    rewardType: '',
+                    rewardDocNumber: '',
+                    rewardDate: '',
                 });
                 handleShowForm(false)
             } else {
@@ -95,25 +81,36 @@ function Awards({ rewardsInfo, setRewardsInfo }, props) {
     // УДАЛЕНИЕ DATA
     const handleDelete = async (id) => {
         try {
-            const response = await deleteAward(id)
-            if (response === 200) {
-                // Успешно удалено, теперь обновляем состояние
-                setPersonnelData(prevData => prevData.filter(tableData => tableData.id !== id));
-                // console.log("Successfully deleted");
-            } else {
-                console.log("Error deleting data in table");
-            }
-            window.location.reload();
-        } catch(error) {
-            console.log(error)
+            // Вызываем функцию для удаления данных на сервере
+            await deleteAward(id);
+        
+            // Обновляем локальное состояние, исключая удаленный объект
+            setRewardsInfo(prevData => {
+            //   console.log("Type of prevData:", typeof prevData);
+        
+              // Проверяем, что prevData является объектом и содержит rewards
+              if (typeof prevData === 'object' && Array.isArray(prevData.rewards)) {
+                return {
+                  ...prevData,
+                  rewards: prevData.rewards.filter(tableData => tableData.id !== id),
+                };
+              } else {
+                // console.error("prevData is not an object or does not contain rewards");
+                return prevData; // возвращаем prevData без изменений
+              }
+            });
+        
+            console.log("Successfully deleted");
+          } catch (error) {
+            console.error("Error deleting data in table:", error);
         }
     }
 
     // EDIT
     const [editedData, setEditedData] = useState({
-        awards_type: '',
-        awards_doc_numb: '',
-        awards_date: '',
+        rewardType: '',
+        rewardDocNumber: '',
+        rewardDate: '',
     });
 
     const [editingId, setEditingId] = useState(null);
@@ -123,17 +120,17 @@ function Awards({ rewardsInfo, setRewardsInfo }, props) {
             try {
                 const updatedData = {
                     id: id,
-                    iin: props.id,
-                    awards_type: editedTableData.awards_type,
-                    awards_doc_numb: editedTableData.awards_doc_numb,
-                    awards_date: editedTableData.awards_date,
+                    personId: id,
+                    rewardType: editedTableData.rewardType,
+                    rewardDocNumber: editedTableData.rewardDocNumber,
+                    rewardDate: editedTableData.rewardDate,
                 };
 
                 await updateAward(id, updatedData);
 
-                setPersonnelData(prevData => {
+                setRewardsInfo(prevData => {
                     return prevData.map(tableData => {
-                        if(tableData.iin === id) {
+                        if(tableData.id === id) {
                             return {...tableData, ...updatedData}
                         }
                         return tableData;
@@ -143,9 +140,9 @@ function Awards({ rewardsInfo, setRewardsInfo }, props) {
                 setEditingId(null);
                 setEditedData({
                     id: id,
-                    awards_type: '',
-                    awards_doc_numb: '',
-                    awards_date: '',
+                    rewardType: '',
+                    rewardDocNumber: '',
+                    rewardDate: '',
                 });
                 // console.log('Successfully updated table data')
             } catch(error) {
@@ -153,7 +150,7 @@ function Awards({ rewardsInfo, setRewardsInfo }, props) {
             }
         } else {
             setEditingId(id)
-            const dataToEdit = personnelData.sick_leaves.find(tableData => tableData.id === id);
+            const dataToEdit = rewardsInfo.rewards.find(tableData => tableData.id === id);
             if(dataToEdit) {
                 setEditedData(dataToEdit);
             }
@@ -165,24 +162,26 @@ function Awards({ rewardsInfo, setRewardsInfo }, props) {
             const updatedData = {
                 id: id,
                 iin: props.id,
-                awards_type: editedData.awards_type,
-                awards_doc_numb: editedData.awards_doc_numb,
-                awards_date: editedData.awards_date,
+                rewardType: editedData.rewardType,
+                rewardDocNumber: editedData.rewardDocNumber,
+                rewardDate: editedData.rewardDate,
             };
             // console.log(id);
     
             const response = await updateAward(id, updatedData);
-    
-            if (response === 200) {
-                setPersonnelData((prevData) =>
-                    prevData.map((tableData) => (tableData.id === id ? updatedData : tableData))
-                );
+  
+            if (response.status === 200) {
+                setRewardsInfo((prevData) => ({
+                    ...prevData,
+                    rewards: prevData.rewards.map((tableData) =>
+                        tableData.id === id ? updatedData : tableData
+                    ),
+                }));
                 setEditingId(null); // Завершаем режим редактирования
-                // console.log('Successfully updated table data');
+                console.log("Successfully updated table data");
             } else {
-                console.log('Error updating table data');
+                console.error("Error updating table data");
             }
-            window.location.reload();
         } catch (error) {
             console.error('Error updating table data:', error);
         }
@@ -211,13 +210,18 @@ function Awards({ rewardsInfo, setRewardsInfo }, props) {
                                     <td>
                                         <select
                                             className={cl.formInput}
-                                            value={inputData.awards_type}
-                                            onChange={(e) => setInputData({ ...inputData, awards_type: e.target.value })}
+                                            value={inputData.rewardType}
+                                            onChange={(e) => setInputData({ ...inputData, rewardType: e.target.value })}
                                         >
                                             <option value="">Выберите тип награды</option>
-                                            <option value="награда1">награда</option>
-                                            <option value="награда2">награда2</option>
-                                            <option value="награда3">награда3</option>
+                                            <option value="Благодарность">Благодарность </option>
+                                            <option value="Грамота">Грамота </option>
+                                            <option value=" Почетная грамота"> Почетная грамота</option>
+                                            <option value="Нагрудной знак">Нагрудной знак - Қаржылық мониторинг органдарының үздігі </option>
+                                            <option value="Медаль ">Медаль - Экономикалық қауіпсіздікті қамтамасыз етуге қосқан үлесі үшін</option>
+                                            <option value=" Мінсіз қызметі үшін ІІІ дәрежелі">Мінсіз қызметі үшін ІІІ дәрежелі</option>
+                                            <option value="Мінсіз қызметі үшін ІІ дәрежелі ">Мінсіз қызметі үшін ІІ дәрежелі</option>
+                                            <option value="Мінсіз қызметі үшін І дәрежелі">Мінсіз қызметі үшін І дәрежелі</option>
                                         </select>
                                     </td>
                                     <td>
@@ -225,8 +229,8 @@ function Awards({ rewardsInfo, setRewardsInfo }, props) {
                                             type="number"
                                             className={cl.formInput}
                                             placeholder="Номер приказа"
-                                            value={inputData.awards_doc_numb}
-                                            onChange={(e) => setInputData({ ...inputData, awards_doc_numb: e.target.value })}
+                                            value={inputData.rewardDocNumber}
+                                            onChange={(e) => setInputData({ ...inputData, rewardDocNumber: e.target.value })}
                                         />
                                     </td>
                                     <td>
@@ -236,12 +240,12 @@ function Awards({ rewardsInfo, setRewardsInfo }, props) {
                                             type="date"
                                             className={cl.formInput}
                                             placeholder="Дата приказа"
-                                            value={inputData.awards_date || ''}
+                                            value={inputData.rewardDate || ''}
                                             onChange={(e) => {
                                                 const newDate = e.target.value;
                                                 setInputData((prevWorker) => ({
                                                 ...prevWorker,
-                                                awards_date: newDate,
+                                                rewardDate: newDate,
                                                 }));
                                             }}
                                         />
@@ -276,9 +280,14 @@ function Awards({ rewardsInfo, setRewardsInfo }, props) {
                                             onChange={(e) => setEditedData({ ...editedData, rewardType: e.target.value })}
                                         >
                                             <option value="">Выберите тип награды</option>
-                                            <option value="награда1">награда</option>
-                                            <option value="награда2">награда2</option>
-                                            <option value="награда3">награда3</option>
+                                            <option value="Благодарность">Благодарность </option>
+                                            <option value="Грамота">Грамота </option>
+                                            <option value=" Почетная грамота"> Почетная грамота</option>
+                                            <option value="Нагрудной знак">Нагрудной знак - Қаржылық мониторинг органдарының үздігі </option>
+                                            <option value="Медаль ">Медаль - Экономикалық қауіпсіздікті қамтамасыз етуге қосқан үлесі үшін</option>
+                                            <option value=" Мінсіз қызметі үшін ІІІ дәрежелі">Мінсіз қызметі үшін ІІІ дәрежелі</option>
+                                            <option value="Мінсіз қызметі үшін ІІ дәрежелі ">Мінсіз қызметі үшін ІІ дәрежелі</option>
+                                            <option value="Мінсіз қызметі үшін І дәрежелі">Мінсіз қызметі үшін І дәрежелі</option>
                                         </select>
                                     ) : (
                                         d.rewardType

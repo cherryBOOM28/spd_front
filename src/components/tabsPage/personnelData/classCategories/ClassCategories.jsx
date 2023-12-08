@@ -6,7 +6,7 @@ import { getStaffInfo } from '../../../../api/staff_info/getStaffInfo';
 import { updateClassCategories } from '../../../../api/staff_info/class_categories/updateClassCategories';
 
 
-function ClassCategories({ classCategoriesInfo }, props) {
+function ClassCategories({ classCategoriesInfo, setClassCategoriesInfo }, props) {
     const { id } = useParams();
 
     const [personnelData, setPersonnelData] = useState({
@@ -27,16 +27,13 @@ function ClassCategories({ classCategoriesInfo }, props) {
                 console.error("Error fetching data:", error);
             }
         }
-    const [editing, setEditing] = useState(false);
-    const [editedWorker, setEditedWorker] = useState({
-        category_type: '',
-    });
+
 
     // TABLE DATA
 
     // EDIT
     const [editedData, setEditedData] = useState({
-        category_type: '',
+        categoryType: '',
     });
 
     const [editingId, setEditingId] = useState(null);
@@ -47,14 +44,14 @@ function ClassCategories({ classCategoriesInfo }, props) {
                 const updatedData = {
                     id: id,
                     iin: props.id,
-                    category_type: editedTableData.category_type,
+                    categoryType: editedTableData.categoryType,
                 };
 
                 await updateClassCategories(id, updatedData);
 
                 setPersonnelData(prevData => {
                     return prevData.map(tableData => {
-                        if(tableData.iin === id) {
+                        if(tableData.id === id) {
                             return {...tableData, ...updatedData}
                         }
                         return tableData;
@@ -64,7 +61,7 @@ function ClassCategories({ classCategoriesInfo }, props) {
                 setEditingId(null);
                 setEditedData({
                     id: id,
-                    category_type: '',
+                    categoryType: '',
                 });
                 // console.log('Successfully updated table data')
             } catch(error) {
@@ -72,7 +69,7 @@ function ClassCategories({ classCategoriesInfo }, props) {
             }
         } else {
             setEditingId(id)
-            const dataToEdit = personnelData.spec_checks.find(tableData => tableData.id === id);
+            const dataToEdit = classCategoriesInfo.classCategories.find(tableData => tableData.id === id);
             if(dataToEdit) {
                 setEditedData(dataToEdit);
             }
@@ -83,24 +80,26 @@ function ClassCategories({ classCategoriesInfo }, props) {
         try {
             const updatedData = {
                 id: id,
-                iin: props.id,
-                category_type: editedData.category_type,
+                personId: editedData.personId,
+                categoryType: editedData.categoryType,
             };
             // console.log(id);
             // console.log(updatedData)
     
             const response = await updateClassCategories(id, updatedData);
     
-            if (response === 200) {
-                setPersonnelData((prevData) =>
-                    prevData.map((tableData) => (tableData.id === id ? updatedData : tableData))
-                );
+            if (response.status === 200) {
+                setClassCategoriesInfo((prevData) => ({
+                    ...prevData,
+                    classCategories: prevData.classCategories.map((tableData) =>
+                        tableData.id === id ? updatedData : tableData
+                    ),
+                }));
                 setEditingId(null); // Завершаем режим редактирования
- 
+                // console.log("Successfully updated table data");
             } else {
-                console.log('Error updating table data');
+                console.error("Error updating table data");
             }
-            window.location.reload();
         } catch (error) {
             console.error('Error updating table data:', error);
         }

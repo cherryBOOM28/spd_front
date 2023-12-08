@@ -5,32 +5,12 @@ import axios from 'axios';
 import Button from '../../../UI/button/Button';
 import Cookies from 'js-cookie';
 
-import { getPersonalInfo } from '../../../../api/persona_info/getPersonalInfo';
 import { deleteCourse } from '../../../../api/persona_info/courses/deleteCourse';
 import { updateCourse } from '../../../../api/persona_info/courses/updateCourse';
 
 function Courses({ course, setCourse }, props) {
     const { id } = useParams();
 
-    const [courses, setCourses] = useState({
-        "courses": []
-    }); // Данные из бэка
-
-    // eslint-disable-next-line
-    useEffect(() => {
-        fetchData()
-    }, [])
-
-    const fetchData = async () => {
-        try {
-            // GET Education info
-            const coursesResponse = await getPersonalInfo(id);
-            setCourses(coursesResponse.data);
-            // console.log(coursesResponse)
-        } catch (error) {
-            console.error("Error fetching data:", error);
-        }
-    }
 
     // ДОБАВЛЕНИЕ РОДСТВЕННИКА
     const [showForm, setShowForm] = useState(false);
