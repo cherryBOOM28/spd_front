@@ -1,9 +1,9 @@
 import cl from './Button.module.css'
 
 
-function Button({children, className, ...props}) {
+function Button({children, className, onClick, ...props}) {
     return (
-        <button {...props} className={cl.btn + " " + className}>{children}</button>
+        <button onClick={onClick} {...props} className={cl.btn + " " + className}>{children}</button>
     );
 }
 

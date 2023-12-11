@@ -1,0 +1,43 @@
+.customTable {
+width: 100%;
+border-collapse: collapse;
+border-spacing: 0;
+}
+
+.customTable th,
+.customTable td {
+/* border: 1px solid #ccc; */
+padding: 8px;
+text-align: left;
+}
+
+.customTable td {
+border-bottom: none;
+border-top: none;
+border-right: 1px solid #ccc;
+}
+
+.customTable td:first-child {
+
+border-left: 1px solid #ccc;
+}
+
+.customTable tr {
+border-bottom: 1px solid #ccc;
+height: fit-content !important;
+}
+
+.customTable tr:first-child {
+border-top: 1px solid #ccc;
+}
+
+.customTable th {
+background-color: #f2f2f2;
+}
+
+.workerImg {
+width: 50px;
+height: 50px;
+border-radius: 50%;
+object-fit: cover;
+}

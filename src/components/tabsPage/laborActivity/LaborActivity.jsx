@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import cl from './LaborActivity.module.css';
@@ -8,9 +8,14 @@ import Cookies from 'js-cookie';
 import { deleteWorkingHistory } from '../../../api/working_history/deleteWorkingHistory';
 import { UpdateWorkingHistory } from '../../../api/working_history/updateWorkingHistory';
 
-function LaborActivity({ workingHistory, setWorkingHistory }, props) {
+function LaborActivity({ workingHistory, setWorkingHistory }) {
     const { id } = useParams();
     // console.log(`id: ${id}`);
+
+    useEffect(() => {
+        // Your asynchronous operations or API calls
+        console.log('Component is re-rendering with updated workingHistory:', workingHistory);
+    }, [workingHistory]);
 
     const [showForm, setShowForm] = useState(false);
 
@@ -198,20 +203,64 @@ function LaborActivity({ workingHistory, setWorkingHistory }, props) {
                 department: editedData.department,
                 organizationName: editedData.organizationName,
                 organizationAddress: editedData.organizationAddress,
-                isPravoOhranka: editedData.isPravoOhranka,
-                HaveCoefficient: editedData.HaveCoefficient,
+                HaveCoefficient: editedData.HaveCoefficient || false,
+                isPravoOhranka: editedData.isPravoOhranka || false,
+                // isPravoOhranka: editedData.isPravoOhranka,
+                // HaveCoefficient: editedData.HaveCoefficient,
             };
+
+            // Check if overall_experience is defined before adding to updatedData
+            if (editedData.overall_experience !== undefined) {
+                updatedData.overall_experience = {
+                    years: editedData.overall_experience.years || 0,
+                    months: editedData.overall_experience.months || 0,
+                    days: editedData.overall_experience.days || 0,
+                };
+            }
+
+            // Check if pravo_experience is defined before adding to updatedData
+            if (editedData.pravo_experience !== undefined) {
+                updatedData.pravo_experience = {
+                    years: editedData.pravo_experience.years || 0,
+                    months: editedData.pravo_experience.months || 0,
+                    days: editedData.pravo_experience.days || 0,
+                };
+            }
+
             // console.log("personId", id);
-            // console.log("updatedData", {updatedData});
+            console.log("updatedData", {updatedData});
+            console.log('Overall Experience:', updatedData.overall_experience);
+            console.log('Pravo Experience:', updatedData.pravo_experience);
+            console.log('editedData:', editedData);
+
+
 
     
             const response = await UpdateWorkingHistory(id, updatedData);
+            console.log('Before API Call - workingHistory:', workingHistory);
+            console.log('After API Call - response:', response.data);
+            console.log('After API Call - workingHistory:', workingHistory);
+
   
             if (response.status === 200) {
                 setWorkingHistory((prevData) => ({
                     ...prevData,
                     workingHistories: prevData.workingHistories.map((tableData) =>
-                        tableData.id === id ? updatedData : tableData
+                        tableData.id === id 
+                        ? {
+                            ...tableData,
+                            overall_experience: {
+                                years: updatedData.overall_experience?.years,
+                                months: updatedData.overall_experience?.months,
+                                days: updatedData.overall_experience?.days,
+                            },
+                            pravo_experience: {
+                                years: updatedData.pravo_experience?.years,
+                                months: updatedData.pravo_experience?.months,
+                                days: updatedData.pravo_experience?.days,
+                            },
+                          }
+                        : tableData
                     ),
                 }));
                 setEditingId(null); // Завершаем режим редактирования
@@ -220,7 +269,7 @@ function LaborActivity({ workingHistory, setWorkingHistory }, props) {
                 console.error("Error updating table data");
             }
             // console.log(updatedData);
-            // window.location.reload();
+            window.location.reload();
         } catch (error) {
             console.error('Error updating table data:', error);
         }
@@ -424,23 +473,6 @@ function LaborActivity({ workingHistory, setWorkingHistory }, props) {
                                     {editingId === d.id ? (
                                         <input
                                         type="checkbox"
-                                        name="isPravoOhranka"
-                                        checked={editedData.isPravoOhranka || false}
-                                        onChange={(e) =>
-                                            setEditedData((prevData) => ({
-                                            ...prevData,
-                                            isPravoOhranka: e.target.checked,
-                                            }))
-                                        }
-                                        />
-                                    ) : (
-                                        d.isPravoOhranka ? "Да" : "Нет"
-                                    )}
-                                </td>
-                                <td>
-                                    {editingId === d.id ? (
-                                        <input
-                                        type="checkbox"
                                         name="HaveCoefficient"
                                         checked={editedData.HaveCoefficient || false}
                                         onChange={(e) =>
@@ -454,6 +486,24 @@ function LaborActivity({ workingHistory, setWorkingHistory }, props) {
                                         d.HaveCoefficient ? "Да" : "Нет"
                                     )}
                                 </td>
+                                <td>
+                                    {editingId === d.id ? (
+                                        <input
+                                        type="checkbox"
+                                        name="isPravoOhranka"
+                                        checked={editedData.isPravoOhranka || false}
+                                        onChange={(e) =>
+                                            setEditedData((prevData) => ({
+                                            ...prevData,
+                                            isPravoOhranka: e.target.checked,
+                                            }))
+                                        }
+                                        />
+                                    ) : (
+                                        d.isPravoOhranka ? "Да" : "Нет"
+                                    )}
+                                </td>
+                                
                                 <td className={cl.relativesActionBtns} style={{}}>
                                     {editingId === d.id ? (
                                         <>
@@ -478,27 +528,32 @@ function LaborActivity({ workingHistory, setWorkingHistory }, props) {
                           <td>Стаж в правохранительных органах</td>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td>
-                            {workingHistory['Overall experience'] && (
-                                <div className={cl.experience}>
-                                    <p>Год: {workingHistory['Overall experience'].years}</p>
-                                    <p>Месяц: {workingHistory['Overall experience'].months}</p>
-                                    <p>День: {workingHistory['Overall experience'].days}</p>
-                                </div>
-                            )}
-                            </td>
-                            <td>
-                                {workingHistory['PravoOhranka experience'] && (
+                    <tbody> 
+                        {workingHistory && workingHistory.workingHistories && workingHistory.workingHistories
+                        .filter((d) =>  d.overall_experience || d.pravo_experience)
+                        .map((d, i) => (
+                            <tr key={i}>
+                                <td>
+                                {d.overall_experience && (
                                     <div className={cl.experience}>
-                                        <p>Год: {workingHistory['PravoOhranka experience'].years}</p>
-                                        <p>Месяц: {workingHistory['PravoOhranka experience'].months}</p>
-                                        <p>День: {workingHistory['PravoOhranka experience'].days}</p>
+                                        <p>Год:  {d.overall_experience.years}</p>
+                                        <p>Месяц: {d.overall_experience.months}</p>
+                                        <p>День: {d.overall_experience.days}</p>
                                     </div>
                                 )}
-                            </td>
-                        </tr>
+                                </td>
+                                <td>
+                                    {d.pravo_experience && (
+                                        <div className={cl.experience}>
+                                           <p>Год:  {d.pravo_experience.years}</p>
+                                            <p>Месяц: {d.pravo_experience.months}</p>
+                                            <p>День: {d.pravo_experience.days}</p>
+                                        </div>
+                                    )}
+                                </td>
+                            </tr>
+                        ))}
+                        
                     </tbody>
                 </table>
 

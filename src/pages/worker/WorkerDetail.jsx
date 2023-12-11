@@ -134,6 +134,8 @@ function WorkerDetail() {
 
         setDecreeListInfo(response.data.DecreeListInfo);
 
+        
+
         // console.log(response.data.Person.rankInfo.militaryRank);
       } else {
         console.log(response.statusText);

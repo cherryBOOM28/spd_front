@@ -34,7 +34,7 @@ const Navigation = () => {
             </NavLink> */}
             <NavLink to="/basic-orders" className={cl.navLink}>
                 <li className={cl.navLi}>
-                    <img src={ordersIcon} alt="ordersIcon" className={cl.navImg} />
+                    <img src={ordersIcon} alt="ordersIcon" className={cl.navImg} style={{ width: '9%' }}/>
                     Основные приказы
                 </li>
             </NavLink>
