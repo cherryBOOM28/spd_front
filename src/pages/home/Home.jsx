@@ -320,7 +320,7 @@ function Home(props) {
                                 onChange={() => handleRadioChange('all')}
                             />
                         </div>
-                        <div className={cl.group_name} style={{ cursor: 'pointer' }} onClick={() => handleLocationChange('Астана')}>
+                        {/* <div className={cl.group_name} style={{ cursor: 'pointer' }} onClick={() => handleLocationChange('Астана')}>
                             <p>Астана</p>
                             <input
                                 type="radio"
@@ -328,7 +328,7 @@ function Home(props) {
                                 checked={selectedLocation === 'Астана'}
                                 onChange={() => handleRadioChange('all')}
                             />
-                        </div>
+                        </div> */}
                     </div>
                 </div>
                 <div className={cl.employees}>

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import cl from './DecreeHistory.module.css';
+import { GoHistory } from "react-icons/go";
 
 function DecreeHistory() {
   const [decreeList, setDecreeList] = useState([]);
@@ -27,7 +28,7 @@ function DecreeHistory() {
 
   return (
     <div className={cl.container}>
-      <h1>Decree History</h1>
+      <h1 className={cl.headline}><GoHistory /> История приказов</h1>
       <table className={cl.customTable}>
         <thead>
           <tr>
@@ -50,14 +51,16 @@ function DecreeHistory() {
               <td>{decree.decreeDate}</td>
               <td>{decree.person.iin}</td>
               <td>
-                <div>
-                  {decree.person.firstName}
-                </div>
-                <div>
-                  {decree.person.surname}
-                </div>
-                <div>
-                  {decree.person.patronymic}
+                <div  className={cl.fio}>
+                  <div>
+                    {decree.person.firstName}
+                  </div>
+                  <div>
+                    {decree.person.surname}
+                  </div>
+                  <div>
+                    {decree.person.patronymic}
+                  </div>
                 </div>
               </td>
               <td>{decree.person.positionInfo}</td>
