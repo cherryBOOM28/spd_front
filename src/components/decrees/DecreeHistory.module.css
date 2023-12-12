@@ -27,7 +27,7 @@ margin: 0 auto;
 }
 
 .customTable tr {
-border-bottom: 1px solid #ccc;
+border-bottom: 1px solid с;
 height: fit-content !important;
 
 }
@@ -63,4 +63,45 @@ object-fit: cover;
 .fio {
     display: flex;
     gap: 8px;
+}
+
+
+/* styles.module.css */
+
+.decree_btn_wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+
+.decree_row {
+  display: flex;
+  gap: 20px;
+}
+
+.decree_btn {
+  background-color: #f5f5f5;
+  border-radius: 8px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: translateY(-5px);
+  }
+
+  svg {
+    font-size: 36px;
+    color: #1B3884;
+  }
+
+  p {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #1B3884;
+  }
 }
