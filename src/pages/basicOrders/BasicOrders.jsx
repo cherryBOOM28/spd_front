@@ -24,6 +24,8 @@ function BasicOrders() {
         monthCount: 0,
         base: '',
     });
+    const [isDecreeHistoryOpen, setDecreeHistoryOpen] = useState(true);
+
 
     const orders = [
         { value: '', label: 'Выберите приказ' },
@@ -210,6 +212,11 @@ function BasicOrders() {
         );
     };
 
+    const handleButtonClick = () => {
+        // Toggle the visibility of DecreeHistory when the button is clicked
+        setDecreeHistoryOpen(!isDecreeHistoryOpen);
+    };
+
     return (
         <div className={cl.wrapper}>
             <Navigation className={cl.navigation} /> 
@@ -228,10 +235,10 @@ function BasicOrders() {
                                     Создать приказ
                                 </Dropdown>
                             </div>
-                            <Button>История документов</Button>
+                            <Button  onClick={handleButtonClick}>История документов</Button>
                         </div>
                         {selectedOrder === 'appointment' && renderAppointmentForm()}
-                            <DecreeHistory />
+                        {isDecreeHistoryOpen && <DecreeHistory />}
                     </div>
                 </div>
             </div>
