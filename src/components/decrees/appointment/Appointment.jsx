@@ -1,10 +1,18 @@
 import React, { useState } from 'react'
-import Button from '../../UI/button/Button';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { NotificationContainer, NotificationManager } from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
 import cl from './Appointment.module.css'
+import TextField from '@mui/material/TextField';
+import { Button } from '@mui/material';
+import Paper from '@mui/material/Paper';
+import Box from '@mui/material/Box';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+
 
 function Appointment() {
     const [formData, setFormData] = useState({
@@ -97,7 +105,7 @@ function Appointment() {
     };
 
     return (
-        <div className={cl.appointmentForm} style={{ marginTop: '80px' }}>
+        <Paper  elevation={3} className={cl.appointmentForm} style={{ marginTop: '80px' }}>
             <div>
                 <p className={cl.headline}>Приказ о назначении</p>  
             </div>
@@ -105,21 +113,37 @@ function Appointment() {
             <div className={cl.form}>
                 <div className={cl.row}>
                     <div>
-                        <label className={cl.label}>Имя</label>
-                        <input
+                        {/* <label className={cl.label}>Имя</label> */}
+                        {/* <input
                             type="text"
                             placeholder="Имя"
                             className={cl.workerInfo}
                             value={formData.firstName}
                             onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+                        /> */}
+                        <TextField 
+                            id="outlined-basic" 
+                            label="Имя" 
+                            variant="outlined"  
+                            size="small"
+                            value={formData.firstName}
+                            onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
                         />
                     </div>
                     <div>
-                        <label className={cl.label}>Фамилия</label>
-                        <input
+                        {/* <label className={cl.label}>Фамилия</label> */}
+                        {/* <input
                             type="text"
                             placeholder="Фамилия"
                             className={cl.workerInfo}
+                            value={formData.surname}
+                            onChange={(e) => setFormData({ ...formData, surname: e.target.value })}
+                        /> */}
+                        <TextField 
+                            id="outlined-basic" 
+                            label="Фамилия" 
+                            variant="outlined"  
+                            size="small"
                             value={formData.surname}
                             onChange={(e) => setFormData({ ...formData, surname: e.target.value })}
                         />
@@ -127,7 +151,7 @@ function Appointment() {
                 </div>
                 <div className={cl.row}>
                     <div>
-                        <label className={cl.label}>Отчество</label>
+                        {/* <label className={cl.label}>Отчество</label>
                         <input
                             type="text"
                             placeholder="Отчество"
@@ -135,10 +159,18 @@ function Appointment() {
                             className={cl.workerInfo}
                             value={formData.patronymic}
                             onChange={(e) => setFormData({ ...formData, patronymic: e.target.value })}
+                        /> */}
+                        <TextField 
+                            id="outlined-basic" 
+                            label="Отчество" 
+                            variant="outlined"  
+                            size="small"
+                            value={formData.patronymic}
+                            onChange={(e) => setFormData({ ...formData, patronymic: e.target.value })}
                         />
                     </div>
                     <div>
-                        <label className={cl.label}>Пол</label>
+                        {/* <label className={cl.label}>Пол</label>
                         <select
                             name='gender'
                             placeholder="Пол"
@@ -149,12 +181,30 @@ function Appointment() {
                             <option value="">Выберите пол</option>
                             <option value="Женский">Женский</option>
                             <option value="Мужской">Мужской</option>
-                        </select>
+                        </select> */}
+                        <Box sx={{ minWidth: 223 }}>
+                        {/* <label className={cl.label}>Должность</label> */}
+                        <FormControl size="small" fullWidth>
+                            <InputLabel id="demo-simple-select-label">Пол</InputLabel>
+                            <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            label="Пол"
+                            value={formData.gender}
+                            onChange={(e) => setFormData({ ...formData, gender: e.target.value })}
+                            
+                            >
+                                <MenuItem value="Женский">Женский</MenuItem>
+                                <MenuItem value="Мужской">Мужской</MenuItem>
+
+                            </Select>
+                        </FormControl>
+                    </Box>
                     </div>
                 </div>
                 <div className={cl.row}>
                     <div>
-                        <label className={cl.label}>Должность</label>
+                        {/* <label className={cl.label}>Должность</label>
                         <select
                             value={formData.position}
                             className={cl.workerInfoSelect}
@@ -166,10 +216,29 @@ function Appointment() {
                                 {position}
                                 </option>
                             ))}
-                        </select>
+                        </select> */}
+                        <Box sx={{ minWidth: 480 }}>
+                            <FormControl size="small" fullWidth>
+                                <InputLabel id="demo-simple-select-label">Должность</InputLabel>
+                                <Select
+                                labelId="demo-simple-select-label"
+                                id="demo-simple-select"
+                                label="Должность"
+                                value={formData.position}
+                                onChange={(e) => setFormData({ ...formData, position: e.target.value })}
+                                
+                                >
+                                    {positionsList.map((position) => (
+                                        <MenuItem key={position} value={position}>
+                                        {position}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </Box>
                     </div>
                     <div>
-                        <label className={cl.label}>Департамент</label>
+                        {/* <label className={cl.label}>Департамент</label>
                         <select
                             value={formData.department}
                             className={cl.workerInfoSelect}
@@ -181,12 +250,34 @@ function Appointment() {
                                 {department}
                                 </option>
                             ))}
-                        </select>
+                        </select> */}
+                        
                     </div>
                 </div>
                 <div className={cl.row}>
+                    <Box sx={{ minWidth: 480 }}>
+                        <FormControl size="small" fullWidth>
+                            <InputLabel id="demo-simple-select-label">Департамент</InputLabel>
+                            <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            label="Департамент"
+                            value={formData.department}
+                            onChange={(e) => setFormData({ ...formData, department: e.target.value })}
+                            
+                            >
+                                {departmentsList.map((department) => (
+                                    <MenuItem key={department} value={department}>
+                                    {department}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    </Box>
+                </div>
+                <div className={cl.row}>
                     <div>
-                        <label className={cl.label}>Срок испытательного периода</label>
+                        {/* <label className={cl.label}>Срок испытательного периода</label>
                         <input
                             type="number"
                             placeholder="Срок испытательного периода"
@@ -194,10 +285,19 @@ function Appointment() {
                             value={formData.monthCount}
                             onChange={(e) => setFormData({ ...formData, monthCount: e.target.value })}
                             style={{ width: '270px', height: '28px' }}
+                        /> */}
+                        <TextField 
+                            sx={{ minWidth: 480 }}
+                            id="outlined-basic" 
+                            label="Срок испытательного периода" 
+                            variant="outlined"  
+                            size="small"
+                            value={formData.monthCount}
+                            onChange={(e) => setFormData({ ...formData, monthCount: e.target.value })}
                         />
                     </div>
                     <div>
-                        <label className={cl.label}>Oснование</label>
+                        {/* <label className={cl.label}>Oснование</label>
                         <select
                             value={formData.base}
                             className={cl.workerInfoSelect}
@@ -209,14 +309,35 @@ function Appointment() {
                                 {base}
                                 </option>
                             ))}
-                        </select>
+                        </select> */}
                     </div>
+                </div>
+                <div className={cl.row}>
+                    <Box sx={{ minWidth: 480 }}>
+                        <FormControl size="small" fullWidth>
+                            <InputLabel id="demo-simple-select-label">Oснование</InputLabel>
+                            <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            label="Oснование"
+                            value={formData.base}
+                            onChange={(e) => setFormData({ ...formData, base: e.target.value })}
+                            
+                            >
+                                {base.map((base) => (
+                                    <MenuItem key={base} value={base}>
+                                    {base}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    </Box>
                 </div>
                 
             </div>
-            <Button onClick={handleFormSubmit} className={cl.btn}>Получить приказ</Button>
+            <Button variant="contained" style={{ marginTop: '40px' }} onClick={handleFormSubmit} className={cl.btn}>Получить приказ</Button>
             <NotificationContainer />
-      </div>
+        </Paper>
     )
 }
 

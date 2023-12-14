@@ -6,7 +6,7 @@ import profilePic from '../../assets/images/pic.svg';
 import SearchInput from '../../components/search/SearchInput';
 import Modal from '../UI/modal/Modal';
 import closeImg from '../../assets/icons/close.svg';
-import Button from '../UI/button/Button';
+import { Button } from '@mui/material';
 import { useAuth } from '../auth/AuthContext';
 import { useParams } from 'react-router-dom';
 import Cookies from 'js-cookie';
@@ -85,7 +85,7 @@ function Header(props) {
                 <div className={cl.headerContent}>
                     <div className={cl.buttons}>
                         <Link to="/create" className={cl.link}>
-                            <button className={cl.btn}>Добавить</button>
+                            <Button variant="contained">Добавить</Button>
                         </Link>
                         {/* <button  onClick={() => setIsClicked(true)} className={cl.btn}>Создать группу</button> */}
                         <Modal visible={isClicked}>

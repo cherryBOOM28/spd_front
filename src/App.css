@@ -1,6 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Ubuntu:wght@300;400;500;700&display=swap');
-
-.App {
-  font-family: 'Ubuntu', sans-serif;
+@font-face {
+  font-family: 'Helvetica'; 
+  src: local('Helvetica'), url('./assets/fonts/helvetica_regular.otf') format('otf');
+  font-weight: normal;
+  font-style: normal;
 }
 
+body {
+  font-family: 'Helvetica', sans-serif;
+}

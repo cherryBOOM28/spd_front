@@ -150,7 +150,7 @@
   padding: 6px 9px;
   margin-left: 12px;
   outline: none;
-  font-family: "Ubuntu", sans-serif;
+  font-family: "Helvetica", sans-serif, sans-serif;
   color: #000;
   font-size: 16px;
   font-weight: 400;
@@ -164,7 +164,7 @@
   padding: 4px 9px;
   margin-left: 12px;
   outline: none;
-  font-family: "Ubuntu", sans-serif;
+  font-family: "Helvetica", sans-serif, sans-serif;
   color: #000;
   font-size: 16px;
   font-weight: 400;
@@ -184,7 +184,7 @@
   padding: 6px 9px;
   margin-left: 12px;
   outline: none;
-  font-family: "Ubuntu", sans-serif;
+  font-family: "Helvetica", sans-serif, sans-serif;
   color: #000;
   font-size: 16px;
   font-weight: 400;
@@ -211,7 +211,7 @@
 .subMenuDropdown {
   border: none;
   outline: none;
-  font-family: "Ubuntu", sans-serif;
+  font-family: "Helvetica", sans-serif, sans-serif;
   color: #000;
   font-size: 16px;
   font-weight: 400;

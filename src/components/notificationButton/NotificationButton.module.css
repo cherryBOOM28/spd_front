@@ -79,7 +79,7 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    font-family: 'Ubuntu', sans-serif;
+    font-family: '', sans-serif;
 }
 
 .paragraph {
@@ -90,7 +90,7 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    font-family: 'Ubuntu', sans-serif;
+    font-family:"Helvetica", sans-serif;
 }
 
 .notification_data {
@@ -110,6 +110,6 @@
 .notification_text {
     color: #3b3b3b;
     font-size: 15px;
-    font-family: Ubuntu, sans-serif;
+    font-family: "Helvetica", sans-serif, sans-serif;
 }
 

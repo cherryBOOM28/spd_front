@@ -2,12 +2,14 @@ import React, { useState } from 'react';
 import Navigation from '../../components/navigation/Navigation';
 import Header from '../../components/header/Header';
 import cl from './BasicOrders.module.css'
-import Button from '../../components/UI/button/Button';
+import { Button } from '@mui/material';
+import Paper from '@mui/material/Paper';
 import 'react-notifications/lib/notifications.css';
 import DecreeHistory from '../../components/decrees/DecreeHistory';
 import { MdOutlineWork } from "react-icons/md";
 import { MdDriveFileMoveRtl } from "react-icons/md";
 import Appointment from '../../components/decrees/appointment/Appointment';
+import Transfer from '../../components/decrees/transfer/Transfer';
 
 
 function BasicOrders() {
@@ -52,20 +54,20 @@ function BasicOrders() {
                         <div className={cl.filters}>
                             <div className={cl.filter_btn}>
                             {isCreateDecreeClicked ? (
-                                <Button onClick={handleReturnToDecreesClick}>Приказы</Button>
+                                <Button  variant="contained" onClick={handleReturnToDecreesClick}>Приказы</Button>
                                 ) : (
                                 <>
-                                    <Button
+                                    <Button  variant="contained" style={{  textTransform: 'none' }}
                                     onClick={handleCreateDecreeClick}
                                     className={isCreateDecreeClicked ? cl.decree_btn_active : ''}
                                     >
                                     Создать приказ
                                     </Button>
                                     {!isDecreeHistoryOpen && (
-                                    <Button onClick={handleButtonClick}>История документов</Button>
+                                    <Button  variant="contained"  style={{  textTransform: 'none' }} onClick={handleButtonClick}>История документов</Button>
                                     )}
                                     {isDecreeHistoryOpen && (
-                                    <Button onClick={handleButtonClick}>Приказы</Button>
+                                    <Button  variant="contained" style={{  textTransform: 'none' }} onClick={handleButtonClick}>Приказы</Button>
                                     )}
                                 </>
                             )}
@@ -77,30 +79,31 @@ function BasicOrders() {
                         {isCreateDecreeClicked && (
                             <div>
                                 {selectedDecreeType === 'appointment' && <Appointment />}
+                                {selectedDecreeType === 'transfer' && <Transfer />}
+
                             </div>
                         )}
                         {!isCreateDecreeClicked && !isDecreeHistoryOpen && (
                             <div className={cl.decree_btn_wrapper}>
                                 <div className={cl.decree_row}>
-                                    <div
-                                    className={`${cl.decree_btn} ${
-                                        selectedDecreeType === 'appointment' ? cl.decree_btn_active : ''
-                                    }`}
-                                    onClick={() => handleDecreeTypeClick('appointment')}
+                                    <div elevation={3}
+                                        className={`${cl.decree_btn} ${
+                                            selectedDecreeType === 'appointment' ? cl.decree_btn_active : ''
+                                        }`}
+                                        onClick={() => handleDecreeTypeClick('appointment')}
                                     >
-                                    <MdOutlineWork />
-                                    <p>Приказ о назначении</p>
+                                        <MdOutlineWork />
+                                        <p>Приказ о назначении</p>
                                     </div>
-                                    <div
-                                    className={`${cl.decree_btn} ${
-                                        selectedDecreeType === 'transfer' ? cl.decree_btn_active : ''
-                                    }`}
-                                    onClick={() => handleDecreeTypeClick('transfer')}
+                                    <div elevation={3}
+                                        className={`${cl.decree_btn} ${
+                                            selectedDecreeType === 'transfer' ? cl.decree_btn_active : ''
+                                        }`}
+                                        onClick={() => handleDecreeTypeClick('transfer')}
                                     >
-                                    <MdDriveFileMoveRtl />
-                                    <p>Приказ о перемещении</p>
+                                        <MdDriveFileMoveRtl />
+                                        <p>Приказ о перемещении</p>
                                     </div>
-                                    {/* Add more buttons as needed */}
                                 </div>
                             </div>
                         )}

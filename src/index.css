@@ -1,8 +1,14 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Ubuntu:wght@300;400;500;700&display=swap');
+
+@font-face {
+	font-family: 'Helvetica'; 
+	src: local('Helvetica'), url('./assets/fonts/helvetica_regular.otf') format('otf');
+	font-weight: normal;
+	font-style: normal;
+}
 
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Ubuntu', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

@@ -60,7 +60,7 @@
     padding: 6px 9px;
     margin-left: 12px;
     outline: none;
-    font-family: "Ubuntu", sans-serif;
+    font-family: "Helvetica", sans-serif, sans-serif;
     color: #000;
     font-size: 16px;
     font-weight: 400;
@@ -74,7 +74,7 @@
     padding: 4px 9px;
     margin-left: 12px;
     outline: none;
-    font-family: "Ubuntu", sans-serif;
+    font-family: "Helvetica", sans-serif, sans-serif;
     color: #000;
     font-size: 16px;
     font-weight: 400;
@@ -94,7 +94,7 @@
     padding: 6px 9px;
     margin-left: 12px;
     outline: none;
-    font-family: "Ubuntu", sans-serif;
+    font-family: "Helvetica", sans-serif, sans-serif;
     color: #000;
     font-size: 16px;
     font-weight: 400;
@@ -121,7 +121,7 @@
 .subMenuDropdownFamily {
   border: none;
   outline: none;
-  font-family: "Ubuntu", sans-serif;
+  font-family: "Helvetica", sans-serif, sans-serif;
   color: #000;
   font-size: 16px;
   font-weight: 400;
@@ -154,7 +154,7 @@
 .subMenuDropdownEdu {
   border: none;
   outline: none;
-  font-family: "Ubuntu", sans-serif;
+  font-family: "Helvetica", sans-serif, sans-serif;
   color: #000;
   font-size: 16px;
   font-weight: 400;
@@ -187,7 +187,7 @@
 .subMenuDropdownLang {
   border: none;
   outline: none;
-  font-family: "Ubuntu", sans-serif;
+  font-family: "Helvetica", sans-serif, sans-serif;
   color: #000;
   font-size: 16px;
   font-weight: 400;
@@ -220,7 +220,7 @@
 .subMenuDropdownCourse {
   border: none;
   outline: none;
-  font-family: "Ubuntu", sans-serif;
+  font-family: "Helvetica", sans-serif, sans-serif;
   color: #000;
   font-size: 16px;
   font-weight: 400;
@@ -253,7 +253,7 @@
 .subMenuDropdownDegree {
   border: none;
   outline: none;
-  font-family: "Ubuntu", sans-serif;
+  font-family: "Helvetica", sans-serif, sans-serif;
   color: #000;
   font-size: 16px;
   font-weight: 400;
@@ -286,7 +286,7 @@
 .subMenuDropdownSport {
   border: none;
   outline: none;
-  font-family: "Ubuntu", sans-serif;
+  font-family: "Helvetica", sans-serif, sans-serif;
   color: #000;
   font-size: 16px;
   font-weight: 400;

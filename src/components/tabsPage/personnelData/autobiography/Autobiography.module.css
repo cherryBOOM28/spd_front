@@ -43,7 +43,7 @@
   width: 90%;
   padding: 6px 9px;
   outline: none;
-  font-family: 'Ubuntu';
+  font-family: "Helvetica", sans-serif;
   color: #000;
   font-size: 16px;
   font-weight: 400;
@@ -57,7 +57,7 @@
   width: 90%;
   padding: 6px 9px;
   outline: none;
-  font-family: 'Ubuntu';
+  font-family: "Helvetica", sans-serif;
   color: #000;
   font-size: 16px;
   font-weight: 400;
@@ -79,7 +79,7 @@
   padding: 6px 9px;
   margin-left: 12px;
   outline: none;
-  font-family: 'Ubuntu';
+  font-family: "Helvetica", sans-serif;
   color: #000;
   font-size: 16px;
   font-weight: 400;

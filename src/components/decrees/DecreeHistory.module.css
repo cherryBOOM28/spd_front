@@ -1,4 +1,4 @@
-.customTable {
+/* .customTable {
 width: 100%;
 border-collapse: collapse;
 border-spacing: 0;
@@ -7,8 +7,7 @@ margin-top: 30px;
 
 .customTable th,
 .customTable td {
-/* border: 1px solid #ccc; */
-padding: 8px;
+padding: 10px;
 text-align: left;
 vertical-align: middle;
 }
@@ -16,20 +15,17 @@ vertical-align: middle;
 .customTable td {
 border-bottom: none;
 border-top: none;
-/* border-right: 1px solid #ccc; */
 margin: 0 auto;
 
 
 }
 
 .customTable td:first-child {
-/* border-left: 1px solid #ccc; */
 }
 
 .customTable tr {
-border-bottom: 1px solid с;
-height: fit-content !important;
-
+  border-bottom: 1px solid #ccc;
+  height: fit-content !important;
 }
 
 .customTable tr:first-child {
@@ -38,7 +34,7 @@ border-top: 1px solid #ccc;
 
 .customTable th {
 background-color: #f2f2f2;
-}
+} */
 
 .workerImg {
 width: 40px;
@@ -51,7 +47,7 @@ object-fit: cover;
 .headline {
     font-size: 18px;
     font-weight: 500;
-    font-family: 'Ubuntu', sans-serif;
+    font-family: 'Helvetica', sans-serif;
     margin: 20px 0 20px;
     color: #4B4B4B;
     display: flex;
@@ -104,4 +100,43 @@ object-fit: cover;
     font-size: 14px;
     color: #1B3884;
   }
+}
+
+.workerRow {
+  /* cursor: pointer; */
+  transition: background-color 0.3s;
+  border-radius: 5px;
+}
+
+.workerRow:hover {
+  background-color: #f0f0f0; 
+  border-radius: 5px;
+}
+
+.modal_wrapper {
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.btn_wrapper {
+  display: flex;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.position_wrapper {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.position_box {
+  padding: 10px;
+  background: #f0f0f0;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
