@@ -1,7 +1,8 @@
 .logo {
     display: flex;
     align-items: center;
-    padding: 14px 12px;
+    padding: 0px 12px;
+    margin-top: 12px;
 }
 
 .logoText {
@@ -18,7 +19,7 @@
     /* left: 0;  */
     width: 264px;
     height: 100vh;
-    background: #1B3884;
+    background: #1565C0;
 }
   
 .navigationMenu ul {
@@ -31,44 +32,27 @@
     display: flex;
     align-items: center;
     padding: 16px 16px;
+    gap: 8px;
 }
 
 .navLi:hover {
     background: #FFF;
-}
-
-/* .navLi:active {
-    background: #FFF;
-} */
-
-/* .navLi:focus {
-    background: #FFF;
-}  */
-
-.navImg {
-    width: 20px;
-    margin-right: 8px;
-}
-
-/* .navLi .navImg,
-.navLi:hover {
-  color: #1B3884;
-  fill: #1B3884;
-} */
-
-.navLi:hover .navImg  {
-    filter: grayscale(100%) brightness(20%);
 }
   
 .navLink {
     text-decoration: none;
     margin-left: 14px;
     color: #FFF;
-    font-size: 16px;
+    font-size: 18px;
     font-weight: 400;
 }
 
 .navLink:hover {
-    color: #1B3884;
+    color: #1565C0;
     background: #FFF;
 }
+
+.activeNavLink {
+    background: #FFF;
+    color: #ffffff;
+  }

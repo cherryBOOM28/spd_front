@@ -64,9 +64,7 @@ function Transfer() {
 
     const base = [
         'представление',
-        'рапорт',
-        'заявление',
-        'протокол и докладная записка',
+        'рапорт'
     ]
 
     const handleFormSubmit = async () => {

@@ -12,6 +12,7 @@ import { useParams } from 'react-router-dom';
 import Cookies from 'js-cookie';
 
 
+
 function Header(props) {
     const { id } = useParams();
     //create group
@@ -21,6 +22,7 @@ function Header(props) {
     const [ selectedIds, setSelectedIds ] = useState([]);
     const [ groupName, setGroupName ] = useState([]);
     const [ photo, setPhoto ] = useState({});
+    const [fullName, setFullName] = useState('');
     
     const accessToken = Cookies.get('jwtAccessToken');
 
@@ -33,22 +35,24 @@ function Header(props) {
         })
           .then(response => {
             setPersonalData(response.data);
-            // console.log("response", response.data)
+            if (response.data && response.data.length > 0) {
+                const photoBinary = response.data[0].photo.photoBinary;
+                const surname = response.data[0].surname;
+                const firstName = response.data[0].firstName;
+        
+                setPhoto(photoBinary);
+                setFullName(`${surname} ${firstName}`);
+            } else {
+                console.error('Данные пользователя не содержат ожидаемых свойств');
+            }
         })
 
-        // axios.get(`http://localhost:8000/api/v1/person/${id}`)
-        //   .then(response => {
-        //     setPhoto(response.data)
-        //     console.log("response", response.data.Person)
-        // })
         .catch(error => {
-            // console.error("Error fetching personal data:", error);
+            console.error("Error fetching personal data:", error);
         });
     }, []);
 
     const { user, logout } = useAuth();
-
-    
 
     const handleGroupOnCheck = (_id) => {
         if (selectedIds.includes(_id)) {
@@ -59,25 +63,6 @@ function Header(props) {
 
         console.log(selectedIds)
     }
-
-    // const handleCreateGroup = async () => {
-    //     try {
-    //         const data = {
-    //             'group_name': groupName,
-    //             'general_info': selectedIds,
-    //         };
-        
-    //         // console.log(data)
-
-    //         const response = await axios.post('', data);
-        
-    //         // console.log('Response:', response.data);
-    //     } catch (error) {
-    //         console.error('Error:', error);
-    //     }
-    // }
-
-
 
     return (
         <div className={cl.headerWrapper}>
@@ -147,13 +132,14 @@ function Header(props) {
                     <div className={cl.headerContentRight}>
                         <SearchInput />
                         <div className={cl.profile}>
-                            {/* <img src={`data:image/jpeg;base64,`} alt="profilePic" /> */}
-                            <Link to="/8" className={cl.profileName}>Louisa Sapina </Link>
+                            <img src={`data:image/jpeg;base64,${photo}`} alt="profilePic" className={cl.profileImg} />
+                            {/* <Link to="/8" className={cl.profileName}>Louisa Sapina </Link> */}
+                            <p className={cl.profileName}>{fullName}</p>
                         </div>
                         <div>
                             { user ? (
                                 <div>
-                                    <Link to="/login" className={cl.logout}>Выйти</Link>
+                                    <Link to="/login" className={cl.logout}> <Button variant="text">Выйти</Button></Link>
                                 </div>
                             ) : (
                                 <p><Link to="/login" className={cl.logout}>Выйти</Link></p>

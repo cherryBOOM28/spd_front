@@ -30,7 +30,13 @@
   height: 60px;
 }
 
+.filter_wrapper {
+  position: relative;
+}
+
 .filters {
+  position: absolute;
+  top: -55px;
   display: flex;
   align-items: center;
   gap: 20px;
@@ -287,10 +293,6 @@ select {
   display: flex;
   align-items: center;
   gap: 20px;
-}
-
-.download {
-  padding: 5px 8px;
 }
 
 /* .notificationButton {

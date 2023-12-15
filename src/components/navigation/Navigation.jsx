@@ -1,55 +1,47 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import cl from './Navigation.module.css';
-import logo from '../../assets/icons/logow.svg';
-import logo3 from '../../assets/icons/logo3.svg';
-
-// import homeIcon from '../../assets/icons/home.svg';
-import homeWhightIcon from '../../assets/icons/homew.svg';
-import adminIcon from '../../assets/icons/admin.svg';
-import ordersIcon from '../../assets/icons/orders.svg';
-import fileIcon from '../../assets/icons/file.svg';
-import docIcon from '../../assets/icons/doc.svg';
+import logo3 from '../../assets/icons/logo_w.svg';
+import { FaFile } from "react-icons/fa6";
+import { IoFileTrayStacked } from "react-icons/io5";
+import { BiSolidHomeAlt2 } from "react-icons/bi";
+import {  useLocation } from 'react-router-dom';
 
 
 const Navigation = () => {
+    const location = useLocation();
+
+    const activeStyle = {
+        background: '#fff',
+    };
+
+    const isActive = location.pathname === '/basic-orders';
+
   return (
     <div className={cl.navigationMenu}>
         <div className={cl.logo}>
             <img src={logo3} alt="logo" style={{ width: "80%" }} />
-            {/* <p className={cl.logoText}>Система кадрового учета</p> */}
         </div>
-        <ul>
+        <ul >
             <NavLink  to="/" className={cl.navLink}>
-                <li className={cl.navLi}>
-                    <img src={homeWhightIcon} alt="homeIcon" className={cl.navImg} />
+                <li  className={cl.navLi}>
+                    <BiSolidHomeAlt2 />
                     Главная
                 </li>
             </NavLink>
-            {/* <NavLink  to="/administration" className={cl.navLink}>
+        
+            <NavLink to="/basic-orders" className={cl.navLink} style={isActive ? activeStyle : {}}>
                 <li className={cl.navLi}>
-                    <img src={adminIcon} alt="homeWhightIcon" className={cl.navImg} />
-                    Администратирование
-                </li>
-            </NavLink> */}
-            <NavLink to="/basic-orders" className={cl.navLink}>
-                <li className={cl.navLi}>
-                    <img src={ordersIcon} alt="ordersIcon" className={cl.navImg} style={{ width: '9%' }}/>
+                    <IoFileTrayStacked />
                     Основные приказы
                 </li>
             </NavLink>
             <NavLink to="/reports" className={cl.navLink}>
                 <li className={cl.navLi}>
-                    <img src={fileIcon} alt="fileIcon" className={cl.navImg} />
+                    <FaFile />
                     Отчеты
                 </li>
             </NavLink>
-            {/* <NavLink to="/other-orders" className={cl.navLink}>
-                <li className={cl.navLi}>
-                    <img src={docIcon} alt="docIcon" className={cl.navImg} />
-                    Прочие приказы
-                </li>
-            </NavLink> */}
       </ul>
     </div>
   );

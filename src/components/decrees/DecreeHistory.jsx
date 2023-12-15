@@ -6,8 +6,10 @@ import { GoHistory } from "react-icons/go";
 import { useNavigate } from 'react-router-dom';
 import { Paper, TableContainer, Table, TableHead, TableBody, TableRow, TableCell, Button } from '@mui/material';
 import Modal from '../UI/modal/Modal';
-import { IoIosArrowForward } from "react-icons/io";
-
+import { IoIosArrowDown } from "react-icons/io";
+import { BsFillBriefcaseFill } from "react-icons/bs";
+import { BsPersonFill } from "react-icons/bs";
+import Loader from '../loader _/Loader ';
 
 function DecreeHistory() {
   const [decreeList, setDecreeList] = useState([]);
@@ -44,6 +46,7 @@ function DecreeHistory() {
     setSelectedDecreeId(decreeId);
     setIsModalVisible(true);
     fetchTransferInfo(decreeId);
+    console.log('Selected Decree ID:', decreeId);
   };
 
   const closeModal = () => {
@@ -59,7 +62,22 @@ function DecreeHistory() {
     }
   };
 
-  
+  const handleConfirmation = async () => {
+    try {
+      const accessToken = Cookies.get('jwtAccessToken');
+      const response = await axios.post('http://127.0.0.1:8000/api/v1/cancel-transfer/', { decreeId: selectedDecreeId }, {
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+        },
+      });
+
+      console.log("deleted decree Id", response)
+      closeModal();
+      window.location.reload();
+    } catch (error) {
+      console.error('Error confirming transfer cancellation:', error);
+    }
+  };
 
   return (
     <div className={cl.container}>
@@ -154,27 +172,39 @@ function DecreeHistory() {
       </Paper>
       <Modal visible={isModalVisible} setVisible={setIsModalVisible}  decreeId={selectedDecreeId}>
         <div className={cl.modal_wrapper}>
-          <h2 className={cl.headline}>Вы уверены в откате приказа?</h2>
+          <h2 className={cl.headline} style={{marginBottom: '35px' }}>Вы уверены в откате приказа?</h2>
           {transferInfo ? (
             <div className={cl.position_wrapper}>
-              <div className={cl.position_box}>
-                <p>Новая должность</p>
-                <p>Департамент: {transferInfo.newPosition.newDepartment}</p>
-                <p>Должность: {transferInfo.newPosition.newPosition}</p>
-              </div>
-              <IoIosArrowForward style={{ fontSize: '30px', color: '#1565C0' }} />
-              <div className={cl.position_box}>
-                <p>Предыдущая должность</p>
-                <p>Департамент: {transferInfo.previousPosition.previousDepartment}</p>
-                <p>Должность: {transferInfo.previousPosition.previousPosition}</p>
-              </div>
+              <Paper className={cl.position_box}>
+                <p  className={cl.h2}>Новая должность</p>
+                <p className={cl.position_text}>
+                  <BsFillBriefcaseFill style={{ color: '#1565C0' }}/>
+                  Департамент: {transferInfo.newPosition.newDepartment}
+                </p>
+                <p className={cl.position_text}>
+                  <BsPersonFill  style={{ color: '#1565C0' }}/>
+                  Должность: {transferInfo.newPosition.newPosition}
+                </p>
+              </Paper >
+              <IoIosArrowDown  style={{ fontSize: '30px', color: '#1565C0' }} />
+              <Paper className={cl.position_box}>
+                <p className={cl.h2}>Предыдущая должность</p>
+                <p className={cl.position_text}>
+                  <BsFillBriefcaseFill style={{ color: '#1565C0' }} />
+                  Департамент: {transferInfo.previousPosition.previousDepartment}
+                </p>
+                <p className={cl.position_text}>
+                  <BsPersonFill  style={{ color: '#1565C0' }} />
+                  Должность: {transferInfo.previousPosition.previousPosition}
+                </p>
+              </Paper>
             </div>
           ) : (
-            <p>Loading transfer info...</p>
+            <div style={{ margin: '45px 0' }}><Loader /></div>
           )}
           <div className={cl.btn_wrapper}>
-            <Button variant="contained">Подтвердить</Button>
-            <Button variant="outlined" onClick={closeModal}>Закрыть</Button>
+            <Button variant="contained"  onClick={handleConfirmation} className={cl.act_btn}>Подтвердить</Button>
+            <Button variant="outlined" onClick={closeModal }  className={cl.act_btn}>Закрыть</Button>
           </div>
         </div>
       </Modal>

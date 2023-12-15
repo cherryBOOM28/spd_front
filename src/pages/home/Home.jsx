@@ -6,14 +6,19 @@ import Header from '../../components/header/Header';
 import employeeList from '../../components/data/employeeList.json';
 import axios from 'axios';
 import Cookies from 'js-cookie';
-import Button from '../../components/UI/button/Button';
+import { Button } from '@mui/material';
 import Dropdown from '../../components/dropdown/Dropdown';
-import { FaCaretDown, FaCaretUp } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import { NotificationContainer, NotificationManager } from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
 import { MdDownload } from "react-icons/md";
 import NotificationButton from '../../components/notificationButton/NotificationButton';
+import IconButton from '@mui/material/IconButton';
+import Box from '@mui/material/Box';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
 
 function Home(props) {
     const navigate = useNavigate();
@@ -227,20 +232,44 @@ function Home(props) {
     const renderEmployeeWrapper = () => {
     if (showSchedule) {
       return (
-        // <div className={cl.container}>
+        <div>
+            <div className={cl.filter_wrapper}>
+                <div className={cl.filters}>
+                    <div className={cl.downloaderFile}>
+                        <Dropdown
+                            title="Выберите местоположение"
+                            options={dropdownOptions}
+                            selected={selectedLocation}
+                            onSelect={setSelectedLocation}
+                        />
+                        <div className={cl.downloader}>
+                            <IconButton 
+                                onClick={handleDownload}
+                                disabled={!selectedLocation}
+                                variant="outlined"
+                            >
+                                {selectedLocation === 'wholeCountry' ? '' : ''}
+                                <MdDownload style={{ color: '#1565C0' }} />
+                            </IconButton >
+                            <NotificationContainer />
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div className={cl.employeeWrapper}>
                 <div className={cl.groups}>
                     <h1 className={cl.headline}>Штатное расписание</h1>
                     <div className={cl.groups_column}>
                         {cities.map((city, index) => (
-                            <li key={index} style={{ listStyle: 'none' }}>
-                                <button
+                            <div key={index} style={{ listStyle: 'none' }}>
+                                <input
+                                type='radio'
                                 className={city === selectedCity ? cl.active : cl.city}
                                 onClick={() => handleCityClick(city)}
-                                >
+                                />
                                 {city}
-                                </button>
-                            </li>
+                                {/* </button> */}
+                            </div>
                         ))}
                     </div>
                 </div>
@@ -300,66 +329,63 @@ function Home(props) {
                 )}
                 </div>
             </div>
-        // </div>
+        </div>
       );
     } else {
       return (
-        // <div className={cl.container}>
-            <div className={cl.employeeWrapper}>
-                <div className={cl.groups}>
-                    <h1 className={cl.headline}>Города</h1>
-                    
-                    <div className={cl.groups_column}>
-                        <div className={cl.group_name} style={{ cursor: 'pointer' }}>
-                            <p>Все</p>
-                            <input
-                                type="radio"
-                                name="table"
-                                value="all"
-                                checked={selectedGroupId === 'all'}
-                                onChange={() => handleRadioChange('all')}
-                            />
-                        </div>
-                        {/* <div className={cl.group_name} style={{ cursor: 'pointer' }} onClick={() => handleLocationChange('Астана')}>
-                            <p>Астана</p>
-                            <input
-                                type="radio"
-                                name="table"
-                                checked={selectedLocation === 'Астана'}
-                                onChange={() => handleRadioChange('all')}
-                            />
-                        </div> */}
+        <div className={cl.employeeWrapper}>
+            <div className={cl.groups}>
+                <h1 className={cl.headline}>Города</h1>
+                
+                <div className={cl.groups_column}>
+                    <div className={cl.group_name} style={{ cursor: 'pointer' }}>
+                        <p>Все</p>
+                        <input
+                            type="radio"
+                            name="table"
+                            value="all"
+                            checked={selectedGroupId === 'all'}
+                            onChange={() => handleRadioChange('all')}
+                        />
                     </div>
-                </div>
-                <div className={cl.employees}>
-                        <table className={cl.table}>
-                            <thead>
-                                <tr>
-                                    <th className={cl.table__headline}>ФИО</th>
-                                    <th className={cl.table__headline}>Пол</th>
-                                    <th className={cl.table__headline}>Должность</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-       
-                                {selectedGroupId === 'all' && personalData.map((data, index) => {
-                                    let name = `${data.surname || ''} ${data.firstName || ''} ${data.patronymic || ''}`;
-
-                                    return (
-                                    <tr key={data.id} onClick={() => handleEmployeeClick(data.id, data.iin)} className={cl.tableRow}>
-                                        <td>{name}</td>
-                                        <td>{gender}</td>
-                                        <td>{positionTitle}</td>
-                                    </tr>
-                                    );
-                                })}
-                             
-                            </tbody>
-                        </table>
+                    {/* <div className={cl.group_name} style={{ cursor: 'pointer' }} onClick={() => handleLocationChange('Астана')}>
+                        <p>Астана</p>
+                        <input
+                            type="radio"
+                            name="table"
+                            checked={selectedLocation === 'Астана'}
+                            onChange={() => handleRadioChange('all')}
+                        />
+                    </div> */}
                 </div>
             </div>
-        // </div>
-        
+            <div className={cl.employees}>
+                    <table className={cl.table}>
+                        <thead>
+                            <tr>
+                                <th className={cl.table__headline}>ФИО</th>
+                                <th className={cl.table__headline}>Пол</th>
+                                <th className={cl.table__headline}>Должность</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+    
+                            {selectedGroupId === 'all' && personalData.map((data, index) => {
+                                let name = `${data.surname || ''} ${data.firstName || ''} ${data.patronymic || ''}`;
+
+                                return (
+                                <tr key={data.id} onClick={() => handleEmployeeClick(data.id, data.iin)} className={cl.tableRow}>
+                                    <td>{name}</td>
+                                    <td>{gender}</td>
+                                    <td>{positionTitle}</td>
+                                </tr>
+                                );
+                            })}
+                            
+                        </tbody>
+                    </table>
+            </div>
+        </div>
       );
     }
     };
@@ -372,35 +398,10 @@ function Home(props) {
                 <div className={cl.content}>
                     <div className={cl.container}>
                         <div className={cl.btn_wrapper}>
-                            {/* Filters */}
-                            <div className={cl.filters}>
-                                
-                                <div className={cl.downloaderFile}>
-                                    <Dropdown
-                                        title="Выберите местоположение"
-                                        options={dropdownOptions}
-                                        selected={selectedLocation}
-                                        onSelect={setSelectedLocation}
-                                    />
-
-                                    <div className={cl.downloader}>
-                                        <Button
-                                            className={cl.download}
-                                            onClick={handleDownload}
-                                            disabled={!selectedLocation}
-                                        >
-                                            {selectedLocation === 'wholeCountry' ? '' : ''}
-                                            <MdDownload />
-                                        </Button>
-                                        <NotificationContainer />
-                                    </div>
-                                </div>
-                            </div>
-                            <div style={{ display: 'flex' }}>
-                                <Button onClick={toggleSchedule} className={cl.btn_schedule}>
-                                    {showSchedule ? 'Вернуться на главную' : 'Штатное расписание'}
-                                </Button>
-                            </div>
+                            <div></div>
+                            <Button onClick={toggleSchedule}  size="small" variant="contained" style={{ display: 'block',  textTransform: 'none' }}>
+                                {showSchedule ? 'Вернуться на главную' : 'Штатное расписание'}
+                            </Button>
                         </div>
                         {renderEmployeeWrapper()}
                     </div>

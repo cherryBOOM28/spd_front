@@ -9,7 +9,7 @@
 
 .notification_container.open {
     transform: translateY(0);
-    box-shadow: 0 0 10px rgba(24, 6, 123, 0.553);
+    box-shadow: 0 0 10px rgba(88, 150, 235, 0.553);
 }
 
 @keyframes blink {
@@ -43,8 +43,8 @@
     border-radius: 50%;
     font-size: 20px;
     cursor: pointer;
-    border: #1B3884;
-    background: #1B3884;
+    border: #1565C0;
+    background: #1565C0;
     color: #fff;
     /* box-shadow: 0 0 10px rgba(33, 8, 176, 0.403); */
 }  
@@ -56,7 +56,7 @@
     background-color: #fff;
     border: 1px solid #e2e2e2;
     padding: 10px;
-    box-shadow: 0 0 10px rgba(8, 16, 171, 0.11);
+    box-shadow: 0 0 10px rgba(140, 168, 247, 0.273);
     z-index: 100;
 }
 

@@ -3,7 +3,6 @@ import Navigation from '../../components/navigation/Navigation';
 import Header from '../../components/header/Header';
 import cl from './BasicOrders.module.css'
 import { Button } from '@mui/material';
-import Paper from '@mui/material/Paper';
 import 'react-notifications/lib/notifications.css';
 import DecreeHistory from '../../components/decrees/DecreeHistory';
 import { MdOutlineWork } from "react-icons/md";
@@ -104,6 +103,7 @@ function BasicOrders() {
                                         <MdDriveFileMoveRtl />
                                         <p>Приказ о перемещении</p>
                                     </div>
+                                    
                                 </div>
                             </div>
                         )}
