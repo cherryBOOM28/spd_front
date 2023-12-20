@@ -3,18 +3,18 @@ import Cookies from "js-cookie";
 
 const accessToken = Cookies.get('jwtAccessToken');
 
-export const updateMilitaryRank = async (id, updatedData) => {
+export const updateRankInfo = async (id, updatedRankInfo) => {
   try {
+    const accessToken = Cookies.get('jwtAccessToken');
     const response = await axios.patch(
-      `http://localhost:8000/api/v1/military-rank/${id}/`,
-      updatedData, {
+      `http://localhost:8000/api/v1/rank-info/${id}/`,
+      updatedRankInfo, {
         headers: {
           'Authorization': `Bearer ${accessToken}`,
         }
       }
       
     );
-    // console.log(response)
 
     return response;
   } catch (error) {

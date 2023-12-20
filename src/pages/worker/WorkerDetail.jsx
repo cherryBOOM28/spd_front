@@ -127,6 +127,7 @@ function WorkerDetail() {
         setRewardsInfo(response.data.RewardsInfo);
         setSickLeavesInfo(response.data.SickLeavesInfo);
         setInvestigationsInfo(response.data.InvestigationsInfo);
+
         setRankInfo(response.data.Person.rankInfo);
         setMilitaryRank(response.data.Person.rankInfo.militaryRank);
 
@@ -134,7 +135,7 @@ function WorkerDetail() {
 
         
 
-        // console.log(response.data.Person.rankInfo.militaryRank);
+        console.log(response.data.Person.rankInfo);
       } else {
         console.log(response.statusText);
       }
@@ -323,7 +324,10 @@ function WorkerDetail() {
                               setInvestigationsInfo={setInvestigationsInfo}
 
                               rankInfo={rankInfo}
+                              setRankInfo={setRankInfo}
+
                               militaryRank={militaryRank}
+                              setMilitaryRank={setMilitaryRank}
                               rankArchive={rankArchive}
                             />
                           </div> 

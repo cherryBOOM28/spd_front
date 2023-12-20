@@ -20,8 +20,8 @@ function PersonnelData
         rewardsInfo, setRewardsInfo, 
         sickLeavesInfo, setSickLeavesInfo,
         investigationsInfo, setInvestigationsInfo,
-        rankInfo, 
-        militaryRank, 
+        rankInfo, setRankInfo,
+        militaryRank, setMilitaryRank,
         rankArchive 
     }) {
     const { id, iin } = useParams();
@@ -53,7 +53,9 @@ function PersonnelData
             <MilitaryRank 
                 id={id} 
                 rankInfo={rankInfo}
+                setRankInfo={setRankInfo}
                 militaryRank={militaryRank}
+                setMilitaryRank={setMilitaryRank}
                 rankArchive={rankArchive}
             />
             <Awards 

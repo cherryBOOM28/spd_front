@@ -2,10 +2,85 @@ import React, { useState } from 'react';
 import cl from './SpecChecks.module.css';
 import { useParams } from 'react-router-dom';
 import { updateSpecCheck } from '../../../../api/staff_info/spec_checks/updateSpecCheck';
+import Cookies from 'js-cookie';
+import axios from 'axios';
+import { Button } from '@mui/material';
+import { FaPlus } from "react-icons/fa6";
+import { IoClose } from "react-icons/io5";
+import IconButton from '@mui/material/IconButton';
 
 
 function SpecChecks({ specCheckInfo, setSpecCheckInfo }) {
     const { id } = useParams();
+
+    const [showForm, setShowForm] = useState(false);
+
+    const handleShowForm = () => {
+        setShowForm(!showForm);
+    };
+
+    const icon = showForm ? <IoClose style={{ fontSize: '18px' }} /> : <FaPlus style={{ fontSize: '16px' }} />;
+
+    const [inputData, setInputData] = useState({
+        docNumber: '',
+        docDate: '',
+    });
+
+    const handleAddNewData = async (e) => {
+        e.preventDefault();
+        try {
+            // if (!inputData.sick_doc_numb || !inputData.sick_doc_date) {
+            //     alert('Пожалуйста, заполните все поля!');
+            //     return;
+            // }
+
+            const newData = {
+                personId: id,
+                docNumber: inputData.docNumber,
+                docDate: inputData.docDate,
+            };
+          
+            console.log(
+                { newData },
+                {id}
+            )
+            const accessToken = Cookies.get('jwtAccessToken');
+
+            const response = await axios.post('http://localhost:8000/api/v1/spec-check/', newData, {
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`,
+                }
+            });
+            if (response.status === 201) {
+                const addedData = {
+                    ...newData,
+                    specChecks: response.data.nextAttDateMin,
+                };
+                setSpecCheckInfo(prevData => {
+                    // Проверяем, что prevData является объектом и содержит attestations
+                    if (typeof prevData === 'object' && Array.isArray(prevData.specChecks)) {
+                      return {
+                        ...prevData,
+                        specChecks: [...prevData.specChecks, addedData],
+                      };
+                    } else {
+                      console.error("prevData is not an object or does not contain attestations");
+                      return prevData; // возвращаем prevData без изменений
+                    }
+                });
+                setInputData({
+                    personId: id,
+                    docNumber: '',
+                    docDate: '',
+                });
+                handleShowForm(false)
+            } else {
+                console.error('Error adding new data');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
 
 
     // EDIT
@@ -98,10 +173,56 @@ function SpecChecks({ specCheckInfo, setSpecCheckInfo }) {
             <div className={cl.container}>
                 <div className={cl.totalInfoWrapper}>
                     <div className={cl.totalInfoContent}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '20px'}}>
                             <p className={cl.workerCapitalName}>Спец проверка</p>
-                            
+                            <IconButton onClick={handleShowForm} aria-label="toggle-form">
+                                {icon}
+                            </IconButton>
                         </div>
+                    </div>
+                    <div>
+                        {showForm && (
+                            <form onSubmit={handleAddNewData} style={{ marginTop: '10px' }}>
+                                <div className={cl.workerBlock}>
+                                    <div className={cl.column}>
+                                        <div className={cl.rows}>
+                                            <label className={cl.label}>Номер документа</label>
+                                            <input 
+                                                type="number" 
+                                                className={cl.workerInfo} 
+                                                name='docNumber' 
+                                                value={inputData.docNumber}
+                                                onChange={(e) => setInputData({ ...inputData, docNumber: e.target.value })}
+                                            /> 
+                                        </div>
+                                    </div>
+                                <div className={cl.column}>
+                                    <div className={cl.rows}>
+                                        <label className={cl.label}>Дата окончания</label>
+                                            <div className={cl.datePickerContainer}>
+                                            <input
+                                                    type="date"
+                                                    className={cl.workerInfo}
+                                                    placeholder='Дата окончания'
+                                                    value={inputData.docDate || ''}
+                                                    onChange={(e) => {
+                                                        const newDate = e.target.value;
+                                                        setInputData((prevWorker) => ({
+                                                        ...prevWorker,
+                                                        docDate: newDate,
+                                                        }));
+                                                    }}
+                                                />
+                                                
+                                            </div> 
+                                    </div>
+                                </div>
+                                <Button type="submit"  variant="contained" size="small" style={{ height: '32px', marginTop: '25px' }}>Добавить</Button>
+                            </div>
+                            
+                            
+                            </form>
+                        )}
                     </div>
                     <div>
                         {specCheckInfo && specCheckInfo.specChecks && specCheckInfo.specChecks.map((d, i) => (
@@ -159,7 +280,6 @@ function SpecChecks({ specCheckInfo, setSpecCheckInfo }) {
                                     )}
                                 </div>
                             </div>
-                            
                         ))}
                     </div>
                 </div>

@@ -1,35 +1,84 @@
 import React, { useState, useEffect } from 'react';
-import Button from '../../../UI/button/Button';
-import { getStaffInfo } from '../../../../api/staff_info/getStaffInfo';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import cl from './Autobiography.module.css';
+import Cookies from 'js-cookie';
+import { Button } from '@mui/material';
+import { FaPlus } from "react-icons/fa6";
+import { IoClose } from "react-icons/io5";
+import IconButton from '@mui/material/IconButton';
 
 import { updateAutobiography } from '../../../../api/staff_info/autobiography/updateAutobiography';
 
 function Autobiography({ autobiographyInfo, setAutobiographyInfo }) {
     const { id } = useParams();
-    const [personnelData, setPersonnelData] = useState([]); // Данные из бэка
-    const [bioId, setBioId] = useState(null)
     const [editingId, setEditingId] = useState(null);
 
     const firstBioText = autobiographyInfo?.autobiographies?.length > 0 ? autobiographyInfo.autobiographies[0]?.autobiographyText : '';
 
-    useEffect(() => {
-        fetchData() 
-    }, [])
-    
-    
-    const fetchData = async () => {
-        try {
-            // GET PERSONAL DATA
-            const response = await getStaffInfo(id);
-            // console.log(response.data)
-            setPersonnelData(response.data.autobiography);
-            setBioId(response.data.autobiography.id)
+    const [showForm, setShowForm] = useState(false);
 
+    const handleShowForm = () => {
+        setShowForm(!showForm);
+    };
+
+    const icon = showForm ? <IoClose style={{ fontSize: '18px' }} /> : <FaPlus style={{ fontSize: '16px' }} />;
+
+    const [inputData, setInputData] = useState({
+        autobiographyText: '',
+    });
+
+    const handleAddNewData = async (e) => {
+        e.preventDefault();
+        try {
+            // if (!inputData.sick_doc_numb || !inputData.sick_doc_date) {
+            //     alert('Пожалуйста, заполните все поля!');
+            //     return;
+            // }
+
+            const newData = {
+                personId: id,
+                autobiographyText: inputData.autobiographyText,
+            };
+          
+            // console.log(
+            //     { newData },
+            //     {id}
+            // )
+            const accessToken = Cookies.get('jwtAccessToken');
+
+            const response = await axios.post('http://localhost:8000/api/v1/autobiography/', newData, {
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`,
+                }
+            });
+            if (response.status === 201) {
+                const addedData = {
+                    ...newData,
+                    autobiographies: response.data.autobiographies,
+                };
+                setAutobiographyInfo(prevData => {
+                    // Проверяем, что prevData является объектом и содержит autobiographies
+                    if (typeof prevData === 'object' && Array.isArray(prevData.autobiographies)) {
+                      return {
+                        ...prevData,
+                        autobiographies: [...prevData.autobiographies, addedData],
+                      };
+                    } else {
+                      console.error("prevData is not an object or does not contain autobiographies");
+                      return prevData; // возвращаем prevData без изменений
+                    }
+                });
+                setInputData({
+                    personId: id,
+                    autobiographyText: '',
+                });
+                handleShowForm(false)
+            } else {
+                console.error('Error adding new data');
+            }
         } catch (error) {
-            console.error("Error fetching data:", error);
+            console.error('Error:', error);
         }
     };
     
@@ -126,30 +175,33 @@ function Autobiography({ autobiographyInfo, setAutobiographyInfo }) {
             <div className={cl.container}>
                 <div className={cl.totalInfoWrapper}>
                     <div className={cl.totalInfoContent}>
-                        <div className={cl.wrapper} style={{ display: 'flex', justifyContent: 'space-between', marginTop: '40px' }}>
+                        <div className={cl.wrapper} style={{ display: 'flex',  alignItems: 'center', gap: '20px', marginTop: '40px' }}>
                             <p className={cl.workerCapitalName}>Автобиография</p>
-                            <div className={cl.relativesActionBtns} style={{ display: 'flex', justifyContent: 'space-between', gap: '5px' }}>
-                                {!editingId && (
-                                    <div className={cl.actionBtn} onClick={() => handleEdit(id)}>
-                                        &#9998;
-                                    </div>
-                                )}
-
-                                {editingId && (
-                                    <>
-                                        <div onClick={() => handleSaveEdit(id)} className={cl.actionBtn}>
-                                            &#10003; 
-                                        </div>
-                                        <div className={cl.actionBtn} onClick={handleCancelEdit}>
-                                            &#x2715; 
-                                        </div>
-                                        
-                                    </>
-                                )}
-                            </div>
+                            <IconButton onClick={handleShowForm} aria-label="toggle-form">
+                                {icon}
+                            </IconButton>
                         </div>
                     </div>
-                    
+                    <div>
+                        {showForm && (
+                            <form onSubmit={handleAddNewData} style={{ marginTop: '10px' }}>
+                                <div className={cl.workerBlock}>
+                                    <div className={cl.column}>
+                                        <div className={cl.rows}>
+                                            <textarea 
+                                                type="text" 
+                                                className={cl.workerInfoText} 
+                                                name='autobiographyText' 
+                                                value={inputData.autobiographyText}
+                                                onChange={(e) => setInputData({ ...inputData, autobiographyText: e.target.value })}
+                                            /> 
+                                        </div>
+                                    </div>
+                                    <Button type="submit"  variant="contained" size="small" style={{ height: '32px', marginTop: '25px' }}>Добавить</Button>
+                                </div>
+                            </form>
+                        )}
+                    </div>
                     <div className={cl.workerBlock}>
                         {editingId ? (
                             
@@ -166,7 +218,27 @@ function Autobiography({ autobiographyInfo, setAutobiographyInfo }) {
                                 {firstBioText}
                             </p>
                         )}
+                        <div className={cl.relativesActionBtns} style={{ display: 'flex', justifyContent: 'space-between', gap: '5px' }}>
+                            {!editingId && (
+                                <div className={cl.actionBtn} onClick={() => handleEdit(id)}>
+                                    &#9998;
+                                </div>
+                            )}
+
+                            {editingId && (
+                                <>
+                                    <div onClick={() => handleSaveEdit(id)} className={cl.actionBtn}>
+                                        &#10003; 
+                                    </div>
+                                    <div className={cl.actionBtn} onClick={handleCancelEdit}>
+                                        &#x2715; 
+                                    </div>
+                                    
+                                </>
+                            )}
+                        </div>
                     </div>
+                    
                 </div>
             </div>
         </div>
