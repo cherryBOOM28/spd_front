@@ -1,36 +1,37 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import cl from './MilitaryRank.module.css';
-import Button from '../../../../components/UI/button/Button';
+import { Button } from '@mui/material';
 import { useParams } from 'react-router-dom';
 import Cookies from 'js-cookie';
+import { GoHistory } from "react-icons/go";
+import Paper from '@mui/material/Paper';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TablePagination from '@mui/material/TablePagination';
+import TableRow from '@mui/material/TableRow';
 
-import { deleteMilitaryRank } from '../../../../api/staff_info/military_rank/deleteMilitaryRank';
-import { updateMilitaryRank } from '../../../../api/staff_info/military_rank/updateMilitaryRank';
 import { updateRankInfo } from '../../../../api/staff_info/military_rank/updateRankInfo';
 
+
+
 function MilitaryRank({ rankInfo, militaryRank,setRankInfo, setMilitaryRank, rankArchive }, props) {
-    // const iin = props.iin;
     const { id } = useParams();
-    console.log("id", id)
-
-    const [militaryRankOption, setMilitaryRankOption] = useState([]);
-
+    // console.log("id", id)
+    const [openMilitaryHistory, setOpenMilitaryHistory] = useState(false);
     const [editing, setEditing] = useState(false);
+    const [militaryRankOption, setMilitaryRankOption] = useState([]);
     const [editedWorker, setEditedWorker] = useState({
-        rankTitle: '',
+        militaryRank: '',
         receivedType: '',
         receivedDate: '',
     });
-
-    const [editedData, setEditedData] = useState({
-        rankTitle: '',
-        receivedType: '',
-        receivedDate: '',
-    });
+   
     const accessToken = Cookies.get('jwtAccessToken');
     useEffect(() => {
-        // Выполняем запрос к серверу при монтировании компонента
         axios.get('http://localhost:8000/api/v1/military-rank/', {
             headers: {
                 'Authorization': `Bearer ${accessToken}`,
@@ -45,406 +46,235 @@ function MilitaryRank({ rankInfo, militaryRank,setRankInfo, setMilitaryRank, ran
           });
     }, []); 
   
-    useEffect(() => {
-        if (rankInfo && editedData) {
-            setEditedData({
-                personId: id,
-                // militaryRank: militaryRank.rankTitle,
-                receivedType: rankInfo.receivedType,
-                receivedDate: rankInfo.receivedDate,
-            });
-        }
-    }, [id, militaryRank, rankInfo, editing]); 
-
-
-    
-    // ИЗМЕНЕНИЯ В INPUT
     const handleInputChange = (event) => {
-      const { name, value } = event.target;
-      setEditedWorker((prevWorker) => ({ ...prevWorker, [name]: value }));
+        const { name, value } = event.target;
+        setEditedWorker((prevWorker) => ({ ...prevWorker, [name]: value }));
     };
 
-    const handleCancelClick = () => {
-        // Отменяем редактирование
+    const handleEdit = () => {
+        console.log("Initial rankInfo:", rankInfo);
+        setEditing(true);
+        setEditedWorker({
+            militaryRank: militaryRank.rankTitle,
+            receivedType:  rankInfo.receivedType,
+            receivedDate: rankInfo.receivedDate,
+        });
+    };
+
+    // const handleSaveEdit = async () => {
+    //     try {
+            
+           
+    //         const updatedRankInfo  = {
+    //             id: rankInfo.id,
+    //             militaryRank: selectedRank,
+    //             receivedType: editedWorker.receivedType,
+    //             receivedDate: editedWorker.receivedDate,
+    //         };
+
+          
+    //         console.log("id",rankInfo.id)
+    //         console.log(updatedRankInfo)
+
+
+
+    //         const response = await updateRankInfo(rankInfo.id, updatedRankInfo);
+    
+    //       if (response.ok) {
+    //         // закончить редактирование
+    //         setEditing(false);
+    //       } else {
+    //         console.error('Ошибка при сохранении изменений');
+    //       }
+    //     } catch (error) {
+    //       console.error('Ошибка при выполнении запроса:', error);
+    //     }
+    // };
+
+    // EDIT
+    
+    const handleSaveEdit = async () => {
+        try {
+          const updatedFields = {};
+      
+          if (selectedRank !== rankInfo.militaryRank) {
+            updatedFields.militaryRank = selectedRank;
+          }
+          if (editedWorker.receivedType !== rankInfo.receivedType) {
+            updatedFields.receivedType = editedWorker.receivedType;
+          }
+          if (editedWorker.receivedDate !== rankInfo.receivedDate) {
+            updatedFields.receivedDate = editedWorker.receivedDate;
+          }
+      
+          // Check if any fields have changed before making the patch request
+          if (Object.keys(updatedFields).length > 0) {
+            const updatedRankInfo = {
+              id: rankInfo.id,
+              ...updatedFields,
+            };
+      
+            console.log("id", rankInfo.id);
+            console.log(updatedRankInfo);
+      
+            const response = await updateRankInfo(rankInfo.id, updatedRankInfo);
+      
+            if (response.ok) {
+                setRankInfo((prevRankInfo) => ({
+                    ...prevRankInfo,
+                    militaryRank: prevRankInfo.militaryRank.map((rank) =>
+                      rank.id === id ? updatedRankInfo : rank
+                    ),
+                  }));
+                  
+                  
+              setEditing(false);
+            } else {
+              console.error('Error saving changes');
+            }
+          } else {
+            // No fields have changed
+            console.log('No changes detected');
+          }
+          window.location.reload()
+        } catch (error) {
+          console.error('Error executing request:', error);
+        }
+    };
+      
+    useEffect(() => {
+        // Your fetch or update logic here
+    }, [rankInfo]); 
+    
+    const [selectedRank, setSelectedRank] = useState('');
+
+    const handleCancelEdit = () => {
+        console.log('handleCancelEdit called');
         setEditing(false);
     };
 
-    const [personnelData, setPersonnelData] = useState({
-        "military_rank": []
-    }); // Данные из бэка
-
-
-    // TABLE DATA
-
-    // ДОБАВЛЕНИЕ 
-    const [showForm, setShowForm] = useState(false);
-
-    const handleShowForm = () => {
-        setShowForm(true);
-    };
-
-    const [inputData, setInputData] = useState({
-        rankTitle: '',
-        receivedType: '',
-        receivedDate: '',
-    });
-
-    const handleAddNewData = async (e) => {
-        e.preventDefault();
-        try {
-            // if (!inputData.sick_doc_numb || !inputData.sick_doc_date) {
-            //     alert('Пожалуйста, заполните все поля!');
-            //     return;
-            // }
-
-            const newData = {
-                iin: props.id,
-                military_rank: inputData.military_rank,
-                received_date: inputData.received_date,
-                type_of_receipt: inputData.type_of_receipt,
-                position: inputData.position
-            };
-          
-            const body =  { "military_rank": [newData] };
-            console.log("body", body);
-
-            const response = await axios.post('http://localhost:8000/staff_info/create/', body);
-            
-
-            if (response.status === 201) {
-                const updatedPersonnelData = {
-                    ...personnelData,
-                    military_rank: [
-                        ...personnelData.military_rank,
-                        newData
-                    ]
-                };
-
-                setPersonnelData(updatedPersonnelData);
-                setInputData({
-                    iin: id,
-                    military_rank: '',
-                    received_date: '',
-                    type_of_receipt: '',
-                    position: '',
-                });
-                handleShowForm(false)
-            } else {
-                console.error('Error adding new data');
-            }
-            window.location.reload();
-
-        } catch (error) {
-            console.error('Error:', error);
-        }
-    };
-
-    // УДАЛЕНИЕ DATA
-    const handleDelete = async (id) => {
-        try {
-            const response = await deleteMilitaryRank(id)
-            if (response === 200) {
-                // Успешно удалено, теперь обновляем состояние
-                setPersonnelData(prevData => prevData.filter(tableData => tableData.id !== id));
-                console.log("Successfully deleted");
-            } else {
-                console.log("Error deleting data in table");
-            }
-            window.location.reload();
-        } catch(error) {
-            console.log(error)
-        }
+    const handleMilitaryHistory = () => {
+        setOpenMilitaryHistory(!openMilitaryHistory);
     }
-
-    // EDIT
-    const [selectedMilitaryRank, setSelectedMilitaryRank] = useState(null);
-
-        const handleMilitaryRankChange = (event) => {
-        const selectedRank = JSON.parse(event.target.value);
-        setSelectedMilitaryRank(selectedRank);
-        };
-
-    const [editingId, setEditingId] = useState(null);
-
-    useEffect(() => {
-        // This useEffect will trigger whenever rankInfo is updated
-        console.log('Rank info updated:', rankInfo);
-      }, [rankInfo]);
-
-    const handleEdit = async () => {
-        if (editing) {
-            try {
-                const updatedRankInfo = {
-                    id: rankInfo.id,
-                    militaryRank: selectedMilitaryRank,
-                    receivedType: editedData.receivedType,
-                    receivedDate: editedData.receivedDate,
-                };
-                console.log("id",rankInfo.id)
-                console.log({updatedRankInfo})
-
-    
-                await updateRankInfo(rankInfo.id, updatedRankInfo);
-    
-                // setRankInfo(updatedRankInfo); 
-                setRankInfo(prevState => ({ ...prevState, ...updatedRankInfo }));
-    
-                setEditing(false); 
-                console.log('Successfully updated data');
-            } catch (error) {
-                console.error('Error updating data:', error);
-            }
-        } else {
-            setEditing(true);
-        }
-        
-    };
-     
-     
-
-    const handleCancelEdit = () => {
-        setShowForm(false);
-        // setEditedData({
-        //     id: null,
-        //     rankTitle: '',
-        //     receivedType: '',
-        //     receivedDate: '',
-        // });
-    };
-    
 
     return (
         <div className={cl.totalInfoWrapper} style={{ marginTop: '40px' }}>
-        <div className={cl.totalInfoContent}>
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <p className={cl.workerCapitalName} style={{ marginBottom: '15px' }}>Звания</p>
-            </div>
-        </div>
-        <div className={cl.workerBlock}>
-            <div className={cl.column}>
-            <div className={cl.rows}>
-                <label className={cl.label}>Поручение</label>
-                {editing ? (
-                    <div className={cl.datePickerContainer}>
-                    <input
-                        type="text"
-                        name='receivedType'
-                        className={cl.workerInfo}
-                        value={editedWorker.receivedType}
-                        onChange={handleInputChange}
-                    />
-                    </div>
-                ) : (
-                    <p className={cl.workerInfo}>{rankInfo.receivedType}</p>
-                )}
-            </div>
-            
-            <div className={cl.rows}>
-                <label className={cl.label}>Звание</label>
-                {editing ? (
-                    <div className={cl.datePickerContainer}>
-                    {/* <select
-                    name='rankTitle'
-                    className={cl.workerInfoSelect}
-                    value={editedWorker.rankTitle}
-                    onChange={(e) => setEditedWorker({ ...editedWorker, rankTitle: e.target.value })}
-                    >
-                        <option value="">Выберите звание</option>
-                        <option value="Рядовой">Рядовой</option>
-                        <option value="Ефрейтор">Ефрейтор</option>
-                        <option value="Младший сержант">Младший сержант	</option>
-                        <option value="Сержант">Сержант</option>
-                        <option value="Старший сержант">Старший сержант	</option>
-                        <option value="Сержант третьего класса">Сержант третьего класса</option>
-                        <option value="Сержант второго класса">Сержант второго класса</option>
-                        <option value="Сержант первого класса">Сержант первого класса</option>
-                        <option value="Штаб-сержант">Штаб-сержант</option>
-                        <option value="Мастер-сержант">Мастер-сержант</option>
-                        <option value="Лейтенант">Лейтенант</option>
-                        <option value="Старший лейтенант">Старший лейтенант	</option>
-                        <option value="Капитан">Капитан</option>
-                        <option value="Майор">Майор</option>
-                        <option value="Подполковник">Подполковник</option>
-                        <option value="Полковник">Полковник</option>
-                        <option value="Генерал-майор">Генерал-майор</option>
-                        <option value="Генерал-лейтенант">Генерал-лейтенант	</option>
-                        <option value="Генерал-полковник">Генерал-полковник</option>
-                        <option value="Генерал армии">Генерал армии</option>  
-                    </select> */}
-
-                    <select  onChange={handleMilitaryRankChange}>
-                        {militaryRankOption.map(rank => (
-                        <option key={rank.id} value={JSON.stringify(rank)}>
-                            {rank.rankTitle}
-                        </option>
-                        ))}
-                    </select>
-                    </div>
-                ) : (
-                    <p className={cl.workerInfo}>{militaryRank.rankTitle}</p>
-                )}
-            </div>
-            
-
-            </div>
-            <div className={cl.column}>
-            <div className={cl.rows}>
-                <label className={cl.label}>Дата получения</label>
-                {editing ? (
-                <div className={cl.datePickerContainer}>
-                    <input
-                    type="date"
-                    name='receivedDate'
-                    className={cl.workerInfo}
-                    value={editedWorker.receivedDate || ''}
-                    onChange={(e) =>
-                        setEditedWorker((prevWorker) => ({
-                        ...prevWorker,
-                        receivedDate: e.target.value,
-                        }))
-                    }
-                    />
-                
+            <div className={cl.totalInfoContent}>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <p className={cl.workerCapitalName} style={{ marginBottom: '15px' }}>Звания</p>
+                    <Button onClick={handleMilitaryHistory} style={{ textTransform: 'none', color: '#4B4B4B'}} className={cl.historyBtn}> <GoHistory /> История приказов</Button>
                 </div>
-                ) : (
-                <p className={cl.workerInfo}>{rankInfo.receivedDate}</p>
-                )}
             </div>
-            <div>
+            <div className={cl.workerBlock}>
+                <div className={cl.column}>
+                    <div className={cl.rows}>
+                        <label className={cl.label}>Поручение</label>
+                        {editing ? (
+                            <div className={cl.datePickerContainer}>
+                            <input
+                                type="text"
+                                name='receivedType'
+                                className={cl.workerInfo}
+                                value={editedWorker.receivedType}
+                                onChange={handleInputChange}
+                            />
+                            </div>
+                        ) : (
+                            <p className={cl.workerInfo}>{rankInfo.receivedType}</p>
+                        )}
+                    </div>
+                    <div className={cl.rows}>
+                        <label className={cl.label}>Звание</label>
+                        {editing ? (
+                            <div className={cl.datePickerContainer}>
                 
-        {/* <table className={cl.customTable} style={{ marginTop: '20px' }}>
-            <thead>
-                <tr>
-                    <td>Начало периода</td>
-                    <td>Конец периода </td>
-                    <td>Должность</td>
-                    <td>Подразделение</td>
-                    <td>Учреждение</td>
-                    <td>Местонахожден. организации</td>
-                    <td>Коэфициент</td>
-                    <td>Правохран. орган</td>
-                    <td>Действие</td>
-                </tr>
-            </thead>
-            <tbody>
-                {rankArchive && rankArchive.archiveObjects && rankArchive.archiveObjects.map((d, i) => (
-                    <tr key={i}> 
-                        <td>
-                            {editingId === d.id ? (
-                            <div className={cl.datePickerContainer}>
-                                <input
-                                    type="date"
-                                    className={cl.formInput}
-                                    placeholder="Начало периода"
-                                    name='startDate'
-                                    value={editedData.startDate || ''}
-                                    onChange={(e) => {
-                                        const newDate = e.target.value;
-                                        setEditedData((prevData) => ({
-                                        ...prevData,
-                                        startDate: newDate,
-                                        }));
-                                    }}
-                                />
+                            <select  
+                                onChange={(e) => setSelectedRank(e.target.value)}
+                                value={selectedRank}
+                                className={cl.workerInfoSelect}
+                                name='militaryRank'
+                            >
+                                <option value="" disabled>Выберите звание</option>
+                                {militaryRankOption.map(rank => (
+                                <option key={rank.id} value={rank.rankTitle}>
+                                    {rank.rankTitle}
+                                </option>
+                                ))}
+                            </select>
                             </div>
                         ) : (
-                            d.startDate
+                            <p className={cl.workerInfo}>{militaryRank.rankTitle}</p>
                         )}
-                        </td>
-                        <td>
-                            {editingId === d.id ? (
-                            <div className={cl.datePickerContainer}>
-                                <input
-                                    type="date"
-                                    className={cl.formInput}
-                                    placeholder="Конец периода"
-                                    name='endDate'
-                                    value={editedData.endDate || ''}
-                                    onChange={(e) => {
-                                        const newDate = e.target.value;
-                                        setEditedData((prevData) => ({
-                                        ...prevData,
-                                        endDate: newDate,
-                                        }));
-                                    }}
-                                />
-                            </div>
+                    </div>
+                </div>
+                <div className={cl.column}>
+                    <div className={cl.rows}>
+                        <label className={cl.label}>Дата получения</label>
+                        {editing ? (
+                        <div className={cl.datePickerContainer}>
+                            <input
+                            type="date"
+                            name='receivedDate'
+                            className={cl.workerInfo}
+                            value={editedWorker.receivedDate || ''}
+                            onChange={(e) =>
+                                setEditedWorker((prevWorker) => ({
+                                ...prevWorker,
+                                receivedDate: e.target.value,
+                                }))
+                            }
+                            />
+                        
+                        </div>
                         ) : (
-                            d.endDate
+                        <p className={cl.workerInfo}>{rankInfo.receivedDate}</p>
                         )}
-                        </td>
-                        <td>{editingId === d.id ? <input type="text" className={cl.editInput} name='receivedType' value={editedData.receivedType} onChange={(e) => setEditedData({ ...editedData, receivedType: e.target.value })} /> : d.receivedType}</td>
-                        <td>{editingId === d.id ? <input type="text" className={cl.editInput} name='decreeNumber' value={editedData.decreeNumber} onChange={(e) => setEditedData({ ...editedData, decreeNumber: e.target.value })} /> : d.decreeNumber}</td>
-                        <td>{editingId === d.id ? <input type="text" className={cl.editInput} name='organizationName' value={editedData.organizationName} onChange={(e) => setEditedData({ ...editedData, organizationName: e.target.value })} /> : d.organizationName}</td>
-                        <td>{editingId === d.id ? <input type="text" className={cl.editInput} name='organizationAddress' value={editedData.organizationAddress} onChange={(e) => setEditedData({ ...editedData, organizationAddress: e.target.value })} /> : d.organizationAddress}</td>
-                        <td>
-                            {editingId === d.id ? (
-                                <input
-                                type="checkbox"
-                                name="isPravoOhranka"
-                                checked={editedData.isPravoOhranka || false}
-                                onChange={(e) =>
-                                    setEditedData((prevData) => ({
-                                    ...prevData,
-                                    isPravoOhranka: e.target.checked,
-                                    }))
-                                }
-                                />
-                            ) : (
-                                d.isPravoOhranka ? "Да" : "Нет"
-                            )}
-                        </td>
-                        <td>
-                            {editingId === d.id ? (
-                                <input
-                                type="checkbox"
-                                name="HaveCoefficient"
-                                checked={editedData.HaveCoefficient || false}
-                                onChange={(e) =>
-                                    setEditedData((prevData) => ({
-                                    ...prevData,
-                                    HaveCoefficient: e.target.checked,
-                                    }))
-                                }
-                                />
-                            ) : (
-                                d.HaveCoefficient ? "Да" : "Нет"
-                            )}
-                        </td>
-                        <td className={cl.relativesActionBtns} style={{}}>
-                            {editingId === d.id ? (
-                                <>
-                                    <div onClick={() => handleSaveEdit(d.id)}>&#10003;</div>
-                                    <div onClick={handleCancelEdit}>&#x2715;</div>
-                                </>
-                            ) : (
-                                <>
-                                    <div onClick={() => handleEdit(d.id)}>&#9998;</div>
-                                    <div onClick={() => handleDelete(d.id)}>Удалить</div>
-                                </>
-                            )}
-                        </td>
-                    </tr>
-                ))}
-            </tbody>
-        </table> */}
-        
-
-    </div>
+                    </div>
+                <div>
             </div>
-            <div className={cl.relativesActionBtns} style={{marginTop: '22px'}}>
-                {editing ? (
-                    <>
-                        <div onClick={handleEdit}>&#9998;</div>
-                        <div onClick={() => handleCancelEdit()}>&#x2715;</div>
-                    </>
-                ) : (
-                    <>
-                        <div onClick={() => handleEdit(rankInfo.id)}>&#9998;</div>
-                    </>
-                )}
-            </div>
+        </div>      
+        <div className={cl.relativesActionBtns} style={{ marginTop: '22px' }}>
+            {editing ? (
+                <>
+                    <div onClick={() => handleSaveEdit()}>&#9998;</div>
+                    <div onClick={handleCancelEdit}>&#x2715;</div>
+                </>
+            ) : (
+                <div onClick={() => handleEdit(id, editedWorker)}>&#9998;</div>
+            )}
         </div>
+        </div>
+        {openMilitaryHistory && (
+            <Paper sx={{ width: '100%', overflow: 'hidden', marginTop: '40px' }}>
+                <TableContainer sx={{ maxHeight: 440 }}>
+                    <Table stickyHeader aria-label="sticky table">
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>Звание</TableCell>
+                                <TableCell>Начало периода</TableCell>
+                                <TableCell>Конец периода</TableCell>
+                                <TableCell>Поручение</TableCell>
+                                <TableCell>Пенсионный возраст</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {rankArchive &&
+                                rankArchive.archiveObjects &&
+                                rankArchive.archiveObjects.map((archiveObject, i) => (
+                                <TableRow key={i}>
+                                    <TableCell>{archiveObject.militaryRank.rankTitle}</TableCell>
+                                    <TableCell>{archiveObject.startDate}</TableCell>
+                                    <TableCell>{archiveObject.endDate}</TableCell>
+                                    <TableCell>{archiveObject.receivedType}</TableCell>
+                                    <TableCell>{archiveObject.militaryRank.pensionAge}</TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            </Paper>
+        )}
+        
     </div>
     );
 }

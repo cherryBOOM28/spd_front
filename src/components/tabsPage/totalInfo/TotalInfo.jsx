@@ -100,14 +100,14 @@ function TotalInfo({ person, identityCardInfo, residentInfo }) {
   };
 
   const [editing, setEditing] = useState(false);
-    const [editedWorker, setEditedWorker] = useState({
-      id: person.id,
-      identityCardNumber: '',
-      dateOfIssue: '',
-      issuedBy: '',
-      resCountry: '',
-      resCity: '',
-      resRegion: '',
+  const [editedWorker, setEditedWorker] = useState({
+    id: person.id,
+    identityCardNumber: '',
+    dateOfIssue: '',
+    issuedBy: '',
+    resCountry: '',
+    resCity: '',
+    resRegion: '',
   });
 
   // ИЗМЕНИТЬ ПОЛЯ

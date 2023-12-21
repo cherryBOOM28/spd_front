@@ -4,10 +4,14 @@ import { useParams } from 'react-router-dom';
 import { updateSpecCheck } from '../../../../api/staff_info/spec_checks/updateSpecCheck';
 import Cookies from 'js-cookie';
 import axios from 'axios';
-import { Button } from '@mui/material';
+import { Button, Paper } from '@mui/material';
 import { FaPlus } from "react-icons/fa6";
 import { IoClose } from "react-icons/io5";
 import IconButton from '@mui/material/IconButton';
+
+import TextField from '@mui/material/TextField';
+import { MdEdit } from "react-icons/md";
+import { FaCheck } from "react-icons/fa6";
 
 
 function SpecChecks({ specCheckInfo, setSpecCheckInfo }) {
@@ -187,21 +191,28 @@ function SpecChecks({ specCheckInfo, setSpecCheckInfo }) {
                                     <div className={cl.column}>
                                         <div className={cl.rows}>
                                             <label className={cl.label}>Номер документа</label>
-                                            <input 
-                                                type="number" 
-                                                className={cl.workerInfo} 
+                                            <TextField 
+                                                type="number"
+                                                id="outlined-basic" 
+                                                variant="outlined"  
+                                                size="small"
+                                                className={cl.workerInfo}
                                                 name='docNumber' 
                                                 value={inputData.docNumber}
                                                 onChange={(e) => setInputData({ ...inputData, docNumber: e.target.value })}
-                                            /> 
+                                            />
                                         </div>
                                     </div>
                                 <div className={cl.column}>
                                     <div className={cl.rows}>
                                         <label className={cl.label}>Дата окончания</label>
                                             <div className={cl.datePickerContainer}>
-                                            <input
+                                                <TextField 
                                                     type="date"
+                                                    id="outlined-basic" 
+                                                    variant="outlined"  
+                                                    size="small"
+                                                    name='docDate'
                                                     className={cl.workerInfo}
                                                     placeholder='Дата окончания'
                                                     value={inputData.docDate || ''}
@@ -213,11 +224,10 @@ function SpecChecks({ specCheckInfo, setSpecCheckInfo }) {
                                                         }));
                                                     }}
                                                 />
-                                                
                                             </div> 
                                     </div>
                                 </div>
-                                <Button type="submit"  variant="contained" size="small" style={{ height: '32px', marginTop: '25px' }}>Добавить</Button>
+                                <Button type="submit"  variant="contained" style={{  marginTop: '25px' }}>Добавить</Button>
                             </div>
                             
                             
@@ -231,14 +241,18 @@ function SpecChecks({ specCheckInfo, setSpecCheckInfo }) {
                                     <div className={cl.rows}>
                                         <label className={cl.label}>Номер документа</label>
                                         {editingId === d.id ? 
-                                            <input 
-                                                type="number" 
-                                                className={cl.workerInfo} 
+                                            <TextField 
+                                                type="number"
+                                                id="outlined-basic" 
+                                                variant="outlined"  
+                                                size="small"
+                                                className={cl.workerInfo}
                                                 name='docNumber' 
                                                 value={editedData.docNumber} 
                                                 onChange={(e) => setEditedData({ ...editedData, docNumber: e.target.value })} 
-                                            /> : 
-                                            <p className={cl.workerInfoP}>{d.docNumber}</p>      
+                                            />
+                                            : 
+                                            <Paper className={cl.workerInfoP}>{d.docNumber}</Paper>      
                                         }
                                     </div>
                                 </div>
@@ -247,35 +261,36 @@ function SpecChecks({ specCheckInfo, setSpecCheckInfo }) {
                                         <label className={cl.label}>Дата окончания</label>
                                         {editingId === d.id ? 
                                             <div className={cl.datePickerContainer}>
-                                            <input
-                                                    type="date"
-                                                    className={cl.workerInfo}
-                                                    placeholder='Дата окончания'
-                                                    value={editedData.docDate || ''}
-                                                    onChange={(e) => {
-                                                        const newData = e.target.value;
-                                                        setEditedData((prevData) => ({
-                                                            ...prevData,
-                                                            docDate: newData,
-                                                        }));
-                                                    }}
-                                                />
-                                                
+                                            <TextField 
+                                                 type="date"
+                                                id="outlined-basic" 
+                                                variant="outlined"  
+                                                size="small"
+                                                className={cl.workerInfo}
+                                                name='docDate' 
+                                                value={editedData.docDate || ''}
+                                                onChange={(e) => {
+                                                    const newData = e.target.value;
+                                                    setEditedData((prevData) => ({
+                                                        ...prevData,
+                                                        docDate: newData,
+                                                    }));
+                                                }}
+                                            />
                                             </div> : 
-                                            <p className={cl.workerInfoP}>{d.docDate}</p>           
+                                            <Paper className={cl.workerInfoP}>{d.docDate}</Paper>      
                                         }
                                     </div>
                                 </div>
                                 <div className={cl.relativesActionBtns} style={{marginTop: '22px'}}>
                                     {editingId === d.id ? (
-                                        <>
-                                            <div onClick={() => handleSaveEdit(d.id)}>&#10003;</div>
-                                            <div onClick={handleCancelEdit}>&#x2715;</div>
-                                        </>
+                                        <div>
+                                            <IconButton className={cl.iconBtn} onClick={() => handleSaveEdit(d.id)}><FaCheck color=' #1565C0' /></IconButton>
+                                            <IconButton className={cl.iconBtn} onClick={handleCancelEdit}><IoClose /></IconButton>
+                                        </div>
                                     ) : (
                                         <>
-                                            <div onClick={() => handleEdit(d.id)}>&#9998;</div>
-                                            
+                                            <IconButton className={cl.iconBtn} onClick={() => handleEdit(d.id)}><MdEdit /></IconButton>
                                         </>
                                     )}
                                 </div>

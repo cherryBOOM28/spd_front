@@ -71,7 +71,7 @@ function WorkerDetail() {
   const [rewardsInfo, setRewardsInfo] = useState({});
   const [sickLeavesInfo, setSickLeavesInfo] = useState({});
   const [investigationsInfo, setInvestigationsInfo] = useState({});
-  const [rankInfo, setRankInfo] = useState({});
+  const [rankInfo, setRankInfo] = useState([]);
   const [militaryRank, setMilitaryRank] = useState({});
 
 

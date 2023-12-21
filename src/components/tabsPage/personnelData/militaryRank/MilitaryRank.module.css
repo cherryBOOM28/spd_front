@@ -217,3 +217,12 @@ color: #000;
 font-size: 16px;
 font-weight: 400;
 }
+
+
+.historyBtn {
+  text-transform: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #4B4B4B;
+}

@@ -1,16 +1,13 @@
 /* Personal.module.css */
 
 .formInput {
-  padding: 5px;
-  background: #f2f2f2;
-  border: none;
-  outline: none;
+  background: #ffffff;
   font-family: "Helvetica", sans-serif;
-  color: #000;
+  outline: none;
+  border: none;
   font-size: 14px;
   font-weight: 400;
-  width: 100%;
-  box-sizing: border-box;
+  width: 270px;
 }
 
 .customTable {
@@ -86,31 +83,26 @@
 }
 
 .workerInfo {
-  border-radius: 5px;
-  border: 1px solid #959595;
+  background: #ffffff;
   width: 270px;
-  height: 18px;
-  padding: 6px 9px;
-  margin-left: 12px;
-  outline: none;
   font-family: "Helvetica", sans-serif;
-  color: #000;
   font-size: 16px;
   font-weight: 400;
 }
 
 .workerInfoP {
-border-radius: 5px;
-border: 1px solid #959595;
-width: 270px;
-height: 18px;
-padding: 6px 9px;
-margin-left: 12px;
-outline: none;
-font-family: "Helvetica", sans-serif;
-color: #000;
-font-size: 16px;
-font-weight: 400;
+  display: block;
+  border-radius: 5px;
+  background-color: #fff;
+  width: 270px;
+  height: 40px;
+  margin-left: 12px;
+  outline: none;
+  border: none;
+  font-family: "Helvetica", sans-serif;
+  color: #000;
+  font-size: 16px;
+  font-weight: 400;
 }
 
 .workerInfoSelect {
@@ -177,24 +169,8 @@ font-weight: 400;
 }
 
 .relativesActionBtns {
-display: flex;
-flex-direction: row;
-align-items: center;
-gap: 5px;
-}
-
-.relativesActionBtns > div {
-padding: 8px;
-border-radius: 5px;
-cursor: pointer;
-}
-
-.relativesActionBtns > div:first-child {
-background-color: #ccc;
-
-}
-.relativesActionBtns > div:nth-child(2) {
-background-color: #d36666;
+  display: flex;
+  gap: 10px;
 }
 
 .editInput {
@@ -202,4 +178,16 @@ border: none;
 outline: none;
 background: none;
 width: 100%;
+}
+
+.wrapper {
+  display: flex;
+  gap: 40px;
+}
+
+.iconBtn {
+  font-size: 16px;
+  width: 32px;
+  height: 32px;
+  color: #1565C0;
 }

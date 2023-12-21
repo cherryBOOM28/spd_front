@@ -261,13 +261,14 @@ function Home(props) {
                     <h1 className={cl.headline}>Штатное расписание</h1>
                     <div className={cl.groups_column}>
                         {cities.map((city, index) => (
-                            <div key={index} style={{ listStyle: 'none' }}>
+                            <div key={index} style={{ listStyle: 'none', display: 'flex' }}>
+                                
+                                {city}
                                 <input
                                 type='radio'
                                 className={city === selectedCity ? cl.active : cl.city}
                                 onClick={() => handleCityClick(city)}
                                 />
-                                {city}
                                 {/* </button> */}
                             </div>
                         ))}

@@ -86,27 +86,24 @@
 }
 
 .workerInfo {
-    border-radius: 5px;
-    border: 1px solid #959595;
-    width: 270px;
-    height: 18px;
-    padding: 6px 9px;
-    margin-left: 12px;
-    outline: none;
-    font-family: "Helvetica", sans-serif;
-    color: #000;
-    font-size: 16px;
-    font-weight: 400;
+  background: #ffffff;
+  width: 270px;
+  font-family: "Helvetica", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
 }
 
 .workerInfoP {
+  display: flex;
+  align-items: center;
+  padding: 0px 8px;
   border-radius: 5px;
-  border: 1px solid #959595;
+  background-color: #fff;
   width: 270px;
-  height: 18px;
-  padding: 6px 9px;
+  height: 40px;
   margin-left: 12px;
   outline: none;
+  border: none;
   font-family: "Helvetica", sans-serif;
   color: #000;
   font-size: 16px;
@@ -184,17 +181,17 @@
 }
 
 .relativesActionBtns > div {
-  padding: 8px;
-  border-radius: 5px;
   cursor: pointer;
+  font-size: 16px;
 }
 
 .relativesActionBtns > div:first-child {
-  background-color: #ccc;
+  font-size: 16px;
 
 }
 .relativesActionBtns > div:nth-child(2) {
-  background-color: #d36666;
+  font-size: 16px;
+
 }
 
 .editInput {

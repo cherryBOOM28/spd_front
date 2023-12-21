@@ -1,9 +1,28 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import cl from './Attestations.module.css';
-import Button from '../../../../components/UI/button/Button';
+import { Button } from '@mui/material';
+import { FaPlus } from "react-icons/fa6";
+import { IoClose } from "react-icons/io5";
+import IconButton from '@mui/material/IconButton';
 import { useParams } from 'react-router-dom';
 import Cookies from 'js-cookie';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';import Box from '@mui/material/Box';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+import TextField from '@mui/material/TextField';
+import TableHead from '@mui/material/TableHead';
+import { FaTrash } from "react-icons/fa";
+import { MdEdit } from "react-icons/md";
+
+import { FaCheck } from "react-icons/fa6";
 
 import { deleteAttestations } from '../../../../api/staff_info/attestations/deleteAttestations';
 import { updateAttestations } from '../../../../api/staff_info/attestations/updateAttestations';
@@ -16,7 +35,7 @@ function Attestations({ attestationInfo, setAttestationInfo }) {
     const [showForm, setShowForm] = useState(false);
 
     const handleShowForm = () => {
-        setShowForm(true);
+        setShowForm(!showForm);
     };
 
     const [inputData, setInputData] = useState({
@@ -206,74 +225,81 @@ function Attestations({ attestationInfo, setAttestationInfo }) {
         setEditedData({});
     };
 
+    const icon = showForm ? <IoClose style={{ fontSize: '18px' }} /> : <FaPlus style={{ fontSize: '16px' }} />;
+
     return (
         <div className={cl.totalInfoWrapper} style={{ marginTop: '40px' }}>
         <div className={cl.totalInfoContent}>
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <p className={cl.workerCapitalName} style={{ marginBottom: '20px' }}>Аттестация</p>
+            <div style={{ display: 'flex',  alignItems: 'center', gap: '20px' }}>
+                <p className={cl.workerCapitalName} style={{ marginBottom: '18px' }}>Аттестация</p>
+                <IconButton onClick={handleShowForm} aria-label="toggle-form" style={{ marginBottom: '15px' }}>
+                    {icon}
+                </IconButton>
             </div>
         </div>
         <div>
             <div>
-            <Button onClick={handleShowForm}>Добавить аттестацию</Button>
                 {showForm && (
                     <form onSubmit={handleAddNewData} style={{ marginTop: '10px' }}>
-                        <table className={cl.customTable}>
-                            <tbody >
-                                <tr>
-                                    <td>
-                                        <select
-                                            className={cl.formInput}
-                                            placeholder="Результат аттестации"
-                                            name='attResult'
-                                            value={inputData.attResult}
-                                            onChange={(e) => setInputData({ ...inputData, attResult: e.target.value })}
-                                        >
-                                            <option value="">Выберите результат</option>
-                                            <option value="Соответствует">Соответствует</option>
-                                            <option value="Не соответствует"> Не соответствует</option>
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <div className={cl.datePickerContainer}>
-                                        <input
-                                            type="date"
-                                            className={cl.formInput}
-                                            placeholder="Дата приказа"
-                                            name='lastAttDate'
-                                            value={inputData.lastAttDate || ''}
-                                            onChange={(e) => {
-                                                const newDate = e.target.value;
-                                                setInputData((prevWorker) => ({
-                                                ...prevWorker,
-                                                lastAttDate: newDate,
-                                                }));
-                                            }}
-                                        />
-                                        </div>
-                                    </td>
-                                    <td><Button type="submit">Добавить</Button></td>
-                                </tr>
-                                
-                            </tbody>
-                        </table>
+                        <div className={cl.wrapper}>
+                            <Box>
+                                {/* <label className={cl.label}>Должность</label> */}
+                                <FormControl size="small" fullWidth>
+                                    <InputLabel id="demo-simple-select-label">Результат аттестации</InputLabel>
+                                    <Select
+                                    className={cl.formInput}
+                                    labelId="demo-simple-select-label"
+                                    id="demo-simple-select"
+                                    label="Результат аттестации"
+                                    placeholder="Результат аттестации"
+                                    name='attResult'
+                                    value={inputData.attResult}
+                                    onChange={(e) => setInputData({ ...inputData, attResult: e.target.value })}
+                                    
+                                    >
+                                        <MenuItem value="">Выберите результат</MenuItem>
+                                        <MenuItem value="Соответствует">Соответствует</MenuItem>
+                                        <MenuItem value="Не соответствует"> Не соответствует</MenuItem>
+                                    </Select>
+                                </FormControl>
+                            </Box>
+                            <TextField 
+                                type="date"
+                                id="outlined-basic" 
+                                variant="outlined"  
+                                size="small"
+                                name='lastAttDate'
+                                className={cl.workerInfo}
+                                value={inputData.lastAttDate || ''}
+                                onChange={(e) => {
+                                    const newDate = e.target.value;
+                                    setInputData((prevWorker) => ({
+                                    ...prevWorker,
+                                    lastAttDate: newDate,
+                                    }));
+                                }}
+                            />
+                            <Button type="submit"  variant="contained">Добавить</Button>
+                        </div>
                     </form>
                 )}
             </div>
             <div>
-                <table className={cl.customTable} style={{ marginTop: '20px' }}>
-                    <thead>
-                        <tr>
-                            <td>Результат аттестации</td>
-                            <td>Последняя дата аттестации</td>
-                            <td>Следующая дата аттестации</td>
-                            <td>Действие</td>
-                        </tr>
-                    </thead>
-                    <tbody>
+            <Paper sx={{ width: '100%', overflow: 'hidden', marginTop: '20px' }}>
+                <TableContainer sx={{ maxHeight: 440 }}>
+                    <Table stickyHeader aria-label="sticky table">
+                        <TableHead>
+                            <TableRow>
+                                    <TableCell>Результат аттестации</TableCell>
+                                    <TableCell>Последняя дата  аттестации</TableCell>
+                                    <TableCell>Следующая дата аттестации</TableCell>
+                                    <TableCell></TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
                         {attestationInfo && attestationInfo.attestations && attestationInfo.attestations.map((d, i) => (
-                            <tr key={i}>
-                                <td>  
+                            <TableRow  key={i}>
+                                <TableCell >  
                                     {editingId === d.id ? (
                                         <select
                                             className={cl.selectRelative_type}
@@ -287,8 +313,8 @@ function Attestations({ attestationInfo, setAttestationInfo }) {
                                     ) : (
                                         d.attResult
                                     )}
-                                </td>
-                                 <td>
+                                </TableCell >
+                                 <TableCell >
                                 {editingId === d.id ? (
                                     <div className={cl.datePickerContainer}>
                                         <input
@@ -309,26 +335,28 @@ function Attestations({ attestationInfo, setAttestationInfo }) {
                                 ) : (
                                     d.lastAttDate
                                 )}
-                                </td>
-                                <td>{d.nextAttDateMin}
-                                </td>
-                                <td className={cl.relativesActionBtns} style={{}}>
+                                </TableCell >
+                                <TableCell >{d.nextAttDateMin}
+                                </TableCell >
+                                <TableCell  className={cl.relativesActionBtns} style={{}}>
                                     {editingId === d.id ? (
-                                        <>
-                                            <div onClick={() => handleSaveEdit(d.id)}>&#10003;</div>
-                                            <div onClick={handleCancelEdit}>&#x2715;</div>
-                                        </>
+                                        <div>
+                                            <IconButton className={cl.iconBtn} onClick={() => handleSaveEdit(d.id)}><FaCheck color=' #1565C0' /></IconButton>
+                                            <IconButton className={cl.iconBtn} onClick={handleCancelEdit}><IoClose /></IconButton>
+                                        </div>
                                     ) : (
                                         <>
-                                            <div onClick={() => handleEdit(d.id)}>&#9998;</div>
-                                            <div onClick={() => handleDelete(d.id)}>Удалить</div>
+                                            <IconButton className={cl.iconBtn} onClick={() => handleEdit(d.id)}><MdEdit /></IconButton>
+                                            <IconButton className={cl.iconBtn} onClick={() => handleDelete(d.id)}><FaTrash /></IconButton>
                                         </>
                                     )}
-                                </td>
-                            </tr>
+                                </TableCell >
+                            </TableRow >
                         ))}
-                    </tbody>
-                </table>
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            </Paper>
             </div>
         </div>
     </div>
