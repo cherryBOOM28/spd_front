@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import cl from './NewBasicInfo.module.css';
 import defaultPhoto from '../../../assets/images/default.jpeg';
@@ -18,12 +18,6 @@ function NewBasicInfo() {
   const [selectedPhoto, setSelectedPhoto] = useState(null);
   const [useDefaultPhoto, setUseDefaultPhoto] = useState(false);
 
-    // const handlePhotoChange = (event) => {
-    //     const file = event.target.files[0];
-    //     setPhoto(file);
-    //     setUseDefaultPhoto(false);
-    // };
-
     const handlePhotoChange = (event) => {
         const file = event.target.files[0];
         if (file) {
@@ -39,29 +33,20 @@ function NewBasicInfo() {
         }
     };
 
-    // const handleSubmit = async (event) => {
-    //     event.preventDefault();
-    //     try {
-    //       const infoResponse = await axios.post('http://localhost:8000/api/v1/person/', {
-    //         Person: person,
-    //         BirthInfo: birthInfo,
-    //         IdentityCardInfo: identityCardInfo,
-    //         ResidentInfo: residentInfo,
-    //         Photo: { photoBinary: photo },
-    //       });
-    //       console.log('Ответ от сервера (данные):', infoResponse.data);
-    //     } catch (error) {
-    //       console.error('Ошибка при отправке данных:', error);
-    //     }
-    // };
-
-    // const handleInputChange = (stateUpdater, name, value) => {
-    //     stateUpdater((prevState) => ({
-    //     ...prevState,
-    //     [name]: value,
-    //     }));
-    // };
-
+    const fetchNewPin = async () => {
+        try {
+            const response = await axios.get('http://127.0.0.1:8000/api/v1/get-available-pin/');
+            const newPin = response.data.newPin;
+            setPerson((prevPerson) => ({ ...prevPerson, pin: newPin }));
+        } catch (error) {
+            console.error('Error fetching new PIN:', error);
+        }
+    };
+    
+    useEffect(() => {
+        fetchNewPin();
+    }, []); 
+    
 
   return (
     <div className={cl.info__block}>
@@ -243,7 +228,15 @@ function NewBasicInfo() {
                     </div>
                     <div className={cl.rows}>
                         <label className={cl.label}>ПИН*</label>
-                            <input
+                            {/* <input
+                                type="text"
+                                className={cl.workerInfo}
+                                required
+                                name="pin"
+                                value={person.pin}
+                                onChange={(e) => handleInputChange(setPerson, 'pin', e.target.value)}
+                            /> */}
+                              <input
                                 type="text"
                                 className={cl.workerInfo}
                                 required

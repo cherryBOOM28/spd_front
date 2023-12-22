@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import cl from './Home.module.css';
 import Navigation from '../../components/navigation/Navigation';
 import Header from '../../components/header/Header';
-import employeeList from '../../components/data/employeeList.json';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { Button } from '@mui/material';
@@ -14,11 +13,16 @@ import 'react-notifications/lib/notifications.css';
 import { MdDownload } from "react-icons/md";
 import NotificationButton from '../../components/notificationButton/NotificationButton';
 import IconButton from '@mui/material/IconButton';
-import Box from '@mui/material/Box';
-import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
+import Box from '@mui/material/Box';
+import InputLabel from '@mui/material/InputLabel';
+import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow } from '@mui/material';
+import Chip from '@mui/material/Chip';
+import Stack from '@mui/material/Stack';
+import Avatar from '@mui/material/Avatar';
+
 
 function Home(props) {
     const navigate = useNavigate();
@@ -28,37 +32,27 @@ function Home(props) {
         // localStorage.setItem('selectedGroupId', value);
     };
 
-    // calendar
     const [personalData, setPersonalData] = useState([]); 
-    const [city, setCity] = useState({});
     const [showSchedule, setShowSchedule] = useState(false);
 
-    const toggleSchedule = () => {
-        setShowSchedule(!showSchedule);
+    // главная страница - отображение городов
+    const accessToken = Cookies.get('jwtAccessToken');
+    const handleLocationChange = async (locationName) => {
+        try {
+        const response = await axios.get(`http://localhost:8000/api/v1/location_departments/Астана/`, {
+            headers: {
+            'Authorization': `Bearer ${accessToken}`,
+            }
+        });
+        setSelectedGroupId('all');
+        console.log("departments", response.data.departments);
+        } catch (error) {
+        console.error('Error fetching departments:', error);
+        }
     };
 
-    const [cities, setCities] = useState([]);
-    const [selectedCity, setSelectedCity] = useState(null);
-    const [departments, setDepartments] = useState([]);
-    const [selectedDepartment, setSelectedDepartment] = useState(null);
-    const [selectedPosition, setSelectedPosition] = useState(null);
-    const [selectedLocation, setSelectedLocation] = useState('wholeCountry');
-
-    const [locations, setLocations] = useState([]);
-    const [groupDepartament, setGroupDepartament] = useState([]);
-    const [groupLocation, setGroupLocation] = useState('Астана');
-
-
-    const [ selectedGroupId, setSelectedGroupId ] = useState(
-        localStorage.getItem('selectedGroupId') || 'all'
-    )
-
-    // employee
-    useEffect(() => {
-        setPersonalData(employeeList);
-    }, [])
-
-    const handleEmployeeClick = (id, iin) => {
+    // Переход на личные страницы - на главной
+    const handleEmployeeClick = (id) => {
         navigate(`/${id}`)
     }
 
@@ -67,9 +61,8 @@ function Home(props) {
     const [patronymic, setPatronymic] = useState([]); // Данные из бэка
     const [positionTitle, setPositionTitle] = useState([]); // Данные из бэка
     const [gender, setGender] = useState([]); // Данные из бэка
-    const [departmentPeople, setDepartmentPeople] = useState([]);
 
-    // данные из person
+    // данные из person - таблица на главной
     useEffect(() => {
         const accessToken = Cookies.get('jwtAccessToken');
 
@@ -88,102 +81,29 @@ function Home(props) {
             setPatronymic(response.data[0].patronymic);
             setGender(response.data[0].gender.genderName);
             setPositionTitle(response.data[0].positionInfo.position.positionTitle);
-
-
             // console.log("data[0][2]",response.data[0].positionInfo.position.positionTitle)
-        })
-        .catch(error => {
-            console.error("Error fetching personal data:", error);
-        });
-
-        axios.get(`http://localhost:8000/api/v1/location_departments/Астана/`)
-          .then(responseCity => {
-            setCity(responseCity.data);
-            console.log("responseCity",responseCity.data);
         })
         .catch(error => {
             console.error("Error fetching personal data:", error);
         });
     }, []);
 
-    const [persons, setPersons] = useState([]);
+    // Выбор все на главной страницу
+    const [ selectedGroupId, setSelectedGroupId ] = useState(
+        localStorage.getItem('selectedGroupId') || 'all'
+    )
 
-    // город
-    useEffect(() => {
-        // Выполняем запрос к серверу при монтировании компонента
-        axios.get('http://127.0.0.1:8000/api/v1/staffing_table/?location_id=1')
-          .then(responseCities => {
-            setCities(responseCities.data.Departments.map(department => department.Location.LocationName));
-          })
-          .catch(error => {
-            console.error('Error fetching data:', error);
-          });
-    }, []); // Пустой массив зависимостей указывает, что эффект должен выполняться только один раз при монтировании
 
-    
-    // отображение городов
-    const handleCityClick = async (cityName) => {
-        if (cityName === selectedCity) {
-          // Если выбран тот же город, что и ранее, сбрасываем выбор
-          setSelectedCity(null);
-          setSelectedDepartment(null);
-          setSelectedPosition(null);
-        } else {
-          setSelectedCity(cityName);
-    
-          try {
-            const response = await axios.get(`http://127.0.0.1:8000/api/v1/staffing_table/?location_id=1`);
-            setDepartments(response.data.Departments);
-            console.log("object", response.data.Departments.positionList);
-            // onCityClick({ city: cityName });
-          } catch (error) {
-            console.error('Error fetching departments:', error);
-          }
-        }
+
+    // Штатное расписание
+
+    // Штатное расписание - кнопка
+    const toggleSchedule = () => {
+        setShowSchedule(!showSchedule);
     };
 
-    // отображение департаментов
-    const handleDepartmentClick = (departmentName) => {
-        if (departmentName === selectedDepartment) {
-            setSelectedDepartment(null);
-            setSelectedPosition(null);
-        } else {
-          setSelectedDepartment(departmentName);
-        }
-    };
-
-    // отображение должностей
-    const handlePositionClick = async (positionTitle) => {
-        if (positionTitle === selectedPosition) {
-          setSelectedPosition(null);
-        } else {
-          setSelectedPosition(positionTitle);
-        }
-
-        try {
-            const response = await axios.get(`http://127.0.0.1:8000/api/v1/staffing_table/?location_id=1`);
-            const persons = response.data.persons;
-            setPersons(persons);
-            // onCityClick({ city: cityName });
-          } catch (error) {
-            console.error('Error fetching departments:', error);
-        }
-    };
-
-    // отображение списка людей из департаментов
-    const [selectedDepartmentId, setSelectedDepartmentId] = useState(null);
-    useEffect(() => {
-        // if (selectedDepartmentId) {
-          axios.get(`http://127.0.0.1:8000/api/v1/persons_by_department/?department=ДЦ`)
-            .then(responseDepartmentPeople => {
-              setDepartmentPeople(responseDepartmentPeople.data.persons);
-              console.log("persons", responseDepartmentPeople.data);
-            })
-            .catch(error => {
-              console.error("Error fetching department people data:", error);
-            });
-        // }
-    }, [selectedDepartmentId]);
+    // Выпадашка в штатном распиании - выборка
+    const [selectedLocation, setSelectedLocation] = useState('wholeCountry');
       
     // скачать штатное расписание
     const handleDownload = () => {
@@ -200,33 +120,90 @@ function Home(props) {
         { value: 'city', label: 'Город' },
     ];
 
-    // главная страница - отображение городов
-    const accessToken = Cookies.get('jwtAccessToken');
-    const handleLocationChange = async (locationName) => {
-        try {
-          const response = await axios.get(`http://localhost:8000/api/v1/location_departments/Астана/`, {
+
+    // выбранный город
+    const [cities, setCities] = useState([]);
+    const [selectedCity, setSelectedCity] = useState(null);
+
+
+
+    // департаменты выбранного города
+    const [departments, setDepartments] = useState([]);
+
+    // выбранный департамент 
+    const [selectedDepartment, setSelectedDepartment] = useState(null);
+
+    // должности из выбранного деепартамента
+    const [positions, setPositions] = useState([]);
+    const [selectedPosition, setSelectedPosition] = useState(null);
+
+
+    // все города в меню
+    useEffect(() => {
+        const accessToken = Cookies.get('jwtAccessToken');
+        axios.get('http://127.0.0.1:8000/api/v1/location', {
+        headers: {
+            'Authorization': `Bearer ${accessToken}`,
+        }
+        })
+        .then(response => {
+            setCities(response.data)
+            // console.log(response.data)
+        })
+        .catch(error => console.error('Error fetching data:', error));
+        
+    }, []);
+
+    // выбранный город который отображает департаменты этого города
+    useEffect(() => {
+        if (selectedCity) {
+          const accessToken = Cookies.get('jwtAccessToken');
+    
+          axios.get(`http://127.0.0.1:8000/api/v1/location_departments/${selectedCity}`, {
             headers: {
               'Authorization': `Bearer ${accessToken}`,
             }
-          });
-          setGroupDepartament(response.data.departments);
-          setGroupLocation(locationName);
-          setSelectedGroupId('all');
-          console.log("departments", response.data.departments);
-        } catch (error) {
-          console.error('Error fetching departments:', error);
+          })
+            .then(response => setDepartments(response.data.departments))
+            .catch(error => console.error('Error fetching departments:', error));
         }
+    }, [selectedCity]);
+  
+    const handleCityChange = (cityId) => {
+        setSelectedCity(cityId);
+        setSelectedDepartment(null);
+        setSelectedPosition(null)
     };
-    
-    useEffect(() => {
-        // Load data for the initial selected location
-        handleLocationChange(groupLocation);
-    }, [groupLocation]);// Пустой массив зависимостей, чтобы эффект вызывался только при монтировании
 
-    const handleClickDepartaments = () => {
-        handleLocationChange('Астана');
-        setSelectedGroupId(null);
+
+    const [showDepartments, setShowDepartments] = useState(true);
+    
+    const handleDepartmentChange = (departmentId) => {
+        setSelectedDepartment(departmentId);
+        setShowDepartments(!showDepartments);
     };
+
+    const handlePositionChange = (positionId) => {
+        setSelectedPosition(positionId);
+    };
+
+    // выбранная должность из департамента
+    useEffect(() => {
+        if (selectedDepartment) {
+          const accessToken = Cookies.get('jwtAccessToken');
+    
+          axios.get(`http://127.0.0.1:8000/api/v1/positions_departments/${selectedDepartment}`, {
+            headers: {
+              'Authorization': `Bearer ${accessToken}`,
+            }
+          })
+            .then(response => 
+                {setPositions(response.data.positions)
+                console.log(response.data.positions)}
+            )
+            .catch(error => console.error('Error fetching positions:', error));
+        }
+    }, [selectedDepartment]);
 
     // отображение tab в штаном расписании 
     const renderEmployeeWrapper = () => {
@@ -260,74 +237,131 @@ function Home(props) {
                 <div className={cl.groups}>
                     <h1 className={cl.headline}>Штатное расписание</h1>
                     <div className={cl.groups_column}>
-                        {cities.map((city, index) => (
-                            <div key={index} style={{ listStyle: 'none', display: 'flex' }}>
-                                
-                                {city}
+                    {cities.map(city => (
+                        <div key={city.id} className={cl.group_name} style={{ cursor: 'pointer' }}>
+                           <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+                                <div>{city.LocationName}</div>
                                 <input
-                                type='radio'
-                                className={city === selectedCity ? cl.active : cl.city}
-                                onClick={() => handleCityClick(city)}
+                                    type="radio"
+                                    value={city.LocationName}
+                                    checked={selectedCity === city.LocationName}
+                                    onChange={() => handleCityChange(city.LocationName)}
                                 />
-                                {/* </button> */}
                             </div>
-                        ))}
+                        </div>
+                    ))}
                     </div>
                 </div>
 
                 <div className={cl.employees}>
-                {selectedCity && (
-                    <div>
-                        <ul style={{ width: '100%' }}>
-                            {departments
-                            .filter((department) => department.Location.LocationName === selectedCity)
-                            .map((department, index) => (
-                                <li key={index}>
-                                <button
-                                    className={department.DepartmentName === selectedDepartment ? cl.active : cl.city}
-                                    onClick={() => handleDepartmentClick(department.DepartmentName)}
+                    <p className={cl.headline_2}>Департаменты</p>
+                    <div className={cl.wrapper}>
+                        
+                        <div>
+                            
+                            {departments.map(department => (
+                                <Button
+                                    size="medium"
+                                    key={department.id}
+                                    variant={selectedDepartment === department.id ? "contained" : "outlined"}
+                                    onClick={() => handleDepartmentChange(
+                                    selectedDepartment === department.id ? null : department.id
+                                    )}
+                                    className={`${cl.departaments_btn} ${selectedDepartment === department.id ? cl.activeButton : ''}`}
                                 >
                                     {department.DepartmentName}
-                                </button>
-                                {selectedDepartment === department.DepartmentName && (
-                                    <ul>
-                                    {department.positionList.map((position, positionIndex) => (
-                                        <li key={positionIndex}>
-                                        <button
-                                            className={position.positionTitle === selectedPosition ? cl.active_drop : cl.city_drop}
-                                            onClick={() => handlePositionClick(position.positionTitle)}
-                                            style={{ marginLeft: '30px' }}
-                                        >
-                                            {position.positionTitle}
-                                        </button>
-                                        {selectedPosition === position.positionTitle && (
-                                            <ul>
-                                            {position.persons.map((person, personIndex) => (
-                                                <li key={personIndex}>
-                                                    <Link to={`/${person.id}`} style={{ textDecoration: 'none', color: 'black' }}>
-                                                        <div className={cl.person}>
-                                                            <img src={`data:image/jpeg;base64, ${person.photo.photoBinary}`} className={cl.department_workers_img} alt="Person" />
-                                                            <div>{`${person.surname} ${person.firstName} ${person.patronymic}`}</div>
-                                                        </div>
-                                                    </Link>
-                                                </li>
-                                            ))}
-                                            </ul>
-                                        )}
-                                        </li>
-                                    ))}
-                                    </ul>
-                                )}
+                                </Button>
+                            ))}
+                        </div>
+                        <div>
+                            {selectedDepartment && (
+                                <div >
+                                    <Box className={cl.workers_table} sx={{ minWidth: 320 }}>
+                                        <FormControl fullWidth>
+                                            <InputLabel  sx={{ marginTop: '-8px' }}  id="position-label">Должности</InputLabel>
+                                            <Select
+                                                size="medium"
+                                                sx={{ height: '38px' }}
+                                                labelId="position-label"
+                                                id="position-select"
+                                                label="Должности"
+                                                className={cl.worker_select}
+                                                value={selectedPosition || ''}
+                                                onChange={(e) => handlePositionChange(e.target.value)}  // Исправление тут
+                                            >
+                                                <MenuItem value=''>Выберите должность</MenuItem>
+                                                {positions.map(position => (
+                                                    <MenuItem key={position.id} value={position.id}>
+                                                        {position.positionTitle}
+                                                    </MenuItem>
+                                                ))}
+                                            </Select>
+                                        </FormControl>
+                                    </Box>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                    <div>
+                        {selectedDepartment && (
+                            <div>
                                 {selectedPosition && (
-                                    <div className={cl. person}>
-                                        <h4>Свободные вакансии: 2 {department.available_slots}</h4>
+                                    <div>
+                                        <div>
+                                        {
+                                            [positions.find(position => position.id === selectedPosition)].map(positionCLicked => (
+                                                <div key={positionCLicked.id} className={cl.available_count_wrapper}>
+                                                    <p className={cl.headline_3}>Свободные вакансии на должность: {positionCLicked.positionTitle}</p>
+
+                                                    <div style={{ marginTop: '15px' }}>
+                                                        {Array.from({ length: positionCLicked.available_count }, (_, index) => (
+                                                            <Stack key={index} style={{ display: 'inline-block', margin: '4px' }}>
+                                                                <Chip
+                                                                    avatar={<Avatar alt="" src="" />}
+                                                                    label={` Вакансия`}
+                                                                    variant="outlined"
+                                                                />
+                                                            </Stack>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            ))
+                                        }
+                                           
+                                        </div>
+                                        <div style={{ marginTop: '30px' }}>
+                                            {/* Здесь отображаем работников для выбранной должности */}
+                                            <p className={cl.headline_2} style={{ marginBottom: '20px' }}>Список сотрудников</p>
+                                            <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+                                                <TableContainer sx={{ maxHeight: 440 }}>
+                                                    <Table stickyHeader aria-label="sticky table">
+                                                        <TableHead>
+                                                            <TableRow>
+                                                                <TableCell></TableCell>
+                                                                <TableCell>Имя</TableCell>
+                                                                <TableCell>Фамилия</TableCell>
+                                                                <TableCell>Отчество</TableCell>
+                                                            </TableRow>
+                                                        </TableHead>
+                                                        <TableBody>
+                                                            {positions.find(position => position.id === selectedPosition)?.persons.map(person => (
+                                                                <TableRow key={person.id}>
+                                                                    <TableCell><img src={`data:image/jpeg;base64,${person.photo}`} alt="" className={cl.department_workers_img} /></TableCell>
+                                                                    <TableCell>{`${person.surname}`}</TableCell>
+                                                                    <TableCell>{` ${person.firstName} `}</TableCell>
+                                                                    <TableCell> {`${person.patronymic}`}</TableCell>
+                                                                </TableRow>
+                                                            ))}
+                                                        </TableBody>
+                                                    </Table>
+                                                </TableContainer>
+                                            </Paper>
+                                        </div>
                                     </div>
                                 )}
-                                </li>
-                            ))}
-                        </ul>
+                            </div>
+                        )}
                     </div>
-                )}
                 </div>
             </div>
         </div>

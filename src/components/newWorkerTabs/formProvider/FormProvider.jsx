@@ -288,7 +288,7 @@ export const FormProvider = ({ children }) => {
   };
 
   const accessToken = Cookies.get('jwtAccessToken');
-  console.log('AccessToken:', accessToken);
+  // console.log('AccessToken:', accessToken);
 
   const handleSubmit = async(event) => {
 
@@ -366,7 +366,7 @@ export const FormProvider = ({ children }) => {
       AttestationInfo: {
         attestations: _attestationInfo
       },
-      RankInfo: {rankInfo},
+      RankInfo: rankInfo,
       ClassCategoriesInfo: {
         classCategoriesInfo: _classCategoriesInfo
       },
