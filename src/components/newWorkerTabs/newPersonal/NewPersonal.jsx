@@ -27,7 +27,6 @@ function NewPersonal() {
       if (response.status === 200) {
         setDepartments(response.data);
         // setPerson(response.data.Person);  
-        //
         if (positionInfo.department != '') {
           const selectedDepartment = response.data.find(
             (department) => department.DepartmentName == positionInfo.department
@@ -142,7 +141,7 @@ function NewPersonal() {
                             </select>
                     </div>
                     <div className={cl.rows}>
-                        <label className={cl.label}>Город подразделения*</label>
+                        <label className={cl.label}>Дата назначения*</label>
                         <input
                             type="date"
                             className={cl.workerInfo}
