@@ -42,7 +42,7 @@
 
 .tabContent {
     border-radius: 5px;
-    background: #F8F8F8;
+    background: #f8f8f8;
     padding: 10px;
     margin: 50px 0;
 }
@@ -52,7 +52,7 @@
     justify-content: space-between;
     padding: 20px 24px;
     border-radius: 5px;
-    background: #F3F3F3;
+    background: #fcfcfc;
 }
 
 .activeTab {
@@ -134,9 +134,10 @@
 
 .totalInfo {
     border-radius: 5px;
-    background: #F3F3F3;
+    background: #fcfcfc;
     padding: 14px;
     margin-top: 15px;
+    box-shadow: 4px 7px 8px -7px rgba(34, 60, 80, 0.16);
 }
 
 

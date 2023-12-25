@@ -189,6 +189,7 @@ function Home(props) {
 
     // выбранная должность из департамента
     useEffect(() => {
+        // console.log("selectedDepartment", selectedDepartment);
         if (selectedDepartment) {
           const accessToken = Cookies.get('jwtAccessToken');
     
@@ -198,8 +199,10 @@ function Home(props) {
             }
           })
             .then(response => 
-                {setPositions(response.data.positions)
-                console.log(response.data.positions)}
+                {
+                    setPositions(response.data.positions)
+                    // console.log("positions",response.data.positions)
+                }
             )
             .catch(error => console.error('Error fetching positions:', error));
         }

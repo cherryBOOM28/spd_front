@@ -22,14 +22,18 @@ function NewPersonal() {
           'Authorization': `Bearer ${accessToken}`,
         }
       });
-      console.log("response", response.data);
+      // console.log("response", response.data);
   
       if (response.status === 200) {
         setDepartments(response.data);
         // setPerson(response.data.Person);  
-        console.log('Departments:', departments);
-
-
+        //
+        if (positionInfo.department != '') {
+          const selectedDepartment = response.data.find(
+            (department) => department.DepartmentName == positionInfo.department
+          );
+          fetchPositions(selectedDepartment)
+        }
 
       } else {
         console.log(response.statusText);
@@ -40,27 +44,10 @@ function NewPersonal() {
   };
 
   useEffect(() => {
-    // Запрос данных о департаментах при загрузке компонента
     fetchData();
+    // Запрос данных о департаментах при загрузке компонента
   }, []);
 
-  // const handleDropdownChange = (selectedDepartmentName) => {
-  //   const selectedDepartment = departments.find(
-  //     (department) => department.DepartmentName === selectedDepartmentName
-  //   );
-   
-  //   if (selectedDepartment) {
-  //     console.log("Selected Department ID:", selectedDepartment.id);
-  //     handleInputChange(setPositionInfo, 'department', selectedDepartment);
-  //     setSelectedDepartment(selectedDepartmentName);
-  //     handleInputChange(setPositionInfo, 'department', selectedDepartment);
-
-  //     // Отправка запроса для получения должностей при выборе департамента
-  //     fetchPositions(selectedDepartment);
-  //   } else {
-  //     console.error("Selected department not found");
-  //   }
-  // };
 
   const handleDropdownChange = (selectedDepartmentName) => {
     const selectedDepartment = departments.find(
@@ -69,6 +56,8 @@ function NewPersonal() {
   
     if (selectedDepartment) {
       console.log("Selected Department ID:", selectedDepartment.id);
+      console.log("Selected  DepartmentName:", selectedDepartment.DepartmentName);
+
       handleInputChange(setPositionInfo, 'department', selectedDepartment.DepartmentName);
       setSelectedDepartment(selectedDepartmentName);
       fetchPositions(selectedDepartment);
@@ -79,6 +68,8 @@ function NewPersonal() {
   
 
   const fetchPositions = async (departmentId) => {
+  
+    console.log()
     try {
       const accessToken = Cookies.get('jwtAccessToken');
       const response = await axios.get(`http://localhost:8000/api/v1/positions_departments/${departmentId.id}`, {
@@ -106,15 +97,15 @@ function NewPersonal() {
                     <div className={cl.rows}>
                         <label className={cl.label}>Департамент*</label>
                         <select 
-                            onChange={(e) => handleDropdownChange(e.target.value)}
-                            className={cl.workerInfoSelect}
-                            value={selectedDepartment}
+                          onChange={(e) => handleDropdownChange(e.target.value)}
+                          className={cl.workerInfoSelect}
+                          value={positionInfo.department}
                         >
                         <option value="">Выберите департамент</option>
                         {departments.map((department) => (
-                            <option key={department.id} value={department.DepartmentName}>
+                          <option key={department.id} value={department.DepartmentName}>
                             {department.DepartmentName}
-                            </option>
+                          </option>
                         ))}
                         </select>
                     </div>
@@ -122,7 +113,7 @@ function NewPersonal() {
                         <label className={cl.label}>Должность*</label>
                             <select 
                               onChange={(e) => handleInputChange(setPositionInfo, 'position', e.target.value)}
-                              
+                              value={positionInfo.position}
                               className={cl.workerInfoSelect}
                             >
                               <option value="">Выберите должность</option>

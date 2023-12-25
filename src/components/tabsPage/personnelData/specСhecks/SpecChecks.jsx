@@ -229,8 +229,6 @@ function SpecChecks({ specCheckInfo, setSpecCheckInfo }) {
                                 </div>
                                 <Button type="submit"  variant="contained" style={{  marginTop: '25px' }}>Добавить</Button>
                             </div>
-                            
-                            
                             </form>
                         )}
                     </div>

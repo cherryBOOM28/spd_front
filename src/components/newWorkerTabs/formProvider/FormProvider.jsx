@@ -317,15 +317,7 @@ export const FormProvider = ({ children }) => {
     //     console.error('Ошибка при отправке данных:', error);
     // }
 
-    // const imageData = (base64String) => {};
-    // if (photo) {
-    //   imageData.append('image', photo);
-    //   await axios.post('http://localhost:8000/api/v1/person/photos/', imageData, {
-    //     headers: {
-    //       'Content-Type': 'application/json', 
-    //     },
-    //   });
-    // }
+ 
 
     const _specCheckInfo = getSpecCheckInfo(specCheckInfo);
     const _attestationInfo = getAttestationInfo(attestationInfo);
@@ -392,16 +384,6 @@ export const FormProvider = ({ children }) => {
     // const myArray = photo.split(",");
     
       const accessToken = Cookies.get('jwtAccessToken');
-
-      // axios.interceptors.request.use(request => {
-      //   console.log('Starting Request', request)
-      //   return request
-      // })
-      
-      // axios.interceptors.response.use(response => {
-      //   console.log('Response:', response)
-      //   return response
-      // })
    
       try {
         const response = await axios.post('http://localhost:8000/api/v1/person/', requestData, {
@@ -414,8 +396,8 @@ export const FormProvider = ({ children }) => {
         console.log('Успешный ответ от сервера:', response.data);
     
         // Добавьте здесь код для перенаправления или обновления страницы
-        // navigate('/');
-        // window.location.reload();
+        navigate('/');
+        window.location.reload();
     
         // Показ уведомления после 200 миллисекунд
         setTimeout(() => {

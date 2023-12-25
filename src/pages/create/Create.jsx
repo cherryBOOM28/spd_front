@@ -87,7 +87,7 @@ function Create(props) {
                                 activeTab === 2 && 
                                 <div className={cl.basic__info}>
                                 <div className={cl.totalInfo}>
-                                    <NewPersonal />
+                                    <NewPersonal/>
                                     <NewFamilyComposition />
                                     <NewEducation />
                                     <NewLanguage />
