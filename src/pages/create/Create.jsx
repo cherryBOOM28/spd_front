@@ -68,12 +68,12 @@ function Create(props) {
                                 >
                             Кадровые данные 
                             </div>
-                            <div 
+                            {/* <div 
                                 className={activeTab === 5 ? cl.btnTab + ' ' + cl.activeTab : cl.btnTab}
                                 onClick={() => handleTabClick(5)}
                                 >
                             Приказы рапорта 
-                            </div>
+                            </div> */}
                         </div>
 
                         <div className={cl.tabBody}>
@@ -113,14 +113,14 @@ function Create(props) {
                                 </div>         
                             </div>
                             }
-                            {
+                            {/* {
                                 activeTab === 5 && 
                                 <div className={cl.basic__info}>
                                 <div className={cl.totalInfo}>
                                     <NewReportOrders />
                                 </div>      
                             </div>
-                            }
+                            } */}
                         </div>                
                         </div>
                     </FormProvider>
