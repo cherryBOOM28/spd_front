@@ -294,28 +294,28 @@ export const FormProvider = ({ children }) => {
 
     const isAllFieldsFilled = validateFields(person);
   
-    // if (!isAllFieldsFilled ) {
-    //   NotificationManager.error('Пожалуйста, заполните все поля!');
-    //   return;
-    // }
+    if (!isAllFieldsFilled ) {
+      NotificationManager.error('Пожалуйста, заполните все поля!');
+      return;
+    }
 
-    // event.preventDefault();
-    // const hasEmptyInputs = Object.values(person).some((value) => value === '');
+    event.preventDefault();
+    const hasEmptyInputs = Object.values(person).some((value) => value === '');
 
-    // if (hasEmptyInputs) {
-    //   setEmptyInputs(true);
-    //   return;
-    // }
+    if (hasEmptyInputs) {
+      setEmptyInputs(true);
+      return;
+    }
 
-    // try {
-    //   // navigate('/'); 
-    //   // window.location.reload(); 
-    //   setTimeout(() => {
-    //     showNotification();
-    //   }, 200);
-    // } catch (error) {
-    //     console.error('Ошибка при отправке данных:', error);
-    // }
+    try {
+      // navigate('/'); 
+      // window.location.reload(); 
+      setTimeout(() => {
+        showNotification();
+      }, 200);
+    } catch (error) {
+        console.error('Ошибка при отправке данных:', error);
+    }
 
  
 

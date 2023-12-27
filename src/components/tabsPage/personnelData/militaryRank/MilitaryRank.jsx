@@ -162,7 +162,7 @@ function MilitaryRank({ rankInfo, militaryRank,setRankInfo, setMilitaryRank, ran
             <div className={cl.totalInfoContent}>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                     <p className={cl.workerCapitalName} style={{ marginBottom: '15px' }}>Звания</p>
-                    <Button onClick={handleMilitaryHistory} style={{ textTransform: 'none', color: '#4B4B4B'}} className={cl.historyBtn}> <GoHistory /> История приказов</Button>
+                    <Button variant="outlined" onClick={handleMilitaryHistory} style={{ textTransform: 'none'}} className={cl.historyBtn}> <GoHistory /> История приказов</Button>
                 </div>
             </div>
             <div className={cl.workerBlock}>

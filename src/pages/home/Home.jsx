@@ -27,13 +27,17 @@ import Avatar from '@mui/material/Avatar';
 function Home(props) {
     const navigate = useNavigate();
 
-    const handleRadioChange = (value) => {
-        setSelectedGroupId(value);
-        // localStorage.setItem('selectedGroupId', value);
-    };
+    // const handleRadioChange = (value) => {
+    //     setSelectedGroupId(value);
+    //     // localStorage.setItem('selectedGroupId', value);
+    // };
 
+    const [persons, setPersons] = useState([]);
     const [personalData, setPersonalData] = useState([]); 
     const [showSchedule, setShowSchedule] = useState(false);
+
+    const [mainDepartments, setMainDepartments] = useState([]);
+    const [selectedMainDepartment, setSelectedMainDepartment] = useState(null);
 
     // главная страница - отображение городов
     const accessToken = Cookies.get('jwtAccessToken');
@@ -51,10 +55,57 @@ function Home(props) {
         }
     };
 
+    // Отображения управлении на главной странице
+    useEffect(() => {
+        const accessToken = Cookies.get('jwtAccessToken');
+        axios.get(`http://127.0.0.1:8000/api/v1/department`, {
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`,
+                }
+            })
+            .then(response => {
+                setMainDepartments(response.data);
+                console.log(response.data)
+            })
+            .catch(error => {
+                console.log("Error main departments", error)
+            })
+            
+    }, []); // Пустой массив зависимостей гарантирует, что запрос будет выполнен только один раз при монтировании
+
+    const getEmployeesByDepartmentId = async (departmentId) => {
+        try {
+          const response = await axios.get(`http://127.0.0.1:8000/api/v1/persons_by_department/?departmentId=${departmentId}`);
+          setPersons(response.data.persons);
+          console.log("Employees for department", response.data);
+          // Обработка данных сотрудников
+        } catch (error) {
+          console.error('Error fetching employees:', error);
+        }
+    };
+      
+    // Пример использования функции с id департамента
+    // getEmployeesByDepartmentId(1);
+
+    // обновление выбранный департнамент при изменении чекбокса
+    const handleCheckboxChangeMainDepartments = (department) => {
+        setSelectedMainDepartment(department);
+        getEmployeesByDepartmentId(department.id);
+    };
+
+    // Выбор все на главной страницу
+     const [ selectedGroupId, setSelectedGroupId ] = useState(
+        localStorage.getItem('selectedGroupId') || 'all'
+    );
+
+    const handleRadioChange = (value) => {
+    setSelectedGroupId(value);
+    };
+
     // Переход на личные страницы - на главной
     const handleEmployeeClick = (id) => {
         navigate(`/${id}`)
-    }
+    };
 
     const [firstName, setFirstName] = useState([]); // Данные из бэка
     const [surname, setSurname] = useState([]); // Данные из бэка
@@ -87,13 +138,7 @@ function Home(props) {
             console.error("Error fetching personal data:", error);
         });
     }, []);
-
-    // Выбор все на главной страницу
-    const [ selectedGroupId, setSelectedGroupId ] = useState(
-        localStorage.getItem('selectedGroupId') || 'all'
-    )
-
-
+   
 
     // Штатное расписание
 
@@ -321,7 +366,7 @@ function Home(props) {
                                                             <Stack key={index} style={{ display: 'inline-block', margin: '4px' }}>
                                                                 <Chip
                                                                     avatar={<Avatar alt="" src="" />}
-                                                                    label={` Вакансия`}
+                                                                    label={`Вакансия`}
                                                                     variant="outlined"
                                                                 />
                                                             </Stack>
@@ -373,10 +418,10 @@ function Home(props) {
       return (
         <div className={cl.employeeWrapper}>
             <div className={cl.groups}>
-                <h1 className={cl.headline}>Города</h1>
+                <h1 className={cl.headline}>Управления</h1>
                 
                 <div className={cl.groups_column}>
-                    <div className={cl.group_name} style={{ cursor: 'pointer' }}>
+                    {/* <div className={cl.group_name} style={{ cursor: 'pointer' }}>
                         <p>Все</p>
                         <input
                             type="radio"
@@ -385,16 +430,27 @@ function Home(props) {
                             checked={selectedGroupId === 'all'}
                             onChange={() => handleRadioChange('all')}
                         />
-                    </div>
-                    {/* <div className={cl.group_name} style={{ cursor: 'pointer' }} onClick={() => handleLocationChange('Астана')}>
-                        <p>Астана</p>
-                        <input
-                            type="radio"
-                            name="table"
-                            checked={selectedLocation === 'Астана'}
-                            onChange={() => handleRadioChange('all')}
-                        />
                     </div> */}
+                    {/* <p>{selectedMainDepartment ? selectedMainDepartment.DepartmentName : 'Ничего не выбрано'}</p> */}
+                  
+                    {mainDepartments.map(department => (
+                    <div key={department.id} className={cl.group_name} style={{ cursor: 'pointer' }}>
+                        <label>{department.DepartmentName}</label>
+                        <input 
+                            type="radio"
+                            id={department.id}
+                            name="table"
+                            checked={selectedMainDepartment === department}
+                            onChange={() => handleCheckboxChangeMainDepartments(department)}
+                            style={{
+                            marginRight: '5px', 
+                            borderRadius: '50%'
+                            }}
+                        />
+                        
+                    </div>
+                    ))}
+
                 </div>
             </div>
             <div className={cl.employees}>
@@ -407,8 +463,7 @@ function Home(props) {
                             </tr>
                         </thead>
                         <tbody>
-    
-                            {selectedGroupId === 'all' && personalData.map((data, index) => {
+                            {/* {selectedGroupId === 'all' && personalData.map((data, index) => {
                                 let name = `${data.surname || ''} ${data.firstName || ''} ${data.patronymic || ''}`;
 
                                 return (
@@ -418,8 +473,15 @@ function Home(props) {
                                     <td>{positionTitle}</td>
                                 </tr>
                                 );
-                            })}
-                            
+                            })} */}
+                             {persons.map(person => (
+                                <tr key={person.id}  onClick={() => handleEmployeeClick(person.id)}>
+                                {/* <td>{person.id}</td> */}
+                                <td>{`${person.surname} ${person.firstName} ${person.patronymic}`}</td>
+                                <td>{person.gender.genderName}</td>
+                                <td>{person.positionInfo.position.positionTitle}</td>
+                                </tr>
+                            ))}
                         </tbody>
                     </table>
             </div>

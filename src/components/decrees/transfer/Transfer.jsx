@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { NotificationContainer, NotificationManager } from 'react-notifications';
@@ -27,40 +27,44 @@ function Transfer() {
     const [ searchText, setSearchText ] = useState('');
     const [ showClearBtn, setShowClearBtn ] = useState(false);
     const [showResults, setShowResults] = useState(false);
+    const [departmentsList, setDepartmentsList] = useState([]);
+    const [positionsList, setPositionsList] = useState([]);
+    const [selectedDepartmentId, setSelectedDepartmentId] = useState('');
 
-    
-    const positionsList = [
-        'Руководитель департамента',
-        'Заместитель руководителя департамента',    
-        'Руководитель управления',
-        'Заместитель руководителя управления',    
-        'Оперуполномоченный по особо важным делам',
-        'Старший оперуполномоченный',    
-        'Оперуполномоченный'
-    ];
+    useEffect(() => {
+        const accessToken = Cookies.get('jwtAccessToken');
+        axios.get(`http://127.0.0.1:8000/api/v1/department`, {
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`,
+                }
+            })
+            .then(response => {
+                setDepartmentsList(response.data);
+                // console.log(response.data)
+            })
+            .catch(error => {
+                console.log("Error main departments", error)
+            })
+            
+    }, []); // Пустой массив зависимостей гарантирует, что запрос будет выполнен только один раз при монтировании
 
-    const departmentsList = [
-        'ЦА',
-        'Управление по городу Алматы',    
-        'Управление по городу Шымкент',
-        'Управление по Акмолинской области',    
-        'Управление по Актюбинской области',
-        'Управление по Алматинской  области',    
-        'Управление по области Жетісу',
-        'Управление по Атырауской области',    
-        'Управление по Восточно-Казахстанской области',
-        'Управление по области Абай',    
-        'Управление по Жамбылской области',
-        'Управление по Западно-Казахстанской области',    
-        'Управление по Карагандинской области',
-        'Управление по области Ұлытау',    
-        'Управление по Костанайской области',
-        'Управление по Кызылординской области',    
-        'Управление по Мангистауской области',
-        'Управление по Павлодарской области',    
-        'Управление по Северо-Казахстанской области',
-        'Управление по по Туркестанской области'
-    ];
+    useEffect(() => {
+        if (selectedDepartmentId !== null) {
+            const accessToken = Cookies.get('jwtAccessToken');
+            axios.get(`http://127.0.0.1:8000/api/v1/positions_departments/${selectedDepartmentId}`, {
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`,
+                },
+            })
+            .then(response => {
+                setPositionsList(response.data.positions);
+                console.log(response.data)
+            })
+            .catch(error => {
+                console.log("Error fetching positions", error);
+            });
+        }
+    }, [selectedDepartmentId]);
 
     const base = [
         'представление',
@@ -68,7 +72,8 @@ function Transfer() {
     ]
 
     const handleFormSubmit = async () => {
-        console.log("handleFormSubmit is called");
+        console.log("handleFormSubmit is called");console.log('Form Data:', formData);
+        
         try {
             if (!formData.personId || !formData.newPosition || !formData.newDepartment || !formData.base) {
                 // Show a warning notification
@@ -114,31 +119,31 @@ function Transfer() {
     const handleInputChange = async (event) => {
         const inputValue = event.target.value;
         setSearchText(inputValue);
-        // const formattedInputValue = encodeURIComponent(inputValue);
         setShowClearBtn(inputValue !== '');
 
         console.log("inputValue", inputValue)
     
-        if (event.key === 'Enter') {
-            // Make API request when Enter key is pressed
-            try {
-                const response = await axios.get(`http://127.0.0.1:8000/api/v1/search_persons/?q=`, {
-                    params: {
-                        q: inputValue,
-                    },
-                });
-
-                // Handle the data returned from the server
-                const data = response.data;
-                setFoundPersons(data.persons);
-                setShowResults(true);
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }
-        } else {
-            setShowResults(false);
+        try {
+            const response = await axios.get(`http://127.0.0.1:8000/api/v1/search_persons/?q=`, {
+                params: {
+                    q: inputValue,
+                },
+            });
+    
+            // Handle the data returned from the server
+            const data = response.data;
+            setFoundPersons(data.persons);
+            setShowResults(true);
+        } catch (error) {
+            console.error('Error fetching data:', error);
         }
-        setShowClearBtn(inputValue !== '');
+        
+        // You can choose to setShowResults(false) when inputValue is empty or handle it differently based on your requirements
+        if (inputValue === '') {
+            setShowResults(false);
+        } else {
+            setShowResults(true);
+        }
     };
 
     const handleCheckboxChange = (personId) => {
@@ -192,7 +197,7 @@ function Transfer() {
                                             alt="Person"
                                             className={cl.profilePic}
                                         />
-                                        <label>{`${person.firstName} ${person.surname} ${person.patronymic}`}</label>
+                                        <label style={{ fontSize: '16px' }}>{`${person.firstName} ${person.surname} ${person.patronymic}`}</label>
                                     </div>
                                     <Checkbox {...label}  
                                     value={person.id}
@@ -225,7 +230,31 @@ function Transfer() {
                             ))}
                         </select>
                     </div> */}
-                    
+                    <Box sx={{ minWidth: 290 }}>
+                        {/* <label className={cl.label}>Должность</label> */}
+                        <FormControl size="small" fullWidth>
+                            <InputLabel id="demo-simple-select-label">Департамент</InputLabel>
+                            <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            label="Департамент"
+                            // value={formData.newDepartment}
+                            value={selectedDepartmentId}
+                            onChange={(e) => {
+                                const selectedDepartment = departmentsList.find(dep => dep.id === e.target.value);
+                                setSelectedDepartmentId(e.target.value);
+                                setFormData({ ...formData, newDepartment: selectedDepartment?.DepartmentName || '' });
+                                console.log("Selected Department ID:", e.target.value);
+                            }}
+                            >
+                                {departmentsList.map((department) => (
+                                <MenuItem key={department.id} value={department.id}>
+                                {department.DepartmentName}
+                                </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    </Box>
                     <Box sx={{ minWidth: 290 }}>
                         {/* <label className={cl.label}>Должность</label> */}
                         <FormControl size="small" fullWidth>
@@ -239,29 +268,9 @@ function Transfer() {
                             
                             >
                                 {positionsList.map((position) => (
-                                    <MenuItem key={position} value={position}>
-                                    {position}
+                                    <MenuItem key={position.id} value={position.positionTitle}>
+                                    {position.positionTitle}
                                     </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
-                    </Box>
-                    <Box sx={{ minWidth: 290 }}>
-                        {/* <label className={cl.label}>Должность</label> */}
-                        <FormControl size="small" fullWidth>
-                            <InputLabel id="demo-simple-select-label">Департамент</InputLabel>
-                            <Select
-                            labelId="demo-simple-select-label"
-                            id="demo-simple-select"
-                            label="Департамент"
-                            value={formData.newDepartment}
-                            onChange={(e) => setFormData({ ...formData, newDepartment: e.target.value })}
-                            
-                            >
-                                {departmentsList.map((department) => (
-                                <MenuItem key={department} value={department}>
-                                {department}
-                                </MenuItem>
                                 ))}
                             </Select>
                         </FormControl>

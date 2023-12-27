@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { NotificationContainer, NotificationManager } from 'react-notifications';
@@ -12,6 +12,7 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
+import ListItemText from '@mui/material/ListItemText';
 
 
 function Appointment() {
@@ -25,46 +26,52 @@ function Appointment() {
         monthCount: 0,
         base: '',
     });
-    
-    const positionsList = [
-        'Руководитель департамента',
-        'Заместитель руководителя департамента',    
-        'Руководитель управления',
-        'Заместитель руководителя управления',    
-        'Оперуполномоченный по особо важным делам',
-        'Старший оперуполномоченный',    
-        'Оперуполномоченный'
-    ];
 
-    const departmentsList = [
-        'ЦА',
-        'Управление по городу Алматы',    
-        'Управление по городу Шымкент',
-        'Управление по Акмолинской области',    
-        'Управление по Актюбинской области',
-        'Управление по Алматинской  области',    
-        'Управление по области Жетісу',
-        'Управление по Атырауской области',    
-        'Управление по Восточно-Казахстанской области',
-        'Управление по области Абай',    
-        'Управление по Жамбылской области',
-        'Управление по Западно-Казахстанской области',    
-        'Управление по Карагандинской области',
-        'Управление по области Ұлытау',    
-        'Управление по Костанайской области',
-        'Управление по Кызылординской области',    
-        'Управление по Мангистауской области',
-        'Управление по Павлодарской области',    
-        'Управление по Северо-Казахстанской области',
-        'Управление по по Туркестанской области'
-    ];
+    const [departmentsList, setDepartmentsList] = useState([]);
+    const [positionsList, setPositionsList] = useState([]);
+    const [selectedDepartmentId, setSelectedDepartmentId] = useState('');
 
     const base = [
         'представление',
         'рапорт',
         'заявление',
         'протокол и докладная записка',
-    ]
+    ];
+
+    useEffect(() => {
+        const accessToken = Cookies.get('jwtAccessToken');
+        axios.get(`http://127.0.0.1:8000/api/v1/department`, {
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`,
+                }
+            })
+            .then(response => {
+                setDepartmentsList(response.data);
+                // console.log(response.data)
+            })
+            .catch(error => {
+                console.log("Error main departments", error)
+            })
+            
+    }, []); // Пустой массив зависимостей гарантирует, что запрос будет выполнен только один раз при монтировании
+
+    useEffect(() => {
+        if (selectedDepartmentId !== null) {
+            const accessToken = Cookies.get('jwtAccessToken');
+            axios.get(`http://127.0.0.1:8000/api/v1/positions_departments/${selectedDepartmentId}`, {
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`,
+                },
+            })
+            .then(response => {
+                setPositionsList(response.data.positions);
+                console.log(response.data)
+            })
+            .catch(error => {
+                console.log("Error fetching positions", error);
+            });
+        }
+    }, [selectedDepartmentId]);
 
     const handleFormSubmit = async () => {
         try {
@@ -218,24 +225,31 @@ function Appointment() {
                             ))}
                         </select> */}
                         <Box sx={{ minWidth: 480 }}>
-                            <FormControl size="small" fullWidth>
-                                <InputLabel id="demo-simple-select-label">Должность</InputLabel>
-                                <Select
-                                labelId="demo-simple-select-label"
-                                id="demo-simple-select"
-                                label="Должность"
-                                value={formData.position}
-                                onChange={(e) => setFormData({ ...formData, position: e.target.value })}
-                                
-                                >
-                                    {positionsList.map((position) => (
-                                        <MenuItem key={position} value={position}>
-                                        {position}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
-                        </Box>
+                        {/* <label className={cl.label}>Должность</label> */}
+                        <FormControl size="small" fullWidth>
+                            <InputLabel id="demo-simple-select-label">Департамент</InputLabel>
+                            <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            label="Департамент"
+                            // value={formData.newDepartment}
+                            value={selectedDepartmentId}
+                            onChange={(e) => {
+                                const selectedDepartment = departmentsList.find(dep => dep.id === e.target.value);
+                                setSelectedDepartmentId(e.target.value);
+                                setFormData({ ...formData, department: selectedDepartment?.DepartmentName || '' });
+                                console.log("Selected Department ID:", e.target.value);
+                            }}
+                            >
+                                {departmentsList.map((department) => (
+                                <MenuItem key={department.id} value={department.id}>
+                                  {department.DepartmentName}
+                                </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    </Box>
+                       
                     </div>
                     <div>
                         {/* <label className={cl.label}>Департамент</label>
@@ -255,7 +269,7 @@ function Appointment() {
                     </div>
                 </div>
                 <div className={cl.row}>
-                    <Box sx={{ minWidth: 480 }}>
+                    {/* <Box sx={{ minWidth: 480 }}>
                         <FormControl size="small" fullWidth>
                             <InputLabel id="demo-simple-select-label">Департамент</InputLabel>
                             <Select
@@ -273,7 +287,29 @@ function Appointment() {
                                 ))}
                             </Select>
                         </FormControl>
+                    </Box> */}
+              
+                        <Box sx={{ minWidth: 480 }}>
+                        {/* <label className={cl.label}>Должность</label> */}
+                        <FormControl size="small" fullWidth>
+                            <InputLabel id="demo-simple-select-label">Должность</InputLabel>
+                            <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            label="Должность"
+                            value={formData.position}
+                            onChange={(e) => setFormData({ ...formData, position: e.target.value })}
+                            
+                            >
+                                {positionsList.map((position) => (
+                                    <MenuItem key={position.id} value={position.positionTitle}>
+                                    {position.positionTitle}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
                     </Box>
+                    
                 </div>
                 <div className={cl.row}>
                     <div>

@@ -67,8 +67,6 @@ function NewPersonal() {
   
 
   const fetchPositions = async (departmentId) => {
-  
-    console.log()
     try {
       const accessToken = Cookies.get('jwtAccessToken');
       const response = await axios.get(`http://localhost:8000/api/v1/positions_departments/${departmentId.id}`, {
@@ -86,6 +84,7 @@ function NewPersonal() {
     }
   };
 
+   
 
   return (
     <div className={cl.info__block}>
@@ -147,7 +146,7 @@ function NewPersonal() {
                             className={cl.workerInfo}
                             required
                             name="receivedDate"
-                            value={positionInfo.dateOfIssue}
+                            value={positionInfo.receivedDate}
                             onChange={(e) => handleInputChange(setPositionInfo, 'receivedDate', e.target.value)}
                         />
                     </div>
