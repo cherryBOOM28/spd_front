@@ -7,7 +7,6 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 import { Button } from '@mui/material';
 import Dropdown from '../../components/dropdown/Dropdown';
-import { Link } from 'react-router-dom';
 import { NotificationContainer, NotificationManager } from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
 import { MdDownload } from "react-icons/md";
@@ -18,19 +17,16 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import Box from '@mui/material/Box';
 import InputLabel from '@mui/material/InputLabel';
-import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow } from '@mui/material';
+import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import Avatar from '@mui/material/Avatar';
+import Checkbox from '@mui/material/Checkbox';
+
 
 
 function Home(props) {
     const navigate = useNavigate();
-
-    // const handleRadioChange = (value) => {
-    //     setSelectedGroupId(value);
-    //     // localStorage.setItem('selectedGroupId', value);
-    // };
 
     const [persons, setPersons] = useState([]);
     const [personalData, setPersonalData] = useState([]); 
@@ -38,6 +34,33 @@ function Home(props) {
 
     const [mainDepartments, setMainDepartments] = useState([]);
     const [selectedMainDepartment, setSelectedMainDepartment] = useState(null);
+
+    const [people, setPeople] = useState([]);
+    const [showFired, setShowFired] = useState(false);
+
+    useEffect(() => {
+        fetchFiredPeople();
+    }, []);
+
+    const fetchFiredPeople = async () => {
+        try {
+            const accessToken = Cookies.get('jwtAccessToken');
+            const response = await axios.get(`http://localhost:8000/api/v1/person/`, {
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`,
+                }
+            })
+            setPeople(response.data);
+        } catch (error) {
+            console.log("fired", error)
+        }
+    };
+
+    const handleFiredCheckbox = () => {
+        setShowFired(!showFired)
+    };
+
+    const filteredPeople = showFired ? people.filter(person => person.isFired) : people;
 
     // главная страница - отображение городов
     const accessToken = Cookies.get('jwtAccessToken');
@@ -98,10 +121,6 @@ function Home(props) {
         localStorage.getItem('selectedGroupId') || 'all'
     );
 
-    const handleRadioChange = (value) => {
-    setSelectedGroupId(value);
-    };
-
     // Переход на личные страницы - на главной
     const handleEmployeeClick = (id) => {
         navigate(`/${id}`)
@@ -157,19 +176,28 @@ function Home(props) {
             return;
         }
         window.location.href = `http://127.0.0.1:8000/api/v1/download-staffing-table/?locationName=Весь Казахстан`;
+
+        if (selectedCity) {
+            const downloadUrl = `http://127.0.0.1:8000/api/v1/download-staffing-table/?locationName=${selectedCity}`;
+
+            console.log('Download URL:', downloadUrl);
+            console.log('Download URL:', selectedCity);
+
+        }
     };
-    
-    // values для шатаного расписания
-    const dropdownOptions = [
-        { value: 'wholeCountry', label: 'Вся страна' },
-        { value: 'city', label: 'Город' },
-    ];
 
 
     // выбранный город
     const [cities, setCities] = useState([]);
     const [selectedCity, setSelectedCity] = useState(null);
 
+    // values для шатаного расписания
+    const dropdownOptions = [
+        { value: 'wholeCountry', label: 'Вся страна' },
+        selectedCity
+          ? { value: selectedCity, label: selectedCity }
+          : { value: 'city', label: 'Город' },
+    ];
 
 
     // департаменты выбранного города
@@ -209,7 +237,9 @@ function Home(props) {
               'Authorization': `Bearer ${accessToken}`,
             }
           })
-            .then(response => setDepartments(response.data.departments))
+            .then(response => {setDepartments(response.data.departments)
+                // console.log(selectedCity)
+            })
             .catch(error => console.error('Error fetching departments:', error));
         }
     }, [selectedCity]);
@@ -416,7 +446,7 @@ function Home(props) {
       );
     } else {
       return (
-        <div className={cl.employeeWrapper}>
+        <div className={cl.employeeWrapper} >
             <div className={cl.groups}>
                 <h1 className={cl.headline}>Управления</h1>
                 
@@ -447,7 +477,6 @@ function Home(props) {
                             borderRadius: '50%'
                             }}
                         />
-                        
                     </div>
                     ))}
 
@@ -474,14 +503,33 @@ function Home(props) {
                                 </tr>
                                 );
                             })} */}
-                             {persons.map(person => (
-                                <tr key={person.id}  onClick={() => handleEmployeeClick(person.id)}>
-                                {/* <td>{person.id}</td> */}
-                                <td>{`${person.surname} ${person.firstName} ${person.patronymic}`}</td>
-                                <td>{person.gender.genderName}</td>
-                                <td>{person.positionInfo.position.positionTitle}</td>
-                                </tr>
-                            ))}
+                          {showFired ? (
+                                // Display only fired people when the checkbox is checked
+                                filteredPeople.length > 0 ? (
+                                    filteredPeople.map(person => (
+                                        <tr key={person.id}>
+                                            <td>{`${person.surname} ${person.firstName} ${person.patronymic}`}</td>
+                                            <td>{person.gender.genderName}</td>
+                                            <td>{person.positionInfo.position.positionTitle}</td>
+                                        </tr>
+                                    ))
+                                ) : (
+                                    <tr>
+                                        <td colSpan='3' style={{ textAlign: 'center' }}>Нет уволенных людей</td>
+                                    </tr>
+                                )
+                            ) : (
+                                // Display the regular list of people when the checkbox is not checked
+                                persons
+                                .filter(person => !person.isFired) // Exclude fired people
+                                .map(person => (
+                                    <tr key={person.id} onClick={() => handleEmployeeClick(person.id)}>
+                                    <td>{`${person.surname} ${person.firstName} ${person.patronymic}`}</td>
+                                    <td>{person.gender.genderName}</td>
+                                    <td>{person.positionInfo.position.positionTitle}</td>
+                                    </tr>
+                                ))
+                            )}
                         </tbody>
                     </table>
             </div>
@@ -498,8 +546,23 @@ function Home(props) {
                 <div className={cl.content}>
                     <div className={cl.container}>
                         <div className={cl.btn_wrapper}>
-                            <div></div>
-                            <Button onClick={toggleSchedule}  size="small" variant="contained" style={{ display: 'block',  textTransform: 'none' }}>
+                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                {!showSchedule && (
+                                    <>
+                                        <p>Только уволенные</p>
+                                        <Checkbox 
+                                            checked={showFired} 
+                                            onChange={handleFiredCheckbox} 
+                                            inputProps={{ 'aria-label': 'controlled' }}
+                                        />
+                                    </>
+                                )}
+                            </div>
+                            <Button 
+                                onClick={toggleSchedule}  
+                                size="small" variant="contained" 
+                                style={{ display: 'block',  textTransform: 'none', margin: '6px 0' }}
+                            >
                                 {showSchedule ? 'Вернуться на главную' : 'Штатное расписание'}
                             </Button>
                         </div>

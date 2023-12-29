@@ -65,7 +65,7 @@ function Appointment() {
             })
             .then(response => {
                 setPositionsList(response.data.positions);
-                console.log(response.data)
+                // console.log(response.data)
             })
             .catch(error => {
                 console.log("Error fetching positions", error);
@@ -105,7 +105,7 @@ function Appointment() {
             // Clean up
             document.body.removeChild(link);
             window.URL.revokeObjectURL(url);
-            console.log("formData", formData)
+            // console.log("formData", formData)
             } catch (error) {
             console.error('Error submitting form:', error);
         }
@@ -238,7 +238,7 @@ function Appointment() {
                                 const selectedDepartment = departmentsList.find(dep => dep.id === e.target.value);
                                 setSelectedDepartmentId(e.target.value);
                                 setFormData({ ...formData, department: selectedDepartment?.DepartmentName || '' });
-                                console.log("Selected Department ID:", e.target.value);
+                                // console.log("Selected Department ID:", e.target.value);
                             }}
                             >
                                 {departmentsList.map((department) => (

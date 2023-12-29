@@ -156,7 +156,7 @@ function Personal({
             console.log("Current id:", id); 
             const newFamilyMember = {
                 personId: id,
-                relativeType: inputData.relativeType,
+                relativeType: {relativeName: inputData.relativeType},
                 relName: inputData.relName,
                 relSurname: inputData.relSurname,
                 relPatronymic: inputData.relPatronymic,
@@ -594,7 +594,12 @@ function Personal({
                                                         className={cl.selectRelative_type}
                                                         name='relativeType'
                                                         value={editedData.relativeType}
-                                                        onChange={(e) => setEditedData({ ...editedData, relativeType: e.target.value })}
+                                                        onChange={(e) => {
+                                                            const selectedValue = e.target.value;
+                                                            console.log('Selected Relative Type:', selectedValue);
+                                                            setEditedData({ ...editedData, relativeType: selectedValue });
+                                                          }}
+                                                        
                                                     >
                                                         <option value="">Выберите тип родственника</option>
                                                         <option value="супруг/супруга">супруг/супруга</option>

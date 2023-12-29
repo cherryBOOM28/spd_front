@@ -7,7 +7,7 @@ const ExcelGenerator = ({ results, selected, optionsData, setResults, formData }
 
     useEffect(() => {
         setExcelData(results);
-        console.log("dcfvf", results);
+        // console.log("dcfvf", results);
         // console.log("options", optionsData);
         // console.log("selected", selected);
     }, [results]);
@@ -39,7 +39,7 @@ const ExcelGenerator = ({ results, selected, optionsData, setResults, formData }
 
 
       selected = ['firstName', 'surname', 'patronymic', ...selected];
-      console.log("selected fields", selected);
+      // console.log("selected fields", selected);
         
       excelData.forEach((rowData) => {
         const formattedRow = [];
@@ -58,7 +58,7 @@ const ExcelGenerator = ({ results, selected, optionsData, setResults, formData }
           
         });
         data.push(formattedRow);
-        console.log("Formatted Row", formattedRow);
+        // console.log("Formatted Row", formattedRow);
       });
       
        const wb = XLSX.utils.book_new();

@@ -393,7 +393,7 @@ export const FormProvider = ({ children }) => {
         });
     
         // Обработка успешного ответа
-        console.log('Успешный ответ от сервера:', response.data);
+        // console.log('Успешный ответ от сервера:', response.data);
     
         // Добавьте здесь код для перенаправления или обновления страницы
         navigate('/');

@@ -36,7 +36,7 @@
 
 .filters {
   position: absolute;
-  top: -55px;
+  top: -66px;
   display: flex;
   align-items: center;
   gap: 20px;
@@ -79,7 +79,7 @@ select {
   border-radius: 5px;
   background: #F8F8F8;
   padding: 10px 10px 10px 10px;
-  margin: 10px 0;
+  margin: 21px 0;
   display: flex;
   gap: 10px;
 }
@@ -193,6 +193,7 @@ select {
   display: flex;
   align-items: center;
   gap: 20px;
+
 }
 
 .headline_2 {

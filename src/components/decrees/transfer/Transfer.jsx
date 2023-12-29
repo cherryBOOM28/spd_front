@@ -80,7 +80,7 @@ function Transfer() {
                 NotificationManager.warning('Пожалуйста, зполните все поля!', 'Поля пустые', 3000);
                 return; // Stop form submission
             };
-            console.log("formData before axios request:", formData);
+            // console.log("formData before axios request:", formData);
             const accessToken = Cookies.get('jwtAccessToken');
             const response = await axios.post(' http://127.0.0.1:8000/api/v1/generate-transfer-decree/', formData, {
                 headers: {
@@ -89,10 +89,10 @@ function Transfer() {
                 responseType: 'blob', // Set the response type to blob
             });
 
-            console.log("formData after axios request:", formData);
+            // console.log("formData after axios request:", formData);
  
 
-            console.log("Server Response", response);
+            // console.log("Server Response", response);
 
             // Create a blob from the response data
             const blob = new Blob([response.data], { type: response.headers['content-type'] });
@@ -110,7 +110,7 @@ function Transfer() {
             // Clean up
             document.body.removeChild(link);
             window.URL.revokeObjectURL(url);
-            console.log("formData after download:", formData);
+            // console.log("formData after download:", formData);
             } catch (error) {
             console.error('Error submitting form:', error);
         }
@@ -121,7 +121,7 @@ function Transfer() {
         setSearchText(inputValue);
         setShowClearBtn(inputValue !== '');
 
-        console.log("inputValue", inputValue)
+        // console.log("inputValue", inputValue)
     
         try {
             const response = await axios.get(`http://127.0.0.1:8000/api/v1/search_persons/?q=`, {
@@ -244,7 +244,7 @@ function Transfer() {
                                 const selectedDepartment = departmentsList.find(dep => dep.id === e.target.value);
                                 setSelectedDepartmentId(e.target.value);
                                 setFormData({ ...formData, newDepartment: selectedDepartment?.DepartmentName || '' });
-                                console.log("Selected Department ID:", e.target.value);
+                                // console.log("Selected Department ID:", e.target.value);
                             }}
                             >
                                 {departmentsList.map((department) => (

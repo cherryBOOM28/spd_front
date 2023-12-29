@@ -13,7 +13,7 @@ import Cookies from 'js-cookie';
 
 
 
-function Header(props) {
+function Header() {
     const { id } = useParams();
     //create group
     const [isClicked, setIsClicked] = useState();
@@ -25,6 +25,7 @@ function Header(props) {
     const [fullName, setFullName] = useState('');
     
     const accessToken = Cookies.get('jwtAccessToken');
+    const userFullName = localStorage.getItem('userFullName');
 
     useEffect(() => {
 
@@ -61,7 +62,7 @@ function Header(props) {
             setSelectedIds([...selectedIds, _id]);
         }
 
-        console.log(selectedIds)
+        // console.log(selectedIds)
     }
 
     return (
@@ -131,11 +132,13 @@ function Header(props) {
                     </div>
                     <div className={cl.headerContentRight}>
                         <SearchInput />
-                        <div className={cl.profile}>
-                            <img src={`data:image/jpeg;base64,${photo}`} alt="profilePic" className={cl.profileImg} />
-                            {/* <Link to="/8" className={cl.profileName}>Louisa Sapina </Link> */}
-                            <p className={cl.profileName}>{fullName}</p>
-                        </div>
+                        {userFullName ?? (
+                            <div className={cl.profile}>
+                                <img src={`data:image/jpeg;base64,${photo}`} alt="profilePic" className={cl.profileImg} />
+                                {/* <Link to="/8" className={cl.profileName}>Louisa Sapina </Link> */}
+                                <p className={cl.profileName}>{userFullName}</p>
+                            </div>
+                        )}
                         <div>
                             { user ? (
                                 <div>

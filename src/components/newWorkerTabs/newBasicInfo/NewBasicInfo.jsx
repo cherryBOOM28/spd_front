@@ -25,7 +25,7 @@ function NewBasicInfo() {
 
             reader.onload = (e) => {
                 const base64String = e.target.result;
-                console.log(base64String); 
+                // console.log(base64String); 
                 setPhoto(base64String);
             };
 

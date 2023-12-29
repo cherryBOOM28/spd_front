@@ -46,7 +46,7 @@ function DecreeHistory() {
     setSelectedDecreeId(decreeId);
     setIsModalVisible(true);
     fetchTransferInfo(decreeId);
-    console.log('Selected Decree ID:', decreeId);
+    // console.log('Selected Decree ID:', decreeId);
   };
 
   const closeModal = () => {

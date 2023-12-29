@@ -16,6 +16,7 @@ const Login = () => {
     });
 
     const [rememberMe, setRememberMe] = useState(true);
+    const [userFullName, setUserFullName] = useState('');
 
     useEffect(() => {
         
@@ -39,14 +40,17 @@ const Login = () => {
                 "username": formData['username'],
                 "password": formData['password'],
             });
-    
+            console.log(response.data); 
+            console.log('Username entered:', formData['username']);
+            console.log('Password entered:', formData['password']);
             // Успешный ответ
             const { access, refresh } = response.data;
     
             // Сохранение токенов в куки с помощью js-cookie
-            Cookies.set('jwtAccessToken', access, { expires: 1, path: '/' }); // куки истекут через 1 дней
+            Cookies.set('jwtAccessToken', access, { expires: 1, path: '/' }); // куки истекут через 1 дн  
+            
             Cookies.set('jwtRefreshToken', refresh, { expires: 1, path: '/' });
-    
+           
             console.log("jwtAccessToken",response.data);
             navigate('/');
         } catch (error) {
