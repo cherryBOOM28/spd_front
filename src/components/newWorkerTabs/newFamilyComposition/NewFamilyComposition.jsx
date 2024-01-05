@@ -45,7 +45,7 @@ const NewFamilyComposition = (props) => {
             // }
 
             const newFamily = {
-                relativeType: {relativeName: inputData.relativeType},
+                relativeType: inputData.relativeType,
                 relName: inputData.relName,
                 relSurname: inputData.relSurname,
                 relPatronymic: inputData.relPatronymic,

@@ -4,7 +4,7 @@ import Button from '../../UI/button/Button';
 import { MdArrowDropDown, MdExpandLess } from 'react-icons/md';
 
 function StaffInfoData(props) {
-    const [formData, setFormData] = useState({}); // Состояние для хранения данных из инпутов
+    // const [formData, setFormData] = useState({}); // Состояние для хранения данных из инпутов
     const [selectedSpecChecksOptions, setSelectedSpecChecksOptions] = useState([]);
     const [selectedAttestationsOptions, setSelectedAttestationsOptions] = useState([]);
     const [selectedCategoryOptions, setSelectedCategoryOptions] = useState([]);
@@ -12,7 +12,7 @@ function StaffInfoData(props) {
     const [selectedAwardsOptions, setSelectedAwardsOptions] = useState([]);
     const [selectedSickLeavesOptions, setSelectedSickLeavesOptions] = useState([]);
     const [selectedInvestigationRetrievalsOptions, setSelectedInvestigationRetrievalsOptions] = useState([]);
-
+    const {formData, setFormData} = props;
 
     useEffect(() => {
         props.setSelectedSpecChecksOptions(selectedSpecChecksOptions)

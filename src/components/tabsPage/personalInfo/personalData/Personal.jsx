@@ -156,7 +156,7 @@ function Personal({
             console.log("Current id:", id); 
             const newFamilyMember = {
                 personId: id,
-                relativeType: {relativeName: inputData.relativeType},
+                relativeType: inputData.relativeType,
                 relName: inputData.relName,
                 relSurname: inputData.relSurname,
                 relPatronymic: inputData.relPatronymic,
@@ -166,7 +166,7 @@ function Personal({
             };
             
             console.log(
-                { newFamilyMember },
+                newFamilyMember,
                 {id}
             )
             const accessToken = Cookies.get('jwtAccessToken');
@@ -179,17 +179,25 @@ function Personal({
             
             if (response.status === 201) {
                 setFamilyComposition(prevData => {
-                    // Проверяем, что prevData является объектом и содержит workingHistories
+                    // Проверяем, что prevData является объектом и содержит relatives
                     if (typeof prevData === 'object' && Array.isArray(prevData.relatives)) {
-                      return {
-                        ...prevData,
-                        relatives: [...prevData.relatives, newFamilyMember],
-                      };
+                        const updatedRelative = {
+                            ...newFamilyMember,
+                            relativeType: response.data.relativeType
+                        };
+
+                        return {
+                            ...prevData,
+                            // relatives: [...prevData.relatives, newFamilyMember],
+                            relatives: [...prevData.relatives, updatedRelative],
+                        };
                     } else {
-                      console.error("prevData is not an object or does not contain workingHistories");
-                      return prevData; // возвращаем prevData без изменений
+                      console.error("prevData is not an object or does not contain relatives");
+                      return prevData;
+                       // возвращаем prevData без изменений
                     }
                 });
+             
                 setInputData({
                   personId: id,
                   relativeType: "",
@@ -201,9 +209,11 @@ function Personal({
                   relJobPlace: "",
                 });
                 handleShowForm(false)
+                
             } else {
                 console.error('Error adding new data');
             }
+            window.location.reload()
         } catch (error) {
             console.error('Error:', error);
         }
@@ -608,7 +618,8 @@ function Personal({
                                                         <option value="брат/сестра">брат/сестра</option>
                                                     </select>
                                                 ) : (
-                                                    d.relativeType
+                                                    d.relativeType.relativeName
+                                                    // d.relativeType && d.relativeType.relativeName
                                                 )}
                                             </td>
                                             <td>{editingId === d.id ? 

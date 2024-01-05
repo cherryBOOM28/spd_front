@@ -3,6 +3,7 @@ import axios from 'axios';
 import cl from './ReportPersonalData.module.css';
 import Button from '../../UI/button/Button';
 import { MdArrowDropDown, MdExpandLess } from 'react-icons/md';
+import { updateFormData } from '../../../pages/reports/Reports';
 
 
 function ReportPersonalData(props) {
@@ -14,8 +15,8 @@ function ReportPersonalData(props) {
     const [selectedAcademicDegreeOptions, setSelectedAcademicDegreeOptions] = useState([]);
     const [selectedSportOptions, setSelectedSportOptions] = useState([]);
 
-
-    const [formData, setFormData] = useState({}); // Состояние для хранения данных из инпутов
+    const {formData, setFormData} = props;
+    // const [formData, setFormData] = useState({}); // Состояние для хранения данных из инпутов
 
     useEffect(() => {
         // console.log(selectedFamilyOptions);
@@ -135,22 +136,57 @@ function ReportPersonalData(props) {
     };
 
     
+    // const togglePersonalOption = (option) => {
+    //     if (selectedPersonalOptions.includes(option)) {
+    //         setSelectedPersonalOptions(selectedPersonalOptions.filter((item) => item !== option));
+    //         delete formData[option];
+    //     } else {
+    //         setSelectedPersonalOptions([...selectedPersonalOptions, option]);
+    //         // Если пользователь выбрал "Пол", "Дата рождения" или другие опции, 
+    //         // то сразу устанавливаем их значения в formData
+    //         if (option === "familyStatus:statusName") {
+    //             setFormData({
+    //               ...formData,
+    //               [option]: option === "familyStatus:statusName" ? personal_data_options.find((o) => o.id === option).selectOptions[0] : {start_date: '', end_date: ''},
+    //             });
+    //         }
+    //     }
+    // };
+
     const togglePersonalOption = (option) => {
+
+        console.log(selectedPersonalOptions)
+
         if (selectedPersonalOptions.includes(option)) {
-            setSelectedPersonalOptions(selectedPersonalOptions.filter((item) => item !== option));
-            delete formData[option];
+          setSelectedPersonalOptions(prev => {
+            return prev.filter((item) => item !== option)
+          });
+          delete formData[option];
+
+        //   Удаляем поле из formData
+        //   updateFormData(option, undefined, formData);
+        //   if (option === undefined || option === null || option === '') {
+        //     delete updatedFormData[key];
+        //   } else {
+        //     updatedFormData[key] = value;
+        //   }
         } else {
-            setSelectedPersonalOptions([...selectedPersonalOptions, option]);
-            // Если пользователь выбрал "Пол", "Дата рождения" или другие опции, 
-            // то сразу устанавливаем их значения в formData
-            if (option === "familyStatus:statusName") {
-                setFormData({
-                  ...formData,
-                  [option]: option === "familyStatus:statusName" ? personal_data_options.find((o) => o.id === option).selectOptions[0] : {start_date: '', end_date: ''},
-                });
-            }
+          setSelectedPersonalOptions([...selectedPersonalOptions, option]);
+          // Если пользователь выбрал "Пол", "Дата рождения" или другие опции, 
+          // то сразу устанавливаем их значения в formData
+
+          if (option === "familyStatus:satatusName") {
+            updateFormData(option, personal_data_options.find((o) => o.id === option).selectOptions[0], formData);
+          } else {
+            updateFormData(option, personal_data_options.find((o) => o.id === option).isRange, formData);
+          }
+
         }
+
+        console.log(selectedPersonalOptions)
     };
+      
+      
 
     const toggleOption = (option) => {
         if (selectedFamilyOptions.includes(option)) {
@@ -529,30 +565,36 @@ export function renderPersonalOptions(selectedPersonalOptions, formData, handleI
             <div className={cl.input__container}>
                 {selectedPersonalOptions.map((option) => (
                     <div key={option} className={cl.wrapper__input}>
-                        <label className={cl.label__name}>{personal_data_options.find((o) => o.id === option).label}:</label>
-                        {option === "familyStatus:statusName" ? (
-                            <select
-                            value={formData[option] || ''}
-                            className={cl.workerInfoSelect}
-                            onChange={(e) => handleInputChange(option, e.target.value)}
-                            >
-                            {personal_data_options.find((o) => o.id === option).selectOptions.map((genderOption) => (
-                                <option key={genderOption} value={genderOption}>
-                                {genderOption}
-                                </option>
-                            ))}
-                            </select>
-                
-                        ) : (
-                        <input
-                            type="text"
-                            className={cl.workerInfo}
-                            value={formData[option] || ''}
-                            placeholder={`${personal_data_options.find((o) => o.id === option).label}`}
-                            onChange={(e) => handleInputChange(option, e.target.value)}
-                        />
-                        ) 
-                    }
+                        {personal_data_options && personal_data_options.length > 0 && (
+                            <>
+                                <label className={cl.label__name}>
+                                    {personal_data_options.find((o) => o.id === option)?.label}:
+                                </label>
+                                {option === "familyStatus:statusName" ? (
+                                    <select
+                                        value={formData[option] || ''}
+                                        className={cl.workerInfoSelect}
+                                        onChange={(e) => handleInputChange(option, e.target.value)}
+                                    >
+                                        {personal_data_options.find((o) => o.id === option)?.selectOptions.map((genderOption) => (
+                                            <option key={genderOption} value={genderOption}>
+                                                {genderOption}
+                                            </option>
+                                        ))}
+                                    </select>
+                                ) : (
+                                    <input
+                                        type="text"
+                                        className={cl.workerInfo}
+                                        value={formData[option] || ''}
+                                        placeholder={`${personal_data_options.find((o) => o.id === option)?.label}`}
+                                        onChange={(e) => {
+                                            handleInputChange(option, e.target.value)
+                                        }}
+                                    />
+                                )}
+                            </>
+                        )}
                     </div>
                 ))}
           

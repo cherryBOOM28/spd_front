@@ -5,7 +5,8 @@ import { MdArrowDropDown, MdExpandLess } from 'react-icons/md';
 
 function WorkingHistoryData(props) {
     const [selectedWorkingHistoryOptions, setSelectedWorkingHistoryOptions] = useState([]);
-    const [formData, setFormData] = useState({}); // Состояние для хранения данных из инпутов
+    // const [formData, setFormData] = useState({}); // Состояние для хранения данных из инпутов
+    const {formData, setFormData} = props
 
     useEffect(() => {
         // console.log(selectedFamilyOptions);

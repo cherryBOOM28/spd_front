@@ -70,6 +70,21 @@ function Reports(props, queryParams) {
     const [results, setResults] = useState([]);
     const [formData, setFormData] = useState({}); // Состояние для хранения данных из инпутов
 
+    useEffect(() => {
+        // console.log(selectedPersonalOptions)
+        
+        if (selectedPersonalOptions.length === 0) {
+            personal_data_options.forEach(item => {
+                setFormData(prev => {
+                    const { [item]: deletedItem, ...rest } = prev;
+                    return rest;
+                })
+            })
+        }
+
+        // console.log(formData)
+    }, [selectedPersonalOptions])
+
     selectedOptions.forEach((option) => {
         if (!formData.hasOwnProperty(option)) {
           formData[option] = '';
@@ -349,19 +364,24 @@ function Reports(props, queryParams) {
 
 
     const handleInputChange = (option, value) => {
+        // console.log(option, value)
+
       setFormData({
         ...formData,
         [option]: value,
       });
     };
       
+    // Поиск
     const handleSubmit = (props) => {
+      
+
         const formatDateRange = (key) => {
             const dateRange = formData[key];
             if (dateRange) {
               const start = dateRange.start_date || '';
               const end = dateRange.end_date || '';
-                console.log(start, typeof start)
+                // console.log(start, typeof start)
                 // const formattedDate = start + '_' + end; 
                 const formattedDate = (start && end) ? `${start}_${end}` : (start || end);
                 return formattedDate;
@@ -395,27 +415,47 @@ function Reports(props, queryParams) {
         // console.log(updatedQueryParams);
 
         const queryParams = {...formData};
-        
+
+        const updateFormDataInternal = (key, value) => {
+            setFormData((prevFormData) => updateFormData(key, value, prevFormData));
+        };
 
         for (const key in updatedQueryParams) {
             if (updatedQueryParams.hasOwnProperty(key)) {
                 const value = updatedQueryParams[key];
-                // console.log(key, value);
                 if (value !== undefined) {
-                    // console.log(key, encodeURIComponent(value));
                     queryParams[key] = value;
+                    // Update formData when removing items
+                    updateFormDataInternal(key, value);
                 }
             }
         }
+
+        // for (const key in queryParams) {
+        //     queryParams[key] = '';
+        // }
+
+        // for (const key in updatedQueryParams) {
+        //     if (updatedQueryParams.hasOwnProperty(key)) {
+        //         const value = updatedQueryParams[key];
+        //         // console.log(key, value);
+        //         if (value !== undefined) {
+        //             // console.log(key, encodeURIComponent(value));
+        //             queryParams[key] = value;
+        //         }
+        //     }
+        // }
 
         // console.log("queryParams", queryParams);
         // console.log(updatedQueryParams);
 
         // console.log("formData:", formData);
 
+        console.log(queryParams)
 
         const queryString = new URLSearchParams(queryParams).toString();
-        // console.log(formData);
+        console.log(formData);
+        console.log(queryString);
         // const queryString = queryParams.join('&');
         const url = `http://localhost:8000/api/v1/filter?${queryString}`;
         // const url = `http://localhost:8000/report_list/?birth_date=:`;
@@ -435,19 +475,24 @@ function Reports(props, queryParams) {
             setIsOpenFamily(false);
 
             // setSelectedOptions([]);
-            console.log(response);
-            console.log("response",response.data.results);
+            // console.log(response);
+            // console.log("response",response.data.results);
             // console.log("setResults",results);
-            console.log("queryParams",formData);
+            console.log(url)
+            console.log("queryParams", formData);
             })
             .catch((error) => {
             console.error('Ошибка при получении данных:', error);
+            })
+            .finally(() => {
+                // for (const key in formData) {
+                //     formData[key] = '';
+                // }
             });
       
         setShowResults(true);
         setShowExcelButton(true);
-    };
-      
+    }; 
     
     const familyOptions = renderFamilyOptions(selectedFamilyOptions, formData, handleInputChange, family_compositions_options);
     const personalDataOptions = renderPersonalOptions(selectedPersonalOptions, formData, handleInputChange, personal_data_options);
@@ -512,111 +557,113 @@ function Reports(props, queryParams) {
                                         activeTab === 1 && 
                                         <div className={cl.basic__info}>
                                             <div className={cl.employees}>
-                                <div className={cl.dropdown}>
-                                    <Button onClick={toggleGeneralDropdown} className={cl.actionBtn}>
-                                        Общие данные
-                                        {isOpenGeneral ? <MdExpandLess className={cl.arrow} /> : <MdArrowDropDown className={cl.arrow} />}
-                                    </Button>
-                                    {isOpenGeneral && (
-                                        <div className={cl.dropdown__content}>
-                                            <ul>
-                                                {options.map((option) => (
-                                                <li key={option.id} className={cl.options__label}>
-                                                    <label>
-                                                        <input
-                                                            type="checkbox"
-                                                            value={option.id}
-                                                            checked={selectedOptions.includes(option.id)}
-                                                            onChange={() => toggleOption(option.id)}
-                                                        />
-                                                        {option.label}
-                                                    </label>
-                                                    {selectedOptions.includes(option.id) && option.id !== "gender:genderName" && (
-                                                        <div>
-                                                
+                                                <div className={cl.dropdown}>
+                                                    <Button onClick={toggleGeneralDropdown} className={cl.actionBtn}>
+                                                        Общие данные
+                                                        {isOpenGeneral ? <MdExpandLess className={cl.arrow} /> : <MdArrowDropDown className={cl.arrow} />}
+                                                    </Button>
+                                                    {isOpenGeneral && (
+                                                        <div className={cl.dropdown__content}>
+                                                            <ul>
+                                                                {options.map((option) => (
+                                                                <li key={option.id} className={cl.options__label}>
+                                                                    <label>
+                                                                        <input
+                                                                            type="checkbox"
+                                                                            value={option.id}
+                                                                            checked={selectedOptions.includes(option.id)}
+                                                                            onChange={() => toggleOption(option.id)}
+                                                                        />
+                                                                        {option.label}
+                                                                    </label>
+                                                                    {selectedOptions.includes(option.id) && option.id !== "gender:genderName" && (
+                                                                        <div>
+                                                                
+                                                                        </div>
+                                                                    )}
+                                                                </li>
+                                                                ))}
+                                                            </ul>
                                                         </div>
                                                     )}
-                                                </li>
-                                                ))}
-                                            </ul>
-                                        </div>
-                                    )}
-                                </div>
-                                
-                                <ReportPersonalData 
-                                    isOpenPersonal={isOpenPersonal}
-                                    selectedFamilyOptions={selectedFamilyOptions}
-                                    setSelectedFamilyOptions={setSelectedFamilyOptions}
-                                    selectedPersonalOptions={selectedPersonalOptions}
-                                    setSelectedPersonalOptions={setSelectedPersonalOptions}
-                                    selectedEducationOptions={selectedEducationOptions}
-                                    setSelectedEducationOptions={setSelectedEducationOptions}
-                                    selectedLanguageOptions={selectedLanguageOptions}
-                                    setSelectedLanguageOptions={setSelectedLanguageOptions}
-                                    selectedCoursesOptions={selectedCoursesOptions}
-                                    setSelectedCoursesOptions={setSelectedCoursesOptions}
-                                    selectedAcademicDegreeOptions={selectedAcademicDegreeOptions}
-                                    setSelectedAcademicDegreeOptions={setSelectedAcademicDegreeOptions}
-                                    selectedSportOptions={selectedSportOptions}
-                                    setSelectedSportOptions={setSelectedSportOptions}
+                                                </div>
+                                                <ReportPersonalData 
+                                                    updateFormData={updateFormData}
+                                                    isOpenPersonal={isOpenPersonal}
+                                                    selectedFamilyOptions={selectedFamilyOptions}
+                                                    setSelectedFamilyOptions={setSelectedFamilyOptions}
+                                                    selectedPersonalOptions={selectedPersonalOptions}
+                                                    setSelectedPersonalOptions={setSelectedPersonalOptions}
+                                                    selectedEducationOptions={selectedEducationOptions}
+                                                    setSelectedEducationOptions={setSelectedEducationOptions}
+                                                    selectedLanguageOptions={selectedLanguageOptions}
+                                                    setSelectedLanguageOptions={setSelectedLanguageOptions}
+                                                    selectedCoursesOptions={selectedCoursesOptions}
+                                                    setSelectedCoursesOptions={setSelectedCoursesOptions}
+                                                    selectedAcademicDegreeOptions={selectedAcademicDegreeOptions}
+                                                    setSelectedAcademicDegreeOptions={setSelectedAcademicDegreeOptions}
+                                                    selectedSportOptions={selectedSportOptions}
+                                                    setSelectedSportOptions={setSelectedSportOptions}
 
-                                    formData={formData}
-                                    handleInputChange={handleInputChange}
+                                                    formData={formData}
+                                                    setFormData={setFormData}
+                                                    handleInputChange={handleInputChange}
 
-                                    personal_data_options={personal_data_options}
-                                    family_compositions_options={family_compositions_options}
-                                    educations_options={educations_options}
-                                    owning_languages_options={owning_languages_options}
-                                    courses_options={courses_options}
-                                    academic_degree_options={academic_degree_options}
-                                    sport_results_options={sport_results_options}
-                                />
-                                <WorkingHistoryData 
-                                    selectedWorkingHistoryOptions={selectedWorkingHistoryOptions}
-                                    setSelectedWorkingHistoryOptions={setSelectedWorkingHistoryOptions}
+                                                    personal_data_options={personal_data_options}
+                                                    family_compositions_options={family_compositions_options}
+                                                    educations_options={educations_options}
+                                                    owning_languages_options={owning_languages_options}
+                                                    courses_options={courses_options}
+                                                    academic_degree_options={academic_degree_options}
+                                                    sport_results_options={sport_results_options}
+                                                />
+                                                <WorkingHistoryData 
+                                                    selectedWorkingHistoryOptions={selectedWorkingHistoryOptions}
+                                                    setSelectedWorkingHistoryOptions={setSelectedWorkingHistoryOptions}
 
-                                    formData={formData}
-                                    handleInputChange={handleInputChange}
+                                                    formData={formData}
+                                                    setFormData={setFormData}
 
-                                    working_history_options={working_history_options}
-                                />
-                                <StaffInfoData 
-                                    selectedSpecChecksOptions={selectedSpecChecksOptions}
-                                    setSelectedSpecChecksOptions={setSelectedSpecChecksOptions}
-                                    selectedAttestationsOptions={selectedAttestationsOptions}
-                                    setSelectedAttestationsOptions={setSelectedAttestationsOptions}
-                                    selectedCategoryOptions={selectedCategoryOptions}
-                                    setSelectedCategoryOptions={setSelectedCategoryOptions}
-                                    selectedMilitaryRankOptions={selectedMilitaryRankOptions}
-                                    setSelectedMilitaryRankOptions={setSelectedMilitaryRankOptions}
-                                    selectedAwardsOptions={selectedAwardsOptions}
-                                    setSelectedAwardsOptions={setSelectedAwardsOptions}
-                                    selectedSickLeavesOptions={selectedSickLeavesOptions}
-                                    setSelectedSickLeavesOptions={setSelectedSickLeavesOptions}
-                                    selectedInvestigationRetrievalsOptions={selectedInvestigationRetrievalsOptions}
-                                    setSelectedInvestigationRetrievalsOptions={setSelectedInvestigationRetrievalsOptions}
+                                                    handleInputChange={handleInputChange}
 
-                                    formData={formData}
-                                    handleInputChange={handleInputChange}
+                                                    working_history_options={working_history_options}
+                                                />
+                                                <StaffInfoData 
+                                                    selectedSpecChecksOptions={selectedSpecChecksOptions}
+                                                    setSelectedSpecChecksOptions={setSelectedSpecChecksOptions}
+                                                    selectedAttestationsOptions={selectedAttestationsOptions}
+                                                    setSelectedAttestationsOptions={setSelectedAttestationsOptions}
+                                                    selectedCategoryOptions={selectedCategoryOptions}
+                                                    setSelectedCategoryOptions={setSelectedCategoryOptions}
+                                                    selectedMilitaryRankOptions={selectedMilitaryRankOptions}
+                                                    setSelectedMilitaryRankOptions={setSelectedMilitaryRankOptions}
+                                                    selectedAwardsOptions={selectedAwardsOptions}
+                                                    setSelectedAwardsOptions={setSelectedAwardsOptions}
+                                                    selectedSickLeavesOptions={selectedSickLeavesOptions}
+                                                    setSelectedSickLeavesOptions={setSelectedSickLeavesOptions}
+                                                    selectedInvestigationRetrievalsOptions={selectedInvestigationRetrievalsOptions}
+                                                    setSelectedInvestigationRetrievalsOptions={setSelectedInvestigationRetrievalsOptions}
 
-                                    spec_checks_options={spec_checks_options}
-                                    attestations_options={attestations_options}
-                                    class_categories_options={class_categories_options}
-                                    military_rank_options={military_rank_options}
-                                    awards_options={awards_options}
-                                    sick_leaves_options={sick_leaves_options}
-                                    investigation_retrievals_options={investigation_retrievals_options}
-                                />
-                                <OrdersListData
-                                    selectedOrderListOptions={selectedOrderListOptions}
-                                    setSelectedOrderListOptions={setSelectedOrderListOptions}
+                                                    formData={formData}
+                                                    handleInputChange={handleInputChange}
 
-                                    formData={formData}
-                                    handleInputChange={handleInputChange}
+                                                    spec_checks_options={spec_checks_options}
+                                                    attestations_options={attestations_options}
+                                                    class_categories_options={class_categories_options}
+                                                    military_rank_options={military_rank_options}
+                                                    awards_options={awards_options}
+                                                    sick_leaves_options={sick_leaves_options}
+                                                    investigation_retrievals_options={investigation_retrievals_options}
+                                                />
+                                                <OrdersListData
+                                                    selectedOrderListOptions={selectedOrderListOptions}
+                                                    setSelectedOrderListOptions={setSelectedOrderListOptions}
 
-                                    orders_list_options={orders_list_options}
-                                />
-                             
+                                                    formData={formData}
+                                                    handleInputChange={handleInputChange}
+
+                                                    orders_list_options={orders_list_options}
+                                                />
                                             </div>
                         
                                             <div style={{ display: 'flex', flexWrap: 'wrap', width: '100%' }}>
@@ -866,3 +913,16 @@ function Reports(props, queryParams) {
 }
 
 export default Reports;
+
+export const updateFormData = (key, value, prevFormData) => {
+    console.log(key, value, prevFormData)
+
+    const updatedFormData = { ...prevFormData };
+    if (value === undefined || value === null || value === '') {
+      delete updatedFormData[key];
+    } else {
+      updatedFormData[key] = value;
+    }
+
+    return updatedFormData;  
+};

@@ -36,7 +36,7 @@ const ResultTable = ({results, setResults, formData, selected, columns, count, n
           setTable(results);
           // Other state updates...
         }
-        console.log("results", results);
+        // console.log("results", results);
       }, [results]);
     // const [countLocal, setCount] = useState(count)
     const [prevLocal, setPrevious] = useState('')
@@ -53,7 +53,7 @@ const ResultTable = ({results, setResults, formData, selected, columns, count, n
     // };
 
     const getColumnName = (fieldName) => {
-        console.log(columns.filter(o => o.id === fieldName)[0].label);
+        // console.log(columns.filter(o => o.id === fieldName)[0].label);
         return columns.filter(o => o.id === fieldName)[0].label;
     }
 
@@ -93,11 +93,12 @@ const ResultTable = ({results, setResults, formData, selected, columns, count, n
                     </TableHead>
 
                     <TableBody>
-                    {console.log('Selected Fields:', selected)}
+                    {/* {console.log('Selected Fields:', selected)} */}
                         {table.map((person) => (
                             <TableRow 
                                 onClick={() => handleRowClick(person.id)} 
-                                key={person.Person && person.Person.id}
+                                // key={person.Person && person.Person.id}
+                                key={person.id}
                                 style={{ cursor: 'pointer' }}
                                 sx={{ '&:hover': { backgroundColor: '#f0f0f0' } }}
                             >
