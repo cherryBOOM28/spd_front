@@ -15,6 +15,7 @@ function DecreeHistory() {
   const [decreeList, setDecreeList] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [transferInfo, setTransferInfo] = useState(null);
+  const [rankUp, setRankUp] = useState(null);
   const [selectedDecreeId, setSelectedDecreeId] = useState(null);
 
   const navigate = useNavigate();
@@ -30,6 +31,7 @@ function DecreeHistory() {
           }
         });
         setDecreeList(response.data.decrees);
+        console.log("decrees",response.data.decrees)
       } catch (error) {
         console.error('Error fetching decree list:', error);
       }
@@ -46,6 +48,7 @@ function DecreeHistory() {
     setSelectedDecreeId(decreeId);
     setIsModalVisible(true);
     fetchTransferInfo(decreeId);
+    fetchRankUpInfo(decreeId);
     // console.log('Selected Decree ID:', decreeId);
   };
 
@@ -57,6 +60,15 @@ function DecreeHistory() {
     try {
       const response = await axios.get(`http://127.0.0.1:8000/api/v1/get-transfer-info?decreeId=${decreeId}`);
       setTransferInfo(response.data.transferInfo[0]); // Assuming there is only one transferInfo object
+    } catch (error) {
+      console.error('Error fetching transfer info:', error);
+    }
+  };
+
+  const fetchRankUpInfo = async (decreeId) => {
+    try {
+      const response = await axios.get(`http://127.0.0.1:8000/api/v1/get-rankup-info?decreeId=${decreeId}`);
+      setRankUp(response.data); // Assuming there is only one transferInfo object
     } catch (error) {
       console.error('Error fetching transfer info:', error);
     }
