@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import cl from './StaffInfoData.module.css';
-import Button from '../../UI/button/Button';
+import { Button } from '@mui/material';
 import { MdArrowDropDown, MdExpandLess } from 'react-icons/md';
 
 function StaffInfoData(props) {
@@ -263,7 +263,7 @@ function StaffInfoData(props) {
     return (
         <div>
             <div className={cl.dropdown}>
-                <Button onClick={toggleStaffInfoDropdown} className={cl.actionBtn}>
+                <Button variant="contained" style={{ textTransform: 'none' }} onClick={toggleStaffInfoDropdown} className={cl.actionBtn}>
                     Кадровые данные
                     {isOpenStaffInfo ? <MdExpandLess className={cl.arrow} /> : <MdArrowDropDown className={cl.arrow} />}
                 </Button>

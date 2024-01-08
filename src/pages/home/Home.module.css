@@ -149,6 +149,7 @@ select {
   border-bottom: 1px solid #E9E9E9;
   padding: 10px;
   text-align: left;
+  vertical-align: middle;
 }
 
 .table tr:hover {
@@ -236,4 +237,10 @@ input[type="radio"] {
 input[type="radio"]:checked + label {
   background-color: #4CAF50; /* Цвет фона для выбранной радио-кнопки */
   color: #fff; /* Цвет текста для выбранной радио-кнопки */
+}
+
+.profileImg {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
 }

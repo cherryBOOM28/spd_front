@@ -2,12 +2,12 @@ import React, { useEffect, useState } from "react";
 import * as XLSX from 'xlsx';
 
 
-const ExcelGenerator = ({ results, selected, optionsData, setResults, formData }) => {
+const ExcelGenerator = ({ results, selected, optionsData }) => {
     const [excelData, setExcelData] = useState([]);
 
     useEffect(() => {
         setExcelData(results);
-        // console.log("dcfvf", results);
+        // console.log("results", results);
         // console.log("options", optionsData);
         // console.log("selected", selected);
     }, [results]);
@@ -18,6 +18,9 @@ const ExcelGenerator = ({ results, selected, optionsData, setResults, formData }
     };
 
     const generateExcelFile = () => {
+      if (selected.includes('selectAll')) {
+        selected = selected.filter((field) => field !== 'selectAll');
+      }
       if (selected.includes('firstName')) {
         selected = selected.filter((field) => field !== 'firstName');
       }
@@ -34,9 +37,7 @@ const ExcelGenerator = ({ results, selected, optionsData, setResults, formData }
         return label || fieldNameWithoutPrefix;
       })];
 
-      //let header = ["Имя", "Фамилия", "Отчество", ...selected.map((field) => optionsData.find((option) => option.id === field).label)];
       const data = [header];
-
 
       selected = ['firstName', 'surname', 'patronymic', ...selected];
       // console.log("selected fields", selected);
@@ -54,8 +55,6 @@ const ExcelGenerator = ({ results, selected, optionsData, setResults, formData }
           } else {
             formattedRow.push('пусто');
           }
-
-          
         });
         data.push(formattedRow);
         // console.log("Formatted Row", formattedRow);
@@ -73,9 +72,9 @@ const ExcelGenerator = ({ results, selected, optionsData, setResults, formData }
 
 
     return (
-        <div>
-            <div onClick={generateExcelFile}>Excel</div>
-        </div>
+      <div>
+        <div onClick={generateExcelFile}>Excel</div>
+      </div>
     )
 }
 

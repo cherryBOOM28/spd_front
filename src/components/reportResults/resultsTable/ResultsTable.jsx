@@ -8,6 +8,8 @@ import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import { useNavigate } from 'react-router-dom';
+import { Button } from '@mui/material';
+import { VscAccount } from "react-icons/vsc";
 
 
 const ResultTable = ({results, setResults, formData, selected, columns, count, next, previous }) => {
@@ -28,7 +30,6 @@ const ResultTable = ({results, setResults, formData, selected, columns, count, n
         // console.log(nextLocal);
         // console.log(previous);
         // console.log(selected);
-        
     })
 
     useEffect(() => {
@@ -61,18 +62,13 @@ const ResultTable = ({results, setResults, formData, selected, columns, count, n
         navigate(`/${id}`);
     };
 
-    // const removePrefix = (fieldName) => {
-    //     const prefixIndex = fieldName.indexOf(':');
-    //     return prefixIndex !== -1 ? fieldName.slice(prefixIndex + 1) : fieldName;
-    // };
-
     const removePrefix = (fieldName) => {
         const lastColonIndex = fieldName.lastIndexOf(':');
         return lastColonIndex !== -1 ? fieldName.slice(lastColonIndex + 1) : fieldName;
     };
 
   return (
-    <Paper style={{ marginTop: '20px', borderRadius: '5px' }} sx={{  width: '77.5vw', overflow: 'hidden' }}>
+    <Paper style={{ marginTop: '20px', borderRadius: '5px' }} sx={{  width: '80.2vw', overflow: 'hidden' }}>
         <div>
             <TableContainer sx={{  maxHeight: 440 }}>
                 <Table stickyHeader aria-label="sticky table">
@@ -82,13 +78,15 @@ const ResultTable = ({results, setResults, formData, selected, columns, count, n
                             <TableCell style={{ minWidth: 50 }}>Имя</TableCell>
                             <TableCell style={{ minWidth: 50 }}>Фамилия</TableCell>
                             <TableCell style={{ minWidth: 50 }}>Отчество</TableCell>
-                            {selected.filter(item => item !== 'firstname' && item !== 'surname' && item !== 'patronymic').map((fieldName) => {
+                            {selected.filter(item => item !== 'selectAll' && item !== 'firstName' && item !== 'surname' && item !== 'patronymic').map((fieldName) => {
                                 return (
                                     <TableCell style={{ minWidth: 100 }} key={fieldName}>
                                         {getColumnName(fieldName)}
                                     </TableCell>
                                 )
                             })}
+                           
+                            <TableCell></TableCell>
                         </TableRow>
                     </TableHead>
 
@@ -96,47 +94,39 @@ const ResultTable = ({results, setResults, formData, selected, columns, count, n
                     {/* {console.log('Selected Fields:', selected)} */}
                         {table.map((person) => (
                             <TableRow 
-                                onClick={() => handleRowClick(person.id)} 
-                                // key={person.Person && person.Person.id}
                                 key={person.id}
-                                style={{ cursor: 'pointer' }}
                                 sx={{ '&:hover': { backgroundColor: '#f0f0f0' } }}
                             >
-                        
-                            <TableCell style={{ minWidth: 50 }}>
-                                    {/* {person['firstName']} */}
-                                    {/* {person.Person && person.Person['firstName']} */}
+                                <TableCell style={{ minWidth: 50 }}>
                                     {person.firstName}
                                 </TableCell>
                                 <TableCell style={{ minWidth: 50 }}>
-                                    {/* {person['surname']} */}
-                                    {/* {person.Person && person.Person['surname']} */}
                                     {person.surname}
                                 </TableCell>
                                 <TableCell style={{ minWidth: 50 }}>
-                                    {/* {person['patronymic']} */}
-                                    {/* {person.Person && person.Person['patronymic']} */}
                                     {person.patronymic}
                                 </TableCell>
-                               
            
-                          
-
                                 {selected
-                                    .filter(item => item !== 'firstName' && item !== 'surname' && item !== 'patronymic')
+                                    .filter(item => item !== 'selectAll' && item !== 'firstName' && item !== 'surname' && item !== 'patronymic')
                                     .map((fieldName) => {
                                     return (
                                         <TableCell key={fieldName} style={{ minWidth: 50 }}>
-                     
-                                        {/* {person[fieldName]} */}
-                                        {person[removePrefix(fieldName)]}
-                                            
-
+                                            {person[removePrefix(fieldName)]}
                                         </TableCell> 
                                     )     
                                 })}   
-                          
-                              
+                               
+                                <TableCell style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                                    <Button 
+                                        variant="outlined" 
+                                        style={{ textTransform: 'none', display: 'flex', gap: '10px', cursor: 'pointer', width: '195px' }}
+                                        onClick={() => handleRowClick(person.id)}
+                                    >
+                                        <VscAccount />
+                                        Перейти в профиль
+                                    </Button>
+                                </TableCell>
                             </TableRow>  
                         ))}
                     </TableBody>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import cl from './OrdersListData.module.css';
-import Button from '../../UI/button/Button';
+import { Button } from '@mui/material';
 import { MdArrowDropDown, MdExpandLess } from 'react-icons/md';
 
 function OrdersListData(props) {
@@ -54,7 +54,7 @@ function OrdersListData(props) {
     return (
         <div>
             <div className={cl.dropdown}>
-                <Button onClick={toggleOrderListDropdown} className={cl.actionBtn}>
+                <Button variant="contained" style={{ textTransform: 'none' }} onClick={toggleOrderListDropdown} className={cl.actionBtn}>
                     Приказы рапорта
                     {isOpenOrderList ? <MdExpandLess className={cl.arrow} /> : <MdArrowDropDown className={cl.arrow} />}
                 </Button>

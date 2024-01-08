@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import cl from './WorkingHistoryData.module.css'
-import Button from '../../UI/button/Button';
+import { Button } from '@mui/material';
 import { MdArrowDropDown, MdExpandLess } from 'react-icons/md';
 
 function WorkingHistoryData(props) {
@@ -59,7 +59,7 @@ function WorkingHistoryData(props) {
 
     return (
         <div className={cl.dropdown}>
-            <Button onClick={toggleWorkingHistoryDropdown} className={cl.actionBtn}>
+            <Button variant="contained" style={{ textTransform: 'none',  flex: 1, }} onClick={toggleWorkingHistoryDropdown} className={cl.actionBtn}>
                 Трудовая деятельность
                 {isOpenWorkingHistory ? <MdExpandLess className={cl.arrow} /> : <MdArrowDropDown className={cl.arrow} />}
             </Button>

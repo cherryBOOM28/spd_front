@@ -145,7 +145,7 @@ function Header() {
                                     <Link to="/login" className={cl.logout}> <Button variant="text">Выйти</Button></Link>
                                 </div>
                             ) : (
-                                <p><Link to="/login" className={cl.logout}>Выйти</Link></p>
+                                <p><Link to="/login" className={cl.logout}>Войти</Link></p>
                             ) }
                         </div>
                         

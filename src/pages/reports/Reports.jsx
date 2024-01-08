@@ -3,7 +3,8 @@ import axios from 'axios';
 import cl from './Reports.module.css';
 import Navigation from '../../components/navigation/Navigation';
 import Header from '../../components/header/Header';
-import Button from '../../components/UI/button/Button';
+// import Button from '../../components/UI/button/Button';
+import { Button } from '@mui/material';
 import { MdArrowDropDown, MdExpandLess } from 'react-icons/md';
 import { AiFillPrinter } from 'react-icons/ai';
 import ResultsTable from '../../components/reportResults/resultsTable/ResultsTable';
@@ -188,6 +189,7 @@ function Reports(props, queryParams) {
     });
 
     const options = [
+        { id: "selectAll", label: "Выбрать все", isSelectAll: true },
         { id: "iin", label: "ИИН", isRange: false },
         { id: "surname", label: "Фамилия", isRange: false },
         { id: "firstName", label: "Имя", isRange: false },
@@ -324,7 +326,6 @@ function Reports(props, queryParams) {
     const [isOpenPersonal, setIsOpenPersonal] = useState(false);
     const [isOpenFamily, setIsOpenFamily] = useState(false);
 
-  
     const toggleGeneralDropdown = () => {
         setIsOpenGeneral(!isOpenGeneral);
     };
@@ -371,6 +372,21 @@ function Reports(props, queryParams) {
         [option]: value,
       });
     };
+
+    // Кнопка для выбора всех чекбоксов
+    const handleSelectAll = () => {
+
+        const allOptionsIds = options.map(option => option.id);
+        const allSelected = selectedOptions.length === allOptionsIds.length;
+
+        if (allSelected) {
+            setSelectedOptions([]);
+        } else {
+            setSelectedOptions(allOptionsIds);
+        }
+    };
+
+
       
     // Поиск
     const handleSubmit = (props) => {
@@ -415,6 +431,9 @@ function Reports(props, queryParams) {
         // console.log(updatedQueryParams);
 
         const queryParams = {...formData};
+
+        // Убираем параметры с "selectAll"
+        delete queryParams.selectAll;
 
         const updateFormDataInternal = (key, value) => {
             setFormData((prevFormData) => updateFormData(key, value, prevFormData));
@@ -558,7 +577,7 @@ function Reports(props, queryParams) {
                                         <div className={cl.basic__info}>
                                             <div className={cl.employees}>
                                                 <div className={cl.dropdown}>
-                                                    <Button onClick={toggleGeneralDropdown} className={cl.actionBtn}>
+                                                    <Button variant="contained" style={{ textTransform: 'none', flex: 1 }}  onClick={toggleGeneralDropdown} className={cl.actionBtn}>
                                                         Общие данные
                                                         {isOpenGeneral ? <MdExpandLess className={cl.arrow} /> : <MdArrowDropDown className={cl.arrow} />}
                                                     </Button>
@@ -567,20 +586,31 @@ function Reports(props, queryParams) {
                                                             <ul>
                                                                 {options.map((option) => (
                                                                 <li key={option.id} className={cl.options__label}>
-                                                                    <label>
+                                                                    {option.isSelectAll ? (
+                                                                    <div style={{ display: 'flex', alignItems: 'center' }}>
                                                                         <input
                                                                             type="checkbox"
-                                                                            value={option.id}
-                                                                            checked={selectedOptions.includes(option.id)}
-                                                                            onChange={() => toggleOption(option.id)}
+                                                                            checked={selectedOptions.length === options.length}
+                                                                            onChange={handleSelectAll}
                                                                         />
                                                                         {option.label}
-                                                                    </label>
-                                                                    {selectedOptions.includes(option.id) && option.id !== "gender:genderName" && (
+                                                                    </div>
+                                                                    ) : (
+                                                                        <label>
+                                                                            <input 
+                                                                                type="checkbox"
+                                                                                value={option.id}
+                                                                                checked={selectedOptions.includes(option.id)}
+                                                                                onChange={() => toggleOption(option.id)}
+                                                                            />
+                                                                            {option.label}
+                                                                        </label>
+                                                                    )}
+                                                                    {/* {selectedOptions.includes(option.id) && option.id !== "gender:genderName" && (
                                                                         <div>
                                                                 
                                                                         </div>
-                                                                    )}
+                                                                    )} */}
                                                                 </li>
                                                                 ))}
                                                             </ul>
@@ -669,88 +699,85 @@ function Reports(props, queryParams) {
                                             <div style={{ display: 'flex', flexWrap: 'wrap', width: '100%' }}>
                                                 <div>
                                                     {selectedOptions.length > 0 && (
-                                                    <div className={cl.input__container}>
-                                                        <p className={cl.input__name}>Общие данные</p>
-                                                        {selectedOptions.map((option) => (
-                                                            <div key={option} className={cl.wrapper__input}>
-                                                                <label className={cl.label__name}>{options.find((o) => o.id === option).label}:</label>
-                                                                {option === "gender:genderName" ? (
-                                                                    <select
-                                                                    value={formData[option] || ''}
-                                                                    className={cl.workerInfoSelect}
-                                                                    onChange={(e) => handleInputChange(option, e.target.value)}
-                                                                    >
-                                                                    {options.find((o) => o.id === option).selectOptions.map((genderOption) => (
-                                                                        <option key={genderOption} value={genderOption}>
-                                                                        {genderOption}
-                                                                        </option>
-                                                                    ))}
-                                                                    </select>
-                                                        
-                                                                ) :
-                                                            
-                                                                option === "birthinfo:birth_date" ? ( // Проверяем, является ли опция диапазоном даты рождения
-                                                                <div className={cl.data__wrapper}>
-                                                                    <div>
-                                                                        <label style={{ marginRight: '5px', marginLeft: '13px'}}>От</label>
-                                                                        <input
-                                                                        type="date"
-                                                                        className={cl.workerInfoDate}
-                                                                        value={formData[option] != null ? formData[option].start_date : ''}
-                                                                        onChange={(e) => {handleInputChange(option, { ...formData[option], start_date: e.target.value })}}
-                                                                        />
-                                                                    </div>
-                                                                    <div>
-                                                                        <label style={{ marginRight: '5px', marginLeft: '13px' }}>До</label>
-                                                                        <input
-                                                                        type="date"
-                                                                        className={cl.workerInfoDate}
-
-                                                                        value={formData[option] != null ? formData[option].end_date : ''}
-                                                                        onChange={(e) => handleInputChange(option, { ...formData[option], end_date: e.target.value })}
-                                                                        
-                                                                        />
-                                                                    </div>
+                                                        <div className={cl.input__container}>
+                                                            <p className={cl.input__name}>Общие данные</p>
+                                                            {selectedOptions.map((option) => (
+                                                                <div key={option} className={cl.wrapper__input}>
+                                                                    {/* Добавим условие для скрытия текстового поля при выборе "Выбрать все" */}
+                                                                    {option !== "selectAll" && (
+                                                                        <>
+                                                                            <label className={cl.label__name}>{options.find((o) => o.id === option).label}:</label>
+                                                                            {option === "gender:genderName" ? (
+                                                                                <select
+                                                                                    value={formData[option] || ''}
+                                                                                    className={cl.workerInfoSelect}
+                                                                                    onChange={(e) => handleInputChange(option, e.target.value)}
+                                                                                >
+                                                                                    {options.find((o) => o.id === option).selectOptions.map((genderOption) => (
+                                                                                        <option key={genderOption} value={genderOption}>
+                                                                                            {genderOption}
+                                                                                        </option>
+                                                                                    ))}
+                                                                                </select>
+                                                                            ) : option === "birthinfo:birth_date" ? (
+                                                                                <div className={cl.data__wrapper}>
+                                                                                    <div>
+                                                                                        <label style={{ marginRight: '5px', marginLeft: '13px' }}>От</label>
+                                                                                        <input
+                                                                                            type="date"
+                                                                                            className={cl.workerInfoDate}
+                                                                                            value={formData[option] != null ? formData[option].start_date : ''}
+                                                                                            onChange={(e) => { handleInputChange(option, { ...formData[option], start_date: e.target.value }) }}
+                                                                                        />
+                                                                                    </div>
+                                                                                    <div>
+                                                                                        <label style={{ marginRight: '5px', marginLeft: '13px' }}>До</label>
+                                                                                        <input
+                                                                                            type="date"
+                                                                                            className={cl.workerInfoDate}
+                                                                                            value={formData[option] != null ? formData[option].end_date : ''}
+                                                                                            onChange={(e) => handleInputChange(option, { ...formData[option], end_date: e.target.value })}
+                                                                                        />
+                                                                                    </div>
+                                                                                </div>
+                                                                            ) : option === "identitycardinfo:dateOfIssue" && options.find((o) => o.id === option).isRange ? (
+                                                                                <div className={cl.data__wrapper}>
+                                                                                    <div>
+                                                                                        <label style={{ marginRight: '5px', marginLeft: '13px' }}>От</label>
+                                                                                        <input
+                                                                                            type="date"
+                                                                                            className={cl.workerInfoDate}
+                                                                                            value={formData[option] != null ? formData[option].start_date : ''}
+                                                                                            onChange={(e) => handleInputChange(option, { ...formData[option], from: e.target.value })}
+                                                                                        />
+                                                                                    </div>
+                                                                                    <div>
+                                                                                        <label style={{ marginRight: '5px', marginLeft: '13px' }}>До</label>
+                                                                                        <input
+                                                                                            type="date"
+                                                                                            className={cl.workerInfoDate}
+                                                                                            value={formData[option] != null ? formData[option].end_date : ''}
+                                                                                            onChange={(e) => handleInputChange(option, { ...formData[option], to: e.target.value })}
+                                                                                        />
+                                                                                    </div>
+                                                                                </div>
+                                                                            ) : (
+                                                                                <input
+                                                                                    type="text"
+                                                                                    className={cl.workerInfo}
+                                                                                    value={formData[option] || ''}
+                                                                                    placeholder={`${options.find((o) => o.id === option).label}`}
+                                                                                    onChange={(e) => handleInputChange(option, e.target.value)}
+                                                                                />
+                                                                            )}
+                                                                        </>
+                                                                    )}
                                                                 </div>
-                                                                ) : (
-                                                                option === "identitycardinfo:dateOfIssue" && options.find((o) => o.id === option).isRange ? (
-                                                                    <div className={cl.data__wrapper}>
-                                                                        <div>
-                                                                        <label style={{ marginRight: '5px', marginLeft: '13px'}}>От</label>
-                                                                        <input
-                                                                            type="date"
-                                                                            className={cl.workerInfoDate}
-                                                                            value={formData[option] != null ? formData[option].start_date : ''}
-                                                                            onChange={(e) => handleInputChange(option, { ...formData[option], from: e.target.value })}
-                                                                        />
-                                                                        </div>
-                                                                        <div>
-                                                                        <label style={{ marginRight: '5px', marginLeft: '13px' }}>До</label>
-                                                                        <input
-                                                                            type="date"
-                                                                            className={cl.workerInfoDate}
-                                                                            value={formData[option] != null ? formData[option].end_date : ''}
-                                                                            onChange={(e) => handleInputChange(option, { ...formData[option], to: e.target.value })}
-                                                                        />
-                                                                        </div>
-                                                                    </div>
-                                                                ) : (
-                                                                <input
-                                                                    type="text"
-                                                                    className={cl.workerInfo}
-                                                                    value={formData[option] || ''}
-                                                                    placeholder={`${options.find((o) => o.id === option).label}`}
-                                                                    onChange={(e) => handleInputChange(option, e.target.value)}
-                                                                />
-                                                            
-                                                                ) 
-                                                                
-                                                            )}
-                                                            </div>
-                                                        ))}                                 
-                                                    </div>     
+                                                            ))}
+                                                        </div>
                                                     )}
                                                 </div>
+
                                                 <div>   
                                                     {personalDataOptions}
                                                     {familyOptions}
@@ -778,12 +805,12 @@ function Reports(props, queryParams) {
                                                 
                                             </div>
                            
-                                            <div style={{ display: 'flex', gap: '10px', justifyContent: 'space-between' }}>
-                                                <Button onClick={handleSubmit} className={cl.submitBtn} >
+                                            <div style={{ display: 'flex', gap: '10px', justifyContent: 'space-between', marginTop: '15px' }}>
+                                                <Button variant="contained" onClick={handleSubmit} style={{ textTransform: 'none' }} className={cl.submitBtn} >
                                                     Поиск
                                                 </Button>
                                                 {showExcelButton && (
-                                                    <Button style={{ display: 'flex', gap: "10px" }} >
+                                                    <Button  variant="outlined" style={{ display: 'flex', gap: "10px",  textTransform: 'none' }} >
                                                         <ExcelGenerator
                                                             results={results} 
                                                             selected={[
@@ -910,7 +937,7 @@ function Reports(props, queryParams) {
         </div>
   
     );
-}
+};
 
 export default Reports;
 

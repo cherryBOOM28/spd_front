@@ -144,7 +144,7 @@ function Home(props) {
           .then(response => {
             // console.log("response", response);
             // setPersonalData(response.data.sort());
-            setPersonalData(response.data);
+            setPersonalData("people", response.data);
 
             setFirstName(response.data[0].firstName);
             setSurname(response.data[0].surname);
@@ -486,8 +486,8 @@ function Home(props) {
                     <table className={cl.table}>
                         <thead>
                             <tr>
+                                <th className={cl.table__headline}></th>
                                 <th className={cl.table__headline}>ФИО</th>
-                                <th className={cl.table__headline}>Пол</th>
                                 <th className={cl.table__headline}>Должность</th>
                             </tr>
                         </thead>
@@ -508,8 +508,8 @@ function Home(props) {
                                 filteredPeople.length > 0 ? (
                                     filteredPeople.map(person => (
                                         <tr key={person.id}>
+                                            <td><img src={`data:image/jpeg;base64,${person.photo.photoBinary}`} alt="d" className={cl.profileImg} /></td>
                                             <td>{`${person.surname} ${person.firstName} ${person.patronymic}`}</td>
-                                            <td>{person.gender.genderName}</td>
                                             <td>{person.positionInfo.position.positionTitle}</td>
                                         </tr>
                                     ))
@@ -524,9 +524,9 @@ function Home(props) {
                                 .filter(person => !person.isFired) // Exclude fired people
                                 .map(person => (
                                     <tr key={person.id} onClick={() => handleEmployeeClick(person.id)}>
-                                    <td>{`${person.surname} ${person.firstName} ${person.patronymic}`}</td>
-                                    <td>{person.gender.genderName}</td>
-                                    <td>{person.positionInfo.position.positionTitle}</td>
+                                        <td><img src={`data:image/jpeg;base64,${person.photo.photoBinary}`} alt="d" className={cl.profileImg} /></td>
+                                        <td>{`${person.surname} ${person.firstName} ${person.patronymic}`}</td>
+                                        <td>{person.positionInfo.position.positionTitle}</td>
                                     </tr>
                                 ))
                             )}

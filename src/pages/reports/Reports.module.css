@@ -86,11 +86,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  
-}
-
-.dropdown {
-  /* width: 210px; */
+  text-decoration: none;
 }
 
 .actionBtn {
@@ -99,6 +95,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex: 1;
 }
 
 .arrow {

@@ -1,5 +1,5 @@
 .loginWrapper {
-    background: #1B3884;
+    background: #1565C0;
     width: 100vw;
     height: 100vh;
 
@@ -54,7 +54,7 @@
     padding: 9px 11px;
     width: 93%;
     border-radius: 5px;
-    background: #E3E3E3;
+    background: #f4f4f4;
     font-size: 16px;
 }
 
@@ -97,4 +97,15 @@
     position: absolute;
     top: 34px;
     right: 15px;
+}
+
+.error {
+    display: block;
+    /* background: rgb(194, 57, 48, 0.2); */
+    border: 1px solid #C23930;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 14px;
+    color:#3e3e3e;
+    font-size: 'Helvetica', sans-serif;
 }

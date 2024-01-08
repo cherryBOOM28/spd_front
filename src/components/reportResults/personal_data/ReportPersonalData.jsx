@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import cl from './ReportPersonalData.module.css';
-import Button from '../../UI/button/Button';
+import { Button } from '@mui/material';
 import { MdArrowDropDown, MdExpandLess } from 'react-icons/md';
 import { updateFormData } from '../../../pages/reports/Reports';
+import { BsExclamationCircle } from "react-icons/bs";
 
 
 function ReportPersonalData(props) {
@@ -291,7 +292,7 @@ function ReportPersonalData(props) {
     return (
         <div>
             <div className={cl.dropdown}>
-                <Button onClick={togglePersonalDropdown} className={cl.actionBtn}>
+                <Button variant="contained" style={{ textTransform: 'none' }} onClick={togglePersonalDropdown} className={cl.actionBtn}>
                     Личные данные
                     {isOpenPersonal ? <MdExpandLess className={cl.arrow} /> : <MdArrowDropDown className={cl.arrow} />}
                 </Button>
@@ -507,21 +508,30 @@ export function renderFamilyOptions(selectedFamilyOptions, formData, handleInput
     selectedFamilyOptions.length > 0 && (
       <div className={cl.input__container}>
         <p className={cl.input__name}>Личные данные</p>
+        <div className={cl.tooltipTextMain}> <BsExclamationCircle style={{ color: '#1565C0' }} /> Заполните все поля</div>
         {selectedFamilyOptions.map((option) => (
           <div key={option} className={cl.wrapper__input}>
             <label className={cl.label__name}>{family_compositions_options.find((o) => o.id === option).label}:</label>
             {option === "familycomposition:relativeType" ? (
-              <select
-                value={formData[option] || ''}
-                className={cl.workerInfoSelect}
-                onChange={(e) => handleInputChange(option, e.target.value)}
-              >
-                {family_compositions_options.find((o) => o.id === option).selectOptions.map((genderOption) => (
-                  <option key={genderOption} value={genderOption}>
-                    {genderOption}
-                  </option>
-                ))}
-              </select>
+               <div className={cl.tooltipWrapper}>
+               <select
+                 value={formData[option] || ''}
+                 className={cl.workerInfoSelect}
+                 onChange={(e) => handleInputChange(option, e.target.value)}
+                 required
+                 title="Выберите тип родственника" // Добавлен атрибут title
+               >
+                 <option value="" disabled hidden>
+                   Выберите тип родственника
+                 </option>
+                 {family_compositions_options.find((o) => o.id === option).selectOptions.map((genderOption) => (
+                   <option key={genderOption} value={genderOption}>
+                     {genderOption}
+                   </option>
+                 ))}
+               </select>
+               <div className={cl.tooltipText}> <BsExclamationCircle />Выберите тип родственника</div>
+             </div>
             ) : option === "familycomposition:relBirthDate" ? (
               <div className={cl.data__wrapper}>
                 <div>
@@ -532,6 +542,7 @@ export function renderFamilyOptions(selectedFamilyOptions, formData, handleInput
                     value={formData[option]?.start_date || ''}
                     onChange={(e) => handleInputChange(option, { ...formData[option], start_date: e.target.value })}
                   />
+                 
                 </div>
                 <div>
                   <label style={{ marginRight: '5px', marginLeft: '13px' }}>До</label>
@@ -541,6 +552,7 @@ export function renderFamilyOptions(selectedFamilyOptions, formData, handleInput
                     value={formData[option]?.end_date || ''}
                     onChange={(e) => handleInputChange(option, { ...formData[option], end_date: e.target.value })}
                   />
+                  
                 </div>
               </div>
             ) : (

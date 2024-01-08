@@ -2,11 +2,14 @@ import cl from './Login.module.css';
 import logo from '../../assets/icons/main_logo.svg';
 import React, {useEffect, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
-import Button from '../../components/UI/button/Button';
+// import Button from '../../components/UI/button/Button';
+import { Button } from '@mui/material';
+import TextField from '@mui/material/TextField';
 import axios from 'axios';
 import {AiFillEye, AiFillEyeInvisible} from 'react-icons/ai';
 import base_url from '../../api/base_url/base_url';
 import Cookies from 'js-cookie';
+
 
 
 const Login = () => {
@@ -22,8 +25,7 @@ const Login = () => {
         
     }, [formData])
 
-    const [errorMessage,
-        setErrorMessage] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
     const navigate = useNavigate();
 
     const handleChange = (e, name) => {
@@ -57,15 +59,14 @@ const Login = () => {
             // Обработка ошибки
             console.error('Login failed:', error);
     
-            if (error.response) {
+            if (error.response && error.response.status === 401) {
+                setErrorMessage("Неправильный логин или пароль")
                 console.error('Server Error:', error.response.data);
                 // Обработка ошибки с сервера
-            } else if (error.request) {
-                console.error('Request Error:', error.request);
-                // Проблемы с отправкой запроса
             } else {
                 console.error('Error:', error.message);
                 // Общие ошибки
+                setErrorMessage("Произошла ошибка. Пожалуйста, попробуйте еще раз.")
             }
         }
     };
@@ -95,9 +96,9 @@ const Login = () => {
                         hint={'Введите пароль'}
                         isPassword={true}
                     />
+                    {errorMessage && <p className={cl.error}>{errorMessage}</p>}
                     <p className={cl.passw}>Забыли пароль?</p>
-                    <Button className={cl.button} onClick={handleSubmit}>Войти</Button>
-                   
+                    <Button variant="contained" className={cl.button} onClick={handleSubmit}>Войти</Button>
                 </form>
             </div>
         </div>
@@ -112,6 +113,7 @@ const InputField = ({ name, label, hint, isPassword, formData, handleChange }) =
     return (
         <div className={cl.field}>
             <label htmlFor={name}>{label}</label>
+            
             <div>
                 <input
                     className={cl.loginInput}
@@ -128,11 +130,11 @@ const InputField = ({ name, label, hint, isPassword, formData, handleChange }) =
                         <div className={cl.show_password}> 
                             {
                                 !showPassword ?
-                                    <AiFillEyeInvisible style={{cursor: 'pointer'}} size={23} onClick={() => {
+                                    <AiFillEyeInvisible style={{cursor: 'pointer', color: '#1565C0'}} size={23} onClick={() => {
                                         setShowPassword(prev => !prev)
                                     }}/>
                                 :
-                                    <AiFillEye style={{cursor: 'pointer'}} size={23} onClick={() => {
+                                    <AiFillEye style={{cursor: 'pointer', color: '#1565C0'}} size={23} onClick={() => {
                                         setShowPassword(prev => !prev)
                                     }}/>
                             } 

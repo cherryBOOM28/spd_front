@@ -9,6 +9,8 @@ import { MdOutlineWork } from "react-icons/md";
 import { MdDriveFileMoveRtl } from "react-icons/md";
 import Appointment from '../../components/decrees/appointment/Appointment';
 import Transfer from '../../components/decrees/transfer/Transfer';
+import { GiRank3 } from "react-icons/gi";
+import RunkUp from '../../components/decrees/rankUp/RankUp';
 
 
 function BasicOrders() {
@@ -68,7 +70,7 @@ function BasicOrders() {
                             <div>
                                 {selectedDecreeType === 'appointment' && <Appointment />}
                                 {selectedDecreeType === 'transfer' && <Transfer />}
-
+                                {selectedDecreeType === 'rankUp' && <RunkUp />}
                             </div>
                         )}
                         {!isCreateDecreeClicked && !isDecreeHistoryOpen && (
@@ -90,6 +92,13 @@ function BasicOrders() {
                                     >
                                         <MdDriveFileMoveRtl />
                                         <p>Приказ о перемещении</p>
+                                    </div>
+                                    <div elevation={3}
+                                        className={`${cl.decree_btn}`}
+                                        onClick={() => handleDecreeTypeClick('rankUp')}
+                                    >
+                                        <GiRank3 />
+                                        <p>Приказ о присвоении звания</p>
                                     </div>
                                     
                                 </div>

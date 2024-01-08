@@ -9,6 +9,8 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    flex: 1;
+    flex-basis: calc(20% - 15px);
   }
   
   .arrow {
@@ -301,4 +303,19 @@
   font-size: 16px;
   font-weight: 500;
   margin-bottom: 15px;
+}
+
+.tooltipTextMain {
+  margin: 0 0 15px 0;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.tooltipText {
+  margin: 10px 0 0 11px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }
