@@ -9,6 +9,8 @@ import Modal from '../UI/modal/Modal';
 import { IoIosArrowDown } from "react-icons/io";
 import { BsFillBriefcaseFill } from "react-icons/bs";
 import { BsPersonFill } from "react-icons/bs";
+import { GiRank2 } from "react-icons/gi";
+import { GiRank3 } from "react-icons/gi";
 import Loader from '../loader _/Loader ';
 
 function DecreeHistory() {
@@ -44,34 +46,48 @@ function DecreeHistory() {
     // navigate(`/${personId}`) 
   };
 
-  const openModal = (decreeId) => {
+  // const openModal = (decreeId) => {
+  //   setSelectedDecreeId(decreeId);
+  //   setIsModalVisible(true);
+  //   fetchTransferInfo(decreeId);
+  //   fetchRankUpInfo(decreeId);
+  //   // console.log('Selected Decree ID:', decreeId);
+  // };
+  const openModal = async (decreeId, decreeType) => {
+    console.log('Decree Type:', decreeType); // Log the decreeType
     setSelectedDecreeId(decreeId);
     setIsModalVisible(true);
-    fetchTransferInfo(decreeId);
-    fetchRankUpInfo(decreeId);
-    // console.log('Selected Decree ID:', decreeId);
+  
+    try {
+      const accessToken = Cookies.get('jwtAccessToken');
+      let response;
+  
+      if (decreeType === 'Перемещение') { // Check for "Перемещение"
+        response = await axios.get(`http://127.0.0.1:8000/api/v1/get-transfer-info?decreeId=${decreeId}`, {
+          headers: {
+            'Authorization': `Bearer ${accessToken}`,
+          },
+        });
+        setTransferInfo(response.data.transferInfo[0]);
+        setRankUp(null);
+      } else if (decreeType === 'Присвоение звания') { // Check for "Присвоение звания"
+        response = await axios.get(`http://127.0.0.1:8000/api/v1/get-rankup-info?decreeId=${decreeId}`, {
+          headers: {
+            'Authorization': `Bearer ${accessToken}`,
+          },
+        });
+        setRankUp(response.data.rankUpInfo[0]);
+        setTransferInfo(null);
+      }
+    } catch (error) {
+      console.error('Error fetching information:', error);
+    }
   };
+  
+  
 
   const closeModal = () => {
     setIsModalVisible(false);
-  };
-
-  const fetchTransferInfo = async (decreeId) => {
-    try {
-      const response = await axios.get(`http://127.0.0.1:8000/api/v1/get-transfer-info?decreeId=${decreeId}`);
-      setTransferInfo(response.data.transferInfo[0]); // Assuming there is only one transferInfo object
-    } catch (error) {
-      console.error('Error fetching transfer info:', error);
-    }
-  };
-
-  const fetchRankUpInfo = async (decreeId) => {
-    try {
-      const response = await axios.get(`http://127.0.0.1:8000/api/v1/get-rankup-info?decreeId=${decreeId}`);
-      setRankUp(response.data); // Assuming there is only one transferInfo object
-    } catch (error) {
-      console.error('Error fetching transfer info:', error);
-    }
   };
 
   const handleConfirmation = async () => {
@@ -91,55 +107,26 @@ function DecreeHistory() {
     }
   };
 
+  const handleConfirmationRankUp = async () => {
+    try {
+      const accessToken = Cookies.get('jwtAccessToken');
+      const response = await axios.post('http://127.0.0.1:8000/api/v1/cancel-rankup/', { decreeId: selectedDecreeId }, {
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+        },
+      });
+
+      console.log("deleted decree Id", response)
+      closeModal();
+      window.location.reload();
+    } catch (error) {
+      console.error('Error confirming transfer cancellation:', error);
+    }
+  };
+
   return (
     <div className={cl.container}>
       <h1 className={cl.headline}><GoHistory /> История приказов</h1>
-      {/* <table className={cl.customTable}>
-        <thead>
-          <tr>
-            <th></th>
-            <th>Вид приказа</th>
-            <th>Вид подприказа</th>
-            <th>Дата получения</th>
-            <th>ИИН</th>
-            <th>ФИО</th>
-            <th>Должность</th>
-            <th>Звание</th>
-            <th></th>
-
-          </tr>
-        </thead>
-        <tbody>
-          {decreeList.map((decree) => (
-            <tr key={decree.decreeId} onClick={() => handleWorkerClick(decree.person.id)} className={cl.workerRow}>
-              <td><img src={`data:image/jpeg;base64,${decree.person.photo}`} alt="worker " className={cl.workerImg}/></td>
-              <td>{decree.decreeType}</td>
-              <td>{decree.decreeSubType}</td>
-              <td>{decree.decreeDate}</td>
-              <td>{decree.person.iin}</td>
-              <td>
-                <div  className={cl.fio}>
-                  <div>
-                    {decree.person.firstName}
-                  </div>
-                  <div>
-                    {decree.person.surname}
-                  </div>
-                  <div>
-                    {decree.person.patronymic}
-                  </div>
-                </div>
-              </td>
-              <td>{decree.person.positionInfo}</td>
-              <td>{decree.person.rankInfo}</td>
-              <td>
-                <Button>Откат</Button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table> */}
-
       <Paper sx={{ width: '100%', overflow: 'hidden' }}>
           <TableContainer sx={{ maxHeight: 840 }}>
           <Table className={cl.customTable}>
@@ -172,7 +159,8 @@ function DecreeHistory() {
                   <TableCell>{decree.person.positionInfo}</TableCell>
                   <TableCell>{decree.person.rankInfo}</TableCell>
                   <TableCell>
-                    <Button  onClick={() => openModal(decree.decreeId)}>Откат</Button>
+                  <Button onClick={() => openModal(decree.decreeId, decree.decreeType)}>Откат</Button>
+
                   </TableCell>
                 </TableRow>
               ))}
@@ -180,23 +168,23 @@ function DecreeHistory() {
           </Table>
         </TableContainer>
       </Paper>
-      <Modal visible={isModalVisible} setVisible={setIsModalVisible}  decreeId={selectedDecreeId}>
+      <Modal visible={isModalVisible} setVisible={setIsModalVisible} decreeId={selectedDecreeId}>
         <div className={cl.modal_wrapper}>
-          <h2 className={cl.headline} style={{marginBottom: '35px' }}>Вы уверены в откате приказа?</h2>
+          <h2 className={cl.headline} style={{ marginBottom: '35px' }}>Вы уверены в откате приказа?</h2>
           {transferInfo ? (
             <div className={cl.position_wrapper}>
               <Paper className={cl.position_box}>
-                <p  className={cl.h2}>Новая должность</p>
+                <p className={cl.h2}>Новая должность</p>
                 <p className={cl.position_text}>
-                  <BsFillBriefcaseFill style={{ color: '#1565C0' }}/>
+                  <BsFillBriefcaseFill style={{ color: '#1565C0' }} />
                   Департамент: {transferInfo.newPosition.newDepartment}
                 </p>
                 <p className={cl.position_text}>
-                  <BsPersonFill  style={{ color: '#1565C0' }}/>
+                  <BsPersonFill style={{ color: '#1565C0' }} />
                   Должность: {transferInfo.newPosition.newPosition}
                 </p>
-              </Paper >
-              <IoIosArrowDown  style={{ fontSize: '30px', color: '#1565C0' }} />
+              </Paper>
+              <IoIosArrowDown style={{ fontSize: '30px', color: '#1565C0' }} />
               <Paper className={cl.position_box}>
                 <p className={cl.h2}>Предыдущая должность</p>
                 <p className={cl.position_text}>
@@ -204,20 +192,44 @@ function DecreeHistory() {
                   Департамент: {transferInfo.previousPosition.previousDepartment}
                 </p>
                 <p className={cl.position_text}>
-                  <BsPersonFill  style={{ color: '#1565C0' }} />
+                  <BsPersonFill style={{ color: '#1565C0' }} />
                   Должность: {transferInfo.previousPosition.previousPosition}
                 </p>
               </Paper>
+              <div className={cl.btn_wrapper}>
+                <Button variant="contained" onClick={handleConfirmation} className={cl.act_btn}>Подтвердить</Button>
+                <Button variant="outlined" onClick={closeModal} className={cl.act_btn}>Закрыть</Button>
+              </div>
+            </div>
+          ) : rankUp ? (
+            <div className={cl.position_wrapper}>
+              <Paper className={cl.position_box}>
+                <p className={cl.h2}>Новое звание</p>
+                <p className={cl.position_text}>
+                  <GiRank3 style={{ color: '#1565C0' }} />
+                  {rankUp.newRank}
+                </p>
+              </Paper>
+              <IoIosArrowDown style={{ fontSize: '30px', color: '#1565C0' }} />
+              <Paper className={cl.position_box}>
+                <p className={cl.h2}>Предыдущее звание</p>
+                <p className={cl.position_text}>
+                  <GiRank2 style={{ color: '#1565C0' }} />
+                  {rankUp.previousRank}
+                </p>
+              </Paper>
+              <div className={cl.btn_wrapper}>
+                <Button variant="contained" onClick={handleConfirmationRankUp} className={cl.act_btn}>Подтвердить</Button>
+                <Button variant="outlined" onClick={closeModal} className={cl.act_btn}>Закрыть</Button>
+              </div>
             </div>
           ) : (
             <div style={{ margin: '45px 0' }}><Loader /></div>
           )}
-          <div className={cl.btn_wrapper}>
-            <Button variant="contained"  onClick={handleConfirmation} className={cl.act_btn}>Подтвердить</Button>
-            <Button variant="outlined" onClick={closeModal }  className={cl.act_btn}>Закрыть</Button>
-          </div>
+          
         </div>
       </Modal>
+
     </div>
   );
 }

@@ -37,11 +37,11 @@ function Header() {
           .then(response => {
             setPersonalData(response.data);
             if (response.data && response.data.length > 0) {
-                const photoBinary = response.data[0].photo.photoBinary;
+                // const photoBinary = response.data[0].photo.photoBinary;
                 const surname = response.data[0].surname;
                 const firstName = response.data[0].firstName;
         
-                setPhoto(photoBinary);
+                // setPhoto(photoBinary);
                 setFullName(`${surname} ${firstName}`);
             } else {
                 console.error('Данные пользователя не содержат ожидаемых свойств');
@@ -134,7 +134,7 @@ function Header() {
                         <SearchInput />
                         {userFullName ?? (
                             <div className={cl.profile}>
-                                <img src={`data:image/jpeg;base64,${photo}`} alt="profilePic" className={cl.profileImg} />
+                                {/* <img src={`data:image/jpeg;base64,${photo}`} alt="profilePic" className={cl.profileImg} /> */}
                                 {/* <Link to="/8" className={cl.profileName}>Louisa Sapina </Link> */}
                                 <p className={cl.profileName}>{userFullName}</p>
                             </div>

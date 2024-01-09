@@ -507,7 +507,7 @@ function Home(props) {
                                 // Display only fired people when the checkbox is checked
                                 filteredPeople.length > 0 ? (
                                     filteredPeople.map(person => (
-                                        <tr key={person.id}>
+                                        <tr key={person.id} onClick={() => handleEmployeeClick(person.id)}>
                                             <td><img src={`data:image/jpeg;base64,${person.photo.photoBinary}`} alt="d" className={cl.profileImg} /></td>
                                             <td>{`${person.surname} ${person.firstName} ${person.patronymic}`}</td>
                                             <td>{person.positionInfo.position.positionTitle}</td>

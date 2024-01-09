@@ -8,7 +8,7 @@ import { red } from '@mui/material/colors';
 import TextField from '@mui/material/TextField';
 
 
-function NewBasicInfo() {
+function  NewBasicInfo() {
   const { emptyInputs, handleInputChange, handleSubmit } = useForm();
   const { person, setPerson } = useForm();
   const { birthInfo, setBirthInfo } = useForm();

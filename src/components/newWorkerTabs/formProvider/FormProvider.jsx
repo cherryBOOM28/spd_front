@@ -325,7 +325,7 @@ export const FormProvider = ({ children }) => {
     const _autobiographyInfo = getAutobiographyInfo(autobiographyInfo);
 
     const requestData = {
-      Photo: photo,
+      // Photo: photo,
       Person: person,
       BirthInfo: birthInfo,
       IdentityCardInfo: identityCardInfo,

@@ -2,10 +2,17 @@ import React, {  useEffect, useState} from "react";
 import axios from "axios";
 import cl from './NotificationButton.module.css';
 import { IoNotifications } from "react-icons/io5";
+import { useNavigate } from "react-router-dom";
 
 const NotificationButton = () => {
     const [showNotifications, setShowNotifications] = useState(false);
     const [notificationData, setNotificationData] = useState([]);
+
+    const navigate = useNavigate();
+
+    const handleWorkerClick = (personId) => {
+        // navigate(`/${personId}`) 
+    };
 
     useEffect(() => {
         const fetchNotifications = async () => {
@@ -43,7 +50,7 @@ const NotificationButton = () => {
                     <ul>
                         {notificationData.persons.map((notification, index) => (
                             <li key={index}>
-                                <div className={cl.notification_data}>
+                                <div className={cl.notification_data} onClick={() => handleWorkerClick(notification.id)} >
                                     <img 
                                         src={`data:image/jpeg;base64,${notification.photo}`} 
                                         className={cl.profilePic} 
