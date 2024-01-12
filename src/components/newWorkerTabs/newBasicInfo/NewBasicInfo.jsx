@@ -18,20 +18,24 @@ function  NewBasicInfo() {
   const [selectedPhoto, setSelectedPhoto] = useState(null);
   const [useDefaultPhoto, setUseDefaultPhoto] = useState(false);
 
-    const handlePhotoChange = (event) => {
-        const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-
-            reader.onload = (e) => {
-                const base64String = e.target.result;
-                // console.log(base64String); 
-                setPhoto(base64String);
-            };
-
-            reader.readAsDataURL(file);
-        }
-    };
+  const handlePhotoChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+  
+      reader.onload = (e) => {
+        let base64String = e.target.result;
+  
+        // Удалите префикс "data:image/jpeg;base64,"
+        base64String = base64String.replace(/^data:image\/\w+;base64,/, '');
+  
+        // Установите обновленное значение в photo
+        setPhoto(base64String);
+      };
+  
+      reader.readAsDataURL(file);
+    }
+  };
 
     const fetchNewPin = async () => {
         try {
@@ -53,22 +57,22 @@ function  NewBasicInfo() {
         <form onSubmit={handleSubmit}>
         <p className={cl.create_worker_text}>Создание работника</p>
             <div className={cl.workerBlock}>
-                <div className={cl.photoUploaderWrapper}>
-                    {photo && typeof photo === 'string' && !useDefaultPhoto ? (
-                        <img src={photo} alt="Selected" className={cl.selectedPhoto} />
-                    ) : (
-                        <img src={defaultPhoto} alt="Default" className={cl.selectedPhoto} />
-                    )}
-                    <label className={cl.customFileInput}>
-                        <input
-                        type="file"
-                        accept="image/*"
-                        id="image"
-                        onChange={handlePhotoChange}
-                        className={cl.fileInput}
-                        />
-                    </label>
-                </div>
+            <div className={cl.photoUploaderWrapper}>
+  {photo && typeof photo === 'string' && !useDefaultPhoto ? (
+    <img src={`data:image/jpeg;base64,${photo}`} alt="Selected" className={cl.selectedPhoto} />
+  ) : (
+    <img src={defaultPhoto} alt="Default" className={cl.selectedPhoto} />
+  )}
+  <label className={cl.customFileInput}>
+    <input
+      type="file"
+      accept="image/*"
+      id="image"
+      onChange={handlePhotoChange}
+      className={cl.fileInput}
+    />
+  </label>
+</div>
 
                 <div className={cl.column}>
                 <div className={cl.rows}>

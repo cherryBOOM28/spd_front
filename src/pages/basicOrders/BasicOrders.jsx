@@ -54,7 +54,7 @@ function BasicOrders() {
                                 ) : (
                                 <>
                                     {!isDecreeHistoryOpen && (
-                                    <Button  variant="contained"  style={{  textTransform: 'none' }} onClick={handleButtonClick}>История документов</Button>
+                                    <Button  variant="contained"  style={{  textTransform: 'none' }} onClick={handleButtonClick}>Журнал приказов</Button>
                                     )}
                                     {isDecreeHistoryOpen && (
                                     <Button  variant="contained" style={{  textTransform: 'none' }} onClick={handleButtonClick}>Приказы</Button>

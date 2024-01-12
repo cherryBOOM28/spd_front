@@ -13,6 +13,7 @@ import Language from '../../components/tabsPage/personalInfo/language/Language';
 import Courses from '../../components/tabsPage/personalInfo/courses/Courses';
 import AcademicDegree from '../../components/tabsPage/personalInfo/academicDegree/AcademicDegree';
 import Sport from '../../components/tabsPage/personalInfo/sport/Sport';
+import Loader from '../../components/loader _/Loader ';
 
 import axios from 'axios';
 import Cookies from 'js-cookie';
@@ -29,13 +30,13 @@ function WorkerDetail() {
   useEffect(() => {
     const savedTab = sessionStorage.getItem('activeTab');
     if (savedTab) {
-        setActiveTab(parseInt(savedTab));
+      setActiveTab(parseInt(savedTab));
     }
   }, []);
 
   const handleTabClick = (tabIndex) => {
-      sessionStorage.setItem('activeTab', tabIndex.toString());
-      setActiveTab(tabIndex);
+    sessionStorage.setItem('activeTab', tabIndex.toString());
+    setActiveTab(tabIndex);
   };
 
   const [photo, setPhoto] = useState({});
@@ -45,6 +46,7 @@ function WorkerDetail() {
   const [gender, setGender] = useState([]);
 
   const [identityCardInfo, setIdentityCardInfo] = useState({});
+  
   const [residentInfo, setResidentInfo] = useState({});
 
   const [positionInfo, setPositionInfo] = useState({});
@@ -74,8 +76,7 @@ function WorkerDetail() {
   const [rankInfo, setRankInfo] = useState([]);
   const [militaryRank, setMilitaryRank] = useState({});
 
-
-  const [decreeListInfo, setDecreeListInfo] = useState({});
+  const [loading, setLoading] = useState(false); // Initialize loading state
 
   const accessToken = Cookies.get('jwtAccessToken');
 
@@ -131,10 +132,6 @@ function WorkerDetail() {
         setRankInfo(response.data.Person.rankInfo);
         setMilitaryRank(response.data.Person.rankInfo.militaryRank);
 
-        setDecreeListInfo(response.data.DecreeListInfo);
-
-        
-
         console.log(response.data.Person.rankInfo);
       } else {
         console.log(response.statusText);
@@ -184,16 +181,15 @@ function WorkerDetail() {
                       >
                         Кадровые данные 
                       </div>
-                      {/* <div 
-                          className={activeTab === 5 ? cl.btnTab + ' ' + cl.activeTab : cl.btnTab}
-                          onClick={() => handleTabClick(5)}
-                      >
-                        Приказы рапорта 
-                      </div> */}
                     </div>
 
                     <div className={cl.tabBody}>
-                      {
+                      {loading ? (
+                        <Loader loading={loading} />
+                      ) : (
+
+                        <div>
+                          {
                         activeTab === 1 && 
 
                         <div className={cl.basic__info}>
@@ -208,8 +204,12 @@ function WorkerDetail() {
                             <TotalInfo
                               id={id}
                               person={person} 
+
                               identityCardInfo={identityCardInfo}
+                              setIdentityCardInfo={setIdentityCardInfo}
+
                               residentInfo={residentInfo}
+                              setResidentInfo={setResidentInfo}
                             />
                           </div>
                             
@@ -334,24 +334,8 @@ function WorkerDetail() {
                             
                         </div>
                       }
-                      {/* {
-                        activeTab === 5 && 
-
-                        <div className={cl.basic__info}>
-                          <BasicInfo id={id}
-                            photo={photo}
-                            person={person} 
-                            birthInfo={birthInfo}
-                            gender={gender}
-                          />
-                          <div className={cl.totalInfo}>
-                            <ReportOrders 
-                              id={id} 
-                              decreeListInfo={decreeListInfo}
-                            />
-                          </div>      
                         </div>
-                      } */}
+                      )}
                     </div>
                   </div>
                 </div>

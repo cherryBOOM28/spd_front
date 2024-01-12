@@ -21,6 +21,7 @@ function RankUp() {
         personId: '',
         newRank: '',
         rankUpDate: '',
+        receivedType: '',
     });
 
     const [militaryRanksList, setMilitaryRanksList] = useState([]);
@@ -137,6 +138,12 @@ function RankUp() {
         setShowResults(false);
     };
 
+    const base = [
+        'Досрочное присвоение',
+        'Внеочередное',
+        'На одну ступень выше специального звания',
+    ];
+
     return (
         <Paper  elevation={3} className={cl.appointmentForm} style={{ marginTop: '80px' }}>
             <div>
@@ -209,6 +216,25 @@ function RankUp() {
                     </Select>
                 </FormControl>
             </Box>
+            <Box sx={{ minWidth: 480 }}>
+                        <FormControl size="small" fullWidth>
+                            <InputLabel id="demo-simple-select-label">Вид присвоения</InputLabel>
+                            <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            label="Вид присвоения"
+                            value={formData.base}
+                            onChange={(e) => setFormData({ ...formData, base: e.target.value })}
+                            
+                            >
+                                {base.map((base) => (
+                                    <MenuItem key={base} value={base}>
+                                    {base}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    </Box>
             <TextField 
                 type='date'
                 id="outlined-basic" 

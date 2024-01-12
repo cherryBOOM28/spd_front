@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import cl from './NewPersonnelData.module.css';
-import Button from '../../../components/UI/button/Button';
 import { useForm } from '../formProvider/FormProvider';
 
 import NewSickLeaves from './sick_leaves/NewSickLeaves';
@@ -16,28 +15,6 @@ const NewPersonnelData = (props) => {
     const {rankInfo, setRankInfo} = useForm();
     const {classCategoriesInfo, setClassCategoriesInfo} = useForm();
     const {autobiographyInfo, setAutobiographyInfo} = useForm();
-
-    // eslint-disable-next-line 
-    const [inputData, setInputData] = useState({ 
-        docNumber: '',
-        docDate: '',
-        
-        attResult: '',
-        lastAttDate: '',
-        
-        militaryRank: '',
-        receivedDate: '',
-        receivedType: '',
-
-        categoryType: '',
-
-        autobiographyText: '',
-    });
-
-    const [inputDataClassCategories, setInputDataClassCategories] = useState({
-        docNumber: '',
-        docDate: '',
-    });
 
     const handleInputChange = (name, value) => {
         setSpecCheckInfo((prevData) => {
@@ -65,6 +42,7 @@ const NewPersonnelData = (props) => {
     };
 
     const handleInputChangeClassCategories = (name, value) => {
+        console.log(value)
         setClassCategoriesInfo((prevData) => {
             let obj = prevData[0];
             obj = {...obj, [name]: value}
@@ -133,8 +111,9 @@ const NewPersonnelData = (props) => {
                                             type="date"
                                             className={cl.workerInfo}
                                             name='lastAttDate'
-                                            // value={attestationInfo.lastAttDate}
-                                            onChange={handleInputChangeAttestation}
+                                            value={attestationInfo.lastAttDate}
+                                            // onChange={handleInputChangeAttestation}
+                                            onChange={(e) => handleInputChangeAttestation('lastAttDate', e.target.value)}
                                         />
                                     </div>
                             </div>
@@ -146,25 +125,13 @@ const NewPersonnelData = (props) => {
                                         className={cl.workerInfo}
                                         type="text"
                                         name="attResult"
-                                        // value={attestationInfo.attResult}
-                                        onChange={handleInputChangeAttestation}
+                                        value={attestationInfo.attResult}
+                                        // onChange={handleInputChangeAttestation}
+                                        onChange={(e) => handleInputChangeAttestation('attResult', e.target.value)}
+
                                     />
                                 </div>
                             </div>
-                        {/* <div className={cl.column}>
-                        <div className={cl.rows}>
-                            <label className={cl.label}>Дата следующей аттестации</label>
-                            <div className={cl.datePickerContainer}>
-                                <input
-                                    type="date"
-                                    className={cl.workerInfo}
-                                    name='next_attestation_date'
-                                    value={attestations[0].next_attestation_date || ''}
-                                    onChange={handleInputChange}
-                                />
-                            </div>
-                            </div>
-                        </div> */}
                     </div>
                 </div>
 
@@ -217,19 +184,24 @@ const NewPersonnelData = (props) => {
                                         // value={rankInfo.receivedDate}
                                         onChange={handleInputChangeRank}
                                     />
+                                    
                                 </div>
                             </div>
                         </div>
                         <div className={cl.column}>
                             <div className={cl.rows}>
-                                <label className={cl.label}>Вид квитанции</label>
-                                    <input
-                                        className={cl.workerInfo}
-                                        type="text"
-                                        name="receivedType"
-                                        // value={rankInfo.receivedType}
-                                        onChange={handleInputChangeRank}
-                                    />
+                                <label className={cl.label}>Вид присвоения</label>
+                                    <select
+                                    className={cl.workerInfoSelect}
+                                    // value={rankInfo.militaryRank}
+                                    name='receivedType'
+                                    onChange={handleInputChangeRank}
+                                    >
+                                    <option value="">Выберите вид присвоения</option>
+                                    <option value="Досрочное присвоение">Досрочное присвоение</option>
+                                    <option value="Внеочередное">Внеочередное</option>
+                                    <option value="На одну ступень выше специального звания">На одну ступень выше специального звания</option>
+                                </select>
                             </div>
                         </div>
                 
@@ -248,9 +220,10 @@ const NewPersonnelData = (props) => {
                                 <label className={cl.label}>Классные категория</label>
                                     <select
                                     className={cl.workerInfoSelect}
-                                    // value={classCategoriesInfo.categoryType}
+                                    value={classCategoriesInfo.categoryType}
                                     name='categoryType'
-                                    onChange={handleInputChangeClassCategories}
+                                    // onChange={handleInputChangeClassCategories}
+                                    onChange={(e) => handleInputChangeClassCategories('categoryType', e.target.value)}
                                 >
                                     <option value="">Выберите категорию</option>
                                     <option value="спец 2 категории">Специалист 2 категории</option>
@@ -280,14 +253,14 @@ const NewPersonnelData = (props) => {
                                 type="text"
                                 name="autobiographyText"
                                 // value={autobiographyInfo.autobiographyText}
-                                onChange={handleInputChangeAutobiography}
+                                // onChange={handleInputChangeAutobiography}
+                                onChange={(e) => handleInputChangeAutobiography('autobiographyText', e.target.value)}
+
                             />
                             </div>
                         </div>
                     </div>
                 </div>
-
-                {/* <Button onClick={handleAddEducation}  className={cl.actionBtn}>Сохранить</Button> */}
             </form>
             <NewAwards />
             <NewSickLeaves />

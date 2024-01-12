@@ -168,7 +168,7 @@ function MilitaryRank({ rankInfo, militaryRank,setRankInfo, setMilitaryRank, ran
             <div className={cl.workerBlock}>
                 <div className={cl.column}>
                     <div className={cl.rows}>
-                        <label className={cl.label}>Поручение</label>
+                        <label className={cl.label}>Вид присвоения</label>
                         {editing ? (
                             <div className={cl.datePickerContainer}>
                             <input

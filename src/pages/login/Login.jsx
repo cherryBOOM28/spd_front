@@ -4,7 +4,6 @@ import React, {useEffect, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 // import Button from '../../components/UI/button/Button';
 import { Button } from '@mui/material';
-import TextField from '@mui/material/TextField';
 import axios from 'axios';
 import {AiFillEye, AiFillEyeInvisible} from 'react-icons/ai';
 import base_url from '../../api/base_url/base_url';
@@ -48,8 +47,8 @@ const Login = () => {
             // Успешный ответ
             const { access, refresh } = response.data;
     
-            // Сохранение токенов в куки с помощью js-cookie
-            Cookies.set('jwtAccessToken', access, { expires: 1, path: '/' }); // куки истекут через 1 дн  
+            // Сохранение токенов в куки с помощью js-cookie 
+            Cookies.set('jwtAccessToken', access, { expires: 1, path: '/' }); // куки истекут через 1 д
             
             Cookies.set('jwtRefreshToken', refresh, { expires: 1, path: '/' });
            
@@ -70,6 +69,12 @@ const Login = () => {
             }
         }
     };
+
+    const handleKeyDown = (event) => {
+        if(event.key === 'Enter') {
+            handleSubmit(event);
+        }
+    }
       
 
     return (

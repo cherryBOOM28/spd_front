@@ -46,13 +46,6 @@ function DecreeHistory() {
     // navigate(`/${personId}`) 
   };
 
-  // const openModal = (decreeId) => {
-  //   setSelectedDecreeId(decreeId);
-  //   setIsModalVisible(true);
-  //   fetchTransferInfo(decreeId);
-  //   fetchRankUpInfo(decreeId);
-  //   // console.log('Selected Decree ID:', decreeId);
-  // };
   const openModal = async (decreeId, decreeType) => {
     console.log('Decree Type:', decreeType); // Log the decreeType
     setSelectedDecreeId(decreeId);
@@ -84,8 +77,6 @@ function DecreeHistory() {
     }
   };
   
-  
-
   const closeModal = () => {
     setIsModalVisible(false);
   };
@@ -126,7 +117,7 @@ function DecreeHistory() {
 
   return (
     <div className={cl.container}>
-      <h1 className={cl.headline}><GoHistory /> История приказов</h1>
+      <h1 className={cl.headline}><GoHistory /> Журнал приказов</h1>
       <Paper sx={{ width: '100%', overflow: 'hidden' }}>
           <TableContainer sx={{ maxHeight: 840 }}>
           <Table className={cl.customTable}>
@@ -160,7 +151,6 @@ function DecreeHistory() {
                   <TableCell>{decree.person.rankInfo}</TableCell>
                   <TableCell>
                   <Button onClick={() => openModal(decree.decreeId, decree.decreeType)}>Откат</Button>
-
                   </TableCell>
                 </TableRow>
               ))}
@@ -226,10 +216,8 @@ function DecreeHistory() {
           ) : (
             <div style={{ margin: '45px 0' }}><Loader /></div>
           )}
-          
         </div>
       </Modal>
-
     </div>
   );
 }

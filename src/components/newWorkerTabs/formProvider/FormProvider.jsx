@@ -290,25 +290,27 @@ export const FormProvider = ({ children }) => {
   const accessToken = Cookies.get('jwtAccessToken');
   // console.log('AccessToken:', accessToken);
 
+
+
   const handleSubmit = async(event) => {
 
-    const isAllFieldsFilled = validateFields(person);
+    // const isAllFieldsFilled = validateFields(person);
   
-    if (!isAllFieldsFilled ) {
-      NotificationManager.error('Пожалуйста, заполните все поля!');
-      return;
-    }
+    // if (!isAllFieldsFilled ) {
+    //   NotificationManager.error('Пожалуйста, заполните все поля!');
+    //   return;
+    // }
 
-    event.preventDefault();
-    const hasEmptyInputs = Object.values(person).some((value) => value === '');
+    // event.preventDefault();
+    // const hasEmptyInputs = Object.values(person).some((value) => value === '');
 
-    if (hasEmptyInputs) {
-      setEmptyInputs(true);
-      return;
-    }
+    // if (hasEmptyInputs) {
+    //   setEmptyInputs(true);
+    //   return;
+    // }
 
     try {
-      // navigate('/'); 
+      navigate('/'); 
       // window.location.reload(); 
       setTimeout(() => {
         showNotification();
@@ -324,8 +326,9 @@ export const FormProvider = ({ children }) => {
     const _classCategoriesInfo = getClassCategoriesInfo(classCategoriesInfo);
     const _autobiographyInfo = getAutobiographyInfo(autobiographyInfo);
 
+
     const requestData = {
-      // Photo: photo,
+      Photo: { photoBinary:  photo},
       Person: person,
       BirthInfo: birthInfo,
       IdentityCardInfo: identityCardInfo,
@@ -377,7 +380,7 @@ export const FormProvider = ({ children }) => {
       DecreeListInfo: {
         decrees: decreeListInfo.slice(1) ? decreeListInfo.slice(1) : [],
       }
-    }
+    };
 
     event.preventDefault();
 
@@ -396,8 +399,8 @@ export const FormProvider = ({ children }) => {
         // console.log('Успешный ответ от сервера:', response.data);
     
         // Добавьте здесь код для перенаправления или обновления страницы
-        navigate('/');
-        window.location.reload();
+        // navigate('/');
+        // window.location.reload();
     
         // Показ уведомления после 200 миллисекунд
         setTimeout(() => {
@@ -413,8 +416,12 @@ export const FormProvider = ({ children }) => {
         }
       }
 
+      console.log(requestData.Photo.photoBinary);
+      // Проверка, является ли photoBinary строкой
+
+    
     console.log("post", {
-      Photo: photo,
+      Photo: { photoBinary: photo },
       Person: person,
       BirthInfo: birthInfo,
       IdentityCardInfo: identityCardInfo,

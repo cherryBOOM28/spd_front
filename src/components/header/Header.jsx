@@ -10,6 +10,7 @@ import { Button } from '@mui/material';
 import { useAuth } from '../auth/AuthContext';
 import { useParams } from 'react-router-dom';
 import Cookies from 'js-cookie';
+import { useNavigate } from 'react-router-dom';
 
 
 
@@ -23,6 +24,8 @@ function Header() {
     const [ groupName, setGroupName ] = useState([]);
     const [ photo, setPhoto ] = useState({});
     const [fullName, setFullName] = useState('');
+
+    const navigate = useNavigate();
     
     const accessToken = Cookies.get('jwtAccessToken');
     const userFullName = localStorage.getItem('userFullName');
@@ -54,6 +57,14 @@ function Header() {
     }, []);
 
     const { user, logout } = useAuth();
+
+    const handleLogout = () => {
+        Cookies.remove('jwtAccessToken', { path: '/login' });
+        Cookies.remove('jwtRefreshToken', { path: '/login' });
+        
+        logout();
+        navigate('/login')
+    }
 
     const handleGroupOnCheck = (_id) => {
         if (selectedIds.includes(_id)) {
@@ -142,10 +153,13 @@ function Header() {
                         <div>
                             { user ? (
                                 <div>
-                                    <Link to="/login" className={cl.logout}> <Button variant="text">Выйти</Button></Link>
+                                    <Button variant="text" onClick={handleLogout}>Выйти</Button>
+                                    {/* <Link to="/login" className={cl.logout}>Войти</Link> */}
                                 </div>
                             ) : (
-                                <p><Link to="/login" className={cl.logout}>Войти</Link></p>
+                                <p>
+                                    <Button variant="text" onClick={handleLogout}>Выйти</Button>
+                                </p>
                             ) }
                         </div>
                         

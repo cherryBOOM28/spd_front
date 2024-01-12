@@ -6,131 +6,97 @@ import { useParams } from 'react-router-dom';
 import Cookies from 'js-cookie';
 
 
-function TotalInfo({ person, identityCardInfo, residentInfo }) {
+function TotalInfo({ person, identityCardInfo, setIdentityCardInfo, residentInfo, setResidentInfo }) {
   const { id } = useParams();
+  console.log("id", id);
 
-  // const id = props.id;
+  console.log('editedIdentityCard.id:', identityCardInfo.id);
+  
+  const [editing, setEditing] = useState(false);
+  // Initialize states properly
+  const [editedIdentityCard, setEditedIdentityCard] = useState({
+    id: identityCardInfo.id, 
+    identityCardNumber: identityCardInfo.identityCardNumber || '', // Make sure to handle undefined values
+    issuedBy: identityCardInfo.issuedBy || '',
+    dateOfIssue: identityCardInfo.dateOfIssue || '',
+    personId: identityCardInfo.personId,
+  });
+  
+  const [editedResident, setEditedResident] = useState({
+    id: residentInfo.id,  
+    resCountry: residentInfo.resCountry || '',
+    resRegion: residentInfo.resRegion || '',
+    resCity: residentInfo.resCity || '',
+    personId: residentInfo.personId,
+  });
+  
+  const handleEditClick = () => {
+    setEditing(true);
+  };
+  
+  useEffect(() => {
 
-  const [personnelData, setPersonnelData] = useState([]); // Данные из бэка
-
-  // СОХРАНИТЬ ИЗМЕНЕНИЯ
-  // const handleSaveClick = async () => {
-  // try { 
-  //     let newJsonEdited = Object.keys(editedWorker).reduce((result, key) => {
-  //         if (editedWorker[key] !== personnelData[key]) {
-  //             result[key] = editedWorker[key];
-  //         }
-  //         return result;
-  //     }, {});
-  //     console.log(newJsonEdited)
-     
-  //     //   axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-  //     const response = await axios.patch(`http://localhost:8000/api/v1/person/${id}/`, editedWorker, id);
-   
-
-  //     if (response.status === 200) {
-  //         setEditing(false);
-  //         window.location.reload();
-  //     } else {
-  //         console.error('Error saving data');
-  //     }
-  // } catch (error) {
-  //     console.error('Error:', error);
-  // }
-  // };
+    console.log('editedIdentityCard.id:', identityCardInfo.id);
+    console.log('editedResident.id:', editedResident.id);
+  })
+  
 
   const handleSaveClick = async () => {
     try {
       const accessToken = Cookies.get('jwtAccessToken');
-  
-      // Обновление данных в таблице "identityCardInfo"
-      const identityCardInfoUpdateData = {
-        id: identityCardInfo.id,
-        identityCardNumber: identityCardInfo.identityCardNumber,
-        dateOfIssue: identityCardInfo.dateOfIssue,
-        issuedBy: identityCardInfo.issuedBy,
-      }
-  
-      const identityCardUpdateResponse = await axios.patch(`http://localhost:8000/api/v1/person/${id}/`, identityCardInfoUpdateData, {
-      }, {
-        headers: {
-          'Authorization': `Bearer ${accessToken}`,
-        },
-      });
-  
-      // Обновление данных в таблице "residentInfo"
-      const residentInfoUpdateData = {
-        gender: {
-          id: residentInfo.id,
-          resCountry: residentInfo.resCountry,
-          resCity: residentInfo.resCity,
-          resRegion: residentInfo.resRegion,
-        }
-      };
+      const identityCardUrl = `http://localhost:8000/api/v1/identity-card-info/${editedIdentityCard.id}/`;
+      const residentInfoUrl = `http://localhost:8000/api/v1/residentinfo/${editedResident.id}/`;
+
+      console.log('Before API call - editedResident:', editedResident);
+
+      const [identityCardResponse, residentInfoResponse] = await Promise.all([
+        axios.patch(identityCardUrl, editedIdentityCard, {
+          headers: {
+            'Authorization': `Bearer ${accessToken}`,
+          }
+        }),
+        axios.patch(residentInfoUrl, editedResident, {
+          headers: {
+            'Authorization': `Bearer ${accessToken}`,
+          }
+        }),
+      ]);
       
-      const residentInfoResponse = await axios.patch(`http://localhost:8000/api/v1/person/${id}/`, residentInfoUpdateData, {
-        headers: {
-          'Authorization': `Bearer ${accessToken}`,
-        },
-      });
+      const updatedIdentityCardInfo = identityCardResponse.data;
+      console.log(updatedIdentityCardInfo)
+      const updatedResidentInfo = residentInfoResponse.data;
+      
+      setIdentityCardInfo(updatedIdentityCardInfo);
+      setResidentInfo(updatedResidentInfo);
+      
+      setEditing(false);
+
+
   
-      // Обновление данных в таблице "person"
-      const personUpdateData = {
-        pin: person.pin
-      };
-      
-      const personUpdateResponse = await axios.patch(`http://localhost:8000/api/v1/birth-info/${id}/`, personUpdateData, {
-        headers: {
-          'Authorization': `Bearer ${accessToken}`,
-        },
-      });
-      
-    
-      // После успешного обновления всех таблиц, можно выполнить дополнительные действия
-      if (personUpdateResponse.status === 200 && identityCardUpdateResponse.status === 200 && residentInfoResponse.status === 200) {
-        setEditing(false);
-        
-        // window.location.reload();
-      } else {
-        console.error('Error saving data');
-      }
     } catch (error) {
-      console.error('Error:', error);
+      console.error('Error saving data:', error);
     }
   };
 
-  const [editing, setEditing] = useState(false);
-  const [editedWorker, setEditedWorker] = useState({
-    id: person.id,
-    identityCardNumber: '',
-    dateOfIssue: '',
-    issuedBy: '',
-    resCountry: '',
-    resCity: '',
-    resRegion: '',
-  });
+  useEffect(() => {
+    // You can call handleSaveClick when the component mounts or based on specific conditions
+    handleSaveClick();
+  }, [/* Add dependencies that trigger the effect */]);
 
-  // ИЗМЕНИТЬ ПОЛЯ
-  const handleEditClick = () => {
-    setEditing(true);
-    // Initialize editedWorker with the worker's current data
-    setEditedWorker({
-      id: person.id,
-      identityCardNumber: identityCardInfo.identityCardNumber,
-      dateOfIssue: identityCardInfo.dateOfIssue,
-      issuedBy: identityCardInfo.issuedBy,
-      resCountry: residentInfo.resCountry,
-      resCity: residentInfo.resCity,
-      resRegion: residentInfo.resRegion,
-      // phone_number: personnelData.phone_number,
-      pin: person.pin,
-    });
-};
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setEditedIdentityCard((prevIdentityCard) => ({
+      ...prevIdentityCard,
+      [name]: value,
+    }));
+  };
 
-  // ИЗМЕНЕНИЯ В INPUT
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setEditedWorker((prevWorker) => ({ ...prevWorker, [name]: value }));
+  const handleInputChangeResident = (e) => {
+    const { name, value } = e.target;
+    setEditedResident((prevIdentityCard) => ({
+      ...prevIdentityCard,
+      [name]: value,
+    }));
   };
 
   const handleCancelClick = () => {
@@ -172,7 +138,7 @@ function TotalInfo({ person, identityCardInfo, residentInfo }) {
                             type="number"
                             className={cl.workerInfo}
                             name='identityCardNumber'
-                            value={editedWorker.identityCardNumber}
+                            value={editedIdentityCard.identityCardNumber}
                             onChange={handleInputChange}
                           />
                         </div>
@@ -188,15 +154,14 @@ function TotalInfo({ person, identityCardInfo, residentInfo }) {
                           type="date"
                           name='dateOfIssue'
                           className={cl.workerInfo}
-                          value={editedWorker.dateOfIssue || ''}
+                          value={editedIdentityCard.dateOfIssue || ''}
                           onChange={(e) =>
-                            setEditedWorker((prevWorker) => ({
-                              ...prevWorker,
+                            setEditedIdentityCard((prevIdentityCard) => ({
+                              ...prevIdentityCard,
                               dateOfIssue: e.target.value,
                             }))
                           }
                         />
-                      
                       </div>
                     ) : (
                       <p className={cl.workerInfo}>{identityCardInfo.dateOfIssue}</p>
@@ -210,7 +175,7 @@ function TotalInfo({ person, identityCardInfo, residentInfo }) {
                             type="text"
                             name='issuedBy'
                             className={cl.workerInfo}
-                            value={editedWorker.issuedBy}
+                            value={editedIdentityCard.issuedBy}
                             onChange={handleInputChange}
                           />
                         </div>
@@ -220,19 +185,7 @@ function TotalInfo({ person, identityCardInfo, residentInfo }) {
                   </div>
                   <div className={cl.rows}>
                       <label className={cl.label}>ПИН</label>
-                      {editing ? (
-                        <div className={cl.datePickerContainer}>
-                          <input
-                            type="text"
-                            name='pin'
-                            className={cl.workerInfo}
-                            value={editedWorker.pin}
-                            onChange={handleInputChange}
-                          />
-                        </div>
-                      ) : (
-                        <p className={cl.workerInfo}>{person.pin}</p>
-                      )}
+                      <p className={cl.workerInfo}>{person.pin}</p>
                   </div>
                 </div>
                 <div className={cl.column}>
@@ -244,8 +197,8 @@ function TotalInfo({ person, identityCardInfo, residentInfo }) {
                             type="text"
                             name='resCountry'
                             className={cl.workerInfo}
-                            value={editedWorker.resCountry}
-                            onChange={handleInputChange}
+                            value={editedResident.resCountry}
+                            onChange={handleInputChangeResident}
                           />
                         </div>
                       ) : (
@@ -260,8 +213,8 @@ function TotalInfo({ person, identityCardInfo, residentInfo }) {
                             type="text"
                             name='resCity'
                             className={cl.workerInfo}
-                            value={editedWorker.resCity}
-                            onChange={handleInputChange}
+                            value={editedResident.resCity}
+                            onChange={handleInputChangeResident}
                           />
                         </div>
                       ) : (
@@ -276,31 +229,14 @@ function TotalInfo({ person, identityCardInfo, residentInfo }) {
                             type="text"
                             name='resRegion'
                             className={cl.workerInfo}
-                            value={editedWorker.resRegion}
-                            onChange={handleInputChange}
+                            value={editedResident.resRegion}
+                            onChange={handleInputChangeResident}
                           />
                         </div>
                       ) : (
                         <p className={cl.workerInfo}>{residentInfo.resRegion}</p>
                       )}
                   </div>
-                  <div className={cl.rows}>
-                      <label className={cl.label}>Номер телефона</label>
-                      {editing ? (
-                        <div className={cl.datePickerContainer}>
-                          <input
-                            type="number"
-                            name='phone_number'
-                            className={cl.workerInfo}
-                            value={editedWorker.phone_number}
-                            onChange={handleInputChange}
-                          />
-                        </div>
-                      ) : (
-                        <p className={cl.workerInfo}>{person.iin}</p>
-                      )}
-                  </div>
-
                 </div>
             </div>
         </div>

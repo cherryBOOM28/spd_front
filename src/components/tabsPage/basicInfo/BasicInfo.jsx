@@ -191,6 +191,7 @@ function BasicInfo({  photo, person, birthInfo, gender }) {
     return (
       <div className={cl.info__block} style={{ display: 'flex' }}>
           <img src={`data:image/jpeg;base64,${photo.photoBinary}`} alt="worker" className={cl.workerImg} />
+
           <div className={cl.blocks}>
             
             <div style={{ display: 'flex', justifyContent: 'space-between'}}>
