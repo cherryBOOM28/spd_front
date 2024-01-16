@@ -1,87 +1,85 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import cl from './TotalInfo.module.css';
-import Button from '../../UI/button/Button';
-import { useParams } from 'react-router-dom';
 import Cookies from 'js-cookie';
+import { Button,TextField, Paper, Select, Box, InputLabel, MenuItem, FormControl } from '@mui/material';
+
 
 
 function TotalInfo({ person, identityCardInfo, setIdentityCardInfo, residentInfo, setResidentInfo }) {
-  const { id } = useParams();
-  console.log("id", id);
+  // const { id } = useParams();
+  // console.log("id", id);
 
-  console.log('editedIdentityCard.id:', identityCardInfo.id);
-  
   const [editing, setEditing] = useState(false);
   // Initialize states properly
   const [editedIdentityCard, setEditedIdentityCard] = useState({
-    id: identityCardInfo.id, 
-    identityCardNumber: identityCardInfo.identityCardNumber || '', // Make sure to handle undefined values
-    issuedBy: identityCardInfo.issuedBy || '',
-    dateOfIssue: identityCardInfo.dateOfIssue || '',
-    personId: identityCardInfo.personId,
+    id: identityCardInfo.id,
+    identityCardNumber: identityCardInfo.identityCardNumber,
+    issuedBy: identityCardInfo.issuedBy,
+    dateOfIssue: identityCardInfo.dateOfIssue,
   });
-  
   const [editedResident, setEditedResident] = useState({
-    id: residentInfo.id,  
-    resCountry: residentInfo.resCountry || '',
-    resRegion: residentInfo.resRegion || '',
-    resCity: residentInfo.resCity || '',
-    personId: residentInfo.personId,
+    id: residentInfo.id,
+    resCountry: residentInfo.resCountry,
+    resCity: residentInfo.resCity,
+    resRegion: residentInfo.resRegion,
   });
   
   const handleEditClick = () => {
+    // При нажатии "Редактировать" используйте текущие данные из состояний identityCardInfo и residentInfo
+    setEditedIdentityCard({
+      identityCardNumber: identityCardInfo.identityCardNumber,
+      issuedBy: identityCardInfo.issuedBy,
+      dateOfIssue: identityCardInfo.dateOfIssue,
+    });
+    setEditedResident({
+      resCountry: residentInfo.resCountry,
+      resCity: residentInfo.resCity,
+      resRegion: residentInfo.resRegion,
+    });
+  
     setEditing(true);
   };
-  
-  useEffect(() => {
 
-    console.log('editedIdentityCard.id:', identityCardInfo.id);
-    console.log('editedResident.id:', editedResident.id);
-  })
-  
-
-  const handleSaveClick = async () => {
+  const handleSaveClick = async (id) => {
     try {
       const accessToken = Cookies.get('jwtAccessToken');
-      const identityCardUrl = `http://localhost:8000/api/v1/identity-card-info/${editedIdentityCard.id}/`;
-      const residentInfoUrl = `http://localhost:8000/api/v1/residentinfo/${editedResident.id}/`;
-
-      console.log('Before API call - editedResident:', editedResident);
-
-      const [identityCardResponse, residentInfoResponse] = await Promise.all([
-        axios.patch(identityCardUrl, editedIdentityCard, {
-          headers: {
-            'Authorization': `Bearer ${accessToken}`,
-          }
-        }),
-        axios.patch(residentInfoUrl, editedResident, {
-          headers: {
-            'Authorization': `Bearer ${accessToken}`,
-          }
-        }),
-      ]);
-      
-      const updatedIdentityCardInfo = identityCardResponse.data;
-      console.log(updatedIdentityCardInfo)
-      const updatedResidentInfo = residentInfoResponse.data;
-      
-      setIdentityCardInfo(updatedIdentityCardInfo);
-      setResidentInfo(updatedResidentInfo);
-      
-      setEditing(false);
-
-
+      // Update identity card information
+      const identityCardResponse = await axios.patch(`http://localhost:8000/api/v1/identity-card-info/${identityCardInfo.id}/`, editedIdentityCard, {
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+        }
+      });
   
+      if (!identityCardResponse.data) {
+        // Handle error response for identity card update
+        console.error('Failed to update identity card information');
+        return;
+      }
+  
+      // Update resident information
+      const residentResponse = await axios.patch(`http://localhost:8000/api/v1/residentinfo/${residentInfo.id}/`, editedResident, {
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+        }
+      });
+  
+      if (!residentResponse.data) {
+        // Handle error response for resident update
+        console.error('Failed to update resident information');
+        return;
+      }
+  
+      // Update the state with the edited data for both identity card and resident
+      setIdentityCardInfo(identityCardResponse.data);
+      setResidentInfo(residentResponse.data);
+      setEditing(false); // Set editing to false after successful save
     } catch (error) {
-      console.error('Error saving data:', error);
+      // Handle any unexpected errors
+      console.error('An error occurred while saving data:', error);
     }
   };
-
-  useEffect(() => {
-    // You can call handleSaveClick when the component mounts or based on specific conditions
-    handleSaveClick();
-  }, [/* Add dependencies that trigger the effect */]);
+  
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -100,7 +98,19 @@ function TotalInfo({ person, identityCardInfo, setIdentityCardInfo, residentInfo
   };
 
   const handleCancelClick = () => {
-    // Отменяем редактирование
+    if (editing) {
+      setEditedIdentityCard({
+        identityCardNumber: identityCardInfo.identityCardNumber,
+        issuedBy: identityCardInfo.issuedBy,
+        dateOfIssue: identityCardInfo.dateOfIssue,
+      });
+      setEditedResident({
+        resCountry: residentInfo.resCountry,
+        resCity: residentInfo.resCity,
+        resRegion: residentInfo.resRegion,
+      });
+    }
+
     setEditing(false);
   };
 
@@ -112,16 +122,16 @@ function TotalInfo({ person, identityCardInfo, setIdentityCardInfo, residentInfo
               <div style={{ display: 'flex', justifyContent: 'space-between', gap: '20px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', gap: '5px' }}>
                   {!editing ? (
-                    <Button className={cl.actionBtn} onClick={handleEditClick}>
+                    <Button className={cl.actionBtn} onClick={handleEditClick} style={{ textTransform: 'none' }}>
                       &#9998; Редактировать
                     </Button>
                   ) : (
 
                     <div style={{ display: 'flex', gap: '10px' }}> 
-                      <Button onClick={handleSaveClick} className={cl.actionBtn}>
+                      <Button onClick={handleSaveClick} className={cl.actionBtn} style={{ textTransform: 'none' }}>
                         Сохранить
                       </Button>
-                      <Button className={cl.actionBtn} onClick={handleCancelClick}>Отмена</Button>
+                      <Button className={cl.actionBtn} onClick={handleCancelClick} style={{ textTransform: 'none' }}>Отмена</Button>
                     </div>
                   )}
                 </div>
@@ -134,26 +144,34 @@ function TotalInfo({ person, identityCardInfo, setIdentityCardInfo, residentInfo
                       <label className={cl.label}>Номер удостоверения</label>
                       {editing ? (
                         <div className={cl.datePickerContainer}>
-                          <input
+                          <TextField
+                            id="outlined-basic" 
+                            label="Номер удостоверения" 
+                            variant="outlined" 
+                            size="small"
                             type="number"
-                            className={cl.workerInfo}
+                            className={cl.workerInfoText}
                             name='identityCardNumber'
                             value={editedIdentityCard.identityCardNumber}
                             onChange={handleInputChange}
                           />
                         </div>
                       ) : (
-                        <p className={cl.workerInfo}>{identityCardInfo.identityCardNumber}</p>
+                        <Paper className={cl.workerInfo}>{identityCardInfo.identityCardNumber}</Paper>
                       )}
                   </div>
                   <div className={cl.rows}>
                     <label className={cl.label}>Дата выдачи</label>
                     {editing ? (
                       <div className={cl.datePickerContainer}>
-                        <input
+                        <TextField
+                          id="outlined-basic" 
+                          label="Дата выдачи" 
+                          variant="outlined" 
+                          size="small"
                           type="date"
                           name='dateOfIssue'
-                          className={cl.workerInfo}
+                          className={cl.workerInfoText}
                           value={editedIdentityCard.dateOfIssue || ''}
                           onChange={(e) =>
                             setEditedIdentityCard((prevIdentityCard) => ({
@@ -164,28 +182,32 @@ function TotalInfo({ person, identityCardInfo, setIdentityCardInfo, residentInfo
                         />
                       </div>
                     ) : (
-                      <p className={cl.workerInfo}>{identityCardInfo.dateOfIssue}</p>
+                      <Paper className={cl.workerInfo}>{identityCardInfo.dateOfIssue}</Paper>
                     )}
                   </div>
                   <div className={cl.rows}>
                       <label className={cl.label}>Выдан</label>
                       {editing ? (
                         <div className={cl.datePickerContainer}>
-                          <input
+                          <TextField
+                            id="outlined-basic" 
+                            label="Выдан" 
+                            variant="outlined" 
+                            size="small"
                             type="text"
                             name='issuedBy'
-                            className={cl.workerInfo}
+                            className={cl.workerInfoText}
                             value={editedIdentityCard.issuedBy}
                             onChange={handleInputChange}
                           />
                         </div>
                       ) : (
-                        <p className={cl.workerInfo}>{identityCardInfo.issuedBy}</p>
+                        <Paper className={cl.workerInfo}>{identityCardInfo.issuedBy}</Paper>
                       )}
                   </div>
                   <div className={cl.rows}>
                       <label className={cl.label}>ПИН</label>
-                      <p className={cl.workerInfo}>{person.pin}</p>
+                      <Paper className={cl.workerInfo}>{person.pin}</Paper>
                   </div>
                 </div>
                 <div className={cl.column}>
@@ -193,48 +215,60 @@ function TotalInfo({ person, identityCardInfo, setIdentityCardInfo, residentInfo
                       <label className={cl.label}>Страна прожвания</label>
                       {editing ? (
                         <div className={cl.datePickerContainer}>
-                          <input
+                          <TextField
+                            id="outlined-basic" 
+                            label="Страна прожвания" 
+                            variant="outlined" 
+                            size="small"
                             type="text"
                             name='resCountry'
-                            className={cl.workerInfo}
+                            className={cl.workerInfoText}
                             value={editedResident.resCountry}
                             onChange={handleInputChangeResident}
                           />
                         </div>
                       ) : (
-                        <p className={cl.workerInfo}>{residentInfo.resCountry}</p>
+                        <Paper className={cl.workerInfo}>{residentInfo.resCountry}</Paper>
                       )}
                   </div>
                   <div className={cl.rows}>
                       <label className={cl.label}>Город прожвания</label>
                       {editing ? (
                         <div className={cl.datePickerContainer}>
-                          <input
+                          <TextField
+                            id="outlined-basic" 
+                            label="Город прожвания" 
+                            variant="outlined" 
+                            size="small"
                             type="text"
                             name='resCity'
-                            className={cl.workerInfo}
+                            className={cl.workerInfoText}
                             value={editedResident.resCity}
                             onChange={handleInputChangeResident}
                           />
                         </div>
                       ) : (
-                        <p className={cl.workerInfo}>{residentInfo.resCity}</p>
+                        <Paper className={cl.workerInfo}>{residentInfo.resCity}</Paper>
                       )}
                   </div>
                   <div className={cl.rows}>
                       <label className={cl.label}>Регион проживания</label>
                       {editing ? (
                         <div className={cl.datePickerContainer}>
-                          <input
+                          <TextField
+                            id="outlined-basic" 
+                            label="Регион прожвания" 
+                            variant="outlined" 
+                            size="small"
                             type="text"
                             name='resRegion'
-                            className={cl.workerInfo}
+                            className={cl.workerInfoText}
                             value={editedResident.resRegion}
                             onChange={handleInputChangeResident}
                           />
                         </div>
                       ) : (
-                        <p className={cl.workerInfo}>{residentInfo.resRegion}</p>
+                        <Paper className={cl.workerInfo}>{residentInfo.resRegion}</Paper>
                       )}
                   </div>
                 </div>

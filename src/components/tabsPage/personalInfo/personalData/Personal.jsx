@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import cl from './Personal.module.css';
@@ -8,122 +8,172 @@ import Cookies from 'js-cookie';
 import { deleteFamilyCompositions } from '../../../../api/persona_info/family_compositions/deleteFamilyCompositions';
 import { updateFamilyCompositions } from '../../../../api/persona_info/family_compositions/updateFamilyCompositions';
 
-import updateFamilyStatus from './api/SaveFamilyStatus';
 
 function Personal({ 
-        positionInfo, 
-        location, 
-        receivedDate, 
-        positionTitle, 
-        departmentName, 
-        familyStatus, 
-        familyComposition, 
-        setFamilyComposition 
-    }, props) {
+    positionInfo, setPositionInfo,
+    location, setLocation,
+    receivedDate, setReceivedDate,
+    positionTitle, setPositionTitle,
+    familyStatus, setFamilyStatus,
+    familyComposition, 
+    setFamilyComposition 
+    }) {
     const { id } = useParams();
     // console.log(`id: ${id}`);
 
-    const [personalData, setPersonalData] = useState({}); // Данные из бэка
-
-    const handleUpdateData = async (updatedFields) => {
-        try {
-            const accessToken = Cookies.get('jwtAccessToken');
-            const response = await axios.patch(`http://localhost:8000/api/v1/position/${id}/`, {
-                headers: {
-                    'Authorization': `Bearer ${accessToken}`,
-                }
-            })
-            console.log('Успешно обновлено:', response.data);
-        } catch (error) {
-            console.log(error)
-        }
-    };
-
-    const handleUpdate = () => {
-        handleUpdateData({
-            familyStatus: positionInfo.statusName,
-            DepartmentName: positionInfo.DepartmentName,
-            positionTitle: positionTitle.positionTitle,
-            receivedDate: receivedDate.receivedDate,
-            LocationName: location.LocationName,
-        });
-    };
-  
-
-    // СОХРАНИТЬ ИЗМЕНЕНИЯ
-    // const handleSaveClick = async () => {
-    //     try {
-    //         let newJsonEdited = Object.keys(editedWorker).reduce((result, key) => {
-    //             if (editedWorker[key] !== personalData[key]) {
-    //                 result[key] = editedWorker[key];
-    //             }
-    //             return result;
-    //         }, {});
-    //         console.log(newJsonEdited, editedWorker)
-    //         console.log(id)
-
-
-    //         //   axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-    //         const response = await axios.patch(`http://localhost:8000/personal_info/update/`, {personal_data: editedWorker});
-
-
-    //         if (response.status === 200) {
-    //             setEditing(false);
-    //             window.location.reload();
-    //         } else {
-    //             console.error('Error saving data');
-    //         }
-    //     } catch (error) {
-    //         console.error('Error:', error);
-    //     }
-    // };
-
-    const handleSaveClick = async () => {
-        try {
-            await updateFamilyStatus(editedWorker.id, editedWorker.statusName);
-
-            setEditing(false);
-        } catch (error) {
-            console.error('Ошибка при сохранении данных:', error.message);
-        }
-    };
 
     const [editing, setEditing] = useState(false);
-    const [editedWorker, setEditedWorker] = useState({
-        statusName: '',
-        DepartmentName: '',
-        positionTitle: '',
-        receivedDate: '',
-        LocationName: ''
+
+    const [editedDepartmentInfo, setEditedDepartmentInfo] = useState({
+        id:positionInfo.id,
+        DepartmentName: positionInfo.DepartmentName
+    });
+
+    const [editedLocationInfo, setEditedLocationInfo] = useState({
+        id: location.id,
+        LocationName: location.LocationName
+    });
+
+    const [editedPositionTitleInfo, setEditedPositionTitleInfo] = useState({
+        id: positionTitle.id,
+        positionTitle: positionTitle.positionTitle
+    });
+
+    const [editedReceivedDate, setEditedReceivedDate] = useState({
+        id: receivedDate.id,
+        receivedDate: receivedDate.receivedDate
+    });
+
+    const [editedStatusName, setEditedStatusName] = useState({
+        id: familyStatus.id,
+        statusName: familyStatus.statusName
     });
 
 
     // ИЗМЕНИТЬ ПОЛЯ
     const handleEditClick = () => {
-        setEditing(true);
-        // Initialize editedWorker with the worker's current data
-        setEditedWorker({
-            // iin: id,
-            id: personalData.id,
-            statusName: familyStatus.statusName,
-            DepartmentName: positionInfo.DepartmentName,
-            positionTitle: positionTitle.positionTitle,
-            receivedDate: receivedDate.receivedDate,
-            LocationName: location.LocationName,
+        setEditedDepartmentInfo({
+            DepartmentName: positionInfo.DepartmentName
         });
+        setEditedLocationInfo({
+            LocationName: location.LocationName
+        });
+        setEditedPositionTitleInfo({
+            positionTitle: positionTitle.positionTitle
+        });
+        setEditedReceivedDate({
+            receivedDate: receivedDate.receivedDate
+        });
+        setEditedStatusName({
+            statusName: familyStatus.statusName
+        });
+
+        setEditing(true);
     };
 
-
-    // 
 
     // ИЗМЕНЕНИЯ В INPUT
     const handleInputChange = (e) => {
         // Обработчик изменения значений в инпуте при редактировании
         const { name, value } = e.target;
-        setEditedWorker((prevWorker) => ({
+        setEditedDepartmentInfo((prevWorker) => ({
             ...prevWorker,
             [name]: value,
         }));
+    };
+
+    const handleInputChangeLocation = (e) => {
+        // Обработчик изменения значений в инпуте при редактировании
+        const { name, value } = e.target;
+        setEditedLocationInfo((prevWorker) => ({
+            ...prevWorker,
+            [name]: value,
+        }));
+    };
+
+    const handleInputChangePosition = (e) => {
+        // Обработчик изменения значений в инпуте при редактировании
+        const { name, value } = e.target;
+        setEditedPositionTitleInfo((prevWorker) => ({
+            ...prevWorker,
+            [name]: value,
+        }));
+    };
+
+    // СОХРАНИТЬ ИЗМЕНЕНИЯ
+    const handleSaveClick = async () => {
+        try {
+            const accessToken = Cookies.get('jwtAccessToken');
+            // Update identity card information
+            const departmentNameResponse = await axios.patch(`http://localhost:8000/api/v1/department/${positionInfo.id}/`, editedDepartmentInfo, {
+                headers: {
+                'Authorization': `Bearer ${accessToken}`,
+                }
+            });
+  
+            if (!departmentNameResponse.data) {
+                console.error('Failed to update');
+                return;
+            }
+        
+            // Update location information
+            const locationNameResponse = await axios.patch(`http://localhost:8000/api/v1/location/${location.id}/`, editedLocationInfo, {
+                headers: {
+                'Authorization': `Bearer ${accessToken}`,
+                }
+            });
+  
+            if (!locationNameResponse.data) {
+                console.error('Failed to update');
+                return;
+            }
+
+            // Update positionTitle information
+            const positionTitleResponse = await axios.patch(`http://localhost:8000/api/v1/position/${positionTitle.id}/`, editedPositionTitleInfo, {
+                headers: {
+                'Authorization': `Bearer ${accessToken}`,
+                }
+            });
+  
+            if (!positionTitleResponse.data) {
+                console.error('Failed to update');
+                return;
+            }
+
+            // Update receivedDate information
+            const receivedDateResponse = await axios.patch(`http://localhost:8000/api/v1/position-info/${receivedDate.id}/`, editedReceivedDate, {
+                headers: {
+                'Authorization': `Bearer ${accessToken}`,
+                }
+            });
+  
+            if (!receivedDateResponse.data) {
+                console.error('Failed to update');
+                return;
+            }
+
+            // Update familyStatus information
+            const familyStatusResponse = await axios.patch(`http://localhost:8000/api/v1/family-status/${familyStatus.id}/`, editedStatusName, {
+                headers: {
+                'Authorization': `Bearer ${accessToken}`,
+                }
+            });
+  
+            if (!familyStatusResponse.data) {
+                console.error('Failed to update');
+                return;
+            }
+
+            setEditing(false);
+
+            setPositionInfo(departmentNameResponse.data);
+            setLocation(locationNameResponse.data);
+            setPositionTitle(positionTitleResponse.data);
+            setReceivedDate(receivedDateResponse.data);
+            setFamilyStatus(familyStatusResponse.data);
+        } catch (error) {
+            console.error('Ошибка при сохранении данных:', error.message);
+        }
     };
 
 
@@ -392,7 +442,7 @@ function Personal({
                                         className={cl.workerInfo}
                                         type="text"
                                         name="DepartmentName"
-                                        value={editedWorker.DepartmentName !== undefined ? editedWorker.DepartmentName : ''}
+                                        value={editedDepartmentInfo.DepartmentName}
                                         onChange={handleInputChange}
                                     />
                                 ) : (
@@ -406,8 +456,8 @@ function Personal({
                                         className={cl.workerInfo}
                                         type="text"
                                         name="positionTitle"
-                                        value={editedWorker.positionTitle}
-                                        onChange={handleInputChange}
+                                        value={editedPositionTitleInfo.positionTitle}
+                                        onChange={handleInputChangePosition}
                                     />
                                 ) : (
 
@@ -422,9 +472,9 @@ function Personal({
                                         type="date"
                                         name='receivedDate'
                                         className={cl.workerInfo}
-                                        value={editedWorker.receivedDate || ''}
+                                        value={editedReceivedDate.receivedDate || ''}
                                         onChange={(e) =>
-                                        setEditedWorker((prevWorker) => ({
+                                        setEditedReceivedDate((prevWorker) => ({
                                             ...prevWorker,
                                             receivedDate: e.target.value,
                                         }))
@@ -443,8 +493,8 @@ function Personal({
                                 {editing ? (
                                     <select
                                     className={cl.workerInfoSelect}
-                                     value={editedWorker.statusName}
-                                     onChange={(e) => setEditedWorker({ ...editedWorker, statusName: e.target.value })}
+                                     value={editedStatusName.statusName}
+                                     onChange={(e) => setEditedStatusName({ ...editedStatusName, statusName: e.target.value })}
                                      >
                                         <option value="">Выберите семейное положение</option>
                                         <option value="Не женат/не замужем">Не женат/не замужем</option>
@@ -465,8 +515,8 @@ function Personal({
                                         className={cl.workerInfo}
                                         type="text"
                                         name="LocationName"
-                                        value={editedWorker.LocationName}
-                                        onChange={handleInputChange}
+                                        value={editedLocationInfo.LocationName}
+                                        onChange={handleInputChangeLocation}
                                     />
                                 ) : (
 

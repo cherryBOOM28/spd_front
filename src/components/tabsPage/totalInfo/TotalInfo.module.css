@@ -24,6 +24,7 @@
 
 .rows {
     display: flex;
+    margin-top: 10px;
 }
 
 .label {
@@ -34,13 +35,37 @@
 }
 
 .workerInfo {
-    border-radius: 5px;
-    border: 1px solid #959595;
+    /* border-radius: 5px; */
+    /* border: 1px solid #959595; */
+    display: flex;
+    align-items: center;
     width: 270px;
-    /* height: 30px; */
-    padding: 6px 9px;
+    height: 40px;
+    padding: 0px 9px;
     margin-left: 12px;
     outline: none;
+    font-family: "Helvetica", sans-serif;
+    color: #000;
+    font-size: 16px;
+    font-weight: 400;
+}
+
+.workerInfoText {
+    width: 290px;
+    height: 34px;
+    margin-left: 12px;
+    outline: none;
+    font-family: "Helvetica", sans-serif;
+    color: #000;
+    font-size: 16px;
+    font-weight: 400;
+}
+
+.workerInfoSelect {
+    width: 290px;
+    height: 40px;
+    padding: 0px 9px;
+    /* margin-left: 12px; */
     font-family: "Helvetica", sans-serif;
     color: #000;
     font-size: 16px;

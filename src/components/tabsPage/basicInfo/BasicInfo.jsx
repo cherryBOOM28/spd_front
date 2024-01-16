@@ -1,185 +1,129 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import cl from './BasicInfo.module.css';
-import { useParams } from 'react-router-dom';
-import Button from '../../UI/button/Button';
-import defaultPic from '../../../assets/images/default.jpeg';
+import { Button,TextField, Paper, Select, Box, InputLabel, MenuItem, FormControl } from '@mui/material';
 import Cookies from 'js-cookie';
 
 
-function BasicInfo({  photo, person, birthInfo, gender }) {
-    
-  const { id } = useParams();
-  // console.log(`id: ${id}`);
-  
-
-  const [personnelData, setPersonnelData] = useState([]); // Данные из бэка
-  // const [photo, setPhoto] = useState([]);
+function BasicInfo({  photo, person, setPerson, birthInfo, setBirthInfo, gender, setGender }) {
   const [editing, setEditing] = useState(false);
-  const [editedWorker, setEditedWorker] = useState({
-    firstName: '',
-    surname: '',
-    patronymic: '',
-    nationality: '',
-    iin: '',
-    genderName: '',
-    birth_date: '',
-    country: '',
-    city: '',
-    region: '',
+
+  const [editedPerson, setEditedPerson] = useState({
+    id: person.id,
+    firstName: person.firstName,
+    surname: person.surname,
+    patronymic: person.patronymic,
+    nationality: person.nationality,
+    iin: person.iin
+  });
+  
+  const [editedGender, setEditedGender] = useState({
+    id: gender.id,
+    genderName: gender.genderName
   });
 
-  useEffect(() => {
-    // console.log(person.firstName);
-    if (person && gender && birthInfo  &&  editedWorker) {
-      // Initialize editedWorker with the worker's current data
-      setEditedWorker({
-        item: id,
-        firstName: person.firstName,
-        surname: person.surname,
-        patronymic: person.patronymic,
-        nationality: person.nationality,
-        iin: person.iin,
-        genderName: gender.genderName,
-        birth_date: birthInfo.birth_date,
-        country: birthInfo.country,
-        city: birthInfo.city,
-        region: birthInfo.region,
-      });
-    }
-  }, []);
-  
-
-
-
-  // СОХРАНИТЬ ИЗМЕНЕНИЯ
-  // const handleSaveClick = async () => {
-  // try {
-  //     let newJsonEdited = Object.keys(editedWorker).reduce((result, key) => {
-  //         if (editedWorker[key] !== person[key]) {
-  //             result[key] = editedWorker[key];
-  //         }
-  //         return result;
-  //     }, {});
-  //     console.log("newJsonEdited", newJsonEdited)
-
-  //     //   axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-  //     const accessToken = Cookies.get('jwtAccessToken');
-  //     const response = await axios.patch(`http://localhost:8000/api/v1/person/${id}`, newJsonEdited, id, 
-  //     {
-  //       headers: {
-  //         'Authorization': `Bearer ${accessToken}`,
-  //       }
-  //     });
-
-  //     console.log("response", response);
-
-
-  //     if (response.status === 200) {
-  //         setEditing(false);
-  //         // window.location.reload();
-  //     } else {
-  //         console.error('Error saving data');
-  //     }
-  // } catch (error) {
-  //     console.error('Error:', error);
-  // }
-  // };
-  const handleSaveClick = async () => {
-  try {
-    const accessToken = Cookies.get('jwtAccessToken');
-
-    // Обновление данных в таблице "person"
-    const personUpdateData = {
-      id: id,
-      firstName: editedWorker.firstName,
-      surname: editedWorker.surname,
-      patronymic: editedWorker.patronymic,
-      nationality: editedWorker.nationality,
-      iin: editedWorker.iin
-    }
-
-    const headers = 
-       {
-        'Authorization': `Bearer ${accessToken}`,
-      }
-
-    const personUpdateResponse = await axios.patch(`http://localhost:8000/api/v1/person/${id}/`, personUpdateData, {headers}, {
-    });
-    console.log("object", headers);
-    console.log("  gender: id", gender.id);
-
-
-    const genderUpdateData = {
-      // id: gender.id,
-      genderName: editedWorker.genderName
-    };
-    
-    console.log("genderUpdateData", genderUpdateData);
-    
-    const genderResponse = await axios.patch(`http://localhost:8000/api/v1/person/${id}/update_gender/`, genderUpdateData, {
-      headers: {
-        'Authorization': `Bearer ${accessToken}`,
-      },
-    });
-
-    // Обновление данных в таблице "birthInfo"
-    const birthInfoUpdateData = {
-      id: birthInfo.id,
-      birth_date: editedWorker.birth_date,
-      country: editedWorker.country,
-      city: editedWorker.city,
-      region: editedWorker.region,
-    };
-    console.log("birthInfoUpdateData",  editedWorker.country);
-    console.log(`birthInfo id: ${birthInfo.id}`);
-
-
-    const birthInfoUpdateResponse = await axios.patch(`http://localhost:8000/api/v1/birth-info/${birthInfo.id}/`, birthInfoUpdateData, {
-      headers: {
-        'Authorization': `Bearer ${accessToken}`,
-      },
-    });
-
-    
-  
-    // После успешного обновления всех таблиц, можно выполнить дополнительные действия
-    if (personUpdateResponse.status === 200 && birthInfoUpdateResponse.status === 200 && genderResponse.status === 200) {
-      setEditing(false);
-      
-      // window.location.reload();
-    } else {
-      console.error('Error saving data');
-    }
-  } catch (error) {
-    console.error('Error:', error);
-  }
-  };
+  const [editedBirthInfo, setEditedBirthInfo] = useState({
+    id: birthInfo.id,
+    birth_date: birthInfo.birth_date,
+    country: birthInfo.country,
+    city: birthInfo.city,
+    region: birthInfo.region
+  });
 
   // ИЗМЕНИТЬ ПОЛЯ
   const handleEditClick = () => {
     setEditing(true);
     // Initialize editedWorker with the worker's current data
-      setEditedWorker({
-        firstName: person.firstName,
-        surname: person.surname,
-        patronymic: person.patronymic,
-        nationality: person.nationality,
-        iin: person.iin,
+    setEditedPerson({
+      firstName: person.firstName,
+      surname: person.surname,
+      patronymic: person.patronymic,
+      nationality: person.nationality,
+      iin: person.iin,
+    });
 
-        genderName: gender.genderName,
+    setEditedGender({
+      genderName: gender.genderName,
+    });
 
-        birth_date: birthInfo.birth_date,
-        country: birthInfo.country,
-        city: birthInfo.city,
-        region: birthInfo.region,
-      });
+    setEditedBirthInfo({
+      birth_date: birthInfo.birth_date,
+      country: birthInfo.country,
+      city: birthInfo.city,
+      region: birthInfo.region
+    });
+  };
+
+  // СОХРАНИТЬ ИЗМЕНЕНИЯ
+  const handleSaveClick = async () => {
+  try {
+    const accessToken = Cookies.get('jwtAccessToken');
+    // Update person information
+    const personResponse = await axios.patch(`http://localhost:8000/api/v1/person/${person.id}/`, editedPerson, {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+      }
+    });
+
+    if (!personResponse.data) {
+      // Handle error response for person update
+      console.error('Failed to update person information');
+      return;
+    }
+
+    // Update gender information
+    const genderResponse = await axios.patch(`http://localhost:8000/api/v1/gender/${gender.id}/`, editedGender, {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+      }
+    });
+
+    if (!genderResponse.data) {
+      // Handle error response for gender update
+      console.error('Failed to update gender information');
+      return;
+    }
+
+    // Update birth info information
+    const birthInfoResponse = await axios.patch(`http://localhost:8000/api/v1/birth-info/${birthInfo.id}/`, editedBirthInfo, {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+      }
+    });
+
+    if (!birthInfoResponse.data) {
+      // Handle error response for birth info update
+      console.error('Failed to update birth info information');
+      return;
+    }
+
+    // Update the state with the edited data 
+    setPerson(personResponse.data);
+    setGender(genderResponse.data);
+    setBirthInfo(birthInfoResponse.data);
+    setEditing(false);
+   
+  } catch (error) {
+    console.error('Error:', error);
+  }
   };
 
   // ИЗМЕНЕНИЯ В INPUT
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setEditedWorker((prevWorker) => ({ ...prevWorker, [name]: value }));
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setEditedPerson((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+
+  const handleInputChangeBirth = (e) => {
+    const { name, value } = e.target;
+    setEditedBirthInfo((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   const handleCancelClick = () => {
@@ -203,16 +147,16 @@ function BasicInfo({  photo, person, birthInfo, gender }) {
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', gap: '5px' }}>
                 {!editing ? (
-                  <Button className={cl.actionBtn} onClick={handleEditClick}>
+                  <Button className={cl.actionBtn} onClick={handleEditClick} style={{ textTransform: 'none' }}>
                     &#9998; Редактировать
                   </Button>
                 ) : (
 
                   <div style={{ display: 'flex', gap: '10px' }}> 
-                    <Button onClick={handleSaveClick} className={cl.actionBtn}>
+                    <Button onClick={handleSaveClick} className={cl.actionBtn} style={{ textTransform: 'none' }}>
                       Сохранить
                     </Button>
-                    <Button className={cl.actionBtn} onClick={handleCancelClick}>Отмена</Button>
+                    <Button className={cl.actionBtn} onClick={handleCancelClick} style={{ textTransform: 'none' }}>Отмена</Button>
                   </div>
                 )}
               </div>
@@ -224,83 +168,107 @@ function BasicInfo({  photo, person, birthInfo, gender }) {
                         <label className={cl.label}>Имя</label>
                         {editing ? (
                           <div className={cl.datePickerContainer}>
-                            <input
+                            <TextField 
+                              id="outlined-basic" 
+                              label="Имя" 
+                              variant="outlined" 
+                              size="small"
                               type="text"
                               name='firstName'
-                              className={cl.workerInfo}
-                              value={editedWorker.firstName}
+                              className={cl.workerInfoText}
+                              value={editedPerson.firstName}
                               onChange={handleInputChange}
                             />
                           </div>
                         ) : (
-                          <p className={cl.workerInfo}>{person.firstName}</p>
+                          <Paper className={cl.workerInfo}>{person.firstName}</Paper>
                         )}
                     </div>
                     <div className={cl.rows}>
                         <label className={cl.label}>Фамилия</label>
                         {editing ? (
                           <div className={cl.datePickerContainer}>
-                            <input
+                            <TextField
+                              id="outlined-basic" 
+                              label="Фамилия" 
+                              variant="outlined" 
+                              size="small"
                               type="text"
                               name='surname'
-                              className={cl.workerInfo}
-                              value={editedWorker.surname}
+                              className={cl.workerInfoText}
+                              value={editedPerson.surname}
                               onChange={handleInputChange}
                             />
                           </div>
                         ) : (
-                          <p className={cl.workerInfo}>{person.surname}</p>
+                          <Paper className={cl.workerInfo}>{person.surname}</Paper>
                         )}
                     </div>
                     <div className={cl.rows}>
                         <label className={cl.label}>Отчество</label>
                         {editing ? (
                           <div className={cl.datePickerContainer}>
-                            <input
+                            <TextField
+                              id="outlined-basic" 
+                              label="Отчество" 
+                              variant="outlined" 
+                              size="small"
                               type="text"
                               name='patronymic'
-                              className={cl.workerInfo}
-                              value={editedWorker.patronymic}
+                              className={cl.workerInfoText}
+                              value={editedPerson.patronymic}
                               onChange={handleInputChange}
                             />
                           </div>
                         ) : (
-                          <p className={cl.workerInfo}>{person.patronymic}</p>
+                          <Paper className={cl.workerInfo}>{person.patronymic}</Paper>
                         )}
                     </div>
                     <div className={cl.rows}>
                         <label className={cl.label}>Пол</label>
                         {editing ? (
-                          <div className={cl.datePickerContainer}>
-                           <select
-                            name='genderName'
-                            className={cl.workerInfoSelect}
-                            value={editedWorker.genderName}
-                            onChange={(e) => setEditedWorker({ ...editedWorker, genderName: e.target.value })}
-                           >
-                            <option value="">Выберите пол</option>
-                            <option value="Female">Женский</option>
-                            <option value="Male">Мужской</option>
-                           </select>
+                          <div className={cl.datePickerContainer} >
+                            <Box sx={{ minWidth: 120 }}>
+                              <FormControl fullWidth>
+                                <InputLabel id="demo-simple-select-label">Пол</InputLabel>
+                                <Select
+                                  labelId="demo-simple-select-label"
+                                  id="demo-simple-select"
+                                  label="Пол"
+                                  name='genderName'
+                                  className={cl.workerInfoSelect}
+                                  value={editedGender.genderName}
+                                  onChange={(e) => setEditedGender({ ...editedGender, genderName: e.target.value })}
+                                >
+                                  <MenuItem value="">Выберите пол</MenuItem>
+                                  <MenuItem value="Женский">Женский</MenuItem>
+                                  <MenuItem value="Мужской">Мужской</MenuItem>
+                                </Select>
+                              </FormControl>
+                            </Box>
                           </div>
                         ) : (
-                          <p className={cl.workerInfo}>{gender.genderName}</p>
+                          <Paper className={cl.workerInfo}>{gender.genderName}</Paper>
                         )}
                     </div>
                     <div className={cl.rows}>
                         <label className={cl.label}>Национальность</label>
                         {editing ? (
                           <div className={cl.datePickerContainer}>
-                            <input
+                            <TextField
+                              id="outlined-basic" 
+                              label="Национальность" 
+                              variant="outlined" 
+                              size="small"
                               type="text"
                               name='nationality'
-                              className={cl.workerInfo}
-                              value={editedWorker.nationality}
+                              className={cl.workerInfoText}
+                              value={editedPerson.nationality}
                               onChange={handleInputChange}
                             />
                           </div>
                         ) : (
-                          <p className={cl.workerInfo}>{person.nationality}</p>
+                          <Paper className={cl.workerInfo}>{person.nationality}</Paper>
                         )}
                     </div>
   
@@ -310,13 +278,17 @@ function BasicInfo({  photo, person, birthInfo, gender }) {
                       <label className={cl.label}>Дата рождения</label>
                       {editing ? (
                         <div className={cl.datePickerContainer}>
-                          <input
+                          <TextField
+                            id="outlined-basic" 
+                            label="Дата рождения" 
+                            variant="outlined" 
+                            size="small"
                             type="date"
                             name='birth_date'
-                            className={cl.workerInfo}
-                            value={editedWorker.birth_date || ''}
+                            className={cl.workerInfoText}
+                            value={editedBirthInfo.birth_date || ''}
                             onChange={(e) =>
-                              setEditedWorker((prevWorker) => ({
+                              setEditedBirthInfo((prevWorker) => ({
                                 ...prevWorker,
                                 birth_date: e.target.value,
                               }))
@@ -325,71 +297,87 @@ function BasicInfo({  photo, person, birthInfo, gender }) {
                         
                         </div>
                       ) : (
-                        <p className={cl.workerInfo}>{birthInfo.birth_date}</p>
+                        <Paper className={cl.workerInfo}>{birthInfo.birth_date}</Paper>
                       )}
                     </div>
                     <div className={cl.rows}>
                         <label className={cl.label}>Страна рождения</label>
                         {editing ? (
                           <div className={cl.datePickerContainer}>
-                            <input
+                            <TextField
+                              id="outlined-basic" 
+                              label="Страна рождения" 
+                              variant="outlined" 
+                              size="small"
                               type="text"
                               name='country'
-                              className={cl.workerInfo}
-                              value={editedWorker.country}
-                              onChange={handleInputChange}
+                              className={cl.workerInfoText}
+                              value={editedBirthInfo.country}
+                              onChange={handleInputChangeBirth}
                             />
                           </div>
                         ) : (
-                          <p className={cl.workerInfo}>{birthInfo.country}</p>
+                          <Paper className={cl.workerInfo}>{birthInfo.country}</Paper>
                         )}
                     </div>
                     <div className={cl.rows}>
                         <label className={cl.label}>Город рождения</label>
                         {editing ? (
                           <div className={cl.datePickerContainer}>
-                            <input
+                            <TextField
+                              id="outlined-basic" 
+                              label="Город рождения" 
+                              variant="outlined" 
+                              size="small"
                               type="text"
                               name='city'
-                              className={cl.workerInfo}
-                              value={editedWorker.city}
-                              onChange={handleInputChange}
+                              className={cl.workerInfoText}
+                              value={editedBirthInfo.city}
+                              onChange={handleInputChangeBirth}
                             />
                           </div>
                         ) : (
-                          <p className={cl.workerInfo}>{birthInfo.city}</p>
+                          <Paper className={cl.workerInfo}>{birthInfo.city}</Paper>
                         )}
                     </div>
                     <div className={cl.rows}>
                         <label className={cl.label}>Регион рождения</label>
                         {editing ? (
                           <div className={cl.datePickerContainer}>
-                            <input
+                            <TextField
+                              id="outlined-basic" 
+                              label="Регион рождения" 
+                              variant="outlined" 
+                              size="small"
                               type="text"
                               name='region'
-                              className={cl.workerInfo}
-                              value={editedWorker.region}
-                              onChange={handleInputChange}
+                              className={cl.workerInfoText}
+                              value={editedBirthInfo.region}
+                              onChange={handleInputChangeBirth}
                             />
                           </div>
                         ) : (
-                          <p className={cl.workerInfo}>{birthInfo.region}</p>
+                          <Paper className={cl.workerInfo}>{birthInfo.region}</Paper>
                         )}
                     </div>
                     <div className={cl.rows}>
                         <label className={cl.label}>ИИН</label>
                         {editing ? (
                           <div className={cl.datePickerContainer}>
-                            <input
+                            <TextField
+                              id="outlined-basic" 
+                              label="ИИН" 
+                              variant="outlined" 
+                              size="small"
                               type="number"
                               name='iin'
-                              className={cl.workerInfo}
-                              value={editedWorker.iin}
+                              className={cl.workerInfoText}
+                              value={editedPerson.iin}
                               onChange={handleInputChange}
                             />
                           </div>
                         ) : (
-                          <p className={cl.workerInfo}>{person.iin}</p>
+                          <Paper className={cl.workerInfo}>{person.iin}</Paper>
                         )}
                     </div>
   

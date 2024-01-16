@@ -45,24 +45,21 @@ object-fit: cover;
 }
 
 .headline {
-    font-size: 18px;
-    font-weight: 600;
-    font-family: 'Helvetica', sans-serif;
-    margin: 20px 0 20px;
-    color: #4B4B4B;
-    display: flex;
-    align-items: flex-end;
-    justify-content: end;
-    gap: 8px
+  font-size: 18px;
+  font-weight: 600;
+  font-family: 'Helvetica', sans-serif;
+  margin: 20px 0 20px;
+  color: #4B4B4B;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  gap: 8px
 }
 
 .fio {
-    display: flex;
-    gap: 8px;
+  display: flex;
+  gap: 8px;
 }
-
-
-/* styles.module.css */
 
 .decree_btn_wrapper {
   display: flex;

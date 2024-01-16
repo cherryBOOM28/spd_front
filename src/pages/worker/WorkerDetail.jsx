@@ -14,6 +14,7 @@ import Courses from '../../components/tabsPage/personalInfo/courses/Courses';
 import AcademicDegree from '../../components/tabsPage/personalInfo/academicDegree/AcademicDegree';
 import Sport from '../../components/tabsPage/personalInfo/sport/Sport';
 import Loader from '../../components/loader _/Loader ';
+import Paper from '@mui/material/Paper';
 
 import axios from 'axios';
 import Cookies from 'js-cookie';
@@ -50,6 +51,7 @@ function WorkerDetail() {
   const [residentInfo, setResidentInfo] = useState({});
 
   const [positionInfo, setPositionInfo] = useState({});
+
   const [location, setLocation] = useState({});
   const [receivedDate, setReceivedDate] = useState({});
   const [positionTitle, setPositionTitle] = useState({});
@@ -132,7 +134,7 @@ function WorkerDetail() {
         setRankInfo(response.data.Person.rankInfo);
         setMilitaryRank(response.data.Person.rankInfo.militaryRank);
 
-        console.log(response.data.Person.rankInfo);
+        // console.log(response.data.Person.rankInfo);
       } else {
         console.log(response.statusText);
       }
@@ -156,7 +158,7 @@ function WorkerDetail() {
             <div className={cl.content}>
                 <div className={cl.container}>
                   <div className={cl.tabContent}>
-                    <div className={cl.tabHeader}>
+                    <Paper  className={cl.tabHeader}>
                       <div 
                           className={activeTab === 1 ? cl.btnTab + ' ' + cl.activeTab : cl.btnTab}
                           onClick={() => handleTabClick(1)}
@@ -181,9 +183,9 @@ function WorkerDetail() {
                       >
                         Кадровые данные 
                       </div>
-                    </div>
+                    </Paper >
 
-                    <div className={cl.tabBody}>
+                    <Paper  className={cl.tabBody}>
                       {loading ? (
                         <Loader loading={loading} />
                       ) : (
@@ -196,9 +198,15 @@ function WorkerDetail() {
                           <BasicInfo  
                             id={id} 
                             photo={photo}
+
                             person={person} 
+                            setPerson={setPerson}
+
                             birthInfo={birthInfo}
+                            setBirthInfo={setBirthInfo}
+
                             gender={gender}
+                            setGender={setGender}
                           />
                           <div className={cl.totalInfo}>
                             <TotalInfo
@@ -218,7 +226,7 @@ function WorkerDetail() {
                       {
                         activeTab === 2 && 
 
-                        <div className={cl.basic__info}>
+                        <div className={cl.basic__info}>   
                           <BasicInfo id={id}
                             photo={photo}
                             person={person} 
@@ -230,11 +238,22 @@ function WorkerDetail() {
                               id={id} 
                               iin={iin}
                               positionInfo={positionInfo}
+                              setPositionInfo={setPositionInfo}
+
                               location={location}
+                              setLocation={setLocation}
+
                               receivedDate={receivedDate}
+                              setReceivedDate={setReceivedDate}
+
                               positionTitle={positionTitle}
+                              setPositionTitle={setPositionTitle}
+
                               departmentName={departmentName}
+                              setDepartmentName={setDepartmentName}
+
                               familyStatus={familyStatus}
+                              setFamilyStatus={setFamilyStatus}
                               
                               familyComposition={familyComposition}
                               setFamilyComposition={setFamilyComposition}
@@ -336,7 +355,7 @@ function WorkerDetail() {
                       }
                         </div>
                       )}
-                    </div>
+                    </Paper >
                   </div>
                 </div>
             </div>
