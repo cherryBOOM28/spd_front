@@ -150,7 +150,7 @@ function DecreeHistory() {
                   <TableCell>{decree.person.positionInfo}</TableCell>
                   <TableCell>{decree.person.rankInfo}</TableCell>
                   <TableCell>
-                  <Button onClick={() => openModal(decree.decreeId, decree.decreeType)}>Откат</Button>
+                  <Button onClick={() => openModal(decree.decreeId, decree.decreeType)} style={{ textTransform: 'none' }}>Согласовать</Button>
                   </TableCell>
                 </TableRow>
               ))}

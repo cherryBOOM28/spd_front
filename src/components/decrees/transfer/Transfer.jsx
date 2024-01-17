@@ -5,7 +5,7 @@ import { NotificationContainer, NotificationManager } from 'react-notifications'
 import 'react-notifications/lib/notifications.css';
 import cl from './Transfer.module.css'
 import searchIcon from '../../../assets/icons/search.svg';
-import { Button } from '@mui/material';
+import { Button, TextField } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import InputLabel from '@mui/material/InputLabel';
@@ -20,9 +20,11 @@ function Transfer() {
         personId: '',
         newPosition: '',
         newDepartment: '',
+        decreeDate: '',
         base: '',
     });
 
+    const [selectedPersonIds, setSelectedPersonIds] = useState([]);
     const [foundPersons, setFoundPersons] = useState([]);
     const [ searchText, setSearchText ] = useState('');
     const [ showClearBtn, setShowClearBtn ] = useState(false);
@@ -86,13 +88,13 @@ function Transfer() {
                 headers: {
                 'Authorization': `Bearer ${accessToken}`,
                 },
-                responseType: 'blob', // Set the response type to blob
+                // responseType: 'blob', // Set the response type to blob
             });
 
             // console.log("formData after axios request:", formData);
  
 
-            // console.log("Server Response", response);
+            console.log("Server Response", response);
 
             // Create a blob from the response data
             const blob = new Blob([response.data], { type: response.headers['content-type'] });
@@ -110,11 +112,27 @@ function Transfer() {
             // Clean up
             document.body.removeChild(link);
             window.URL.revokeObjectURL(url);
+            NotificationManager.success('Документ успешно создан', 'Успех', 3000);
             // console.log("formData after download:", formData);
             } catch (error) {
-            console.error('Error submitting form:', error);
+            // console.error('Error submitting form:', error);
+
+            if (error.response && error.response.status === 400) {
+                const errorMessage = error.response.data.error || 'Неизвестная ошибка';
+                NotificationManager.error(errorMessage, 'Ошибка', 3000);
+            } else {
+                NotificationManager.error('Произошла ошибка', 'Ошибка', 3000);
+            }
         }
     };
+
+    useEffect(() => {
+        // Update formData when selectedPersonIds change
+        setFormData((prevFormData) => ({
+            ...prevFormData,
+            personId: selectedPersonIds.length > 0 ? Number(selectedPersonIds[selectedPersonIds.length - 1]) : 0,
+        }));
+    }, [selectedPersonIds]);
 
     const handleInputChange = async (event) => {
         const inputValue = event.target.value;
@@ -134,7 +152,9 @@ function Transfer() {
             const data = response.data;
             setFoundPersons(data.persons);
             setShowResults(true);
+            setShowResults(foundPersons.length > 0);
         } catch (error) {
+            console.log()
             console.error('Error fetching data:', error);
         }
         
@@ -147,13 +167,26 @@ function Transfer() {
     };
 
     const handleCheckboxChange = (personId) => {
-        // Update personId in the formData state
-        setFormData({
-            ...formData,
-            personId: Number(personId),
+        setSelectedPersonIds((prevSelectedPersonIds) => {
+            const isSelected = prevSelectedPersonIds.includes(personId);
+    
+            // If checkbox is checked, add the personId to selectedPersonIds
+            // If checkbox is unchecked, remove the personId from selectedPersonIds
+            const updatedSelectedPersonIds = isSelected
+                ? prevSelectedPersonIds.filter((id) => id !== personId)
+                : [...prevSelectedPersonIds, personId];
+    
+            // Update the selectedPersonIds state
+            setFormData((prevFormData) => ({
+                ...prevFormData,
+                personId: Number(personId),
+            }));
+    
+            console.log("Selected Person IDs:", updatedSelectedPersonIds);
+            return updatedSelectedPersonIds;
         });
     };
-
+    
     const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
     const handleClearClick = () => {
@@ -187,49 +220,37 @@ function Transfer() {
                         )}
                     </div>
                     {showResults && (
-                    <div className={cl.search_wrapper}>
-                        {foundPersons.map(person => (
-                            <div key={person.id} className={cl.search_list}>
-                                <div className={`${cl.search_row} ${cl.hoverEffect}`}>
-                                    <div className={cl.search_data}>
-                                        <img
-                                            src={`data:image/jpeg;base64,${person.photo}`}
-                                            alt="Person"
-                                            className={cl.profilePic}
-                                        />
-                                        <label style={{ fontSize: '16px' }}>{`${person.firstName} ${person.surname} ${person.patronymic}`}</label>
+                            <div className={cl.search_wrapper}>
+                                {foundPersons.length > 0 ? (
+                                    foundPersons.map(person => (
+                                        <div key={person.id} className={cl.search_list}>
+                                            <div className={`${cl.search_row} ${cl.hoverEffect}`}>
+                                                <div className={cl.search_data}>
+                                                    <img
+                                                        src={`data:image/jpeg;base64,${person.photo}`}
+                                                        alt="Person"
+                                                        className={cl.profilePic}
+                                                    />
+                                                    <label style={{ fontSize: '16px' }}>{`${person.firstName} ${person.surname} ${person.patronymic}`}</label>
+                                                </div>
+                                                <Checkbox
+                                                    {...label}
+                                                    value={person.id}
+                                                    onChange={() => handleCheckboxChange(person.id)} 
+                                                    checked={selectedPersonIds.includes(person.id)}
+                                                />
+                                            </div>
+                                        </div>
+                                    ))
+                                ) : (
+                                    <div className={cl.noResults}>
+                                        Нет совпадений
                                     </div>
-                                    <Checkbox {...label}  
-                                    value={person.id}
-                                        onChange={() => handleCheckboxChange(person.id)} />
-                                    {/* <input
-                                        type="checkbox"
-                                        className={cl.customCheckbox}
-                                        value={person.id}
-                                        onChange={() => handleCheckboxChange(person.id)}
-                                    /> */}
-                                </div>
+                                )}
                             </div>
-                        ))}
-                    </div>
-                    )}
+                        )}
 
                 </div>
-                    {/* <div>
-                        <label className={cl.label}>Должность</label>
-                        <select
-                            value={formData.newPosition}
-                            className={cl.workerInfoSelect}
-                            onChange={(e) => setFormData({ ...formData, newPosition: e.target.value })}
-                            >
-                            <option value="" disabled>Выберите должность</option>
-                            {positionsList.map((position) => (
-                                <option key={position} value={position}>
-                                {position}
-                                </option>
-                            ))}
-                        </select>
-                    </div> */}
                     <Box sx={{ minWidth: 290 }}>
                         {/* <label className={cl.label}>Должность</label> */}
                         <FormControl size="small" fullWidth>
@@ -275,6 +296,16 @@ function Transfer() {
                             </Select>
                         </FormControl>
                     </Box>
+                    <TextField
+                        sx={{ minWidth: 480 }}
+                        id="outlined-basic" 
+                        // label="Дата приказа" 
+                        variant="outlined"  
+                        size="small"
+                        type='date'
+                        value={formData.decreeDate}
+                        onChange={(e) => setFormData({ ...formData, decreeDate: e.target.value })}
+                     />
                     <Box sx={{ minWidth: 290 }}>
                         {/* <label className={cl.label}>Должность</label> */}
                         <FormControl size="small" fullWidth>
@@ -295,38 +326,7 @@ function Transfer() {
                             </Select>
                         </FormControl>
                     </Box>
-                    {/* <div>
-                        <label className={cl.label}>Департамент</label>
-                        <select
-                            value={formData.newDepartment}
-                            className={cl.workerInfoSelect}
-                            onChange={(e) => setFormData({ ...formData, newDepartment: e.target.value })}
-                            >
-                            <option value="" disabled>Выберите департамент</option>
-                            {departmentsList.map((department) => (
-                                <option key={department} value={department}>
-                                {department}
-                                </option>
-                            ))}
-                        </select>
-                    </div> */}
-                {/* <div className={cl.row}>
-                    <div>
-                        <label className={cl.label}>Oснование</label>
-                        <select
-                            value={formData.base}
-                            className={cl.workerInfoSelect}
-                            onChange={(e) => setFormData({ ...formData, base: e.target.value })}
-                            >
-                            <option value="" disabled>Выберите основание</option>
-                            {base.map((base) => (
-                                <option key={base} value={base}>
-                                {base}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
-                </div> */}
+                    
                 
             </div>
             <Button variant="contained" style={{ marginTop: '40px' }} onClick={handleFormSubmit} className={cl.btn}>Получить приказ</Button>

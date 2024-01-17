@@ -29,6 +29,8 @@ function RankUp() {
     const [ searchText, setSearchText ] = useState('');
     const [ showClearBtn, setShowClearBtn ] = useState(false);
     const [showResults, setShowResults] = useState(false);
+    const [selectedPersonIds, setSelectedPersonIds] = useState([]);
+    
 
     const handleFormSubmit = async () => {
         console.log("handleFormSubmit is called");console.log('Form Data:', formData);
@@ -45,7 +47,6 @@ function RankUp() {
                 headers: {
                 'Authorization': `Bearer ${accessToken}`,
                 },
-                responseType: 'blob', // Set the response type to blob
             });
 
             console.log("formData after axios request:", formData);
@@ -69,9 +70,17 @@ function RankUp() {
             // Clean up
             document.body.removeChild(link);
             window.URL.revokeObjectURL(url);
+            NotificationManager.success('Документ успешно создан', 'Успех', 3000);
             // console.log("formData after download:", formData);
             } catch (error) {
             console.error('Error submitting form:', error);
+
+            if (error.response && error.response.status === 400) {
+                const errorMessage = error.response.data.error || 'Неизвестная ошибка';
+                NotificationManager.error(errorMessage, 'Ошибка', 3000);
+            } else {
+                NotificationManager.error('Произошла ошибка', 'Ошибка', 3000);
+            }
         }
     };
 
@@ -123,10 +132,23 @@ function RankUp() {
     };
 
     const handleCheckboxChange = (personId) => {
-        // Update personId in the formData state
-        setFormData({
-            ...formData,
-            personId: Number(personId),
+        setSelectedPersonIds((prevSelectedPersonIds) => {
+            const isSelected = prevSelectedPersonIds.includes(personId);
+    
+            // If checkbox is checked, add the personId to selectedPersonIds
+            // If checkbox is unchecked, remove the personId from selectedPersonIds
+            const updatedSelectedPersonIds = isSelected
+                ? prevSelectedPersonIds.filter((id) => id !== personId)
+                : [...prevSelectedPersonIds, personId];
+    
+            // Update the selectedPersonIds state
+            setFormData((prevFormData) => ({
+                ...prevFormData,
+                personId: Number(personId),
+            }));
+    
+            console.log("Selected Person IDs:", updatedSelectedPersonIds);
+            return updatedSelectedPersonIds;
         });
     };
 
@@ -169,31 +191,37 @@ function RankUp() {
                         )}
                     </div>
                     {showResults && (
-                    <div className={cl.search_wrapper}>
-                        {foundPersons.map(person => (
-                            <div key={person.id} className={cl.search_list}>
-                                <div className={`${cl.search_row} ${cl.hoverEffect}`}>
-                                    <div className={cl.search_data}>
-                                        <img
-                                            src={`data:image/jpeg;base64,${person.photo}`}
-                                            alt="Person"
-                                            className={cl.profilePic}
-                                        />
-                                        <label style={{ fontSize: '16px' }}>{`${person.firstName} ${person.surname} ${person.patronymic}`}</label>
+                        <div className={cl.search_wrapper}>
+                            {foundPersons.length > 0 ? (
+                                foundPersons.map(person => (
+                                    <div key={person.id} className={cl.search_list}>
+                                        <div className={`${cl.search_row} ${cl.hoverEffect}`}>
+                                            <div className={cl.search_data}>
+                                                <img
+                                                    src={`data:image/jpeg;base64,${person.photo}`}
+                                                    alt="Person"
+                                                    className={cl.profilePic}
+                                                />
+                                                <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                                                    <label style={{ fontSize: '16px' }}>{`${person.firstName} ${person.surname} ${person.patronymic}`}</label>
+                                                    <label style={{ fontSize: '13px' }}>{person.currentRank}</label>
+                                                </div>
+                                            </div>
+                                            <Checkbox
+                                                {...label}
+                                                value={person.id}
+                                                onChange={() => handleCheckboxChange(person.id)} 
+                                                checked={selectedPersonIds.includes(person.id)}
+                                            />
+                                        </div>
                                     </div>
-                                    <Checkbox {...label}  
-                                    value={person.id}
-                                        onChange={() => handleCheckboxChange(person.id)} />
-                                    {/* <input
-                                        type="checkbox"
-                                        className={cl.customCheckbox}
-                                        value={person.id}
-                                        onChange={() => handleCheckboxChange(person.id)}
-                                    /> */}
+                                ))
+                            ) : (
+                                <div className={cl.noResults}>
+                                    Нет совпадений
                                 </div>
-                            </div>
-                        ))}
-                    </div>
+                            )}
+                        </div>
                     )}
 
                 </div>
