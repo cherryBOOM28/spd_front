@@ -8,3 +8,11 @@
 body {
   font-family: 'Helvetica', sans-serif;
 }
+
+/* Medium */
+@font-face {
+  font-family: 'Helvetica Meduim';
+  src: url('./assets/fonts/HelveticaMedium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+}
