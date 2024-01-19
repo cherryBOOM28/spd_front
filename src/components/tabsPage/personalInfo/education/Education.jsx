@@ -2,8 +2,21 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import cl from './Education.module.css';
 import axios from 'axios';
-import Button from '../../../UI/button/Button';
 import Cookies from 'js-cookie';
+import { Button,TextField, Select, Box, InputLabel, MenuItem, FormControl } from '@mui/material';
+import Table from '@mui/material/Table';
+import TableHead from '@mui/material/TableHead';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
+import { FaTrash } from "react-icons/fa";
+import { MdEdit } from "react-icons/md";
+import { FaPlus } from "react-icons/fa6";
+import { IoClose } from "react-icons/io5";
+import { FaCheck } from "react-icons/fa6";
+import IconButton from '@mui/material/IconButton';
 
 import { getPersonalInfo } from '../../../../api/persona_info/getPersonalInfo';
 import { deleteEducation } from '../../../../api/persona_info/educations/deleteEducation';
@@ -17,7 +30,7 @@ function Education({ education, setEducation }) {
     const [showForm, setShowForm] = useState(false);
 
     const handleShowForm = () => {
-        setShowForm(true);
+        setShowForm(!showForm);
     };
 
     const [inputData, setInputData] = useState({
@@ -223,15 +236,19 @@ function Education({ education, setEducation }) {
         setEditingId(null);
         setEditedData({});
     };
-    
+
+    const icon = showForm ? <IoClose style={{ fontSize: '18px' }} /> : <FaPlus style={{ fontSize: '16px' }} />;
 
     return (
         <div className={cl.personalWrapper}>
             <div className={cl.container}>
-                <div className={cl.totalInfoWrapper}>
+                <div className={cl.totalInfoWrapper}  style={{ marginTop: '40px' }}>
                     <div className={cl.totalInfoContent}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '40px' }}>
-                            <p className={cl.workerCapitalName}>Образование</p>
+                        <div style={{ display: 'flex',  alignItems: 'center', gap: '20px' }}>
+                            <p className={cl.workerCapitalName} style={{ marginBottom: '18px' }}>Образование</p>
+                            <IconButton onClick={handleShowForm} aria-label="toggle-form" style={{ marginBottom: '15px' }}>
+                                {icon}
+                            </IconButton>
                         </div>
                     </div>
                 </div>
@@ -241,87 +258,99 @@ function Education({ education, setEducation }) {
                         <Button onClick={handleShowForm}>Добавить образование</Button>
                             {showForm && (
                                 <form onSubmit={(e) => handleAddEducation(e, id)} style={{ marginTop: '10px' }}>
-                                    <table className={cl.customTable}>
-                                        <tbody >
-                                            <tr>
-                                                <td>
-                                                    <select
-                                                        className={cl.formInput}
-                                                        value={inputData.educationType}
-                                                        onChange={(e) => setInputData({ ...inputData, educationType: e.target.value })}
-                                                    >
-                                                        <option value="">Вид образование</option>
-                                                        <option value="Бакалавр">Высшее</option>
-                                                        <option value="Магистратура">Магистратура</option>
-                                                    </select>
-                                                </td>
-                                                <td>
-                                                    <input
-                                                        type="text"
-                                                        className={cl.formInput}
-                                                        placeholder="Учебное заведение "
-                                                        value={inputData.educationPlace}
-                                                        onChange={(e) => setInputData({ ...inputData, educationPlace: e.target.value })}
-                                                    />
-                                                </td>
-                                                <td>
-                                                    <div className={cl.datePickerContainer}>
-                                                    <input 
-                                                        type="date" 
-                                                        className={cl.formInput}
-                                                        placeholder="Дата поступления"
-                                                        value={inputData.educationDateIn || ''}
-                                                        onChange={(e) => {
-                                                            const newDate = e.target.value;
-                                                            setInputData((prevWorker) => ({
-                                                                ...prevWorker,
-                                                                educationDateIn: newDate,
-                                                            }));
-                                                        }}
-                                                    />
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div className={cl.datePickerContainer}>
-                                                    <input 
-                                                        type="date" 
-                                                        className={cl.formInput}
-                                                        placeholder="Дата окончания"
-                                                        value={inputData.educationDateOut || ''}
-                                                        onChange={(e) => {
-                                                            const newDate = e.target.value;
-                                                            setInputData((prevWorker) => ({
-                                                                ...prevWorker,
-                                                                educationDateOut: newDate,
-                                                            }));
-                                                        }}
-                                                    /> 
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <input
-                                                        type="text"
-                                                        className={cl.formInput}
-                                                        placeholder="Специальность"
-                                                        value={inputData.speciality}
-                                                        onChange={(e) => setInputData({ ...inputData, speciality: e.target.value })}
-                                                    />
-                                                </td>
-                                                <td>
-                                                    <input
-                                                        type="number"
-                                                        className={cl.formInput}
-                                                        placeholder="Номер диплома"
-                                                        value={inputData.diplomaNumber}
-                                                        onChange={(e) => setInputData({ ...inputData, diplomaNumber: e.target.value })}
-                                                    />
-                                                </td>
+                                    <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
+                                        <Box>
+                                            {/* <label className={cl.label}>Должность</label> */}
+                                            <FormControl size="small" fullWidth>
+                                                <InputLabel id="demo-simple-select-label">Вид образования</InputLabel>
+                                                <Select
+                                                labelId="demo-simple-select-label"
+                                                id="demo-simple-select"
+                                                label="Вид образования"
+                                                name='attResult'
+                                                className={cl.workerInfoSelect}
+                                                value={inputData.educationType}
+                                                onChange={(e) => setInputData({ ...inputData, educationType: e.target.value })}
                                                 
-                                                <td><Button type="submit" className={cl.submitBtn} >Добавить</Button></td>
-                                            </tr>
+                                                >
+                                                    <MenuItem value="Бакалавр">Высшее</MenuItem>
+                                                    <MenuItem value="Магистратура">Магистратура</MenuItem>
+                                                </Select>
+                                            </FormControl>
+                                        </Box>
+                                        <TextField
+                                            label="Учебное заведение" 
+                                            id="outlined-basic" 
+                                            variant="outlined"  
+                                            size="small"
+                                            type="text"
+                                            className={cl.workerInfoText}
+                                            value={inputData.educationPlace}
+                                            onChange={(e) => setInputData({ ...inputData, educationPlace: e.target.value })}
+                                        />
+                                    </div>
+                                    
+                                    <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
+                                       
+                                        <TextField 
+                                            id="outlined-basic" 
+                                            // label="Дата поступления" 
+                                            variant="outlined"  
+                                            size="small"
+                                            type="date" 
+                                            className={cl.workerInfoText}
+                                            // placeholder="Дата поступления"
+                                            value={inputData.educationDateIn || ''}
+                                            onChange={(e) => {
+                                                const newDate = e.target.value;
+                                                setInputData((prevWorker) => ({
+                                                    ...prevWorker,
+                                                    educationDateIn: newDate,
+                                                }));
+                                            }}
+                                        />
+                                        <TextField 
+                                            id="outlined-basic" 
+                                            variant="outlined"  
+                                            size="small"
+                                            type="date" 
+                                            className={cl.workerInfoText}
+                                            value={inputData.educationDateOut || ''}
+                                            onChange={(e) => {
+                                                const newDate = e.target.value;
+                                                setInputData((prevWorker) => ({
+                                                    ...prevWorker,
+                                                    educationDateOut: newDate,
+                                                }));
+                                            }}
+                                        /> 
+                                    </div>
+                                    <div style={{ display: 'flex', gap: '10px', marginTop: '15px' }}>
+                                        <TextField
+                                            id="outlined-basic" 
+                                            label="Специальность" 
+                                            variant="outlined"  
+                                            size="small"
+                                            type="text"
+                                            className={cl.workerInfoText}
+                                            value={inputData.speciality}
+                                            onChange={(e) => setInputData({ ...inputData, speciality: e.target.value })}
+                                        />
+                                        <TextField
+                                            id="outlined-basic" 
+                                            label="Номер диплома" 
+                                            variant="outlined"  
+                                            size="small"
+                                            type="number"
+                                            className={cl.workerInfoText}
+                                            value={inputData.diplomaNumber}
+                                            onChange={(e) => setInputData({ ...inputData, diplomaNumber: e.target.value })}
+                                        />
+                                    </div>
+                                    
+                                                
+                                    <Button type="submit" className={cl.submitBtn} >Добавить</Button>
                                             
-                                        </tbody>
-                                    </table>
                                 </form>
                             )}
                         </div>

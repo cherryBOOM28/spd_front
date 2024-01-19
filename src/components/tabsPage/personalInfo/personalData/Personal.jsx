@@ -2,8 +2,21 @@ import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import cl from './Personal.module.css';
-import Button from '../../../UI/button/Button';
+import { Button,TextField, Select, Box, InputLabel, MenuItem, FormControl } from '@mui/material';
+import Table from '@mui/material/Table';
+import TableHead from '@mui/material/TableHead';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
 import Cookies from 'js-cookie';
+import { FaTrash } from "react-icons/fa";
+import { MdEdit } from "react-icons/md";
+import { FaPlus } from "react-icons/fa6";
+import { IoClose } from "react-icons/io5";
+import { FaCheck } from "react-icons/fa6";
+import IconButton from '@mui/material/IconButton';
 
 import { deleteFamilyCompositions } from '../../../../api/persona_info/family_compositions/deleteFamilyCompositions';
 import { updateFamilyCompositions } from '../../../../api/persona_info/family_compositions/updateFamilyCompositions';
@@ -181,7 +194,7 @@ function Personal({
     const [showForm, setShowForm] = useState(false);
 
     const handleShowForm = () => {
-        setShowForm(true);
+        setShowForm(!showForm);
     };
 
     // input-ы где сохраняютя данные
@@ -408,6 +421,8 @@ function Personal({
         // Отменяем редактирование
         setEditing(false);
     };
+
+    const icon = showForm ? <IoClose style={{ fontSize: '18px' }} /> : <FaPlus style={{ fontSize: '16px' }} />;
     
     return (
         <div className={cl.personalWrapper}>
@@ -418,16 +433,16 @@ function Personal({
                             <p className={cl.workerCapitalName}>Семейное положение</p>
                             <div style={{ display: 'flex', justifyContent: 'space-between', gap: '5px' }}>
                                 {!editing ? (
-                                <Button className={cl.actionBtn} onClick={handleEditClick}>
+                                <Button className={cl.actionBtn} onClick={handleEditClick} style={{ textTransform: 'none' }}>
                                     &#9998; Редактировать
                                 </Button>
                                 ) : (
 
                                 <div style={{ display: 'flex', gap: '10px' }}> 
-                                    <Button onClick={handleSaveClick} className={cl.actionBtn}>
+                                    <Button onClick={handleSaveClick} className={cl.actionBtn} style={{ textTransform: 'none' }}>
                                     Сохранить
                                     </Button>
-                                    <Button className={cl.actionBtn} onClick={handleCancelClick}>Отмена</Button>
+                                    <Button className={cl.actionBtn} onClick={handleCancelClick} style={{ textTransform: 'none' }}>Отмена</Button>
                                 </div>
                                 )}
                             </div>
@@ -438,40 +453,57 @@ function Personal({
                             <div className={cl.rows}>
                                 <label className={cl.label}>Подразделение</label>
                                 {editing ? (
-                                    <input
-                                        className={cl.workerInfo}
+                                    <div style={{ marginLeft: '12px' }}>
+                                        <TextField
+                                        id="outlined-basic" 
+                                        label="Подразделение" 
+                                        variant="outlined" 
+                                        size="small"
+                                        className={cl.workerInfoText}
                                         type="text"
                                         name="DepartmentName"
                                         value={editedDepartmentInfo.DepartmentName}
                                         onChange={handleInputChange}
                                     />
+                                    </div>
                                 ) : (
-                                    <p className={cl.workerInfo}>{positionInfo.DepartmentName}</p>
+                                    <Paper className={cl.workerInfo}>{positionInfo.DepartmentName}</Paper>
                                 )}
                             </div>
                             <div className={cl.rows}>
                                 <label className={cl.label}>Должность</label>
                                 {editing ? (
-                                    <input
-                                        className={cl.workerInfo}
+                                    <div style={{ marginLeft: '12px',  }}>
+                                        <TextField
+                                        id="outlined-basic" 
+                                        label="Должность" 
+                                        variant="outlined" 
+                                        size="small"
+                                        className={cl.workerInfoText}
                                         type="text"
                                         name="positionTitle"
                                         value={editedPositionTitleInfo.positionTitle}
                                         onChange={handleInputChangePosition}
-                                    />
+                                        />
+                                    </div>
+                                   
                                 ) : (
 
-                                    <p className={cl.workerInfo}>{positionTitle.positionTitle}</p>
+                                    <Paper className={cl.workerInfo}>{positionTitle.positionTitle}</Paper>
                                 )}
                             </div>
                             <div className={cl.rows}>
                                 <label className={cl.label}>Дата зачисления</label>
                                 {editing ? (
-                                    <div className={cl.datePickerContainer}>
-                                    <input
+                                    <div className={cl.datePickerContainer} style={{ marginLeft: '12px'  }}>
+                                    <TextField
+                                        id="outlined-basic" 
+                                        label="Дата зачисления" 
+                                        variant="outlined" 
+                                        size="small"
                                         type="date"
                                         name='receivedDate'
-                                        className={cl.workerInfo}
+                                        className={cl.workerInfoText}
                                         value={editedReceivedDate.receivedDate || ''}
                                         onChange={(e) =>
                                         setEditedReceivedDate((prevWorker) => ({
@@ -482,7 +514,7 @@ function Personal({
                                     />
                                     </div>
                                 ) : (
-                                    <p className={cl.workerInfo}>{receivedDate.receivedDate}</p>
+                                    <Paper className={cl.workerInfo}>{receivedDate.receivedDate}</Paper>
                                 )}
                             </div>
                             
@@ -491,36 +523,50 @@ function Personal({
                             <div className={cl.rows}>
                                 <label className={cl.label}>Семейное положение</label>
                                 {editing ? (
-                                    <select
-                                    className={cl.workerInfoSelect}
-                                     value={editedStatusName.statusName}
-                                     onChange={(e) => setEditedStatusName({ ...editedStatusName, statusName: e.target.value })}
-                                     >
-                                        <option value="">Выберите семейное положение</option>
-                                        <option value="Не женат/не замужем">Не женат/не замужем</option>
-                                        <option value="Женат/замужем">Женат/замужем</option>
-                                        <option value="Вдова/вдовец">Вдова/вдовец</option>
-                                        <option value="Разведена/разведен">Разведен/разведена</option>
-                                     </select>  
+                                     <Box sx={{ minWidth: 120 }} style={{ marginLeft: '12px'  }}>
+                                     <FormControl fullWidth>
+                                       <InputLabel id="demo-simple-select-label">Пол</InputLabel>
+                                       <Select
+                                            labelId="demo-simple-select-label"
+                                            id="demo-simple-select"
+                                            label="Пол"
+                                            name='genderName'
+                                            className={cl.workerInfoSelect}
+                                            value={editedStatusName.statusName}
+                                            onChange={(e) => setEditedStatusName({ ...editedStatusName, statusName: e.target.value })}
+                                        >
+                                            <MenuItem value="">Выберите семейное положение</MenuItem>
+                                            <MenuItem value="Не женат/не замужем">Не женат/не замужем</MenuItem>
+                                            <MenuItem value="Женат/замужем">Женат/замужем</MenuItem>
+                                            <MenuItem value="Вдова/вдовец">Вдова/вдовец</MenuItem>
+                                            <MenuItem value="Разведена/разведен">Разведен/разведена</MenuItem>
+                                       </Select>
+                                     </FormControl>
+                                   </Box>
                                     
                                 ) : (
 
-                                    <p className={cl.workerInfo}>{familyStatus.statusName}</p>
+                                    <Paper className={cl.workerInfo}>{familyStatus.statusName}</Paper>
                                 )}
                             </div>
                             <div className={cl.rows}>
                                 <label className={cl.label}>Город подразделения</label>
                                 {editing ? (
-                                    <input
-                                        className={cl.workerInfo}
-                                        type="text"
-                                        name="LocationName"
-                                        value={editedLocationInfo.LocationName}
-                                        onChange={handleInputChangeLocation}
-                                    />
+                                    <div style={{ marginLeft: '12px'  }}>
+                                        <TextField
+                                            id="outlined-basic" 
+                                            label="Город подразделения" 
+                                            variant="outlined" 
+                                            size="small"
+                                            className={cl.workerInfoText}
+                                            type="text"
+                                            name="LocationName"
+                                            value={editedLocationInfo.LocationName}
+                                            onChange={handleInputChangeLocation}
+                                        />
+                                    </div>
                                 ) : (
-
-                                    <p className={cl.workerInfo}>{location.LocationName}</p>
+                                    <Paper className={cl.workerInfo}>{location.LocationName}</Paper>
                                 )}
                             </div>
                             
@@ -529,217 +575,256 @@ function Personal({
                 </div>
                 <div className={cl.totalInfoWrapper} style={{ marginTop: '40px' }}>
                     <div className={cl.totalInfoContent}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                            <p className={cl.workerCapitalName} style={{ marginBottom: '20px' }}>Состав семьи</p>
+                        <div style={{ display: 'flex',  alignItems: 'center', gap: '20px' }}>
+                            <p className={cl.workerCapitalName} style={{ marginBottom: '18px' }}>Состав семьи</p>
+                            <IconButton onClick={handleShowForm} aria-label="toggle-form" style={{ marginBottom: '15px' }}>
+                                {icon}
+                            </IconButton>
                         </div>
                     </div>
                     <div>
                         <div>
-                        <Button onClick={handleShowForm}>Добавить родственника</Button>
                             {showForm && (
                                 <form onSubmit={(e) => handleAddMember(e, id)} style={{ marginTop: '10px' }}>
-                                    <table className={cl.customTable}>
-                                        <tbody >
-                                            <tr>
-                                                <td>
-                                                    <select
-                                                        className={cl.formInput}
-                                                        value={inputData.relativeType}
-                                                        onChange={(e) => setInputData({ ...inputData, relativeType: e.target.value })}
-                                                    >
-                                                        <option value="">Выберите тип родственника</option>
-                                                        <option value="супруг/супруга">супруг/супруга</option>
-                                                        <option value="сын/дочь">сын/дочь</option>
-                                                        <option value="мать/отец">мать/отец</option>
-                                                        <option value="брат/сестра">брат/сестра</option>
-                                                    </select>
-                                                </td>
-                                                <td>
-                                                    <input
-                                                        type="text"
-                                                        className={cl.formInput}
-                                                        placeholder="Имя"
-                                                        name='relName'
-                                                        value={inputData.relName}
-                                                        onChange={(e) => setInputData({ ...inputData, relName: e.target.value })}
-                                                    />
-                                                </td>
-                                                <td>
-                                                    <input
-                                                        type="text"
-                                                        className={cl.formInput}
-                                                        placeholder="Фамилия"
-                                                        name='relSurname'
-                                                        value={inputData.relSurname}
-                                                        onChange={(e) => setInputData({ ...inputData, relSurname: e.target.value })}
-                                                    />
-                                                </td>
-                                                <td>
-                                                    <input
-                                                        type="text"
-                                                        className={cl.formInput}
-                                                        placeholder="Отчество"
-                                                        name='relPatronymic'
-                                                        value={inputData.relPatronymic}
-                                                        onChange={(e) => setInputData({ ...inputData, relPatronymic: e.target.value })}
-                                                    />
-                                                </td>
-                                                <td>
-                                                    <input
-                                                        type="number"
-                                                        className={cl.formInput}
-                                                        name='relIin'
-                                                        placeholder="ИИН родственника"
-                                                        value={inputData.relIin}
-                                                        onChange={(e) => setInputData({ ...inputData, relIin: e.target.value })}
-                                                    />
-                                                </td>
-                                                <td>
-                                                    <div className={cl.datePickerContainer}>
+                                    <div style={{ display:'flex', gap: '20px' }}>
+                                        <Box>
+                                            {/* <label className={cl.label}>Должность</label> */}
+                                            <FormControl size="small" fullWidth>
+                                                <InputLabel id="demo-simple-select-label">Степень родства</InputLabel>
+                                                <Select
+                                                labelId="demo-simple-select-label"
+                                                id="demo-simple-select"
+                                                label="Степень родства"
+                                                placeholder="Степень родства"
+                                                name='attResult'
+                                                className={cl.workerInfoSelect_long}
+                                                value={inputData.relativeType}
+                                                onChange={(e) => setInputData({ ...inputData, relativeType: e.target.value })}
+                                                
+                                                >
+                                                    <MenuItem value="">Выберите тип родственника</MenuItem>
+                                                    <MenuItem value="супруг/супруга">супруг/супруга</MenuItem>
+                                                    <MenuItem value="сын/дочь">сын/дочь</MenuItem>
+                                                    <MenuItem value="мать/отец">мать/отец</MenuItem>
+                                                    <MenuItem value="брат/сестра">брат/сестра</MenuItem>
+                                                </Select>
+                                            </FormControl>
+                                        </Box>
+                                        <Button  variant="contained" type="submit">Добавить</Button>
+                                    </div>
+                                    <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
+                                        <TextField
+                                            id="outlined-basic" 
+                                            label="Имя" 
+                                            variant="outlined"  
+                                            size="small"
+                                            type="text"
+                                            className={cl.workerInfoText}
+                                            name='relName'
+                                            value={inputData.relName}
+                                            onChange={(e) => setInputData({ ...inputData, relName: e.target.value })}
+                                        />
+                                        <TextField
+                                            id="outlined-basic" 
+                                            label="Фамилия" 
+                                            variant="outlined"  
+                                            size="small"
+                                            type="text"
+                                            className={cl.workerInfoText}
+                                            name='relSurname'
+                                            value={inputData.relSurname}
+                                            onChange={(e) => setInputData({ ...inputData, relSurname: e.target.value })}
+                                        />
+                                    </div>
+                                    <div style={{ display: 'flex', gap: '10px', marginTop: '15px' }}>
+                                        <TextField
+                                            id="outlined-basic" 
+                                            label="Отчество" 
+                                            variant="outlined"  
+                                            size="small"
+                                            type="text"
+                                            className={cl.workerInfoText}
+                                            name='relPatronymic'
+                                            value={inputData.relPatronymic}
+                                            onChange={(e) => setInputData({ ...inputData, relPatronymic: e.target.value })}
+                                        />
+                                        <TextField
+                                            id="outlined-basic" 
+                                            label="ИИН родственника" 
+                                            variant="outlined"  
+                                            size="small"
+                                            type="number"
+                                            className={cl.workerInfoText}
+                                            name='relIin'
+                                            value={inputData.relIin}
+                                            onChange={(e) => setInputData({ ...inputData, relIin: e.target.value })}
+                                        />
+                                    </div>
+                                    
+                                    <div style={{ display: 'flex', gap: '10px', marginTop: '15px' }} >
 
-                                                    <input
-                                                        type="date"
-                                                        className={cl.formInput}
-                                                        name='relBirthDate'
-                                                        placeholder="Дата рождения"
-                                                        value={inputData.relBirthDate || ''}
-                                                        onChange={(e) => {
-                                                            const newDate = e.target.value;
-                                                            setInputData((prevWorker) => ({
-                                                            ...prevWorker,
-                                                            relBirthDate: newDate,
-                                                            }));
-                                                        }}
-                                                        />
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <input
-                                                        type="text"
-                                                        className={cl.formInput}
-                                                        name='relJobPlace'
-                                                        placeholder="Место работы"
-                                                        value={inputData.relJobPlace}
-                                                        onChange={(e) => setInputData({ ...inputData, relJobPlace: e.target.value })}
-                                                    />
-                                                </td>
-                                                <td><Button type="submit">Добавить</Button></td>
-                                            </tr>
+                                        <TextField
+                                            id="outlined-basic" 
+                                            variant="outlined"  
+                                            size="small"
+                                            type="date"
+                                            className={cl.workerInfoText}
+                                            name='relBirthDate'
+                                            value={inputData.relBirthDate || ''}
+                                            onChange={(e) => {
+                                                const newDate = e.target.value;
+                                                setInputData((prevWorker) => ({
+                                                ...prevWorker,
+                                                relBirthDate: newDate,
+                                                }));
+                                            }}
+                                        />
+                                        <TextField
+                                        id="outlined-basic" 
+                                        label="Место работы" 
+                                        variant="outlined"  
+                                        size="small"
+                                        type="text"
+                                        className={cl.workerInfoText}
+                                        name='relJobPlace'
+                                        value={inputData.relJobPlace}
+                                        onChange={(e) => setInputData({ ...inputData, relJobPlace: e.target.value })}
+                                        />
+                                    </div>
+                                    
+                                
                                             
-                                        </tbody>
-                                    </table>
                                 </form>
                             )}
                         </div>
                         <div>
-                            <table className={cl.customTable} style={{ marginTop: '20px' }}>
-                                <thead>
-                                    <tr>
-                                        <td>Степень родства</td>
-                                        <td>Имя</td>
-                                        <td>Фамилия</td>
-                                        <td>Отчество</td>
-                                        <td>ИИН</td>
-                                        <td>Дата рождения</td>
-                                        <td>Место работы</td>
-                                        <td>Действие</td>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {familyComposition && familyComposition.relatives && familyComposition.relatives.map((d, i) => (
-                                        <tr key={i}>
-                                            <td>  
-                                                {editingId === d.id ? (
-                                                    <select
-                                                        className={cl.selectRelative_type}
-                                                        name='relativeType'
-                                                        value={editedData.relativeType}
-                                                        onChange={(e) => {
-                                                            const selectedValue = e.target.value;
-                                                            console.log('Selected Relative Type:', selectedValue);
-                                                            setEditedData({ ...editedData, relativeType: selectedValue });
-                                                          }}
-                                                        
-                                                    >
-                                                        <option value="">Выберите тип родственника</option>
-                                                        <option value="супруг/супруга">супруг/супруга</option>
-                                                        <option value="сын/дочь">сын/дочь</option>
-                                                        <option value="мать/отец">мать/отец</option>
-                                                        <option value="брат/сестра">брат/сестра</option>
-                                                    </select>
-                                                ) : (
-                                                    d.relativeType.relativeName
-                                                    // d.relativeType && d.relativeType.relativeName
-                                                )}
-                                            </td>
-                                            <td>{editingId === d.id ? 
-                                                <input 
-                                                    type="text" 
-                                                    className={cl.editInput} 
-                                                    name='relName' 
-                                                    value={editedData.relName} 
-                                                    onChange={(e) => setEditedData({ ...editedData, relName: e.target.value })} 
-                                                /> : d.relName}
-                                            </td>
-                                            <td>{editingId === d.id ? 
-                                                <input 
-                                                    type="text" 
-                                                    className={cl.editInput} 
-                                                    name='relSurname' 
-                                                    value={editedData.relSurname} 
-                                                    onChange={(e) => setEditedData({ ...editedData, relSurname: e.target.value })} 
-                                                /> : d.relSurname}
-                                            </td>
-                                            <td>{editingId === d.id ? 
-                                                <input 
-                                                    type="text" 
-                                                    className={cl.editInput} 
-                                                    name='relPatronymic' 
-                                                    value={editedData.relPatronymic} 
-                                                    onChange={(e) => setEditedData({ ...editedData, relPatronymic: e.target.value })} 
-                                                /> : d.relPatronymic}
-                                            </td>
-                                            <td>{editingId === d.id ? <input type='number' className={cl.editInput} name='relIin'  value={editedData.relIin} onChange={(e) => setEditedData({ ...editedData, relIin: e.target.value })} /> : d.relIin}</td>
-                                            <td>
-                                            {editingId === d.id ? (
-                                                <div className={cl.datePickerContainer}>
-                                                    <input
-                                                        type="date"
-                                                        className={cl.formInput}
-                                                        name='relBirthDate'
-                                                        placeholder="Дата рождения"
-                                                        value={editedData.relBirthDate || ''}
-                                                        onChange={(e) => {
-                                                            const newDate = e.target.value;
-                                                            setEditedData((prevData) => ({
-                                                            ...prevData,
-                                                            relBirthDate: newDate,
-                                                            }));
-                                                        }}
-                                                    />
-                                                </div>
+                            <Paper sx={{ width: '100%', overflow: 'hidden', marginTop: '20px' }}>
+                                <TableContainer sx={{ maxHeight: 440 }}>
+                                    <Table stickyHeader aria-label="sticky table">
+                                        <TableHead>
+                                            <TableRow>
+                                                    <TableCell>Степень родства</TableCell>
+                                                    <TableCell>Имя</TableCell>
+                                                    <TableCell>Фамилия</TableCell>
+                                                    <TableCell>Отчество</TableCell>
+                                                    <TableCell>ИИН</TableCell>
+                                                    <TableCell>Дата рождения</TableCell>
+                                                    <TableCell>Место работы</TableCell>
+                                                    <TableCell>Действие</TableCell>
+                                            </TableRow>
+                                        </TableHead>
+                                        <TableBody>
+                                            {familyComposition && familyComposition.relatives && familyComposition.relatives.length > 0 ? (
+                                                familyComposition.relatives.map((d, i) => (
+                                                    <TableRow key={i}>
+                                                    <TableCell>  
+                                                        {editingId === d.id ? (
+                                                             <Box sx={{ minWidth: 120 }}>
+                                                             <FormControl fullWidth>
+                                                               <InputLabel id="demo-simple-select-label">Степень родства</InputLabel>
+                                                               <Select
+                                                                    labelId="demo-simple-select-label"
+                                                                    id="demo-simple-select"
+                                                                    label="Степень родства"
+                                                                    className={cl.workerInfoSelect}
+                                                                    style={{ width: '240px' }}
+                                                                    name='relativeType'
+                                                                    value={editedData.relativeType}
+                                                                    onChange={(e) => {
+                                                                        const selectedValue = e.target.value;
+                                                                        console.log('Selected Relative Type:', selectedValue);
+                                                                        setEditedData({ ...editedData, relativeType: selectedValue });
+                                                                    }}
+                                                                >
+                                                                    <MenuItem value="супруг/супруга">супруг/супруга</MenuItem>
+                                                                    <MenuItem value="сын/дочь">сын/дочь</MenuItem>
+                                                                    <MenuItem value="мать/отец">мать/отец</MenuItem>
+                                                                    <MenuItem value="брат/сестра">брат/сестра</MenuItem>
+                                                               </Select>
+                                                             </FormControl>
+                                                           </Box>
+                                                        ) : (
+                                                            d.relativeType.relativeName
+                                                            // d.relativeType && d.relativeType.relativeName
+                                                        )}
+                                                    </TableCell>
+                                                    <TableCell>{editingId === d.id ? 
+                                                        <input 
+                                                            type="text" 
+                                                            className={cl.editInput} 
+                                                            name='relName' 
+                                                            value={editedData.relName} 
+                                                            onChange={(e) => setEditedData({ ...editedData, relName: e.target.value })} 
+                                                        /> : d.relName}
+                                                    </TableCell>
+                                                    <TableCell>{editingId === d.id ? 
+                                                        <input 
+                                                            type="text" 
+                                                            className={cl.editInput} 
+                                                            name='relSurname' 
+                                                            value={editedData.relSurname} 
+                                                            onChange={(e) => setEditedData({ ...editedData, relSurname: e.target.value })} 
+                                                        /> : d.relSurname}
+                                                    </TableCell>
+                                                    <TableCell>{editingId === d.id ? 
+                                                        <input 
+                                                            type="text" 
+                                                            className={cl.editInput} 
+                                                            name='relPatronymic' 
+                                                            value={editedData.relPatronymic} 
+                                                            onChange={(e) => setEditedData({ ...editedData, relPatronymic: e.target.value })} 
+                                                        /> : d.relPatronymic}
+                                                    </TableCell>
+                                                    <TableCell>{editingId === d.id ? <input type='number' className={cl.editInput} name='relIin'  value={editedData.relIin} onChange={(e) => setEditedData({ ...editedData, relIin: e.target.value })} /> : d.relIin}</TableCell>
+                                                    <TableCell>
+                                                    {editingId === d.id ? (
+                                                        <div className={cl.datePickerContainer}>
+                                                            <input
+                                                                type="date"
+                                                                className={cl.formInput}
+                                                                name='relBirthDate'
+                                                                placeholder="Дата рождения"
+                                                                value={editedData.relBirthDate || ''}
+                                                                onChange={(e) => {
+                                                                    const newDate = e.target.value;
+                                                                    setEditedData((prevData) => ({
+                                                                    ...prevData,
+                                                                    relBirthDate: newDate,
+                                                                    }));
+                                                                }}
+                                                            />
+                                                        </div>
+                                                    ) : (
+                                                        d.relBirthDate
+                                                    )}
+                                                    </TableCell>
+                                                    <TableCell>{editingId === d.id ? <input type='text' className={cl.editInput} name='relJobPlace' value={editedData.relJobPlace} onChange={(e) => setEditedData({ ...editedData, relJobPlace: e.target.value })} /> : d.relJobPlace}</TableCell>
+                                                    <TableCell  className={cl.relativesActionBtns} style={{}}>
+                                                        {editingId === d.id ? (
+                                                            <div>
+                                                                <IconButton className={cl.iconBtn} onClick={() => handleSaveEdit(d.id)}><FaCheck color=' #1565C0' /></IconButton>
+                                                                <IconButton className={cl.iconBtn} onClick={handleCancelEdit}><IoClose /></IconButton>
+                                                            </div>
+                                                        ) : (
+                                                            <>
+                                                                <IconButton className={cl.iconBtn} onClick={() => handleEdit(d.id)}><MdEdit /></IconButton>
+                                                                <IconButton className={cl.iconBtn} onClick={() => handleDelete(d.id)}><FaTrash /></IconButton>
+                                                            </>
+                                                        )}
+                                                    </TableCell >
+                                                </TableRow>
+                                                ))
                                             ) : (
-                                                d.relBirthDate
+                                                <TableRow>
+                                                    <TableCell colSpan={8} align="center">
+                                                        Нет данных
+                                                    </TableCell>
+                                                </TableRow>
                                             )}
-                                            </td>
-                                            <td>{editingId === d.id ? <input type='text' className={cl.editInput} name='relJobPlace' value={editedData.relJobPlace} onChange={(e) => setEditedData({ ...editedData, relJobPlace: e.target.value })} /> : d.relJobPlace}</td>
-                                            <td className={cl.relativesActionBtns} style={{}}>
-                                                {editingId === d.id ? (
-                                                    <>
-                                                        <div onClick={() => handleSaveEdit(d.id)}>&#10003;</div>
-                                                        <div onClick={handleCancelEdit}>&#x2715;</div>
-                                                    </>
-                                                ) : (
-                                                    <>
-                                                        <div onClick={() => handleEdit(d.id)}>&#9998;</div>
-                                                        <div onClick={() => handleDelete(d.id)}>Удалить</div>
-                                                    </>
-                                                )}
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
+                                        </TableBody>
+                                    </Table>
+                                </TableContainer>
+                            </Paper>
                         </div>
                     </div>
                 </div>

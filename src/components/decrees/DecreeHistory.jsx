@@ -3,10 +3,11 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 import cl from './DecreeHistory.module.css';
 import { GoHistory } from "react-icons/go";
-import { useNavigate } from 'react-router-dom';
 import { Paper, TableContainer, Table, TableHead, TableBody, TableRow, TableCell, Button } from '@mui/material';
 import Modal from '../UI/modal/Modal';
 import { IoIosArrowDown } from "react-icons/io";
+import { NotificationContainer, NotificationManager } from 'react-notifications';
+import 'react-notifications/lib/notifications.css';
 import { BsFillBriefcaseFill } from "react-icons/bs";
 import { BsPersonFill } from "react-icons/bs";
 import { GiRank2 } from "react-icons/gi";
@@ -19,10 +20,6 @@ function DecreeHistory() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedDecreeId, setSelectedDecreeId] = useState(null);
   const [decreeInfo, setDecreeInfo] = useState([]);
-
-
-
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchDecrees = async () => {
@@ -44,7 +41,7 @@ function DecreeHistory() {
     fetchDecrees();
   }, []); // Run the effect only once on mount
 
-  const handleWorkerClick = (personId) => {
+  const handleWorkerClick = () => {
     // navigate(`/${personId}`) 
   };
 
@@ -70,35 +67,25 @@ function DecreeHistory() {
     setIsModalVisible(false);
   };
 
-  const handleConfirmation = async () => {
+  const handleConfirmation = async (decreeId) => {
     try {
       const accessToken = Cookies.get('jwtAccessToken');
-      const response = await axios.post('http://127.0.0.1:8000/api/v1/confirm-decree/', { decreeId: selectedDecreeId }, {
+      const response = await axios.post('http://127.0.0.1:8000/api/v1/confirm-decree/', { decreeId }, {
         headers: {
           'Authorization': `Bearer ${accessToken}`,
         },
       });
+
+       // Update the local state or data structure with the confirmation status
+        const updatedDecreeList = decreeList.map((decree) =>
+        decree.decreeId === decreeId ? { ...decree, decreeIsConfirmed: true } : decree
+        );
+        setDecreeList(updatedDecreeList);
 
       console.log("deleted decree Id", response)
       closeModal();
-      window.location.reload();
-    } catch (error) {
-      console.error('Error confirming transfer cancellation:', error);
-    }
-  };
-
-  const getDecreeInfo = async (decreeId) => {
-    try {
-      const accessToken = Cookies.get('jwtAccessToken');
-      const response = await axios.get(`http://127.0.0.1:8000/api/v1/get-decree-info/?decreeId=${decreeId}`, {
-        headers: {
-          'Authorization': `Bearer ${accessToken}`,
-        },
-      });
-
-      console.log("deleted decree Id", response.data)
-      closeModal();
-      window.location.reload();
+      NotificationManager.success('Приказ успешно согласован!', 'Успех', 3000)
+      // window.location.reload();
     } catch (error) {
       console.error('Error confirming transfer cancellation:', error);
     }
@@ -156,7 +143,7 @@ function DecreeHistory() {
           <h2 className={cl.headline} style={{ marginBottom: '35px' }}>Согласование приказа</h2>
           <div>
             {decreeInfo.transferInfo && decreeInfo.transferInfo.map((info) => (
-              <div className={cl.form_wrapper}>
+              <div className={cl.form_wrapper} key={info.decreeInfo.decreeId}>
                 <div className={cl.worker_info}>
                   <div>
                     <img src={`data:image/jpeg;base64,${info.decreeInfo.person.photo}`} alt=""  className={cl.workerPic} />
@@ -223,7 +210,10 @@ function DecreeHistory() {
                 </div>
                 <div style={{ marginTop: '30px',  }}>
                   <div style={{ display: 'flex',   flexDirection: 'column', gap: '10px', marginTop: '10px' }}>
-                    <p className={cl.headline_2}>Предыдущяя должность</p>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '5px', marginBottom: '15px' }}>
+                      <BsFillBriefcaseFill style={{ color: '#1976D2', fontSize: '20px' }} />
+                      <p className={cl.headline_2}>Предыдущяя должность</p>
+                    </div>
                       <div className={cl.info_text_block}>
                         <Paper  className={cl.info_text_2}>
                           <label className={cl.label_2}>Департамент</label>
@@ -232,7 +222,7 @@ function DecreeHistory() {
                       </div>
                       <div className={cl.info_text_block}>
                         <Paper  className={cl.info_text_2}>
-                          <label className={cl.label_2}>Новая должность</label>
+                          <label className={cl.label_2}>Должность</label>
                           {info.previousPosition.previousPosition}
                         </Paper>
                       </div>
@@ -241,7 +231,10 @@ function DecreeHistory() {
                     <IoIosArrowDown style={{ fontSize: '28px', color: '#1565C0' }} />
                   </div>
                   <div style={{ display: 'flex',   flexDirection: 'column', gap: '10px', marginTop: '0px' }}>
-                  <p className={cl.headline_2}>Новая должность</p>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '5px', marginBottom: '15px' }}>
+                      <BsFillBriefcaseFill style={{ color: '#1976D2', fontSize: '20px' }} />
+                      <p className={cl.headline_2}>Новая должность</p>
+                    </div>
                     <div className={cl.info_text_block}>
                       <Paper  className={cl.info_text_2}>
                         <label className={cl.label_2}>Департамент</label>
@@ -254,13 +247,17 @@ function DecreeHistory() {
                         {info.newPosition.newPosition}
                       </Paper>
                     </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', gap: '10px', marginTop: '20px' }}>
+                      <Button variant="contained" style={{ width: '100%' }} onClick={() => handleConfirmation(info.decreeInfo.decreeId)}>Согласовать</Button>
+                      <Button variant="outlined" style={{ width: '100%' }} onClick={closeModal}>Отменить</Button>
+                    </div>
                   </div>
                 </div>
               </div>
             ))}
 
             {decreeInfo.appointmentInfo && decreeInfo.appointmentInfo.map((info) => (
-              <div className={cl.form_wrapper}>
+              <div className={cl.form_wrapper} key={info.decreeInfo.decreeId}>
                 <div className={cl.worker_info}>
                   <div>
                     <img src={`data:image/jpeg;base64,${info.decreeInfo.person.photo}`} alt=""  className={cl.workerPic} />
@@ -320,16 +317,60 @@ function DecreeHistory() {
                   </div>
                   <div className={cl.info_text_block}>
                     <Paper  className={cl.info_text_2}>
-                      <label className={cl.label_2}>Дата приказа</label>
-                      {info.decreeInfo.decreeType}
+                      <label className={cl.label_2}>Должность</label>
+                      {info.decreeInfo.person.positionInfo}
                     </Paper>
+                  </div>
+                </div>
+                <div style={{ marginTop: '30px',  }}>
+                  <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+                  </div>
+                  <div style={{ display: 'flex',   flexDirection: 'column', gap: '10px', marginTop: '0px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '5px', marginBottom: '15px' }}>
+                      <BsFillBriefcaseFill style={{ color: '#1976D2', fontSize: '20px' }} />
+                      <p className={cl.headline_2}>Новая должность</p>
+                    </div>
+                    <div className={cl.info_text_block}>
+                      <Paper  className={cl.info_text_2}>
+                        <label className={cl.label_2}>Департамент</label>
+                        {info.newPosition.newDepartment}
+                      </Paper>
+                    </div>
+                    <div className={cl.info_text_block}>
+                      <Paper  className={cl.info_text_2}>
+                        <label className={cl.label_2}>Новая должность</label>
+                        {info.newPosition.newPosition}
+                      </Paper>
+                    </div>
+                    <div className={cl.info_text_block}>
+                      <Paper  className={cl.info_text_2}>
+                        <label className={cl.label_2}>Испытательный срок</label>
+                        {info.newPosition.probationMonthCount}
+                      </Paper>
+                    </div>
+                    <div className={cl.info_text_block}>
+                      <Paper  className={cl.info_text_2}>
+                        <label className={cl.label_2}>Основание</label>
+                        {info.newPosition.base}
+                      </Paper>
+                    </div>
+                    <div className={cl.info_text_block}>
+                      <Paper  className={cl.info_text_2}>
+                        <label className={cl.label_2}>Вид назначения</label>
+                        {info.newPosition.appointmentType}
+                      </Paper>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', gap: '10px', marginTop: '20px' }}>
+                      <Button variant="contained" style={{ width: '100%' }} onClick={() => handleConfirmation(info.decreeInfo.decreeId)}>Согласовать</Button>
+                      <Button variant="outlined" style={{ width: '100%' }} onClick={closeModal}>Отменить</Button>
+                    </div>
                   </div>
                 </div>
               </div>
             ))}
 
             {decreeInfo.rankUpInfo && decreeInfo.rankUpInfo.map((info) => (
-              <div className={cl.form_wrapper}>
+              <div className={cl.form_wrapper} key={info.decreeInfo.decreeId}>
                 <div className={cl.worker_info}>
                   <div>
                     <img src={`data:image/jpeg;base64,${info.decreeInfo.person.photo}`} alt=""  className={cl.workerPic} />
@@ -389,17 +430,44 @@ function DecreeHistory() {
                   </div>
                   <div className={cl.info_text_block}>
                     <Paper  className={cl.info_text_2}>
-                      <label className={cl.label_2}>Дата приказа</label>
-                      {info.decreeInfo.decreeType}
+                      <label className={cl.label_2}>Должность</label>
+                      {info.decreeInfo.person.positionInfo}
                     </Paper>
+                  </div>
+                </div>
+                <div style={{ marginTop: '30px',  }}>
+                  <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+                  </div>
+                  <div style={{ display: 'flex',   flexDirection: 'column', gap: '10px', marginTop: '0px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '5px', marginBottom: '15px' }}>
+                      <GiRank3 style={{ color: '#1976D2', fontSize: '20px' }} />
+                      <p className={cl.headline_2}>Новое звание</p>
+                    </div>
+                    <div className={cl.info_text_block}>
+                      <Paper  className={cl.info_text_2}>
+                        <label className={cl.label_2}>Новое звание</label>
+                        {info.newRank}
+                      </Paper>
+                    </div>
+                    <div className={cl.info_text_block}>
+                      <Paper  className={cl.info_text_2}>
+                        <label className={cl.label_2}>Предыдущее звание</label>
+                        {info.previousRank}
+                      </Paper>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', gap: '10px', marginTop: '20px' }}>
+                      <Button variant="contained" style={{ width: '100%' }} onClick={() => handleConfirmation(info.decreeInfo.decreeId)}>Согласовать</Button>
+                      <Button variant="outlined" style={{ width: '100%' }} onClick={closeModal}>Отменить</Button>
+                    </div>
                   </div>
                 </div>
               </div>
             ))}
-
+            
           </div>
         </div>
       </Modal>
+      <NotificationContainer />
     </div>
   );
 }

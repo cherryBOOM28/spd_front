@@ -57,7 +57,7 @@ object-fit: cover;
 }
 
 .headline_2 {
-  margin-bottom: 5px;
+  /* margin-bottom: 5px; */
   font-family: 'Helvetica Meduim', sans-serif;
   font-weight: 500;
 }
