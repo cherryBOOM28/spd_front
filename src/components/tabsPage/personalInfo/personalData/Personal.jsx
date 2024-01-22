@@ -703,14 +703,14 @@ function Personal({
                                     <Table stickyHeader aria-label="sticky table">
                                         <TableHead>
                                             <TableRow>
-                                                    <TableCell>Степень родства</TableCell>
-                                                    <TableCell>Имя</TableCell>
-                                                    <TableCell>Фамилия</TableCell>
-                                                    <TableCell>Отчество</TableCell>
-                                                    <TableCell>ИИН</TableCell>
-                                                    <TableCell>Дата рождения</TableCell>
-                                                    <TableCell>Место работы</TableCell>
-                                                    <TableCell>Действие</TableCell>
+                                                <TableCell>Степень родства</TableCell>
+                                                <TableCell>Имя</TableCell>
+                                                <TableCell>Фамилия</TableCell>
+                                                <TableCell>Отчество</TableCell>
+                                                <TableCell>ИИН</TableCell>
+                                                <TableCell>Дата рождения</TableCell>
+                                                <TableCell>Место работы</TableCell>
+                                                <TableCell>Действие</TableCell>
                                             </TableRow>
                                         </TableHead>
                                         <TableBody>

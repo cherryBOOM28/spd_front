@@ -66,7 +66,7 @@ export const FormProvider = ({ children }) => {
   };
 
   // Общие данные
-  const [photo, setPhoto] = useState(
+  const [photoBinary, setPhotoBinary] = useState(
     {
       photoBinary: ''
     }
@@ -274,9 +274,7 @@ export const FormProvider = ({ children }) => {
     return true;
   };
 
-  const showNotification = () => {
-    NotificationManager.success('Успех!', 'Сохранение данных прошло успешно.');
-  };
+ 
 
   const [emptyInputs, setEmptyInputs] = useState(false);
 
@@ -294,29 +292,33 @@ export const FormProvider = ({ children }) => {
 
   const handleSubmit = async(event) => {
 
-    // const isAllFieldsFilled = validateFields(person);
+    const isAllFieldsFilled = validateFields(person);
   
-    // if (!isAllFieldsFilled ) {
-    //   NotificationManager.error('Пожалуйста, заполните все поля!');
-    //   return;
-    // }
+    if (!isAllFieldsFilled ) {
+      NotificationManager.error('Пожалуйста, заполните все поля!');
+      return;
+    }
 
-    // event.preventDefault();
-    // const hasEmptyInputs = Object.values(person).some((value) => value === '');
+    event.preventDefault();
+    const hasEmptyInputs = Object.values(person).some((value) => value === '');
 
-    // if (hasEmptyInputs) {
-    //   setEmptyInputs(true);
-    //   return;
-    // }
+    if (hasEmptyInputs) {
+      setEmptyInputs(true);
+      return;
+    }
 
     try {
-      navigate('/'); 
+      // navigate('/'); 
       // window.location.reload(); 
-      setTimeout(() => {
-        showNotification();
-      }, 200);
+      NotificationManager.success('Работник добавлен!', 'Успех', 3000);
     } catch (error) {
         console.error('Ошибка при отправке данных:', error);
+        if (error.response && error.response.status === 400) {
+          const errorMessage = error.response.data.error || 'Неизвестная ошибка';
+          NotificationManager.error(errorMessage, 'Ошибка', 3000);
+      } else {
+          NotificationManager.error('Произошла ошибка', 'Ошибка', 3000);
+      }
     }
 
  
@@ -328,7 +330,7 @@ export const FormProvider = ({ children }) => {
 
 
     const requestData = {
-      Photo: { photoBinary:  photo},
+      Photo: {photoBinary},
       Person: person,
       BirthInfo: birthInfo,
       IdentityCardInfo: identityCardInfo,
@@ -403,17 +405,21 @@ export const FormProvider = ({ children }) => {
         // window.location.reload();
     
         // Показ уведомления после 200 миллисекунд
-        setTimeout(() => {
-          showNotification();
-        }, 200);
+        NotificationManager.success('Документ успешно создан', 'Успех', 3000);
       } catch (error) {
         // Обработка ошибки
         console.error('Ошибка при отправке данных:', error);
-        if (error.response) {
-          console.error('Данные ответа сервера:', error.response.data);
-          console.error('Статус ответа сервера:', error.response.status);
-          console.error('Заголовки ответа сервера:', error.response.headers);
-        }
+        // if (error.response) {
+        //   console.error('Данные ответа сервера:', error.response.data);
+        //   console.error('Статус ответа сервера:', error.response.status);
+        //   console.error('Заголовки ответа сервера:', error.response.headers);
+        // }
+        if (error.response && error.response.status === 400) {
+          const errorMessage = error.response.data.error || 'Неизвестная ошибка';
+          NotificationManager.error(errorMessage, 'Ошибка', 3000);
+      } else {
+          NotificationManager.error('Произошла ошибка', 'Ошибка', 3000);
+      }
       }
 
       console.log(requestData.Photo.photoBinary);
@@ -421,7 +427,7 @@ export const FormProvider = ({ children }) => {
 
     
     console.log("post", {
-      Photo: { photoBinary: photo },
+      Photo: photoBinary && typeof photoBinary === 'string' ? { photoBinary } : null,
       Person: person,
       BirthInfo: birthInfo,
       IdentityCardInfo: identityCardInfo,
@@ -481,7 +487,7 @@ export const FormProvider = ({ children }) => {
   return (
     <FormContext.Provider 
       value={{ 
-        photo, setPhoto,
+        photoBinary, setPhotoBinary,
         person, setPerson, 
         birthInfo, setBirthInfo,
         identityCardInfo, setIdentityCardInfo,

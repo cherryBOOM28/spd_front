@@ -33,42 +33,51 @@ const NotificationButton = () => {
     }
 
 
-    
-
     return (
-        <div className={`${cl.notification_container} ${showNotifications ? cl.open : ''} ${!showNotifications ? cl.closed : ''}`}>
-            <button className={cl.notification_button} onClick={handleNotificationClick}>
+        <div
+          className={`${cl.notification_container} ${
+            showNotifications ? cl.open : ""
+          } ${!showNotifications ? cl.closed : ""}`}
+        >
+          <button className={cl.notification_button} onClick={handleNotificationClick}>
+            <IoNotifications />
+          </button>
+          {showNotifications && (
+            <div className={cl.notification_list}>
+              <h2 className={cl.notification_headline}>
                 <IoNotifications />
-            </button>
-            {showNotifications && (
-                <div className={cl.notification_list}>
-                    <h2 className={cl.notification_headline}>
-                        <IoNotifications />
-                        Предстоящие повышения
-                    </h2>
-                    <p className={cl.paragraph}>Количество людей: {notificationData.count}</p>
-                    <ul>
-                        {notificationData.persons.map((notification, index) => (
-                            <li key={index}>
-                                <div className={cl.notification_data} onClick={() => handleWorkerClick(notification.id)} >
-                                    <img 
-                                        src={`data:image/jpeg;base64,${notification.photo}`} 
-                                        className={cl.profilePic} 
-                                        alt="profile pic" 
-                                    />
-                                    <p className={cl.notification_text}>{notification.firstName}</p>
-                                    <p className={cl.notification_text}>{notification.surname}</p>
-                                    <p className={cl.notification_text}>{notification.patronymic}</p>
-
-                                </div>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-            )}
-
+                Предстоящие повышения
+              </h2>
+              <p className={cl.paragraph}>Количество людей: {notificationData.count}</p>
+              <div
+                className={`${cl.scrollable_content} ${
+                  notificationData.persons.length > 5 ? cl.scrollable : ""
+                }`}
+              >
+                <ul>
+                  {notificationData.persons.map((notification, index) => (
+                    <li key={index}>
+                      <div
+                        className={cl.notification_data}
+                        onClick={() => handleWorkerClick(notification.id)}
+                      >
+                        <img
+                          src={`data:image/jpeg;base64,${notification.photo}`}
+                          className={cl.profilePic}
+                          alt="profile pic"
+                        />
+                        <p className={cl.notification_text}>{notification.firstName}</p>
+                        <p className={cl.notification_text}>{notification.surname}</p>
+                        <p className={cl.notification_text}>{notification.patronymic}</p>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          )}
         </div>
-    )
+      );
 };
 
 export default NotificationButton;

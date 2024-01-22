@@ -82,7 +82,7 @@ function Appointment() {
             // console.log("formData", formData)
         } 
         catch (error) {
-            
+            console.log(error)
             if (error.response && error.response.status === 400) {
                 const errorMessage = error.response.data.error || 'Неизвестная ошибка';
                 NotificationManager.error(errorMessage, 'Ошибка', 3000);
@@ -119,7 +119,6 @@ function Appointment() {
             setFoundPersons(data.persons);
             setShowResults(true);
             setShowResults(foundPersons.length > 0);
-            NotificationManager.success('Документ успешно создан', 'Успех', 3000);
         } catch (error) {
             console.log()
             console.error('Error fetching data:', error);

@@ -14,8 +14,8 @@ function  NewBasicInfo() {
   const { birthInfo, setBirthInfo } = useForm();
   const { identityCardInfo, setIdentityCardInfo } = useForm();
   const { residentInfo, setResidentInfo } = useForm();
-  const { photo, setPhoto } = useForm();
-  const [selectedPhoto, setSelectedPhoto] = useState(null);
+  const { photoBinary, setPhotoBinary } = useForm();
+
   const [useDefaultPhoto, setUseDefaultPhoto] = useState(false);
 
   const handlePhotoChange = (event) => {
@@ -30,10 +30,12 @@ function  NewBasicInfo() {
         base64String = base64String.replace(/^data:image\/\w+;base64,/, '');
   
         // Установите обновленное значение в photo
-        setPhoto(base64String);
-      };
+        setPhotoBinary(base64String);
+    } 
   
       reader.readAsDataURL(file);
+    } else {
+        setPhotoBinary('')
     }
   };
 
@@ -58,21 +60,21 @@ function  NewBasicInfo() {
         <p className={cl.create_worker_text}>Создание работника</p>
             <div className={cl.workerBlock}>
             <div className={cl.photoUploaderWrapper}>
-  {photo && typeof photo === 'string' && !useDefaultPhoto ? (
-    <img src={`data:image/jpeg;base64,${photo}`} alt="Selected" className={cl.selectedPhoto} />
-  ) : (
-    <img src={defaultPhoto} alt="Default" className={cl.selectedPhoto} />
-  )}
-  <label className={cl.customFileInput}>
-    <input
-      type="file"
-      accept="image/*"
-      id="image"
-      onChange={handlePhotoChange}
-      className={cl.fileInput}
-    />
-  </label>
-</div>
+                {photoBinary && typeof photoBinary === 'string' && !useDefaultPhoto ? (
+                    <img src={`data:image/jpeg;base64,${photoBinary}`} alt="Selected" className={cl.selectedPhoto} />
+                ) : (
+                    <img src={defaultPhoto} alt="Default" className={cl.selectedPhoto} />
+                )}
+                <label className={cl.customFileInput}>
+                    <input
+                    type="file"
+                    accept="image/*"
+                    id="image"
+                    onChange={handlePhotoChange}
+                    className={cl.fileInput}
+                    />
+                </label>
+            </div>
 
                 <div className={cl.column}>
                 <div className={cl.rows}>
