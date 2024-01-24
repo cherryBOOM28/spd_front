@@ -1,9 +1,14 @@
+.notification_wrapper {
+    position: relative;
+}
+
+
 .notification_container {
     position: fixed;
-    bottom: 100px;
+    bottom: 80px;
     right: 100px;
     transition: transform 0.3s ease-in-out;
-    transform: translateY(90%);
+    transform: translateY(1%);
     border-radius: 50%;
 }
 
@@ -38,6 +43,7 @@
 }
 
 .notification_button {
+    position: relative;
     width: 50px;
     height: 50px;
     border-radius: 50%;
@@ -51,11 +57,12 @@
 
 .notification_list {
     position: absolute;
-    top: -65px;
+    /* top: -65px; */
+    bottom: 0px;
     right: 70px;
     background-color: #fff;
     border: 1px solid #e2e2e2;
-    padding: 10px;
+    padding: 15px;
     box-shadow: 0 0 10px rgba(140, 168, 247, 0.273);
     z-index: 100;
 }
@@ -79,7 +86,8 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    font-family: '', sans-serif;
+    font-family: 'Helvetica', sans-serif;
+    margin-bottom: 15px;
 }
 
 .paragraph {
@@ -96,13 +104,31 @@
 .notification_data {
     display: flex;
     align-items: center;
-    gap: 10px;
-    margin-bottom: 15px;
+    gap: 8px;
+    /* margin-bottom: 15px; */
+    padding: 8px 12px;
+}
+
+.notification_data:hover {
+    background: #f1f1f1;
+    cursor: pointer;
+}
+
+.inner_notification_data {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.box {
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .profilePic {
-    width: 40px;
-    height: 40px;
+    width: 35px;
+    height: 35px;
     border-radius: 50%;
     object-fit: cover;
 }
@@ -110,15 +136,51 @@
 .notification_text {
     color: #3b3b3b;
     font-size: 15px;
-    font-family: "Helvetica", sans-serif, sans-serif;
+    font-family: "Helvetica", sans-serif;
 }
 
 .scrollable_content {
-    max-height: 300px; /* You can adjust the max height as needed */
+    max-height: 200px;
     overflow-y: auto;
-  }
-  
-  .scrollable {
+    padding-top: 10px;
+    border: 1px solid #e2e2e2;
+    border-radius: 5px;
+}
+
+.scrollable_content::-webkit-scrollbar {
+    width: 10px;
+}
+
+.scrollable_content::-webkit-scrollbar-thumb {
+    background-color: #1565C0;
+    border-radius: 5px;
+}
+
+.scrollable_content::-webkit-scrollbar-track {
+    background-color: #f1f1f1;
+}
+
+.scrollable_content::-webkit-scrollbar-thumb:hover {
+    background-color: #125193;
+}
+
+.scrollable {
     overflow-y: auto;
-  }
+}
   
+.count {
+    position: absolute;
+    right: 0;
+    top: -15px;
+    background: #f5f5f5;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 40%;
+    min-width: 16px;
+    /* height: 16px; */
+    font-size: 12px;
+    color: #1565C0;
+    box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.10);
+}

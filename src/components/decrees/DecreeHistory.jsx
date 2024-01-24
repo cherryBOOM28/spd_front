@@ -3,7 +3,7 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 import cl from './DecreeHistory.module.css';
 import { GoHistory } from "react-icons/go";
-import { Paper, TableContainer, Table, TableHead, TableBody, TableRow, TableCell, Button } from '@mui/material';
+import { Paper, TableContainer, Table, TableHead, TableBody, TableRow, TableCell, Button, Select, MenuItem, InputLabel } from '@mui/material';
 import Modal from '../UI/modal/Modal';
 import { IoIosArrowDown } from "react-icons/io";
 import { NotificationContainer, NotificationManager } from 'react-notifications';
@@ -14,12 +14,20 @@ import { GiRank2 } from "react-icons/gi";
 import { GiRank3 } from "react-icons/gi";
 import Loader from '../loader _/Loader ';
 import { FaCheck } from "react-icons/fa6";
+import { FaFilter } from "react-icons/fa";
+import { RiSearchLine } from "react-icons/ri";
 
 function DecreeHistory() {
   const [decreeList, setDecreeList] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedDecreeId, setSelectedDecreeId] = useState(null);
   const [decreeInfo, setDecreeInfo] = useState([]);
+  const [selectedDecreeType, setSelectedDecreeType] = useState(''); // Состояние для отслеживания выбранного вида приказа
+  const [ searchText, setSearchText ] = useState('');
+  const [ showClearBtn, setShowClearBtn ] = useState(false);
+  const [showResults, setShowResults] = useState(false);
+  const [selectedPersonIds, setSelectedPersonIds] = useState([]);
+  const [foundPersons, setFoundPersons] = useState([]);
 
   useEffect(() => {
     const fetchDecrees = async () => {
@@ -91,9 +99,105 @@ function DecreeHistory() {
     }
   };
 
+  const filteredDecrees = selectedDecreeType
+  ? decreeList.filter((decree) => {
+      const trimmedSelectedDecreeType = selectedDecreeType.trim();
+      const trimmedDecreeType = decree.decreeType.trim();
+
+      if (trimmedSelectedDecreeType === "Все приказы") {
+        return true; // Возвращаем true, чтобы отобразить все приказы
+      }
+
+      const match = trimmedDecreeType === trimmedSelectedDecreeType;
+
+      console.log(`Selected Decree Type: '${trimmedSelectedDecreeType}'`);
+      console.log(`Decree Type for ID ${decree.decreeId}: '${trimmedDecreeType}'`);
+      console.log(`Decree ID ${decree.decreeId} - Match: ${match}`);
+
+      return match;
+    })
+  : decreeList;
+
+  const handleInputChange = async (event) => {
+    const inputValue = event.target.value;
+    setSearchText(inputValue);
+    setShowClearBtn(inputValue !== '');
+
+    // console.log("inputValue", inputValue)
+
+    try {
+        const response = await axios.get(`http://127.0.0.1:8000/api/v1/search_persons/?q=`, {
+            params: {
+                q: inputValue,
+            },
+        });
+
+        // Handle the data returned from the server
+        const data = response.data;
+        setFoundPersons(data.persons);
+        setShowResults(true);
+    } catch (error) {
+        console.error('Error fetching data:', error);
+    }
+    
+    // You can choose to setShowResults(false) when inputValue is empty or handle it differently based on your requirements
+    if (inputValue === '') {
+        setShowResults(false);
+    } else {
+        setShowResults(true);
+    }
+  };
+
+  const handleClearClick = () => {
+    setSearchText('');
+    setShowClearBtn(false);
+    setShowResults(false);
+  };
+
+
+
   return (
     <div className={cl.container}>
-      <h1 className={cl.headline}><GoHistory /> Журнал приказов</h1>
+       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '25px', marginBottom: '25px' }}>
+        <div className={cl.filters}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '8px'}}>
+              <FaFilter style={{ color: '#1565C0', fontSize: '20px' }} />
+              {/* Выпадающий список для выбора вида приказа */}
+              <Select
+                labelId="decreeTypeLabel"
+                id="decreeTypeSelect"
+                value={selectedDecreeType}
+                className={cl.select_type}
+                onChange={(e) => setSelectedDecreeType(e.target.value)}
+              >
+                <MenuItem value="Все приказы">Все приказы</MenuItem>
+                <MenuItem value="Назначение">Приказ о назначении</MenuItem>
+                <MenuItem value="Перемещение">Приказ о перемещении</MenuItem>
+                <MenuItem value="Присвоение звания">Присвоение звания</MenuItem>
+              </Select>
+            </div>
+
+            <div className={cl.searchWrapper}>
+              {/* <img src={searchIcon} alt="searchIcon" className={cl.searchIcon} /> */}
+              <RiSearchLine className={cl.searchIcon} />
+              <input 
+                  type="text" 
+                  className={cl.search__input}
+                  placeholder='Поиск'
+                  value={searchText}
+                  onChange={handleInputChange}
+                  onKeyPress={handleInputChange}
+              />
+              {showClearBtn && (
+                  <button className={cl.clearBtn} onClick={handleClearClick}>
+                      &#x2715;
+                  </button>
+              )}
+            </div>
+        </div>
+        <h1 className={cl.headline}><GoHistory style={{ color: '#1565C0' }} /> Журнал приказов</h1>
+      </div>
+
       <Paper sx={{ width: '100%', overflow: 'hidden' }}>
           <TableContainer sx={{ maxHeight: 840 }}>
           <Table className={cl.customTable}>
@@ -110,7 +214,7 @@ function DecreeHistory() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {decreeList.map((decree) => (
+              {filteredDecrees.map((decree) => (
                 <TableRow key={decree.decreeId} onClick={() => handleWorkerClick(decree.person.id)} className={cl.workerRow}>
                   <TableCell><img src={`data:image/jpeg;base64,${decree.person.photo}`} alt="worker" className={cl.workerImg} /></TableCell>
                   <TableCell>{decree.decreeType}</TableCell>
@@ -138,6 +242,7 @@ function DecreeHistory() {
           </Table>
         </TableContainer>
       </Paper>
+
       <Modal visible={isModalVisible} setVisible={setIsModalVisible} decreeId={selectedDecreeId}>
         <div className={cl.modal_wrapper}>
           <h2 className={cl.headline} style={{ marginBottom: '35px' }}>Согласование приказа</h2>

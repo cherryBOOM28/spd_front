@@ -1,10 +1,11 @@
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useState } from 'react';
 import axios from 'axios';
 import Button from '../../UI/button/Button';
 import { NotificationContainer, NotificationManager } from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
+import Loader from '../../loader _/Loader ';
 
 const FormContext = createContext();
 
@@ -14,7 +15,7 @@ export const FormProvider = ({ children }) => {
     // console.log("fff", specCheckInfo);
     let newSpecCheckInfo = []
 
-    specCheckInfo.map((item, index) => {
+    specCheckInfo.map((item) => {
       let _specCheckItem = {};
 
       if (item['docDate'].length > 0) _specCheckItem['docDate'] = item['docDate'];
@@ -65,12 +66,7 @@ export const FormProvider = ({ children }) => {
     return newAutobiographyInfo;
   };
 
-  // Общие данные
-  const [photoBinary, setPhotoBinary] = useState(
-    {
-      photoBinary: ''
-    }
-  )
+  const [photoBinary, setPhotoBinary] = useState('');
 
   const [person, setPerson] = useState({
     firstName: '',
@@ -274,9 +270,9 @@ export const FormProvider = ({ children }) => {
     return true;
   };
 
- 
 
   const [emptyInputs, setEmptyInputs] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleInputChange = (stateUpdater, name, value) => {
     stateUpdater((prevState) => ({
@@ -285,43 +281,23 @@ export const FormProvider = ({ children }) => {
     }));
   };
 
-  const accessToken = Cookies.get('jwtAccessToken');
   // console.log('AccessToken:', accessToken);
-
-
-
   const handleSubmit = async(event) => {
 
     const isAllFieldsFilled = validateFields(person);
-  
-    if (!isAllFieldsFilled ) {
-      NotificationManager.error('Пожалуйста, заполните все поля!');
-      return;
+
+    if (!isAllFieldsFilled) {
+        NotificationManager.warning('Пожалуйста, заполните все поля!');
+        return;
     }
 
-    event.preventDefault();
     const hasEmptyInputs = Object.values(person).some((value) => value === '');
 
     if (hasEmptyInputs) {
-      setEmptyInputs(true);
-      return;
+        setEmptyInputs(true);
+        NotificationManager.error('Пожалуйста, заполните все поля!');
+        return;
     }
-
-    try {
-      // navigate('/'); 
-      // window.location.reload(); 
-      NotificationManager.success('Работник добавлен!', 'Успех', 3000);
-    } catch (error) {
-        console.error('Ошибка при отправке данных:', error);
-        if (error.response && error.response.status === 400) {
-          const errorMessage = error.response.data.error || 'Неизвестная ошибка';
-          NotificationManager.error(errorMessage, 'Ошибка', 3000);
-      } else {
-          NotificationManager.error('Произошла ошибка', 'Ошибка', 3000);
-      }
-    }
-
- 
 
     const _specCheckInfo = getSpecCheckInfo(specCheckInfo);
     const _attestationInfo = getAttestationInfo(attestationInfo);
@@ -330,7 +306,9 @@ export const FormProvider = ({ children }) => {
 
 
     const requestData = {
-      Photo: {photoBinary},
+      Photo: {
+        photoBinary: photoBinary || '', // Если photoBinary не определен, устанавливаем пустую строку
+      },
       Person: person,
       BirthInfo: birthInfo,
       IdentityCardInfo: identityCardInfo,
@@ -384,50 +362,43 @@ export const FormProvider = ({ children }) => {
       }
     };
 
-    event.preventDefault();
-
+    // event.preventDefault();
     // const myArray = photo.split(",");
-    
-      const accessToken = Cookies.get('jwtAccessToken');
-   
-      try {
-        const response = await axios.post('http://localhost:8000/api/v1/person/', requestData, {
-          headers: {
-            'Authorization': `Bearer ${accessToken}`,
-          }
-        });
-    
-        // Обработка успешного ответа
-        // console.log('Успешный ответ от сервера:', response.data);
-    
-        // Добавьте здесь код для перенаправления или обновления страницы
-        // navigate('/');
-        // window.location.reload();
-    
-        // Показ уведомления после 200 миллисекунд
-        NotificationManager.success('Документ успешно создан', 'Успех', 3000);
-      } catch (error) {
-        // Обработка ошибки
-        console.error('Ошибка при отправке данных:', error);
-        // if (error.response) {
-        //   console.error('Данные ответа сервера:', error.response.data);
-        //   console.error('Статус ответа сервера:', error.response.status);
-        //   console.error('Заголовки ответа сервера:', error.response.headers);
-        // }
-        if (error.response && error.response.status === 400) {
-          const errorMessage = error.response.data.error || 'Неизвестная ошибка';
-          NotificationManager.error(errorMessage, 'Ошибка', 3000);
-      } else {
-          NotificationManager.error('Произошла ошибка', 'Ошибка', 3000);
-      }
-      }
+    const accessToken = Cookies.get('jwtAccessToken');
+    try {
+      // Установите isLoading в true перед отправкой запроса
+      setIsLoading(true);
 
-      console.log(requestData.Photo.photoBinary);
-      // Проверка, является ли photoBinary строкой
+      const response = await axios.post('http://localhost:8000/api/v1/person/', requestData, {
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+        }
+      });
+      // Обработка успешного ответа
+      // window.location.reload();
+      NotificationManager.success('Данные успешно сохранились!', 'Успех', 3000);
 
+      // Задержка в 3 секунды перед переходом на другую страницу
+      setTimeout(() => {
+        setIsLoading(false);
+        navigate('/');
+      }, 1000);
+      // Установите isLoading в false при возникновении ошибки
+
+    } catch (error) {
+      // Обработка ошибки
+      console.error('Ошибка при отправке данных:', error);
+      const errorMessage = error.response ? error.response.data.error || 'Неизвестная ошибка' : 'Произошла ошибка';
     
+      NotificationManager.error(errorMessage, 'Ошибка', 3000);
+      setIsLoading(false);
+    }
+    console.log(requestData.Photo.photoBinary);
+
     console.log("post", {
-      Photo: photoBinary && typeof photoBinary === 'string' ? { photoBinary } : null,
+      Photo: {
+        photoBinary: photoBinary || '', // Если photoBinary не определен, устанавливаем пустую строку
+      },
       Person: person,
       BirthInfo: birthInfo,
       IdentityCardInfo: identityCardInfo,
@@ -482,8 +453,6 @@ export const FormProvider = ({ children }) => {
     })
   };
 
-  // console.log('Person:', JSON.stringify(person));
-
   return (
     <FormContext.Provider 
       value={{ 
@@ -513,8 +482,13 @@ export const FormProvider = ({ children }) => {
         emptyInputs,
         handleInputChange,
         handleSubmit
-      }}>
+      }}
+      style={{ width: '100%' }}
+    >
       {children}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        {isLoading && <Loader loading={true} />}
+      </div>
       <Button type="submit" onClick={handleSubmit}>Сохранить</Button>
       <NotificationContainer />
     </FormContext.Provider>

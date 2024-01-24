@@ -80,7 +80,7 @@ const Login = () => {
     return (
         <div className={cl.loginWrapper}>
             <div className={cl.container}>
-                <form onSubmit={handleSubmit} className={cl.loginForm}>
+                <form onSubmit={handleSubmit} onKeyDown={handleKeyDown} className={cl.loginForm}>
                     <div className={cl.logo}>
                         <img src={logo} alt="logo" className={cl.logoImg} />
                         {/* <p className={cl.logoText}>Система кадрового учета</p> */}

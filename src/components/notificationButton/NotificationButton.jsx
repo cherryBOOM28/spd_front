@@ -2,17 +2,56 @@ import React, {  useEffect, useState} from "react";
 import axios from "axios";
 import cl from './NotificationButton.module.css';
 import { IoNotifications } from "react-icons/io5";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams  } from "react-router-dom";
+import { IoCalendarClear } from "react-icons/io5";
 
 const NotificationButton = () => {
     const [showNotifications, setShowNotifications] = useState(false);
     const [notificationData, setNotificationData] = useState([]);
 
     const navigate = useNavigate();
+    const { id } = useParams();
 
     const handleWorkerClick = (personId) => {
-        // navigate(`/${personId}`) 
+        navigate(`/${personId}`) 
     };
+
+    const list = [
+      {
+        "firstName": "Георгий",
+        "surname": "Нефедов",
+        "patronymic": "Вячеславович",
+        "photo": "465"
+      },
+      {
+        "firstName": "Георгий",
+        "surname": "Нефедов",
+        "patronymic": "Вячеславович",
+        "photo": "465"
+    },
+    {
+      "firstName": "Георгий",
+      "surname": "Нефедов",
+      "patronymic": "Вячеславович",
+      "photo": "465"
+  }, {
+    "firstName": "Георгий",
+    "surname": "Нефедов",
+    "patronymic": "Вячеславович",
+    "photo": "465"
+}, {
+  "firstName": "Георгий",
+  "surname": "Нефедов",
+  "patronymic": "Вячеславович",
+  "photo": "465"
+},
+{
+  "firstName": "Георгий",
+  "surname": "Нефедов",
+  "patronymic": "Вячеславович",
+  "photo": "465"
+},
+    ]
 
     useEffect(() => {
         const fetchNotifications = async () => {
@@ -34,41 +73,56 @@ const NotificationButton = () => {
 
 
     return (
-        <div
+        <div className={cl.notification_wrapper}>
+          <div
           className={`${cl.notification_container} ${
             showNotifications ? cl.open : ""
           } ${!showNotifications ? cl.closed : ""}`}
         >
+           
           <button className={cl.notification_button} onClick={handleNotificationClick}>
             <IoNotifications />
+            <div className={cl.count}>
+              {notificationData.count}
+            </div>
           </button>
+          
           {showNotifications && (
             <div className={cl.notification_list}>
               <h2 className={cl.notification_headline}>
-                <IoNotifications />
+                <IoNotifications style={{ color: '#1565C0' }}/>
                 Предстоящие повышения
               </h2>
-              <p className={cl.paragraph}>Количество людей: {notificationData.count}</p>
+             
               <div
                 className={`${cl.scrollable_content} ${
-                  notificationData.persons.length > 5 ? cl.scrollable : ""
+                  notificationData.persons.length > 2 ? cl.scrollable : ""
                 }`}
               >
                 <ul>
                   {notificationData.persons.map((notification, index) => (
-                    <li key={index}>
+                    <li key={notification.personId}>
                       <div
                         className={cl.notification_data}
-                        onClick={() => handleWorkerClick(notification.id)}
+                        onClick={() => handleWorkerClick(notification.personId)}
                       >
                         <img
                           src={`data:image/jpeg;base64,${notification.photo}`}
                           className={cl.profilePic}
                           alt="profile pic"
                         />
-                        <p className={cl.notification_text}>{notification.firstName}</p>
-                        <p className={cl.notification_text}>{notification.surname}</p>
-                        <p className={cl.notification_text}>{notification.patronymic}</p>
+                        <div className={cl.inner_notification_data}>
+                          <div className={cl.box}>
+                            <p className={cl.notification_text}>{notification.firstName}</p>
+                            <p className={cl.notification_text}>{notification.surname}</p>
+                            <p className={cl.notification_text}>{notification.patronymic}</p>
+                          </div>
+                          <div  className={cl.box}>
+                            <IoCalendarClear style={{ color: '#707070' }} />
+                            <p className={cl.notification_text}>{notification.rankUpDate}</p>
+                          </div>
+                        </div>
+                        
                       </div>
                     </li>
                   ))}
@@ -76,6 +130,7 @@ const NotificationButton = () => {
               </div>
             </div>
           )}
+          </div>
         </div>
       );
 };

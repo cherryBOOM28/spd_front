@@ -20,22 +20,19 @@ function  NewBasicInfo() {
 
   const handlePhotoChange = (event) => {
     const file = event.target.files[0];
+
     if (file) {
       const reader = new FileReader();
-  
+
       reader.onload = (e) => {
         let base64String = e.target.result;
-  
-        // Удалите префикс "data:image/jpeg;base64,"
         base64String = base64String.replace(/^data:image\/\w+;base64,/, '');
-  
-        // Установите обновленное значение в photo
         setPhotoBinary(base64String);
-    } 
-  
+      };
+
       reader.readAsDataURL(file);
     } else {
-        setPhotoBinary('')
+      setPhotoBinary(''); // Если файл не выбран, устанавливаем пустую строку
     }
   };
 

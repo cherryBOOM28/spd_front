@@ -16,6 +16,7 @@ import Checkbox from '@mui/material/Checkbox';
 import searchIcon from '../../../assets/icons/search.svg';
 
 
+
 function RankUp() {
     const [formData, setFormData] = useState({
         personId: '',
