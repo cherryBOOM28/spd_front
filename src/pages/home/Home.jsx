@@ -42,7 +42,7 @@ function Home(props) {
         fetchFiredPeople();
     }, []);
 
-    const fetchFiredPeople = async () => {
+    const fetchFiredPeople = async (departmentId) => {
         try {
             const accessToken = Cookies.get('jwtAccessToken');
             const response = await axios.get(`http://localhost:8000/api/v1/person/`, {
@@ -57,8 +57,11 @@ function Home(props) {
     };
 
     const handleFiredCheckbox = () => {
-        setShowFired(!showFired)
+        setShowFired(!showFired);
     };
+
+   
+    
 
     const filteredPeople = showFired ? people.filter(person => person.isFired) : people;
 
@@ -114,7 +117,14 @@ function Home(props) {
     const handleCheckboxChangeMainDepartments = (department) => {
         setSelectedMainDepartment(department);
         getEmployeesByDepartmentId(department.id);
+
+        setSelectedDepartment(department.id); // Обновить выбранный департамент
     };
+
+    
+
+    
+    
 
     // Выбор все на главной страницу
      const [ selectedGroupId, setSelectedGroupId ] = useState(
@@ -471,7 +481,9 @@ function Home(props) {
                             id={department.id}
                             name="table"
                             checked={selectedMainDepartment === department}
+                            // onChange={() => handleCheckboxChangeMainDepartments(department)}
                             onChange={() => handleCheckboxChangeMainDepartments(department)}
+
                             style={{
                             marginRight: '5px', 
                             borderRadius: '50%'
@@ -491,50 +503,45 @@ function Home(props) {
                                 <th className={cl.table__headline}>Должность</th>
                             </tr>
                         </thead>
+                
                         <tbody>
-                            {/* {selectedGroupId === 'all' && personalData.map((data, index) => {
-                                let name = `${data.surname || ''} ${data.firstName || ''} ${data.patronymic || ''}`;
-
-                                return (
-                                <tr key={data.id} onClick={() => handleEmployeeClick(data.id, data.iin)} className={cl.tableRow}>
-                                    <td>{name}</td>
-                                    <td>{gender}</td>
-                                    <td>{positionTitle}</td>
-                                </tr>
-                                );
-                            })} */}
-                          {showFired ? (
+                            {showFired ? (
                                 // Display only fired people when the checkbox is checked
-                                filteredPeople.length > 0 ? (
+                                (filteredPeople.filter(person => person.isFired && (selectedDepartment === null || person.positionInfo.department.id === selectedDepartment)).length > 0 ? (
                                     filteredPeople.map(person => (
-                                        <tr key={person.id} onClick={() => handleEmployeeClick(person.id)}>
-                                            <td><img src={`data:image/jpeg;base64,${person.photo.photoBinary}`} alt="d" className={cl.profileImg} /></td>
-                                            <td>{`${person.surname} ${person.firstName} ${person.patronymic}`}</td>
-                                            <td>{person.positionInfo.position.positionTitle}</td>
-                                        </tr>
+                                        // Проверить соответствие выбранного департамента
+                                        (selectedDepartment === null || person.positionInfo.department.id === selectedDepartment) && person.isFired && (
+                                            <tr key={person.id} onClick={() => handleEmployeeClick(person.id)}>
+                                                <td><img src={`data:image/jpeg;base64,${person.photo.photoBinary}`} alt="d" className={cl.profileImg} /></td>
+                                                <td>{`${person.surname} ${person.firstName} ${person.patronymic}`}</td>
+                                                <td>{person.positionInfo.position.positionTitle}</td>
+                                            </tr>
+                                        )
                                     ))
                                 ) : (
                                     <tr>
                                         <td colSpan='3' style={{ textAlign: 'center' }}>Нет уволенных людей</td>
                                     </tr>
-                                )
+                                ))
                             ) : (
                                 // Display the regular list of people when the checkbox is not checked
                                 persons
                                 .filter(person => !person.isFired) // Exclude fired people
                                 .map(person => (
-                                    <tr key={person.id} onClick={() => handleEmployeeClick(person.id)}>
-                                        <td><img src={`data:image/jpeg;base64,${person.photo.photoBinary}`} alt="d" className={cl.profileImg} /></td>
-                                        <td>{`${person.surname} ${person.firstName} ${person.patronymic}`}</td>
-                                        <td>{person.positionInfo.position.positionTitle}</td>
-                                    </tr>
+                                    (selectedDepartment === null || person.positionInfo.department.id === selectedDepartment) && (
+                                        <tr key={person.id} onClick={() => handleEmployeeClick(person.id)}>
+                                            <td><img src={`data:image/jpeg;base64,${person.photo.photoBinary}`} alt="d" className={cl.profileImg} /></td>
+                                            <td>{`${person.surname} ${person.firstName} ${person.patronymic}`}</td>
+                                            <td>{person.positionInfo.position.positionTitle}</td>
+                                        </tr>
+                                    )
                                 ))
                             )}
                         </tbody>
                     </table>
             </div>
         </div>
-      );
+    );
     }
     };
 

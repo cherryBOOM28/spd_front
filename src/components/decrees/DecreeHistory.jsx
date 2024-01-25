@@ -3,16 +3,13 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 import cl from './DecreeHistory.module.css';
 import { GoHistory } from "react-icons/go";
-import { Paper, TableContainer, Table, TableHead, TableBody, TableRow, TableCell, Button, Select, MenuItem, InputLabel } from '@mui/material';
+import { Paper, TableContainer, Table, TableHead, TableBody, TableRow, TableCell, Button, Select, MenuItem } from '@mui/material';
 import Modal from '../UI/modal/Modal';
 import { IoIosArrowDown } from "react-icons/io";
 import { NotificationContainer, NotificationManager } from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
 import { BsFillBriefcaseFill } from "react-icons/bs";
-import { BsPersonFill } from "react-icons/bs";
-import { GiRank2 } from "react-icons/gi";
 import { GiRank3 } from "react-icons/gi";
-import Loader from '../loader _/Loader ';
 import { FaCheck } from "react-icons/fa6";
 import { FaFilter } from "react-icons/fa";
 import { RiSearchLine } from "react-icons/ri";
@@ -25,9 +22,10 @@ function DecreeHistory() {
   const [selectedDecreeType, setSelectedDecreeType] = useState(''); // Состояние для отслеживания выбранного вида приказа
   const [ searchText, setSearchText ] = useState('');
   const [ showClearBtn, setShowClearBtn ] = useState(false);
-  const [showResults, setShowResults] = useState(false);
-  const [selectedPersonIds, setSelectedPersonIds] = useState([]);
-  const [foundPersons, setFoundPersons] = useState([]);
+  const [filteredDecreesList, setFilteredDecreesList] = useState([]);
+
+  // const [filteredDecrees, setFilteredDecrees] = useState([]);
+
 
   useEffect(() => {
     const fetchDecrees = async () => {
@@ -40,6 +38,8 @@ function DecreeHistory() {
           }
         });
         setDecreeList(response.data.decrees);
+        console.log(response.data.decrees);
+
         // console.log("decrees",response.data.decrees)
       } catch (error) {
         console.error('Error fetching decree list:', error);
@@ -99,61 +99,68 @@ function DecreeHistory() {
     }
   };
 
-  const filteredDecrees = selectedDecreeType
-  ? decreeList.filter((decree) => {
-      const trimmedSelectedDecreeType = selectedDecreeType.trim();
-      const trimmedDecreeType = decree.decreeType.trim();
+  // const filteredDecrees = selectedDecreeType
+  // ? decreeList.filter((decree) => {
+  //     const trimmedSelectedDecreeType = selectedDecreeType.trim();
+  //     const trimmedDecreeType = decree.decreeType.trim();
 
-      if (trimmedSelectedDecreeType === "Все приказы") {
-        return true; // Возвращаем true, чтобы отобразить все приказы
-      }
+  //     if (trimmedSelectedDecreeType === "Все приказы") {
+  //       return true; // Возвращаем true, чтобы отобразить все приказы
+  //     }
 
-      const match = trimmedDecreeType === trimmedSelectedDecreeType;
+  //     const match = trimmedDecreeType === trimmedSelectedDecreeType;
 
-      console.log(`Selected Decree Type: '${trimmedSelectedDecreeType}'`);
-      console.log(`Decree Type for ID ${decree.decreeId}: '${trimmedDecreeType}'`);
-      console.log(`Decree ID ${decree.decreeId} - Match: ${match}`);
+  //     // console.log(`Selected Decree Type: '${trimmedSelectedDecreeType}'`);
+  //     // console.log(`Decree Type for ID ${decree.decreeId}: '${trimmedDecreeType}'`);
+  //     // console.log(`Decree ID ${decree.decreeId} - Match: ${match}`);
 
-      return match;
-    })
-  : decreeList;
+  //     return match;
+  //   })
+  // : decreeList;
 
-  const handleInputChange = async (event) => {
-    const inputValue = event.target.value;
-    setSearchText(inputValue);
-    setShowClearBtn(inputValue !== '');
+  
 
-    // console.log("inputValue", inputValue)
+  const filteredDecrees = () => {
+    const filteredDecrees = selectedDecreeType
+      ? decreeList.filter((decree) => {
+          const trimmedSelectedDecreeType = selectedDecreeType.trim();
+          const trimmedDecreeType = decree.decreeType.trim();
 
-    try {
-        const response = await axios.get(`http://127.0.0.1:8000/api/v1/search_persons/?q=`, {
-            params: {
-                q: inputValue,
-            },
-        });
+          if (trimmedSelectedDecreeType === "Все приказы") {
+            return true;
+          }
 
-        // Handle the data returned from the server
-        const data = response.data;
-        setFoundPersons(data.persons);
-        setShowResults(true);
-    } catch (error) {
-        console.error('Error fetching data:', error);
-    }
-    
-    // You can choose to setShowResults(false) when inputValue is empty or handle it differently based on your requirements
-    if (inputValue === '') {
-        setShowResults(false);
-    } else {
-        setShowResults(true);
-    }
+          return trimmedDecreeType === trimmedSelectedDecreeType;
+        })
+      : decreeList;
+
+    setFilteredDecreesList(filteredDecrees); // Установка отфильтрованных приказов в состояние
   };
+  useEffect(() => {
+    filteredDecrees();
+  }, [selectedDecreeType, decreeList]);
+  
+
+
+  const handleInputChange = (event) => {
+    const inputValue = event.target.value.toLowerCase(); // Приводим введенный текст к нижнему регистру
+    setSearchText(inputValue);
+  
+    // Фильтруем список приказов на основе введенного текста
+    const filtered = decreeList.filter((decree) => {
+      const fullName = `${decree.person.surname} ${decree.person.firstName} ${decree.person.patronymic}`.toLowerCase(); // Собираем ФИО из данных приказа и приводим к нижнему регистру
+      // console.log('Filtered full names:', fullName);
+      return fullName.includes(inputValue); // Проверяем включает ли ФИО в себя введенный текст
+    });
+  
+    setFilteredDecreesList(filtered);
+  };
+  
 
   const handleClearClick = () => {
     setSearchText('');
     setShowClearBtn(false);
-    setShowResults(false);
   };
-
 
 
   return (
@@ -167,9 +174,11 @@ function DecreeHistory() {
                 labelId="decreeTypeLabel"
                 id="decreeTypeSelect"
                 value={selectedDecreeType}
+                placeholder='Вид приказа'
                 className={cl.select_type}
                 onChange={(e) => setSelectedDecreeType(e.target.value)}
               >
+                <MenuItem value="">Выберите вид приказа</MenuItem>
                 <MenuItem value="Все приказы">Все приказы</MenuItem>
                 <MenuItem value="Назначение">Приказ о назначении</MenuItem>
                 <MenuItem value="Перемещение">Приказ о перемещении</MenuItem>
@@ -178,20 +187,19 @@ function DecreeHistory() {
             </div>
 
             <div className={cl.searchWrapper}>
-              {/* <img src={searchIcon} alt="searchIcon" className={cl.searchIcon} /> */}
               <RiSearchLine className={cl.searchIcon} />
-              <input 
-                  type="text" 
-                  className={cl.search__input}
-                  placeholder='Поиск'
-                  value={searchText}
-                  onChange={handleInputChange}
-                  onKeyPress={handleInputChange}
+              <input
+                type="text"
+                className={cl.search__input}
+                placeholder="Введите ФИО"
+                value={searchText}
+                onChange={handleInputChange} 
+                onKeyPress={handleInputChange}
               />
               {showClearBtn && (
-                  <button className={cl.clearBtn} onClick={handleClearClick}>
-                      &#x2715;
-                  </button>
+                <button className={cl.clearBtn} onClick={handleClearClick}>
+                  &#x2715;
+                </button>
               )}
             </div>
         </div>
@@ -214,7 +222,7 @@ function DecreeHistory() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {filteredDecrees.map((decree) => (
+              {filteredDecreesList.map((decree) => (
                 <TableRow key={decree.decreeId} onClick={() => handleWorkerClick(decree.person.id)} className={cl.workerRow}>
                   <TableCell><img src={`data:image/jpeg;base64,${decree.person.photo}`} alt="worker" className={cl.workerImg} /></TableCell>
                   <TableCell>{decree.decreeType}</TableCell>
