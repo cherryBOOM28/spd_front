@@ -3,7 +3,22 @@ import { useParams } from 'react-router-dom';
 import cl from './Sport.module.css';
 import axios from 'axios';
 import Cookies from 'js-cookie';
-import Button from '../../../UI/button/Button';
+
+import { FaTrash } from "react-icons/fa";
+import { MdEdit } from "react-icons/md";
+import { FaPlus } from "react-icons/fa6";
+import { IoClose } from "react-icons/io5";
+import { FaCheck } from "react-icons/fa6";
+import IconButton from '@mui/material/IconButton';
+
+import { Button,TextField, Select, Box, InputLabel, MenuItem, FormControl } from '@mui/material';
+import Table from '@mui/material/Table';
+import TableHead from '@mui/material/TableHead';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
 
 import { deleteSport } from '../../../../api/persona_info/sport/deleteSport';
 import { updateSport } from '../../../../api/persona_info/sport/updateSport';
@@ -48,7 +63,7 @@ function Sport({sportSkill, setSportSkill}, props) {
     const [showForm, setShowForm] = useState(false);
 
     const handleShowForm = () => {
-        setShowForm(true);
+        setShowForm(!showForm);
     };
 
     const [inputData, setInputData] = useState({
@@ -241,129 +256,182 @@ function Sport({sportSkill, setSportSkill}, props) {
         setEditedData({});
     };
     
+    const icon = showForm ? <IoClose style={{ fontSize: '18px' }} /> : <FaPlus style={{ fontSize: '16px' }} />;
+
 
     return (
         <div className={cl.personalWrapper}>
             <div className={cl.container}>
                 <div className={cl.totalInfoWrapper}>
                     <div className={cl.totalInfoContent}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '40px' }}>
-                            <p className={cl.workerCapitalName}>Отношение к спорту</p>
+                        <div style={{ display: 'flex',  alignItems: 'center', gap: '20px',  marginTop: '40px' }}>
+                            <p className={cl.workerCapitalName} style={{ marginBottom: '18px' }}>Отношение к спорту</p>
+                            <IconButton onClick={handleShowForm} aria-label="toggle-form" style={{ marginBottom: '15px' }}>
+                                {icon}
+                            </IconButton>
                         </div>
                     </div>
                 </div>
                 <div className={cl.totalInfoWrapper} style={{ marginTop: '20px' }}>
                     <div>
                         <div>
-                        <Button onClick={handleShowForm}>Добавить вил спорта</Button>
                             {showForm && (
                                 <form onSubmit={(e) => handleAddSport(e, id)} style={{ marginTop: '10px' }}>
-                                    <table className={cl.customTable}>
-                                        <tbody >
-                                            <tr>
-                                                <td>
-                                                    <select
-                                                        className={cl.formInput}
-                                                        value={inputData.sportType}
-                                                        onChange={(e) => setInputData({ ...inputData, sportType: e.target.value })}
-                                                    >
-                                                        <option value="">Выберите вид спорта</option>
+                                    <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
+                                        <Box>
+                                            {/* <label className={cl.label}>Должность</label> */}
+                                            <FormControl size="small" fullWidth>
+                                                <InputLabel id="demo-simple-select-label">Вид спорта</InputLabel>
+                                                <Select
+                                                labelId="demo-simple-select-label"
+                                                id="demo-simple-select"
+                                                label="Вид спорта"
+                                                name='sportType'
+                                                className={cl.workerInfoSelect}
+                                                value={inputData.sportType}
+                                                onChange={(e) => setInputData({ ...inputData, sportType: e.target.value })}
+                                                
+                                                >
+                                                    <MenuItem value="">Выберите вид спорта</MenuItem>
                                                         {Object.keys(kindsOfSport).map((sportKind, index) => (
-                                                          <option key={index} value={sportKind}>
+                                                          <MenuItem key={index} value={sportKind}>
                                                             {kindsOfSport[sportKind]}
-                                                          </option>
+                                                          </MenuItem>
                                                         ))}
-                                                    </select>
-                                                </td>
-                                                <td>
-                                                    <select
-                                                        className={cl.formInput}
-                                                        value={inputData.sportSkillLvl}
-                                                        onChange={(e) => setInputData({ ...inputData, sportSkillLvl: e.target.value })}
-                                                    >
-                                                        <option value="">Выберите степень владения</option>
-                                                        <option value="Любитель">Любитель</option>
-                                                        <option value="Первый спортивный разряд">Первый спортивный разряд</option>
-                                                        <option value="Второй спортивный разряд">Второй спортивный разряд</option>
-                                                        <option value="Третий спортивный разряд">Третий спортивный разряд</option>
-                                                        <option value="Кандидат мастера спорта">Кандидат мастера спорта</option>
-                                                        <option value="Мастер спорта">Мастер спорта</option>   
-                                                    </select>
-                                                </td>
-                                                <td><Button type="submit" className={cl.submitBtn} >Добавить</Button></td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                                                </Select>
+                                            </FormControl>
+                                        </Box>
+                                        <Box>
+                                            {/* <label className={cl.label}>Должность</label> */}
+                                            <FormControl size="small" fullWidth>
+                                                <InputLabel id="demo-simple-select-label">Степень владения</InputLabel>
+                                                <Select
+                                                labelId="demo-simple-select-label"
+                                                id="demo-simple-select"
+                                                label="	Степень владения"
+                                                name='sportSkillLvl'
+                                                className={cl.workerInfoSelect}
+                                                value={inputData.sportSkillLvl}
+                                                onChange={(e) => setInputData({ ...inputData, sportSkillLvl: e.target.value })}
+                                                
+                                                >
+                                                    <MenuItem value="">Выберите степень владения</MenuItem>
+                                                    <MenuItem value="Любитель">Любитель</MenuItem>
+                                                    <MenuItem value="Первый спортивный разряд">Первый спортивный разряд</MenuItem>
+                                                    <MenuItem value="Второй спортивный разряд">Второй спортивный разряд</MenuItem>
+                                                    <MenuItem value="Третий спортивный разряд">Третий спортивный разряд</MenuItem>
+                                                    <MenuItem value="Кандидат мастера спорта">Кандидат мастера спорта</MenuItem>
+                                                    <MenuItem value="Мастер спорта">Мастер спорта</MenuItem>   
+                                                </Select>
+                                            </FormControl>
+                                        </Box>
+                                        <Button variant="contained" type="submit" className={cl.submitBtn} >Добавить</Button>
+                                    </div>
                                 </form>
                             )}
                         </div>
                         <div>
-                            <table className={cl.customTable} style={{ marginTop: '20px' }}>
-                                <thead>
-                                    <tr>
-                                        <td>Вид спорта</td>
-                                        <td>Степень владения</td>
-                                        <td>Действие</td>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {sportSkill && sportSkill.sportSkills && sportSkill.sportSkills.map((d, i) => (
-                                        <tr key={i}>
-                                            <td>  
-                                                {editingId === d.id ? (
-                                                    <select
-                                                        className={cl.selectRelative_type}
-                                                        value={editedData.sportType}
-                                                        onChange={(e) => setEditedData({ ...editedData, sportType: e.target.value })}
-                                                    >
-                                                        <option value="">Выберите вил спорта</option>
-                                                        {Object.keys(kindsOfSport).map((sportKind, index) => (
-                                                          <option key={index} value={sportKind}>
-                                                            {kindsOfSport[sportKind]}
-                                                          </option>
-                                                        ))}
-                                                    </select>
-                                                ) : (
-                                                    d.sportType
-                                                )}
-                                            </td>
-                                            <td>  
-                                                {editingId === d.id ? (
-                                                    <select
-                                                        className={cl.selectRelative_type}
-                                                        value={editedData.sportSkillLvl}
-                                                        onChange={(e) => setEditedData({ ...editedData, sportSkillLvl: e.target.value })}
-                                                    >
-                                                        <option value="">Выберите степень владения</option>
-                                                        <option value="Любитель">Любитель</option>
-                                                        <option value="Первый спортивный разряд">Первый спортивный разряд</option>
-                                                        <option value="Второй спортивный разряд">Второй спортивный разряд</option>
-                                                        <option value="Третий спортивный разряд">Третий спортивный разряд</option>
-                                                        <option value="Кандидат мастера спорта">Кандидат мастера спорта</option>
-                                                        <option value="Мастер спорта">Мастер спорта</option>   
-                                                    </select>
-                                                ) : (
-                                                    d.sportSkillLvl
-                                                )}
-                                            </td>
-                                           
-                                            <td className={cl.relativesActionBtns} style={{}}>
-                                                {editingId === d.id ? (
-                                                    <>
-                                                        <div onClick={() => handleSaveEdit(d.id)}>&#10003;</div>
-                                                        <div onClick={handleCancelEdit}>&#x2715;</div>
-                                                    </>
-                                                ) : (
-                                                    <>
-                                                        <div onClick={() => handleEdit(d.id)}>&#9998;</div>
-                                                        <div onClick={() => handleDelete(d.id)}>Удалить</div>
-                                                    </>
-                                                )}
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
+                            <Paper sx={{ width: '100%', overflow: 'hidden', marginTop: '20px' }}>
+                                    <TableContainer sx={{ maxHeight: 440 }}>
+                                        <Table stickyHeader aria-label="sticky table">
+                                            <TableHead>
+                                                <TableRow>
+                                                    <TableCell>Вид спорта</TableCell>
+                                                    <TableCell>Степень владения</TableCell>
+                                                    <TableCell>Действие</TableCell>
+                                                </TableRow>
+                                            </TableHead>
+                                            <TableBody>
+                                                {sportSkill && sportSkill.sportSkills && sportSkill.sportSkills.length > 0 ? (
+                                                        sportSkill.sportSkills .map((d, i) => (
+                                                            <TableRow key={i}>
+                                                                <TableCell>  
+                                                                    {editingId === d.id ? (
+                                                                        <Box>
+                                                                            {/* <label className={cl.label}>Должность</label> */}
+                                                                            <FormControl size="small" fullWidth>
+                                                                                <InputLabel id="demo-simple-select-label">Вид спорта</InputLabel>
+                                                                                <Select
+                                                                                labelId="demo-simple-select-label"
+                                                                                id="demo-simple-select"
+                                                                                label="Вид спорта"
+                                                                                name='sportType'
+                                                                                className={cl.workerInfoSelect}
+                                                                                value={inputData.sportType}
+                                                                                onChange={(e) => setInputData({ ...inputData, sportType: e.target.value })}
+                                                                                
+                                                                                >
+                                                                                    <MenuItem value="">Выберите вид спорта</MenuItem>
+                                                                                    {Object.keys(kindsOfSport).map((sportKind, index) => (
+                                                                                    <MenuItem key={index} value={sportKind}>
+                                                                                        {kindsOfSport[sportKind]}
+                                                                                    </MenuItem>
+                                                                                    ))}
+                                                                                </Select>
+                                                                            </FormControl>
+                                                                        </Box>
+                                                                        
+                                                                    ) : (
+                                                                        d.sportType
+                                                                    )}
+                                                                </TableCell>
+                                                                <TableCell>  
+                                                                    {editingId === d.id ? (
+                                                                        <Box>
+                                                                        {/* <label className={cl.label}>Должность</label> */}
+                                                                        <FormControl size="small" fullWidth>
+                                                                            <InputLabel id="demo-simple-select-label">Степень владения</InputLabel>
+                                                                            <Select
+                                                                            labelId="demo-simple-select-label"
+                                                                            id="demo-simple-select"
+                                                                            label="Степень владения"
+                                                                            name='sportSkillLvl'
+                                                                            className={cl.workerInfoSelect}
+                                                                            value={inputData.sportSkillLvl}
+                                                                            onChange={(e) => setInputData({ ...inputData, sportSkillLvl: e.target.value })}
+                                                                            
+                                                                            >
+                                                                                <MenuItem value="">Выберите степень владения</MenuItem>
+                                                                                <MenuItem value="Любитель">Любитель</MenuItem>
+                                                                                <MenuItem value="Первый спортивный разряд">Первый спортивный разряд</MenuItem>
+                                                                                <MenuItem value="Второй спортивный разряд">Второй спортивный разряд</MenuItem>
+                                                                                <MenuItem value="Третий спортивный разряд">Третий спортивный разряд</MenuItem>
+                                                                                <MenuItem value="Кандидат мастера спорта">Кандидат мастера спорта</MenuItem>
+                                                                                <MenuItem value="Мастер спорта">Мастер спорта</MenuItem>  
+                                                                            </Select>
+                                                                        </FormControl>
+                                                                    </Box>
+                                                                    ) : (
+                                                                        d.sportSkillLvl
+                                                                    )}
+                                                                </TableCell>
+                                                            
+                                                                <TableCell className={cl.relativesActionBtns} style={{}}>
+                                                                    {editingId === d.id ? (
+                                                                        <div>
+                                                                            <IconButton className={cl.iconBtn} onClick={() => handleSaveEdit(d.id)}><FaCheck color=' #1565C0' /></IconButton>
+                                                                            <IconButton className={cl.iconBtn} onClick={handleCancelEdit}><IoClose /></IconButton>
+                                                                        </div>
+                                                                    ) : (
+                                                                        <>
+                                                                            <IconButton className={cl.iconBtn} onClick={() => handleEdit(d.id)}><MdEdit /></IconButton>
+                                                                            <IconButton className={cl.iconBtn} onClick={() => handleDelete(d.id)}><FaTrash /></IconButton>
+                                                                        </>
+                                                                    )}
+                                                                </TableCell>
+                                                            </TableRow>
+                                                        ))
+                                                    ) : (
+                                                        <TableRow>
+                                                            <TableCell colSpan={8} align="center">
+                                                                Нет данных
+                                                            </TableCell>
+                                                        </TableRow>
+                                                    )}
+                                            </TableBody>
+                                        </Table>
+                                    </TableContainer>
+                                </Paper>
                         </div>
                     </div>
                 </div>

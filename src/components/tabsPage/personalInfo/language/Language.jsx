@@ -3,7 +3,22 @@ import { useParams } from 'react-router-dom';
 import cl from './Language.module.css';
 import axios from 'axios';
 import Cookies from 'js-cookie';
-import Button from '../../../UI/button/Button';
+
+import { FaTrash } from "react-icons/fa";
+import { MdEdit } from "react-icons/md";
+import { FaPlus } from "react-icons/fa6";
+import { IoClose } from "react-icons/io5";
+import { FaCheck } from "react-icons/fa6";
+import IconButton from '@mui/material/IconButton';
+
+import { Button,TextField, Select, Box, InputLabel, MenuItem, FormControl } from '@mui/material';
+import Table from '@mui/material/Table';
+import TableHead from '@mui/material/TableHead';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
 
 import { getPersonalInfo } from '../../../../api/persona_info/getPersonalInfo';
 import { deleteLanguages } from '../../../../api/persona_info/languages/deleteLanguages';
@@ -50,7 +65,7 @@ function Language({ languageSkill, setLanguageSkill }, props) {
     const [showForm, setShowForm] = useState(false);
 
     const handleShowForm = () => {
-        setShowForm(true);
+        setShowForm(!showForm);
     };
 
     const [inputData, setInputData] = useState({
@@ -229,6 +244,8 @@ function Language({ languageSkill, setLanguageSkill }, props) {
         setEditingId(null);
         setEditedData({});
     };
+
+    const icon = showForm ? <IoClose style={{ fontSize: '18px' }} /> : <FaPlus style={{ fontSize: '16px' }} />;
     
 
     return (
@@ -236,125 +253,178 @@ function Language({ languageSkill, setLanguageSkill }, props) {
             <div className={cl.container}>
                 <div className={cl.totalInfoWrapper}>
                     <div className={cl.totalInfoContent}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '40px' }}>
-                            <p className={cl.workerCapitalName}>Владения языками</p>
+                        <div style={{ display: 'flex',  alignItems: 'center', gap: '20px',  marginTop: '40px' }}>
+                            <p className={cl.workerCapitalName} style={{ marginBottom: '18px' }}>Владения языками</p>
+                            <IconButton onClick={handleShowForm} aria-label="toggle-form" style={{ marginBottom: '15px' }}>
+                                {icon}
+                            </IconButton>
                         </div>
                     </div>
                 </div>
                 <div className={cl.totalInfoWrapper} style={{ marginTop: '20px' }}>
                     <div>
                         <div>
-                        <Button onClick={handleShowForm}>Добавить язык</Button>
                             {showForm && (
                                 <form onSubmit={(e) => handleAddLanguage(e, id)} style={{ marginTop: '10px' }}>
-                                    <table className={cl.customTable}>
-                                        <tbody >
-                                            <tr>
-                                                <td>
-                                                    <select
-                                                        className={cl.formInput}
-                                                        value={inputData.langName}
-                                                        onChange={(e) => setInputData({ ...inputData, langName: e.target.value })}
-                                                    >
-                                                        <option value="">Выберите язык</option>
+                                    <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
+                                        <Box>
+                                            {/* <label className={cl.label}>Должность</label> */}
+                                            <FormControl size="small" fullWidth>
+                                                <InputLabel id="demo-simple-select-label">Язык</InputLabel>
+                                                <Select
+                                                labelId="demo-simple-select-label"
+                                                id="demo-simple-select"
+                                                label="Язык"
+                                                name='langName'
+                                                className={cl.workerInfoSelect}
+                                                value={inputData.langName}
+                                                onChange={(e) => setInputData({ ...inputData, langName: e.target.value })}
+                                                
+                                                >
+                                                    <MenuItem value="">Выберите язык</MenuItem>
                                                         {Object.keys(apiLanguages).map((languageName, index) => (
-                                                          <option key={index} value={languageName}>
+                                                          <MenuItem key={index} value={languageName}>
                                                             {apiLanguages[languageName]}
-                                                          </option>
+                                                          </MenuItem>
                                                         ))}
-                                                    </select>
-                                                </td>
-                                                <td>
-                                                <select
-                                                        className={cl.formInput}
-                                                        value={inputData.skillLvl}
-                                                        onChange={(e) => setInputData({ ...inputData, skillLvl: e.target.value })}
-                                                    >
-                                                        <option value="">Выберите уровень владения</option>
-                                                        <option value="со словарем">Со словарем</option>
-                                                        <option value="начальный">Начальный</option>
-                                                        <option value="ниже среднего">Ниже среднего</option>
-                                                        <option value="средний">Средний</option>
-                                                        <option value="начальный">Выше среднего</option>
-                                                        <option value="продвинутый">Продвинутый</option>
-                                                        <option value="профессиональный">Профессиональный уровень владения</option>
-                                                        <option value="родной">Родной</option>
-                                                    </select>
-                                                </td>
-                                                <td><Button type="submit" className={cl.submitBtn} >Добавить</Button></td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                                                </Select>
+                                            </FormControl>
+                                        </Box>
+                                        <Box>
+                                            {/* <label className={cl.label}>Должность</label> */}
+                                            <FormControl size="small" fullWidth>
+                                                <InputLabel id="demo-simple-select-label">Уровень владения языком</InputLabel>
+                                                <Select
+                                                labelId="demo-simple-select-label"
+                                                id="demo-simple-select"
+                                                label="Уровень владения языком"
+                                                name='skillLvl'
+                                                className={cl.workerInfoSelect}
+                                                value={inputData.skillLvl}
+                                                onChange={(e) => setInputData({ ...inputData, skillLvl: e.target.value })}
+                                                
+                                                >
+                                                    <MenuItem value="">Выберите уровень владения</MenuItem>
+                                                    <MenuItem value="со словарем">Со словарем</MenuItem>
+                                                    <MenuItem value="начальный">Начальный</MenuItem>
+                                                    <MenuItem value="ниже среднего">Ниже среднего</MenuItem>
+                                                    <MenuItem value="средний">Средний</MenuItem>
+                                                    <MenuItem value="начальный">Выше среднего</MenuItem>
+                                                    <MenuItem value="продвинутый">Продвинутый</MenuItem>
+                                                    <MenuItem value="профессиональный">Профессиональный уровень владения</MenuItem>
+                                                    <MenuItem value="родной">Родной</MenuItem>
+                                                </Select>
+                                            </FormControl>
+                                        </Box>
+                                        <Button variant="contained" type="submit" className={cl.submitBtn} >Добавить</Button>
+                                    </div>
                                 </form>
                             )}
                         </div>
                         <div>
-                            <table className={cl.customTable} style={{ marginTop: '20px' }}>
-                                <thead>
-                                    <tr>
-                                        <td>Язык</td>
-                                        <td>Уровень владения языком </td>
-                                        <td>Действие</td>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {languageSkill && languageSkill.languageSkills && languageSkill.languageSkills.map((d, i) => (
-                                        <tr key={i}>
-                                            <td>  
-                                                {editingId === d.id ? (
-                                                    <select
-                                                        className={cl.selectRelative_type}
-                                                        value={editedData.langName}
-                                                        onChange={(e) => setEditedData({ ...editedData, langName: e.target.value })}
-                                                    >
-                                                        <option value="">Выберите тип образования</option>
-                                                        {Object.keys(apiLanguages).map((languageCode) => (
-                                                          <option key={languageCode} value={languageCode}>
-                                                            {apiLanguages[languageCode]}
-                                                          </option>
-                                                        ))}
-                                                    </select>
+                            <Paper sx={{ width: '100%', overflow: 'hidden', marginTop: '20px' }}>
+                                <TableContainer sx={{ maxHeight: 440 }}>
+                                    <Table stickyHeader aria-label="sticky table">
+                                        <TableHead>
+                                            <TableRow>
+                                                <TableCell>Язык</TableCell>
+                                                <TableCell>Уровень владения языком </TableCell>
+                                                <TableCell>Действие</TableCell>
+                                            </TableRow>
+                                        </TableHead>
+                                        <TableBody>
+                                            {languageSkill && languageSkill.languageSkills && languageSkill.languageSkills.length > 0 ? (
+                                                    languageSkill.languageSkills.map((d, i) => (
+                                                        <TableRow key={i}>
+                                                            <TableCell>  
+                                                                {editingId === d.id ? (
+                                                                    <Box>
+                                                                        {/* <label className={cl.label}>Должность</label> */}
+                                                                        <FormControl size="small" fullWidth>
+                                                                            <InputLabel id="demo-simple-select-label">Язык</InputLabel>
+                                                                            <Select
+                                                                            labelId="demo-simple-select-label"
+                                                                            id="demo-simple-select"
+                                                                            label="Язык"
+                                                                            name='langName'
+                                                                            className={cl.workerInfoSelect}
+                                                                            value={editedData.langName}
+                                                                            onChange={(e) => setEditedData({ ...editedData, langName: e.target.value })}
+                                                                            
+                                                                            >
+                                                                                <MenuItem value="">Выберите тип образования</MenuItem>
+                                                                                {Object.keys(apiLanguages).map((languageCode) => (
+                                                                                <MenuItem key={languageCode} value={languageCode}>
+                                                                                    {apiLanguages[languageCode]}
+                                                                                </MenuItem>
+                                                                                ))}
+                                                                            </Select>
+                                                                        </FormControl>
+                                                                    </Box>
+                                                                    
+                                                                ) : (
+                                                                    d.langName
+                                                                )}
+                                                            </TableCell>
+                                                            <TableCell>  
+                                                                {editingId === d.id ? (
+                                                                    <Box>
+                                                                    {/* <label className={cl.label}>Должность</label> */}
+                                                                    <FormControl size="small" fullWidth>
+                                                                        <InputLabel id="demo-simple-select-label">	Уровень владения языком</InputLabel>
+                                                                        <Select
+                                                                        labelId="demo-simple-select-label"
+                                                                        id="demo-simple-select"
+                                                                        label="	Уровень владения языком"
+                                                                        name='skillLvl'
+                                                                        className={cl.workerInfoSelect}
+                                                                        value={editedData.skillLvl}
+                                                                        onChange={(e) => setEditedData({ ...editedData, skillLvl: e.target.value })}
+                                                                        
+                                                                        >
+                                                                            <MenuItem value="">Выберите уровень владения</MenuItem>
+                                                                            <MenuItem value="со словарем">Со словарем</MenuItem>
+                                                                            <MenuItem value="начальный">Начальный</MenuItem>
+                                                                            <MenuItem value="ниже среднего">Ниже среднего</MenuItem>
+                                                                            <MenuItem value="средний">Средний</MenuItem>
+                                                                            <MenuItem value="начальный">Выше среднего</MenuItem>
+                                                                            <MenuItem value="продвинутый">Продвинутый</MenuItem>
+                                                                            <MenuItem value="профессиональный">Профессиональный уровень владения</MenuItem>
+                                                                            <MenuItem value="родной">Родной</MenuItem>
+                                                                        </Select>
+                                                                    </FormControl>
+                                                                </Box>
+                                                                ) : (
+                                                                    d.skillLvl
+                                                                )}
+                                                            </TableCell>
+                                                        
+                                                            <TableCell className={cl.relativesActionBtns} style={{}}>
+                                                                {editingId === d.id ? (
+                                                                    <div>
+                                                                        <IconButton className={cl.iconBtn} onClick={() => handleSaveEdit(d.id)}><FaCheck color=' #1565C0' /></IconButton>
+                                                                        <IconButton className={cl.iconBtn} onClick={handleCancelEdit}><IoClose /></IconButton>
+                                                                    </div>
+                                                                ) : (
+                                                                    <>
+                                                                        <IconButton className={cl.iconBtn} onClick={() => handleEdit(d.id)}><MdEdit /></IconButton>
+                                                                        <IconButton className={cl.iconBtn} onClick={() => handleDelete(d.id)}><FaTrash /></IconButton>
+                                                                    </>
+                                                                )}
+                                                            </TableCell>
+                                                        </TableRow>
+                                                    ))
                                                 ) : (
-                                                    d.langName
+                                                    <TableRow>
+                                                        <TableCell colSpan={8} align="center">
+                                                            Нет данных
+                                                        </TableCell>
+                                                    </TableRow>
                                                 )}
-                                            </td>
-                                            <td>  
-                                                {editingId === d.id ? (
-                                                    <select
-                                                        className={cl.selectRelative_type}
-                                                        value={editedData.skillLvl}
-                                                        onChange={(e) => setEditedData({ ...editedData, skillLvl: e.target.value })}
-                                                    >
-                                                        <option value="">Выберите уровень владения</option>
-                                                        <option value="начальный">Начальный</option>
-                                                        <option value="ниже среднего">Ниже среднего</option>
-                                                        <option value="средний">Средний</option>
-                                                        <option value="начальный">Выше среднего</option>
-                                                        <option value="продвинутый">Продвинутый</option>
-                                                        <option value="профессиональный">Профессиональный уровень владения</option>
-                                                    </select>
-                                                ) : (
-                                                    d.skillLvl
-                                                )}
-                                            </td>
-                                           
-                                            <td className={cl.relativesActionBtns} style={{}}>
-                                                {editingId === d.id ? (
-                                                    <>
-                                                        <div onClick={() => handleSaveEdit(d.id)}>&#10003;</div>
-                                                        <div onClick={handleCancelEdit}>&#x2715;</div>
-                                                    </>
-                                                ) : (
-                                                    <>
-                                                        <div onClick={() => handleEdit(d.id)}>&#9998;</div>
-                                                        <div onClick={() => handleDelete(d.id)}>Удалить</div>
-                                                    </>
-                                                )}
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
+                                        </TableBody>
+                                    </Table>
+                                </TableContainer>
+                            </Paper>
                         </div>
                     </div>
                 </div>

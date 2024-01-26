@@ -1,67 +1,23 @@
 /* Personal.module.css */
 
-.formInput {
-    padding: 5px;
-    background: #f2f2f2;
-    border: none;
-    outline: none;
-    font-family: "Helvetica", sans-serif;
-    color: #000;
-    font-size: 14px;
-    font-weight: 400;
-    width: 100%;
-    box-sizing: border-box;
-  }
-  
-  .customTable {
-    width: 100%;
-    border-collapse: collapse;
-    border-spacing: 0;
-  }
-  
-  .customTable th,
-  .customTable td {
-    /* border: 1px solid #ccc; */
-    padding: 8px;
-    text-align: left;
-  }
-  
-  .customTable td {
-    border-bottom: none;
-    border-top: none;
-    border-right: 1px solid #ccc;
-  }
-  
-  .customTable td:first-child {
-    
-    border-left: 1px solid #ccc;
-  }
-  
-  .customTable tr {
-    border-bottom: 1px solid #ccc;
-    height: fit-content !important;
-  }
-  
-  .customTable tr:first-child {
-    border-top: 1px solid #ccc;
-  }
-  
-  .customTable th {
-    background-color: #f2f2f2;
-  }
+.workerInfoSelect {
+  width: 290px;
+  height: 40px;
+  padding: 0px 9px;
+  /* margin-left: 12px; */
+  font-family: "Helvetica", sans-serif;
+  color: #000;
+  font-size: 16px;
+  font-weight: 400;
+  /* margin-left: 12px; */
+}
   
   .info__block {
     display: flex;
     margin-top: 10px;
     gap: 10px;
   }
-  
-  .workerImg {
-    width: 201px;
-    height: 254px;
-    object-fit: cover;
-    border-radius: 5px;
-  }
+
   
   .workerCapitalName {
     color: #4B4B4B;
@@ -118,50 +74,30 @@
     margin-top: 15px;
   }
   
-  /* calendar */
-  .datePickerContainer {
-    position: relative;
-  }
-  
-  .dateLogo {
-    position: absolute;
-    z-index: 12;
-    right: 9px;
-    top: 9px;
-  }
-  
+
   .actionBtn {
     padding: 5px 9px;
     font-weight: 400;
   }
 
-  .submitBtn {
-    padding: 10px;
-  }
   
   .relativesActionBtns {
     display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 5px;
+    gap: 10px;
+    background: none;
   }
   
-  .relativesActionBtns > div {
-    padding: 10px;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  .relativesActionBtns > div:first-child {
-    background-color: #ccc;
-  }
-  .relativesActionBtns > div:nth-child(2) {
-    background-color: #d36666;
-  }
   
   .editInput {
     border: none;
     outline: none;
     background: none;
     width: 100%;
+  }
+
+  .iconBtn {
+    font-size: 16px;
+    width: 32px;
+    height: 32px;
+    color: #1565C0;
   }

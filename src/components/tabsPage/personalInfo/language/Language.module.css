@@ -97,18 +97,16 @@
     width: 127px;
   }
   
-  .workerInfo {
-    border-radius: 5px;
-    border: 1px solid #959595;
-    width: 270px;
-    /* height: 30px; */
-    padding: 6px 9px;
-    margin-left: 12px;
-    outline: none;
+  .workerInfoSelect {
+    width: 290px;
+    height: 40px;
+    padding: 0px 9px;
+    /* margin-left: 12px; */
     font-family: "Helvetica", sans-serif;
     color: #000;
     font-size: 16px;
     font-weight: 400;
+    /* margin-left: 12px; */
   }
   
   .totalInfo {
@@ -118,50 +116,23 @@
     margin-top: 15px;
   }
   
-  /* calendar */
-  .datePickerContainer {
-    position: relative;
-  }
-  
-  .dateLogo {
-    position: absolute;
-    z-index: 12;
-    right: 9px;
-    top: 9px;
-  }
-  
-  .actionBtn {
-    padding: 5px 9px;
-    font-weight: 400;
-  }
-
-  .submitBtn {
-    padding: 10px;
-  }
-  
   .relativesActionBtns {
     display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 5px;
+    gap: 10px;
+    background: none;
   }
   
-  .relativesActionBtns > div {
-    padding: 10px;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  .relativesActionBtns > div:first-child {
-    background-color: #ccc;
-  }
-  .relativesActionBtns > div:nth-child(2) {
-    background-color: #d36666;
-  }
   
   .editInput {
     border: none;
     outline: none;
     background: none;
     width: 100%;
+  }
+
+  .iconBtn {
+    font-size: 16px;
+    width: 32px;
+    height: 32px;
+    color: #1565C0;
   }

@@ -1,17 +1,15 @@
 /* Personal.module.css */
 
 .formInput {
-    padding: 5px;
-    background: #f2f2f2;
-    border: none;
-    outline: none;
-    font-family: "Helvetica", sans-serif;
-    color: #000;
-    font-size: 14px;
-    font-weight: 400;
-    width: 100%;
-    box-sizing: border-box;
-  }
+  background: #ffffff;
+  font-family: "Helvetica", sans-serif;
+  outline: none;
+  border: none;
+  font-size: 14px;
+  font-weight: 400;
+  width: 100px;
+  cursor: pointer;
+}
   
   .customTable {
     width: 100%;
@@ -55,13 +53,30 @@
     margin-top: 10px;
     gap: 10px;
   }
-  
-  .workerImg {
-    width: 201px;
-    height: 254px;
-    object-fit: cover;
-    border-radius: 5px;
+
+  .workerInfoText {
+    width: 290px;
+    height: 34px;
+    outline: none;
+    font-family: "Helvetica", sans-serif;
+    color: #000;
+    font-size: 16px;
+    font-weight: 400;
+    /* margin-left: 26px; */
   }
+  
+  .workerInfoSelect {
+    width: 290px;
+    height: 40px;
+    padding: 0px 9px;
+    /* margin-left: 12px; */
+    font-family: "Helvetica", sans-serif;
+    color: #000;
+    font-size: 16px;
+    font-weight: 400;
+    /* margin-left: 12px; */
+  }
+  
   
   .workerCapitalName {
     color: #4B4B4B;
@@ -134,34 +149,24 @@
     padding: 5px 9px;
     font-weight: 400;
   }
-
-  .submitBtn {
-    padding: 10px;
-  }
   
   .relativesActionBtns {
     display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 5px;
+    gap: 10px;
+    background: none;
   }
   
-  .relativesActionBtns > div {
-    padding: 10px;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  .relativesActionBtns > div:first-child {
-    background-color: #ccc;
-  }
-  .relativesActionBtns > div:nth-child(2) {
-    background-color: #d36666;
-  }
   
   .editInput {
     border: none;
     outline: none;
     background: none;
     width: 100%;
+  }
+
+  .iconBtn {
+    font-size: 16px;
+    width: 32px;
+    height: 32px;
+    color: #1565C0;
   }
