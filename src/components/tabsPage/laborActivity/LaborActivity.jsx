@@ -2,8 +2,25 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import cl from './LaborActivity.module.css';
-import Button from '../../../components/UI/button/Button';
 import Cookies from 'js-cookie';
+
+import { FaTrash } from "react-icons/fa";
+import { MdEdit } from "react-icons/md";
+import { FaPlus } from "react-icons/fa6";
+import { IoClose } from "react-icons/io5";
+import { FaCheck } from "react-icons/fa6";
+import IconButton from '@mui/material/IconButton';
+
+import { Button,TextField } from '@mui/material';
+import Table from '@mui/material/Table';
+import TableHead from '@mui/material/TableHead';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
+
+import { MdFileDownload } from "react-icons/md";
 
 import { deleteWorkingHistory } from '../../../api/working_history/deleteWorkingHistory';
 import { UpdateWorkingHistory } from '../../../api/working_history/updateWorkingHistory';
@@ -20,7 +37,7 @@ function LaborActivity({ workingHistory, setWorkingHistory }) {
     const [showForm, setShowForm] = useState(false);
 
     const handleShowForm = () => {
-        setShowForm(true);
+        setShowForm(!showForm);
     };
 
     const [inputData, setInputData] = useState({
@@ -306,259 +323,289 @@ function LaborActivity({ workingHistory, setWorkingHistory }) {
           console.error('Ошибка при скачивании файла', error);
         }
     };
+
+    const icon = showForm ? <IoClose style={{ fontSize: '18px' }} /> : <FaPlus style={{ fontSize: '16px' }} />;
+
     
     return (
         <div className={cl.totalInfoWrapper}>
         <div className={cl.totalInfoContent}>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <p className={cl.workerCapitalName} style={{ marginBottom: '20px' }}>Трудовая деятельность </p>
+                <div style={{ display: 'flex',  alignItems: 'center', gap: '20px' }}>
+                    <p className={cl.workerCapitalName} style={{ marginBottom: '18px' }}>Трудовая деятельность</p>
+                    <IconButton onClick={handleShowForm} aria-label="toggle-form" style={{ marginBottom: '15px' }}>
+                        {icon}
+                    </IconButton>
+                </div>
+                <Button onClick={handleDownload}  style={{ textTransform: 'none', display: 'flex', alignItems: 'center', gap: '8px' }}> <MdFileDownload style={{ fontSize: '19px' }} /> Скачать данные</Button>
             </div>
         </div>
         <div>
             <div>
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Button onClick={handleShowForm}>Добавить трудовую деятельность </Button>
-                <Button onClick={handleDownload}>Скачать данные</Button>
-            </div>
                 {showForm && (
                     <form onSubmit={(e) => handleAddNewData(e, id)} style={{ marginTop: '10px' }}>
-                        <table className={cl.customTable}>
-                            <tbody >
-                              <tr>   
-                                <td>
-                                  <div className={cl.datePickerContainer}>
-                                        <input
-                                            type="date"
-                                            className={cl.formInput}
-                                            placeholder="Начало периода"
-                                            value={inputData.startDate || ''}
-                                            onChange={(e) => {
-                                                const newDate = e.target.value;
-                                                setInputData((prevWorker) => ({
-                                                ...prevWorker,
-                                                startDate: newDate,
-                                                }));
-                                            }}
-                                        />
-                                    </div>
-                                  </td>
-                                  <td>
-                                    <div className={cl.datePickerContainer}>
-                                        <input
-                                            type="date"
-                                            className={cl.formInput}
-                                            placeholder="Конец периода"
-                                            value={inputData.endDate || ''}
-                                            onChange={(e) => {
-                                                const newDate = e.target.value;
-                                                setInputData((prevWorker) => ({
-                                                ...prevWorker,
-                                                endDate: newDate,
-                                                }));
-                                            }}
-                                        />
-                                    </div>
-                                  </td>
-                                  <td>
-                                      <input
-                                          type="text"
-                                          className={cl.formInput}
-                                          placeholder="Должность"
-                                          value={inputData.positionName}
-                                          onChange={(e) => setInputData({ ...inputData, positionName: e.target.value })}
-                                      />
-                                  </td>
-                                  <td>
-                                      <input
-                                          type="text"
-                                          className={cl.formInput}
-                                          placeholder="Подразделение"
-                                          value={inputData.department}
-                                          onChange={(e) => setInputData({ ...inputData, department: e.target.value })}
-                                      />
-                                  </td>
-                                  <td>
-                                      <input
-                                          type="text"
-                                          className={cl.formInput}
-                                          placeholder="Учреждение"
-                                          value={inputData.organizationName}
-                                          onChange={(e) => setInputData({ ...inputData, organizationName: e.target.value })}
-                                      />
-                                  </td>
-                                  <td>
-                                      <input
-                                          type="text"
-                                          className={cl.formInput}
-                                          placeholder="Местонахождение организации"
-                                          value={inputData.organizationAddress}
-                                          onChange={(e) => setInputData({ ...inputData, organizationAddress: e.target.value })}
-                                      />
-                                  </td>
-                                  <td><Button type="submit">Добавить</Button></td>
-                                </tr>
-                                
-                            </tbody>
-                        </table>
+                        <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '5px', marginTop: '8px' }}>
+                                <label style={{ fontSize: '13px', color: '#4B4B4B', marginLeft: '2px' }}>Начало периода</label>
+                                <TextField
+                                id="outlined-basic" 
+                                variant="outlined"  
+                                size="small"
+                                type="date"
+                                className={cl.workerInfoText}
+                                value={inputData.startDate || ''}
+                                onChange={(e) => {
+                                    const newDate = e.target.value;
+                                    setInputData((prevWorker) => ({
+                                    ...prevWorker,
+                                    startDate: newDate,
+                                    }));
+                                }}
+                                />
+                            </div>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '5px', marginTop: '8px' }}>
+                                <label style={{ fontSize: '13px', color: '#4B4B4B', marginLeft: '2px' }}>Конец периода</label>
+                                <TextField
+                                id="outlined-basic" 
+                                variant="outlined"  
+                                size="small"
+                                type="date"
+                                className={cl.workerInfoText}
+                                value={inputData.endDate || ''}
+                                onChange={(e) => {
+                                    const newDate = e.target.value;
+                                    setInputData((prevWorker) => ({
+                                    ...prevWorker,
+                                    endDate: newDate,
+                                    }));
+                                }}
+                                />
+                            </div>
+                        
+                            <Button variant="contained" type="submit" className={cl.submitBtn} >Добавить</Button>
+                        </div>
+                        <div style={{ display: 'flex', gap: '10px' }}>
+                            <TextField
+                                style={{ marginTop: '25px' }}
+                                id="outlined-basic" 
+                                label="Должность" 
+                                variant="outlined"  
+                                size="small"
+                                type="text"
+                                className={cl.workerInfoText}
+                                value={inputData.positionName}
+                                onChange={(e) => setInputData({ ...inputData, positionName: e.target.value })}
+                            />
+                            <TextField
+                                style={{ marginTop: '25px' }}
+                                id="outlined-basic" 
+                                label="Подразделение" 
+                                variant="outlined"  
+                                size="small"
+                                type="text"
+                                className={cl.workerInfoText}
+                                value={inputData.department}
+                                onChange={(e) => setInputData({ ...inputData, department: e.target.value })}
+                            />
+                        </div>
+                        
+                        <div style={{ display: 'flex', gap: '10px' }}>
+                            <TextField
+                                style={{ marginTop: '25px' }}
+                                id="outlined-basic" 
+                                label="Учреждение" 
+                                variant="outlined"  
+                                size="small"
+                                type="text"
+                                className={cl.workerInfoText}
+                                value={inputData.organizationName}
+                                onChange={(e) => setInputData({ ...inputData, organizationName: e.target.value })}
+                            />
+                            <TextField
+                                style={{ marginTop: '25px' }}
+                                id="outlined-basic" 
+                                label="Местонахождение организации" 
+                                variant="outlined"  
+                                size="small"
+                                type="text"
+                                className={cl.workerInfoText}
+                                value={inputData.organizationAddress}
+                                onChange={(e) => setInputData({ ...inputData, organizationAddress: e.target.value })}
+                            />
+                        </div>
                     </form>
                 )}
             </div>
             <div>
-                <table className={cl.customTable} style={{ marginTop: '20px' }}>
-                    <thead>
-                        <tr>
-                          <td>Начало периода</td>
-                          <td>Конец периода </td>
-                          <td>Должность</td>
-                          <td>Подразделение</td>
-                          <td>Учреждение</td>
-                          <td>Местонахожден. организации</td>
-                          <td>Коэфициент</td>
-                          <td>Правохран. орган</td>
-                          <td>Действие</td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {workingHistory && workingHistory.workingHistories && workingHistory.workingHistories.map((d, i) => (
-                            <tr key={i}> 
-                                <td>
-                                  {editingId === d.id ? (
-                                    <div className={cl.datePickerContainer}>
-                                        <input
-                                            type="date"
-                                            className={cl.formInput}
-                                            placeholder="Начало периода"
-                                            name='startDate'
-                                            value={editedData.startDate || ''}
-                                            onChange={(e) => {
-                                                const newDate = e.target.value;
-                                                setEditedData((prevData) => ({
-                                                ...prevData,
-                                                startDate: newDate,
-                                                }));
-                                            }}
-                                        />
-                                    </div>
-                                ) : (
-                                    d.startDate
-                                )}
-                                </td>
-                                <td>
-                                  {editingId === d.id ? (
-                                    <div className={cl.datePickerContainer}>
-                                        <input
-                                            type="date"
-                                            className={cl.formInput}
-                                            placeholder="Конец периода"
-                                            name='endDate'
-                                            value={editedData.endDate || ''}
-                                            onChange={(e) => {
-                                                const newDate = e.target.value;
-                                                setEditedData((prevData) => ({
-                                                ...prevData,
-                                                endDate: newDate,
-                                                }));
-                                            }}
-                                        />
-                                    </div>
-                                ) : (
-                                    d.endDate
-                                )}
-                                </td>
-                                <td>{editingId === d.id ? <input type="text" className={cl.editInput} name='department' value={editedData.department} onChange={(e) => setEditedData({ ...editedData, department: e.target.value })} /> : d.department}</td>
-                                <td>{editingId === d.id ? <input type="text" className={cl.editInput} name='positionName' value={editedData.positionName} onChange={(e) => setEditedData({ ...editedData, positionName: e.target.value })} /> : d.positionName}</td>
-                                <td>{editingId === d.id ? <input type="text" className={cl.editInput} name='organizationName' value={editedData.organizationName} onChange={(e) => setEditedData({ ...editedData, organizationName: e.target.value })} /> : d.organizationName}</td>
-                                <td>{editingId === d.id ? <input type="text" className={cl.editInput} name='organizationAddress' value={editedData.organizationAddress} onChange={(e) => setEditedData({ ...editedData, organizationAddress: e.target.value })} /> : d.organizationAddress}</td>
-                                <td>
-                                    {editingId === d.id ? (
-                                        <input
-                                        type="checkbox"
-                                        name="HaveCoefficient"
-                                        checked={editedData.HaveCoefficient || false}
-                                        onChange={(e) =>
-                                            setEditedData((prevData) => ({
-                                            ...prevData,
-                                            HaveCoefficient: e.target.checked,
-                                            }))
-                                        }
-                                        />
-                                    ) : (
-                                        d.HaveCoefficient ? "Да" : "Нет"
-                                    )}
-                                </td>
-                                <td>
-                                    {editingId === d.id ? (
-                                        <input
-                                        type="checkbox"
-                                        name="isPravoOhranka"
-                                        checked={editedData.isPravoOhranka || false}
-                                        onChange={(e) =>
-                                            setEditedData((prevData) => ({
-                                            ...prevData,
-                                            isPravoOhranka: e.target.checked,
-                                            }))
-                                        }
-                                        />
-                                    ) : (
-                                        d.isPravoOhranka ? "Да" : "Нет"
-                                    )}
-                                </td>
-                                
-                                <td className={cl.relativesActionBtns} style={{}}>
-                                    {editingId === d.id ? (
-                                        <>
-                                            <div onClick={() => handleSaveEdit(d.id)}>&#10003;</div>
-                                            <div onClick={handleCancelEdit}>&#x2715;</div>
-                                        </>
-                                    ) : (
-                                        <>
-                                            <div onClick={() => handleEdit(d.id)}>&#9998;</div>
-                                            <div onClick={() => handleDelete(d.id)}>Удалить</div>
-                                        </>
-                                    )}
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-                <table className={cl.customTable} style={{ marginTop: '20px' }}>
-                    <thead>
-                        <tr>
-                          <td>Общий стаж</td>
-                          <td>Стаж в правохранительных органах</td>
-                        </tr>
-                    </thead>
-                    <tbody> 
-                        {workingHistory && workingHistory.workingHistories && workingHistory.workingHistories
-                        .filter((d) =>  d.overall_experience || d.pravo_experience)
-                        .map((d, i) => (
-                            <tr key={i}>
-                                <td>
-                                {d.overall_experience && (
-                                    <div className={cl.experience}>
-                                        <p>Год:  {d.overall_experience.years}</p>
-                                        <p>Месяц: {d.overall_experience.months}</p>
-                                        <p>День: {d.overall_experience.days}</p>
-                                    </div>
-                                )}
-                                </td>
-                                <td>
-                                    {d.pravo_experience && (
+            <Paper sx={{ width: '100%', overflow: 'hidden', marginTop: '20px' }}>
+                <TableContainer sx={{ maxHeight: 440 }}>
+                    <Table stickyHeader aria-label="sticky table">
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>Начало периода</TableCell>
+                                <TableCell>Конец периода </TableCell>
+                                <TableCell>Должность</TableCell>
+                                <TableCell>Подразделение</TableCell>
+                                <TableCell>Учреждение</TableCell>
+                                <TableCell>Местонахожден. организации</TableCell>
+                                <TableCell>Коэфициент</TableCell>
+                                <TableCell>Правохран. орган</TableCell>
+                                <TableCell>Действие</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {workingHistory && workingHistory.workingHistories && workingHistory.workingHistories.length > 0 ? (
+                                workingHistory.workingHistories.map((d, i) => (
+                                    <TableRow key={i}>
+                                        <TableCell>
+                                            {editingId === d.id ? (
+                                                <div className={cl.datePickerContainer}>
+                                                    <input
+                                                        type="date"
+                                                        className={cl.formInput}
+                                                        placeholder="Начало периода"
+                                                        name='startDate'
+                                                        value={editedData.startDate || ''}
+                                                        onChange={(e) => {
+                                                            const newDate = e.target.value;
+                                                            setEditedData((prevData) => ({
+                                                            ...prevData,
+                                                            startDate: newDate,
+                                                            }));
+                                                        }}
+                                                    />
+                                                </div>
+                                            ) : (
+                                                d.startDate
+                                            )}
+                                        </TableCell>
+                                        <TableCell>
+                                            {editingId === d.id ? (
+                                                <div className={cl.datePickerContainer}>
+                                                    <input
+                                                        type="date"
+                                                        className={cl.formInput}
+                                                        placeholder="Конец периода"
+                                                        name='endDate'
+                                                        value={editedData.endDate || ''}
+                                                        onChange={(e) => {
+                                                            const newDate = e.target.value;
+                                                            setEditedData((prevData) => ({
+                                                            ...prevData,
+                                                            endDate: newDate,
+                                                            }));
+                                                        }}
+                                                    />
+                                                </div>
+                                            ) : (
+                                                d.endDate
+                                            )}
+                                        </TableCell>
+                                        <TableCell>{editingId === d.id ? <input type="text" className={cl.editInput} name='department' value={editedData.department} onChange={(e) => setEditedData({ ...editedData, department: e.target.value })} /> : d.department}</TableCell>
+                                        <TableCell>{editingId === d.id ? <input type="text" className={cl.editInput} name='positionName' value={editedData.positionName} onChange={(e) => setEditedData({ ...editedData, positionName: e.target.value })} /> : d.positionName}</TableCell>
+                                        <TableCell>{editingId === d.id ? <input type="text" className={cl.editInput} name='organizationName' value={editedData.organizationName} onChange={(e) => setEditedData({ ...editedData, organizationName: e.target.value })} /> : d.organizationName}</TableCell>
+                                        <TableCell>{editingId === d.id ? <input type="text" className={cl.editInput} name='organizationAddress' value={editedData.organizationAddress} onChange={(e) => setEditedData({ ...editedData, organizationAddress: e.target.value })} /> : d.organizationAddress}</TableCell>
+                                        <TableCell>
+                                            {editingId === d.id ? (
+                                                <input
+                                                type="checkbox"
+                                                name="HaveCoefficient"
+                                                checked={editedData.HaveCoefficient || false}
+                                                onChange={(e) =>
+                                                    setEditedData((prevData) => ({
+                                                    ...prevData,
+                                                    HaveCoefficient: e.target.checked,
+                                                    }))
+                                                }
+                                                />
+                                            ) : (
+                                                d.HaveCoefficient ? "Да" : "Нет"
+                                            )}
+                                        </TableCell>
+                                        <TableCell>
+                                            {editingId === d.id ? (
+                                                <input
+                                                type="checkbox"
+                                                name="isPravoOhranka"
+                                                checked={editedData.isPravoOhranka || false}
+                                                onChange={(e) =>
+                                                    setEditedData((prevData) => ({
+                                                    ...prevData,
+                                                    isPravoOhranka: e.target.checked,
+                                                    }))
+                                                }
+                                                />
+                                            ) : (
+                                                d.isPravoOhranka ? "Да" : "Нет"
+                                            )}
+                                        </TableCell>
+                                        <TableCell className={cl.relativesActionBtns} >
+                                            {editingId === d.id ? (
+                                                <div>
+                                                    <IconButton className={cl.iconBtn} onClick={() => handleSaveEdit(d.id)}><FaCheck color=' #1565C0' /></IconButton>
+                                                    <IconButton className={cl.iconBtn} onClick={handleCancelEdit}><IoClose /></IconButton>
+                                                </div>
+                                            ) : (
+                                                <>
+                                                    <IconButton className={cl.iconBtn} onClick={() => handleEdit(d.id)}><MdEdit /></IconButton>
+                                                    <IconButton className={cl.iconBtn} onClick={() => handleDelete(d.id)}><FaTrash /></IconButton>
+                                                </>
+                                            )}
+                                        </TableCell>
+                                    </TableRow>
+                                ))
+                            ) : (
+                                <TableRow>
+                                    <TableCell colSpan={8} align="center">
+                                        Нет данных
+                                    </TableCell>
+                                </TableRow>
+                            )}
+
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            </Paper>
+
+            <Paper sx={{ width: '100%', overflow: 'hidden', marginTop: '20px' }}>
+                <TableContainer sx={{ maxHeight: 440 }}>
+                    <Table stickyHeader aria-label="sticky table">
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>Общий стаж</TableCell>
+                                <TableCell>Стаж в правохранительных органах</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {workingHistory && workingHistory.workingHistories && workingHistory.workingHistories
+                            .filter((d) =>  d.overall_experience || d.pravo_experience)
+                            .map((d, i) => (
+                                <TableRow key={i}>
+                                    <TableCell>
+                                    {d.overall_experience && (
                                         <div className={cl.experience}>
-                                           <p>Год:  {d.pravo_experience.years}</p>
-                                            <p>Месяц: {d.pravo_experience.months}</p>
-                                            <p>День: {d.pravo_experience.days}</p>
+                                            <p>Год:  {d.overall_experience.years}</p>
+                                            <p>Месяц: {d.overall_experience.months}</p>
+                                            <p>День: {d.overall_experience.days}</p>
                                         </div>
                                     )}
-                                </td>
-                            </tr>
-                        ))}
-                        
-                    </tbody>
-                </table>
-
+                                    </TableCell>
+                                    <TableCell>
+                                        {d.pravo_experience && (
+                                            <div className={cl.experience}>
+                                            <p>Год:  {d.pravo_experience.years}</p>
+                                                <p>Месяц: {d.pravo_experience.months}</p>
+                                                <p>День: {d.pravo_experience.days}</p>
+                                            </div>
+                                        )}
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            </Paper>
             </div>
-
         </div>
     </div>
     );

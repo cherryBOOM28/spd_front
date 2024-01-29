@@ -1,54 +1,16 @@
 /* Personal.module.css */
 
 .formInput {
-    padding: 5px;
-    background: #f2f2f2;
-    border: none;
-    outline: none;
-    font-family: "Helvetica", sans-serif;
-    color: #000;
-    font-size: 14px;
-    font-weight: 400;
-    width: 100%;
-    box-sizing: border-box;
-  }
-  
-  .customTable {
-    width: 100%;
-    border-collapse: collapse;
-    border-spacing: 0;
-  }
-  
-  .customTable th,
-  .customTable td {
-    /* border: 1px solid #ccc; */
-    padding: 8px;
-    text-align: left;
-  }
-  
-  .customTable td {
-    border-bottom: none;
-    border-top: none;
-    border-right: 1px solid #ccc;
-  }
-  
-  .customTable td:first-child {
-    
-    border-left: 1px solid #ccc;
-  }
-  
-  .customTable tr {
-    border-bottom: 1px solid #ccc;
-    height: fit-content !important;
-  }
-  
-  .customTable tr:first-child {
-    border-top: 1px solid #ccc;
-  }
-  
-  .customTable th {
-    background-color: #f2f2f2;
-  }
+  background: #ffffff;
+  font-family: "Helvetica", sans-serif;
+  outline: none;
+  border: none;
+  font-size: 14px;
+  font-weight: 400;
+  width: 100px;
+  cursor: pointer;
+}
+
 
 .workerCapitalName {
   color: #4B4B4B;
@@ -56,10 +18,7 @@
   font-weight: 600;
 }
 
-.actionBtn {
-    padding: 5px 9px;
-    font-weight: 400;
-}
+
 
 .workerBlock {
     display: flex;
@@ -84,53 +43,34 @@
     width: 127px;
 }
 
-.workerInfo {
-    border-radius: 5px;
-    border: 1px solid #959595;
-    width: 270px;
-    /* height: 30px; */
-    padding: 6px 9px;
-    margin-left: 12px;
-    outline: none;
-    font-family: "Helvetica", sans-serif;
-    color: #000;
-    font-size: 16px;
-    font-weight: 400;
+.workerInfoText {
+  width: 290px;
+  height: 34px;
+  outline: none;
+  font-family: "Helvetica", sans-serif;
+  color: #000;
+  font-size: 16px;
+  font-weight: 400;
+  /* margin-left: 26px; */
 }
 
 .workerInfoSelect {
-    border-radius: 5px;
-    border: 1px solid #959595;
-    width: 290px;
-    height: 30px;
-    padding: 2px 9px;
-    margin-left: 12px;
-    outline: none;
-    font-family: "Helvetica", sans-serif;
-    color: #000;
-    font-size: 16px;
-    font-weight: 400;
+  width: 290px;
+  height: 40px;
+  padding: 0px 9px;
+  /* margin-left: 12px; */
+  font-family: "Helvetica", sans-serif;
+  color: #000;
+  font-size: 16px;
+  font-weight: 400;
+  /* margin-left: 12px; */
 }
 
-.workerInfoText {
-    border-radius: 5px;
-    border: 1px solid #959595;
-    min-width: 725px;
-    padding: 6px 9px;
-    margin-left: 12px;
-    outline: none;
-    font-family: "Helvetica", sans-serif;
-    color: #000;
-    font-size: 16px;
-    font-weight: 400;
+.submitBtn {
+  height: 40px;
+  margin-top: 25px;
 }
 
-.totalInfo {
-    border-radius: 5px;
-    background: #F3F3F3;
-    padding: 14px;
-    margin-top: 15px;
-}
 
 /* calendar */
 .datePickerContainer {
@@ -163,22 +103,23 @@
 
 .relativesActionBtns {
   display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 5px;
+  gap: 10px;
+  background: none;
 }
 
-.relativesActionBtns > div {
-  padding: 10px;
-  border-radius: 4px;
-  cursor: pointer;
+
+.editInput {
+  border: none;
+  outline: none;
+  background: none;
+  width: 100%;
 }
 
-.relativesActionBtns > div:first-child {
-  background-color: #ccc;
-}
-.relativesActionBtns > div:nth-child(2) {
-  background-color: #d36666;
+.iconBtn {
+  font-size: 16px;
+  width: 32px;
+  height: 32px;
+  color: #1565C0;
 }
 
 .editInput {

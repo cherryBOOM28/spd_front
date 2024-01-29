@@ -90,7 +90,7 @@ const NotificationButton = () => {
           {showNotifications && (
             <div className={cl.notification_list}>
               <h2 className={cl.notification_headline}>
-                <IoNotifications style={{ color: '#1565C0' }}/>
+                <IoNotifications style={{ color: '#1565C0', fontSize: '30px' }}/>
                 Предстоящие повышения
               </h2>
              
@@ -100,32 +100,38 @@ const NotificationButton = () => {
                 }`}
               >
                 <ul>
-                  {notificationData.persons.map((notification, index) => (
-                    <li key={notification.personId}>
-                      <div
-                        className={cl.notification_data}
-                        onClick={() => handleWorkerClick(notification.personId)}
-                      >
-                        <img
-                          src={`data:image/jpeg;base64,${notification.photo}`}
-                          className={cl.profilePic}
-                          alt="profile pic"
-                        />
-                        <div className={cl.inner_notification_data}>
-                          <div className={cl.box}>
-                            <p className={cl.notification_text}>{notification.firstName}</p>
-                            <p className={cl.notification_text}>{notification.surname}</p>
-                            <p className={cl.notification_text}>{notification.patronymic}</p>
-                          </div>
-                          <div  className={cl.box}>
-                            <IoCalendarClear style={{ color: '#707070' }} />
-                            <p className={cl.notification_text}>{notification.rankUpDate}</p>
-                          </div>
-                        </div>
-                        
+                {notificationData.persons.length > 0 ? (
+                      notificationData.persons.map((notification, index) => (
+                          <li key={notification.personId}>
+                              <div
+                                  className={cl.notification_data}
+                                  onClick={() => handleWorkerClick(notification.personId)}
+                              >
+                                  <img
+                                      src={`data:image/jpeg;base64,${notification.photo}`}
+                                      className={cl.profilePic}
+                                      alt="profile pic"
+                                  />
+                                  <div className={cl.inner_notification_data}>
+                                      <div className={cl.box}>
+                                          <p className={cl.notification_text}>{notification.firstName}</p>
+                                          <p className={cl.notification_text}>{notification.surname}</p>
+                                          <p className={cl.notification_text}>{notification.patronymic}</p>
+                                      </div>
+                                      <div className={cl.box}>
+                                          <IoCalendarClear style={{ color: '#707070' }} />
+                                          <p className={cl.notification_text}>{notification.rankUpDate}</p>
+                                      </div>
+                                  </div>
+                              </div>
+                          </li>
+                      ))
+                  ) : (
+                      <div style={{ width: '221px', padding: '5px 8px 12px', display: 'flex', alignItems: 'center' }}>
+                          <p style={{ color: '#585858' }}>Нет предстоящих повышений</p>
                       </div>
-                    </li>
-                  ))}
+                )}
+
                 </ul>
               </div>
             </div>

@@ -24,7 +24,6 @@ import Avatar from '@mui/material/Avatar';
 import Checkbox from '@mui/material/Checkbox';
 
 
-
 function Home(props) {
     const navigate = useNavigate();
 
@@ -222,20 +221,53 @@ function Home(props) {
 
 
     // все города в меню
+    // useEffect(() => {
+    //     const accessToken = Cookies.get('jwtAccessToken');
+    //     axios.get('http://127.0.0.1:8000/api/v1/location', {
+    //     headers: {
+    //         'Authorization': `Bearer ${accessToken}`,
+    //     }
+    //     })
+    //     .then(response => {
+    //         setCities(response.data)
+    //         // console.log(response.data)
+    //     })
+    //     .catch(error => console.error('Error fetching data:', error));
+        
+    // }, []);
+
+    // Все управления
+    
+
     useEffect(() => {
         const accessToken = Cookies.get('jwtAccessToken');
-        axios.get('http://127.0.0.1:8000/api/v1/location', {
-        headers: {
-            'Authorization': `Bearer ${accessToken}`,
-        }
+        fetchDepartments(accessToken);
+    }, []);
+
+    const fetchDepartments = (accessToken) => {
+        axios.get(`http://127.0.0.1:8000/api/v1/department`, {
+            headers: {
+                'Authorization': `Bearer ${accessToken}`,
+            }
         })
         .then(response => {
-            setCities(response.data)
-            // console.log(response.data)
+            setDepartments(response.data);
         })
-        .catch(error => console.error('Error fetching data:', error));
-        
-    }, []);
+        .catch(error => console.log("Error fetching departments:", error));
+    };
+
+    // useEffect(() => {
+    //     const accessToken = Cookies.get('jwtAccessToken');
+    //     axios.get(`http://127.0.0.1:8000/api/v1/department`, {
+    //         headers: {
+    //             'Authorization': `Bearer ${accessToken}`,
+    //         }
+    //     })
+    //     .then(response => {
+    //         setDepartments(response.data)
+    //     })
+    //     .catch(error => console.log("Error", error))
+    // });
 
     // выбранный город который отображает департаменты этого города
     useEffect(() => {
@@ -253,6 +285,8 @@ function Home(props) {
             .catch(error => console.error('Error fetching departments:', error));
         }
     }, [selectedCity]);
+
+
   
     const handleCityChange = (cityId) => {
         setSelectedCity(cityId);
@@ -262,6 +296,7 @@ function Home(props) {
 
 
     const [showDepartments, setShowDepartments] = useState(true);
+    const [vacancies, setVacancies] = useState([]);
     
     const handleDepartmentChange = (departmentId) => {
         setSelectedDepartment(departmentId);
@@ -292,6 +327,8 @@ function Home(props) {
             .catch(error => console.error('Error fetching positions:', error));
         }
     }, [selectedDepartment]);
+
+
 
     // отображение tab в штаном расписании 
     const renderEmployeeWrapper = () => {
@@ -325,33 +362,26 @@ function Home(props) {
                 <div className={cl.groups}>
                     <h1 className={cl.headline}>Штатное расписание</h1>
                     <div className={cl.groups_column}>
-                    {cities.map(city => (
-                        <div key={city.id} className={cl.group_name} style={{ cursor: 'pointer' }}>
-                           <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
-                                <div>{city.LocationName}</div>
-                                <input
-                                    type="radio"
-                                    value={city.LocationName}
-                                    checked={selectedCity === city.LocationName}
-                                    onChange={() => handleCityChange(city.LocationName)}
-                                />
+                        {/* {cities.map(city => (
+                            <div key={city.id} className={cl.group_name} style={{ cursor: 'pointer' }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+                                    <div>{city.LocationName}</div>
+                                    <input
+                                        type="radio"
+                                        value={city.LocationName}
+                                        checked={selectedCity === city.LocationName}
+                                        onChange={() => handleCityChange(city.LocationName)}
+                                    />
+                                </div>
                             </div>
-                        </div>
-                    ))}
-                    </div>
-                </div>
-
-                <div className={cl.employees}>
-                    <p className={cl.headline_2}>Департаменты</p>
-                    <div className={cl.wrapper}>
-                        
+                        ))} */}
                         <div>
-                            
                             {departments.map(department => (
                                 <Button
                                     size="medium"
+                                    style={{ textTransform: 'none' }}
                                     key={department.id}
-                                    variant={selectedDepartment === department.id ? "contained" : "outlined"}
+                                    variant={selectedDepartment === department.id ? "outlined" : "text"}
                                     onClick={() => handleDepartmentChange(
                                     selectedDepartment === department.id ? null : department.id
                                     )}
@@ -361,6 +391,12 @@ function Home(props) {
                                 </Button>
                             ))}
                         </div>
+                    </div>
+                </div>
+
+                <div className={cl.employees}>
+                    <p className={cl.headline_2}>Должности</p>
+                    <div className={cl.wrapper}>
                         <div>
                             {selectedDepartment && (
                                 <div >
@@ -397,24 +433,38 @@ function Home(props) {
                                     <div>
                                         <div>
                                         {
-                                            [positions.find(position => position.id === selectedPosition)].map(positionCLicked => (
-                                                <div key={positionCLicked.id} className={cl.available_count_wrapper}>
-                                                    <p className={cl.headline_3}>Свободные вакансии на должность: {positionCLicked.positionTitle}</p>
-
+                                            [positions.find(position => position.id === selectedPosition)].map(positionClicked => (
+                                                <div key={positionClicked.id} className={cl.available_count_wrapper}>
+                                                    <p className={cl.headline_3}>Свободные вакансии на должность: {positionClicked.positionTitle}</p>
                                                     <div style={{ marginTop: '15px' }}>
-                                                        {Array.from({ length: positionCLicked.available_count }, (_, index) => (
-                                                            <Stack key={index} style={{ display: 'inline-block', margin: '4px' }}>
-                                                                <Chip
-                                                                    avatar={<Avatar alt="" src="" />}
-                                                                    label={`Вакансия`}
-                                                                    variant="outlined"
-                                                                />
-                                                            </Stack>
-                                                        ))}
+                                                        {positionClicked.vacancies.length > 0 ? (
+                                                            positionClicked.vacancies.map((vacancy, index) => (
+                                                                <Stack key={index} style={{ display: 'inline-block', margin: '0px' }}>
+                                                                    <Chip
+                                                                        sx={{ height: 'auto', minHeight: '28px' }} // Установка стилей через sx
+                                                                        avatar={<Avatar alt="" src="" />}
+                                                                        label={
+                                                                            <div style={{ display: 'flex', flexDirection: 'column', gap: '3px', padding: '5px' }}>
+                                                                                <div>Вакансия {index + 1}:</div>
+                                                                                <div>Дата открытия вакансии: {vacancy.available_date}</div>
+                                                                            </div>
+                                                                        }
+                                                                        variant="outlined"
+                                                                    />
+                                                                </Stack>
+                                                            ))
+                                                        ) : (
+                                                            <Chip
+                                                                label="Нет доступных вакансий" variant="outlined"  
+                                                            />
+                                                            // <p>Нет доступных вакансий</p>
+                                                        )}
                                                     </div>
                                                 </div>
                                             ))
                                         }
+
+                                        
                                            
                                         </div>
                                         <div style={{ marginTop: '30px' }}>
@@ -447,6 +497,7 @@ function Home(props) {
                                         </div>
                                     </div>
                                 )}
+                                
                             </div>
                         )}
                     </div>

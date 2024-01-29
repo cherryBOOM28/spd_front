@@ -662,24 +662,28 @@ function Personal({
                                     </div>
                                     
                                     <div style={{ display: 'flex', gap: '10px', marginTop: '15px' }} >
-
+                                        <div style={{ display: 'flex', flexDirection: 'column', gap: '5px', marginTop: '8px' }}>
+                                            <label style={{ fontSize: '13px', color: '#4B4B4B', marginLeft: '2px' }}>Дата рождения</label>
+                                            <TextField
+                                                id="outlined-basic" 
+                                                variant="outlined"  
+                                                size="small"
+                                                type="date"
+                                                className={cl.workerInfoText}
+                                                name='relBirthDate'
+                                                value={inputData.relBirthDate || ''}
+                                                onChange={(e) => {
+                                                    const newDate = e.target.value;
+                                                    setInputData((prevWorker) => ({
+                                                    ...prevWorker,
+                                                    relBirthDate: newDate,
+                                                    }));
+                                                }}
+                                            />
+                                        </div>
+                                        
                                         <TextField
-                                            id="outlined-basic" 
-                                            variant="outlined"  
-                                            size="small"
-                                            type="date"
-                                            className={cl.workerInfoText}
-                                            name='relBirthDate'
-                                            value={inputData.relBirthDate || ''}
-                                            onChange={(e) => {
-                                                const newDate = e.target.value;
-                                                setInputData((prevWorker) => ({
-                                                ...prevWorker,
-                                                relBirthDate: newDate,
-                                                }));
-                                            }}
-                                        />
-                                        <TextField
+                                        style={{ marginTop: '25px' }}
                                         id="outlined-basic" 
                                         label="Место работы" 
                                         variant="outlined"  

@@ -293,7 +293,7 @@ function AcademicDegree({academicDegree, setAcademicDegree}, props) {
                                             onChange={(e) => setInputData({ ...inputData, academicDiplomaNumber: e.target.value })}
                                         />
                                         <div style={{ display: 'flex', flexDirection: 'column', gap: '5px', marginTop: '8px' }}>
-                                            <label style={{ fontSize: '13px', color: '#4B4B4B', marginLeft: '2px' }}>Дата поступления</label>
+                                            <label style={{ fontSize: '13px', color: '#4B4B4B', marginLeft: '2px' }}>Дата диплома</label>
                                             <TextField
                                             id="outlined-basic" 
                                             variant="outlined"  
