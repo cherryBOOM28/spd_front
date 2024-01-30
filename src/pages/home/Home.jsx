@@ -60,8 +60,6 @@ function Home(props) {
     };
 
    
-    
-
     const filteredPeople = showFired ? people.filter(person => person.isFired) : people;
 
     // главная страница - отображение городов
@@ -120,10 +118,6 @@ function Home(props) {
         setSelectedDepartment(department.id); // Обновить выбранный департамент
     };
 
-    
-
-    
-    
 
     // Выбор все на главной страницу
      const [ selectedGroupId, setSelectedGroupId ] = useState(
@@ -179,34 +173,85 @@ function Home(props) {
     const [selectedLocation, setSelectedLocation] = useState('wholeCountry');
       
     // скачать штатное расписание
-    const handleDownload = () => {
-        if (!selectedLocation) {
-            NotificationManager.warning('Please select a location before downloading', 'Warning');
-            return;
-        }
-        window.location.href = `http://127.0.0.1:8000/api/v1/download-staffing-table/?locationName=Весь Казахстан`;
+    // const handleDownload = () => {
+    //    if(selectedStaffingTable === 'Все управления') {
+    //     axios.get(`http://127.0.0.1:8000/api/v1/staffing-table/downloadStaffingTable?department=${selectedStaffingTable}`, {
+    //         headers: {
+    //             'Authorization': `Bearer ${accessToken}`,
+    //         }
+    //     })
+    //         .then(response => {
 
-        if (selectedCity) {
-            const downloadUrl = `http://127.0.0.1:8000/api/v1/download-staffing-table/?locationName=${selectedCity}`;
+    //         })
+    //         .catch(error => {
+    //             console.log(error);
+    //             if (error.response && error.response.status === 400) {
+    //                 const errorMessage = error.response.data.error || 'Неизвестная ошибка';
+    //                 NotificationManager.error(errorMessage, 'Ошибка', 3000);
+    //             } else {
+    //                 NotificationManager.error('Произошла ошибка', 'Ошибка', 3000);
+    //             }
+    //         })
+    //     } else {
+    //         axios.get(`http://127.0.0.1:8000/api/v1/staffing_table/getStaffingTable?department_id=${selectedStaffingTable}`, {
+    //             headers: {
+    //                 'Authorization': `Bearer ${accessToken}`,
+    //             }
+    //         })
+    //             .then(response => {
 
-            console.log('Download URL:', downloadUrl);
-            console.log('Download URL:', selectedCity);
+    //             })
+    //             .catch(error => {
+    //                 console.log(error);
+    //                 if (error.response && error.response.status === 400) {
+    //                     const errorMessage = error.response.data.error || 'Неизвестная ошибка';
+    //                     NotificationManager.error(errorMessage, 'Ошибка', 3000);
+    //                 } else {
+    //                     NotificationManager.error('Произошла ошибка', 'Ошибка', 3000);
+    //                 }
+    //             })
+    //     } 
+    // };
 
+
+    const handleDownload = async () => {
+        try {
+            const url = `http://127.0.0.1:8000/api/v1/staffing-table/downloadStaffingTable?department=${encodeURIComponent(selectedStaffingTable)}`;
+            const response = await axios.get(url, {
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`,
+                },
+                responseType: 'blob',
+            });
+    
+            const fileURL = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            link.href = fileURL;
+            link.setAttribute('download', 'staffing_table.xlsx');
+            document.body.appendChild(link);
+            link.click();
+        } catch (error) {
+            console.error('Ошибка при загрузке файла:', error);
         }
     };
+    
+
+
+    
+    const [selectedStaffingTable, setSelectedStaffingTable] = useState('');
+
+    const handleTableChange = (event) => {
+        const value = event.target.value;
+        setSelectedStaffingTable(value);
+        console.log('Выбранное значение:', value);
+    };
+
+     
 
 
     // выбранный город
     const [cities, setCities] = useState([]);
     const [selectedCity, setSelectedCity] = useState(null);
-
-    // values для шатаного расписания
-    const dropdownOptions = [
-        { value: 'wholeCountry', label: 'Вся страна' },
-        selectedCity
-          ? { value: selectedCity, label: selectedCity }
-          : { value: 'city', label: 'Город' },
-    ];
 
 
     // департаменты выбранного города
@@ -338,19 +383,36 @@ function Home(props) {
             <div className={cl.filter_wrapper}>
                 <div className={cl.filters}>
                     <div className={cl.downloaderFile}>
-                        <Dropdown
+                        <FormControl  size="small" fullWidth style={{ width: '300px' }}>
+                            <InputLabel id="demo-simple-select-label">Штатное расписание</InputLabel>
+                            <Select
+                                labelId="demo-simple-select-label"
+                                id="demo-simple-select"
+                                label="Штатное расписание"
+                                value={selectedStaffingTable}
+                                onChange={handleTableChange}
+                                // sx={{ height: '32.75px !important' }} 
+                            >
+                                <MenuItem value="Все управления">Все управления</MenuItem>
+                                {departments.map((department) => (
+                                    <MenuItem key={department.id} value={department.DepartmentName}>
+                                        {department.DepartmentName}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                        {/* <Dropdown
                             title="Выберите местоположение"
                             options={dropdownOptions}
                             selected={selectedLocation}
                             onSelect={setSelectedLocation}
-                        />
+                        /> */}
                         <div className={cl.downloader}>
                             <IconButton 
-                                onClick={handleDownload}
-                                disabled={!selectedLocation}
                                 variant="outlined"
+                                onClick={handleDownload}
+
                             >
-                                {selectedLocation === 'wholeCountry' ? '' : ''}
                                 <MdDownload style={{ color: '#1565C0' }} />
                             </IconButton >
                             <NotificationContainer />
