@@ -1,17 +1,15 @@
 /* Personal.module.css */
 
 .formInput {
-    padding: 5px;
-    background: #f2f2f2;
-    border: none;
-    outline: none;
-    font-family: "Helvetica", sans-serif;
-    color: #000;
-    font-size: 14px;
-    font-weight: 400;
-    width: 100%;
-    box-sizing: border-box;
-  }
+  background: #ffffff;
+  font-family: "Helvetica", sans-serif;
+  outline: none;
+  border: none;
+  font-size: 14px;
+  font-weight: 400;
+  width: 100px;
+  cursor: pointer;
+}
   
   .customTable {
     width: 100%;
@@ -56,6 +54,29 @@
   font-weight: 600;
 }
 
+.workerInfoText {
+  width: 290px;
+  height: 34px;
+  outline: none;
+  font-family: "Helvetica", sans-serif;
+  color: #000;
+  font-size: 16px;
+  font-weight: 400;
+  /* margin-left: 26px; */
+}
+
+.workerInfoSelect {
+  width: 290px;
+  height: 40px;
+  padding: 0px 9px;
+  /* margin-left: 12px; */
+  font-family: "Helvetica", sans-serif;
+  color: #000;
+  font-size: 16px;
+  font-weight: 400;
+  /* margin-left: 12px; */
+}
+
 .actionBtn {
     padding: 5px 9px;
     font-weight: 400;
@@ -82,34 +103,6 @@
     font-size: 16px;
     font-weight: 400;
     width: 127px;
-}
-
-.workerInfo {
-    border-radius: 5px;
-    border: 1px solid #959595;
-    width: 270px;
-    /* height: 30px; */
-    padding: 6px 9px;
-    margin-left: 12px;
-    outline: none;
-    font-family: "Helvetica", sans-serif;
-    color: #000;
-    font-size: 16px;
-    font-weight: 400;
-}
-
-.workerInfoSelect {
-    border-radius: 5px;
-    border: 1px solid #959595;
-    width: 290px;
-    height: 30px;
-    padding: 2px 9px;
-    margin-left: 12px;
-    outline: none;
-    font-family: "Helvetica", sans-serif;
-    color: #000;
-    font-size: 16px;
-    font-weight: 400;
 }
 
 .workerInfoText {
@@ -163,22 +156,15 @@
 
 .relativesActionBtns {
   display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 5px;
+  gap: 10px;
+  background: none;
 }
 
-.relativesActionBtns > div {
-  padding: 10px;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.relativesActionBtns > div:first-child {
-  background-color: #ccc;
-}
-.relativesActionBtns > div:nth-child(2) {
-  background-color: #d36666;
+.iconBtn {
+  font-size: 16px;
+  width: 32px;
+  height: 32px;
+  color: #1565C0;
 }
 
 .editInput {
@@ -186,4 +172,10 @@
   outline: none;
   background: none;
   width: 100%;
+}
+
+.submitBtn {
+  position: absolute;
+  top: 17px;
+  height: 40px;
 }

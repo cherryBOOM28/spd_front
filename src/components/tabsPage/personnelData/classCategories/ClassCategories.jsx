@@ -2,15 +2,27 @@ import React, { useEffect, useState } from 'react';
 import cl from './ClassCategories.module.css';
 import { useParams } from 'react-router-dom';
 
+import { FaTrash } from "react-icons/fa";
+import { MdEdit } from "react-icons/md";
+import { FaPlus } from "react-icons/fa6";
+import { IoClose } from "react-icons/io5";
+import { FaCheck } from "react-icons/fa6";
+import IconButton from '@mui/material/IconButton';
+
+import { Button,TextField, Select, Box, InputLabel, MenuItem, FormControl } from '@mui/material';
+import Table from '@mui/material/Table';
+import TableHead from '@mui/material/TableHead';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
+
 import { getStaffInfo } from '../../../../api/staff_info/getStaffInfo';
 import { updateClassCategories } from '../../../../api/staff_info/class_categories/updateClassCategories';
 
 import Cookies from 'js-cookie';
 import axios from 'axios';
-import { Button } from '@mui/material';
-import { FaPlus } from "react-icons/fa6";
-import { IoClose } from "react-icons/io5";
-import IconButton from '@mui/material/IconButton';
 
 
 function ClassCategories({ classCategoriesInfo, setClassCategoriesInfo }, props) {
@@ -169,8 +181,6 @@ function ClassCategories({ classCategoriesInfo, setClassCategoriesInfo }, props)
         setEditedData({});
     };
 
-    
-    
     return (
         <div className={cl.personalWrapper}>
             <div className={cl.container}>
@@ -190,19 +200,29 @@ function ClassCategories({ classCategoriesInfo, setClassCategoriesInfo }, props)
                                     <div className={cl.column}>
                                         <div className={cl.rows}>
                                             <label className={cl.label}>Номер документа</label>
-                                            <select
-                                            className={cl.selectRelative_type}
-                                            value={inputData.categoryType}
-                                            onChange={(e) => setInputData({ ...inputData, categoryType: e.target.value })}
-                                            >
-                                                <option value="">Выберите категорию</option>
-                                                <option value="Спец 2 категории">Специалист 2 категории</option>
-                                                <option value="Спец 1 категории">Специалист 1 категории</option>
-                                                <option value="Наставник">Наставник</option>
-                                            </select> 
+                                            <Box>
+                                                {/* <label className={cl.label}>Должность</label> */}
+                                                <FormControl size="small" fullWidth>
+                                                    <InputLabel id="demo-simple-select-label">Классные категории</InputLabel>
+                                                    <Select
+                                                    labelId="demo-simple-select-label"
+                                                    id="demo-simple-select"
+                                                    label="Классные категории"
+                                                    name='categoryType'
+                                                    className={cl.workerInfoSelect}
+                                                    value={inputData.categoryType}
+                                                    onChange={(e) => setInputData({ ...inputData, categoryType: e.target.value })}
+                                                    >
+                                                        <MenuItem value="">Выберите категорию</MenuItem>
+                                                        <MenuItem value="Спец 2 категории">Специалист 2 категории</MenuItem>
+                                                        <MenuItem value="Спец 1 категории">Специалист 1 категории</MenuItem>
+                                                        <MenuItem value="Наставник">Наставник</MenuItem>
+                                                    </Select>
+                                                </FormControl>
+                                            </Box>
                                         </div>
                                     </div>
-                                <Button type="submit"  variant="contained" size="small" style={{ height: '32px', marginTop: '25px' }}>Добавить</Button>
+                                <Button type="submit"  variant="contained" size="small" style={{ marginTop: '25px' }}>Добавить</Button>
                             </div>
                             
                             
@@ -216,32 +236,42 @@ function ClassCategories({ classCategoriesInfo, setClassCategoriesInfo }, props)
                                     <div className={cl.rows}>
                                         <label className={cl.label}>Классные категория</label>
                                         {editingId === d.id ? 
-                                           <select
-                                           className={cl.selectRelative_type}
-                                            value={editedData.categoryType}
+                                        <Box>
+                                        {/* <label className={cl.label}>Должность</label> */}
+                                            <FormControl size="small" fullWidth>
+                                                <InputLabel id="demo-simple-select-label">Классные категории</InputLabel>
+                                                <Select
+                                                labelId="demo-simple-select-label"
+                                                id="demo-simple-select"
+                                                label="Классные категории"
+                                                name='categoryType'
+                                                className={cl.workerInfoSelect}
+                                                value={editedData.categoryType}
                                             onChange={(e) => setEditedData({ ...editedData, categoryType: e.target.value })}
-                                            >
-                                                <option value="">Выберите категорию</option>
-                                                <option value="Спец 2 категории">Специалист 2 категории</option>
-                                                <option value="Спец 1 категории">Специалист 1 категории</option>
-                                                <option value="Наставник">Наставник</option>
-                                            </select>  
+                                                >
+                                                    <MenuItem value="">Выберите категорию</MenuItem>
+                                                    <MenuItem value="Спец 2 категории">Специалист 2 категории</MenuItem>
+                                                    <MenuItem value="Спец 1 категории">Специалист 1 категории</MenuItem>
+                                                    <MenuItem value="Наставник">Наставник</MenuItem>
+                                                </Select>
+                                            </FormControl>
+                                        </Box>
                                             : 
-                                            <p className={cl.workerInfoP}>{d.categoryType}</p>      
+                                            // <p className={cl.workerInfoP}>{d.categoryType}</p>
+                                            <Paper className={cl.workerInfoP}>{d.categoryType}</Paper>      
                                         }
                                     </div>
                                 </div>
                            
                                 <div className={cl.relativesActionBtns} style={{marginTop: '22px'}}>
                                     {editingId === d.id ? (
-                                        <>
-                                            <div onClick={() => handleSaveEdit(d.id)}>&#10003;</div>
-                                            <div onClick={handleCancelEdit}>&#x2715;</div>
-                                        </>
+                                        <div>
+                                            <IconButton className={cl.iconBtn} onClick={() => handleSaveEdit(d.id)}><FaCheck color=' #1565C0' /></IconButton>
+                                            <IconButton className={cl.iconBtn} onClick={handleCancelEdit}><IoClose /></IconButton>
+                                        </div>
                                     ) : (
                                         <>
-                                            <div onClick={() => handleEdit(d.id)}>&#9998;</div>
-                                            
+                                            <IconButton className={cl.iconBtn} onClick={() => handleEdit(d.id)}><MdEdit /></IconButton>
                                         </>
                                     )}
                                 </div>

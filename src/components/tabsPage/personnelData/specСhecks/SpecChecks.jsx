@@ -240,6 +240,7 @@ function SpecChecks({ specCheckInfo, setSpecCheckInfo }) {
                                         <label className={cl.label}>Номер документа</label>
                                         {editingId === d.id ? 
                                             <TextField 
+                                            style={{ marginLeft: '12px' }}
                                                 type="number"
                                                 id="outlined-basic" 
                                                 variant="outlined"  
@@ -280,7 +281,7 @@ function SpecChecks({ specCheckInfo, setSpecCheckInfo }) {
                                         }
                                     </div>
                                 </div>
-                                <div className={cl.relativesActionBtns} style={{marginTop: '22px'}}>
+                                <div className={cl.relativesActionBtns} style={{marginTop: '25px'}}>
                                     {editingId === d.id ? (
                                         <div>
                                             <IconButton className={cl.iconBtn} onClick={() => handleSaveEdit(d.id)}><FaCheck color=' #1565C0' /></IconButton>

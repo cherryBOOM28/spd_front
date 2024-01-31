@@ -100,13 +100,16 @@
 }
 
 .workerInfoP {
+  display: flex;
+  align-items: center;
+  padding: 0px 8px;
   border-radius: 5px;
-  border: 1px solid #959595;
+  background-color: #fff;
   width: 270px;
-  height: 18px;
-  padding: 6px 9px;
+  height: 40px;
   margin-left: 12px;
   outline: none;
+  border: none;
   font-family: "Helvetica", sans-serif;
   color: #000;
   font-size: 16px;
@@ -114,17 +117,15 @@
 }
 
 .workerInfoSelect {
-    border-radius: 5px;
-    border: 1px solid #959595;
-    width: 290px;
-    height: 30px;
-    padding: 2px 9px;
-    margin-left: 12px;
-    outline: none;
-    font-family: "Helvetica", sans-serif;
-    color: #000;
-    font-size: 16px;
-    font-weight: 400;
+  width: 290px;
+  height: 40px;
+  padding: 0px 9px;
+  /* margin-left: 12px; */
+  font-family: "Helvetica", sans-serif;
+  color: #000;
+  font-size: 16px;
+  font-weight: 400;
+  /* margin-left: 12px; */
 }
 
 .workerInfoText {
@@ -147,16 +148,6 @@
     margin-top: 15px;
 }
 
-/* calendar */
-.datePickerContainer {
-    position: relative;
-}
-.dateLogo {
-    position: absolute;
-    z-index: 12;
-    right: 9px;
-    top: 8px;
-}
 
 .checkboxDiv {
     display: flex;
@@ -178,23 +169,15 @@
 
 .relativesActionBtns {
   display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 5px;
+  gap: 10px;
+  background: none;
 }
 
-.relativesActionBtns > div {
-  padding: 8px;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.relativesActionBtns > div:first-child {
-  background-color: #ccc;
-
-}
-.relativesActionBtns > div:nth-child(2) {
-  background-color: #d36666;
+.iconBtn {
+  font-size: 16px;
+  width: 35px;
+  height: 35px;
+  color: #1565C0;
 }
 
 .editInput {
@@ -202,18 +185,4 @@
   outline: none;
   background: none;
   width: 100%;
-}
-
-.selectRelative_type {
-  border-radius: 5px;
-  border: 1px solid #959595;
-  width: 290px;
-  height: 32px;
-  padding: 0px 9px;
-  margin-left: 12px;
-  outline: none;
-  font-family: "Helvetica", sans-serif;
-  color: #000;
-  font-size: 16px;
-  font-weight: 400;
 }

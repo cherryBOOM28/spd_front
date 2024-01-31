@@ -214,6 +214,7 @@ function Home(props) {
     // };
 
 
+    // Дропдаун с управлениями для скачивания таблиц
     const handleDownload = async () => {
         try {
             const url = `http://127.0.0.1:8000/api/v1/staffing-table/downloadStaffingTable?department=${encodeURIComponent(selectedStaffingTable)}`;
@@ -235,9 +236,6 @@ function Home(props) {
         }
     };
     
-
-
-    
     const [selectedStaffingTable, setSelectedStaffingTable] = useState('');
 
     const handleTableChange = (event) => {
@@ -247,8 +245,6 @@ function Home(props) {
     };
 
      
-
-
     // выбранный город
     const [cities, setCities] = useState([]);
     const [selectedCity, setSelectedCity] = useState(null);
@@ -358,14 +354,14 @@ function Home(props) {
         if (selectedDepartment) {
           const accessToken = Cookies.get('jwtAccessToken');
     
-          axios.get(`http://127.0.0.1:8000/api/v1/positions_departments/${selectedDepartment}`, {
+          axios.get(`http://127.0.0.1:8000/api/v1/staffing_table/getStaffingTable?department_id=${selectedDepartment}`, {
             headers: {
               'Authorization': `Bearer ${accessToken}`,
             }
           })
             .then(response => 
                 {
-                    setPositions(response.data.positions)
+                    setPositions(response.data.positionList)
                     // console.log("positions",response.data.positions)
                 }
             )
@@ -401,12 +397,6 @@ function Home(props) {
                                 ))}
                             </Select>
                         </FormControl>
-                        {/* <Dropdown
-                            title="Выберите местоположение"
-                            options={dropdownOptions}
-                            selected={selectedLocation}
-                            onSelect={setSelectedLocation}
-                        /> */}
                         <div className={cl.downloader}>
                             <IconButton 
                                 variant="outlined"
@@ -476,7 +466,7 @@ function Home(props) {
                                                 onChange={(e) => handlePositionChange(e.target.value)}  // Исправление тут
                                             >
                                                 <MenuItem value=''>Выберите должность</MenuItem>
-                                                {positions.map(position => (
+                                                {positions && positions.map(position => (
                                                     <MenuItem key={position.id} value={position.id}>
                                                         {position.positionTitle}
                                                     </MenuItem>
@@ -546,7 +536,7 @@ function Home(props) {
                                                         <TableBody>
                                                             {positions.find(position => position.id === selectedPosition)?.persons.map(person => (
                                                                 <TableRow key={person.id}>
-                                                                    <TableCell><img src={`data:image/jpeg;base64,${person.photo}`} alt="" className={cl.department_workers_img} /></TableCell>
+                                                                    <TableCell><img src={`data:image/jpeg;base64,${person.photo.photoBinary}`} alt="" className={cl.department_workers_img} /></TableCell>
                                                                     <TableCell>{`${person.surname}`}</TableCell>
                                                                     <TableCell>{` ${person.firstName} `}</TableCell>
                                                                     <TableCell> {`${person.patronymic}`}</TableCell>

@@ -284,7 +284,7 @@ function Courses({ course, setCourse }, props) {
                                         <Button variant="contained" type="submit" className={cl.submitBtn} >Добавить</Button>
                                     </div>
                                     <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
-                                       <div style={{ display: 'flex', flexDirection: 'column', gap: '5px', marginTop: '8px' }}>
+                                        <div style={{ display: 'flex', flexDirection: 'column', gap: '5px', marginTop: '8px' }}>
                                             <label style={{ fontSize: '13px', color: '#4B4B4B', marginLeft: '2px' }}>Дата начала</label>
                                             <TextField 
                                                 id="outlined-basic" 

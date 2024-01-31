@@ -297,7 +297,8 @@ function Attestations({ attestationInfo, setAttestationInfo }) {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                        {attestationInfo && attestationInfo.attestations && attestationInfo.attestations.map((d, i) => (
+                        {attestationInfo && attestationInfo.attestations && attestationInfo.attestations.length > 0 ? (
+                        attestationInfo.attestations.map((d, i) => (
                             <TableRow  key={i}>
                                 <TableCell >  
                                     {editingId === d.id ? (
@@ -352,7 +353,14 @@ function Attestations({ attestationInfo, setAttestationInfo }) {
                                     )}
                                 </TableCell >
                             </TableRow >
-                        ))}
+                        ))
+                        ) : (
+                            <TableRow>
+                            <TableCell colSpan={8} align="center">
+                                Нет данных
+                            </TableCell>
+                        </TableRow>
+                        )}
                         </TableBody>
                     </Table>
                 </TableContainer>
