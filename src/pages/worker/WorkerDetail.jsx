@@ -78,7 +78,7 @@ function WorkerDetail() {
   const [rankInfo, setRankInfo] = useState([]);
   const [militaryRank, setMilitaryRank] = useState({});
 
-  const [loading, setLoading] = useState(false); // Initialize loading state
+  const [loading] = useState(false); // Initialize loading state
 
   const accessToken = Cookies.get('jwtAccessToken');
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import cl from './PersonnelData.module.css';
 import { useParams } from 'react-router-dom';
-import Table from './table/Table';
+import TableSickLeaves from './table/Table';
 import SpecChecks from './specСhecks/SpecChecks';
 import Attestations from './attestations/Attestations';
 import Awards from './awards/Awards';
@@ -63,7 +63,7 @@ function PersonnelData
                 rewardsInfo={rewardsInfo}
                 setRewardsInfo={setRewardsInfo}
             />
-            <Table 
+            <TableSickLeaves 
                 id={id} 
                 sickLeavesInfo={sickLeavesInfo}
                 setSickLeavesInfo={setSickLeavesInfo}

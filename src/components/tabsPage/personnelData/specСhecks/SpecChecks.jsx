@@ -276,7 +276,8 @@ function SpecChecks({ specCheckInfo, setSpecCheckInfo }) {
                                                     }));
                                                 }}
                                             />
-                                            </div> : 
+                                            </div>
+                                            : 
                                             <Paper className={cl.workerInfoP}>{d.docDate}</Paper>      
                                         }
                                     </div>

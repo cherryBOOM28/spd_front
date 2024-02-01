@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import cl from './ClassCategories.module.css';
 import { useParams } from 'react-router-dom';
 
-import { FaTrash } from "react-icons/fa";
 import { MdEdit } from "react-icons/md";
 import { FaPlus } from "react-icons/fa6";
 import { IoClose } from "react-icons/io5";
@@ -10,15 +9,8 @@ import { FaCheck } from "react-icons/fa6";
 import IconButton from '@mui/material/IconButton';
 
 import { Button,TextField, Select, Box, InputLabel, MenuItem, FormControl } from '@mui/material';
-import Table from '@mui/material/Table';
-import TableHead from '@mui/material/TableHead';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 
-import { getStaffInfo } from '../../../../api/staff_info/getStaffInfo';
 import { updateClassCategories } from '../../../../api/staff_info/class_categories/updateClassCategories';
 
 import Cookies from 'js-cookie';
@@ -32,10 +24,7 @@ function ClassCategories({ classCategoriesInfo, setClassCategoriesInfo }, props)
         "class_categories": []
     });
 
-
-
     // TABLE DATA
-
     const [showForm, setShowForm] = useState(false);
 
     const handleShowForm = () => {

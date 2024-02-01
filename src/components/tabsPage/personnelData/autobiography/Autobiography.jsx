@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import cl from './Autobiography.module.css';
@@ -7,6 +7,10 @@ import { Button } from '@mui/material';
 import { FaPlus } from "react-icons/fa6";
 import { IoClose } from "react-icons/io5";
 import IconButton from '@mui/material/IconButton';
+import Paper from '@mui/material/Paper';
+import { FaCheck } from "react-icons/fa6";
+import { FiAlertCircle } from "react-icons/fi";
+
 
 import { updateAutobiography } from '../../../../api/staff_info/autobiography/updateAutobiography';
 
@@ -84,7 +88,7 @@ function Autobiography({ autobiographyInfo, setAutobiographyInfo }) {
     
     // EDIT
     const [editedData, setEditedData] = useState({
-        autobiographyText: '',
+        autobiographyText: firstBioText ,
     });
 
     const handleEdit = async (id, editedTableData) => {
@@ -170,6 +174,7 @@ function Autobiography({ autobiographyInfo, setAutobiographyInfo }) {
         setEditedData({});
     };
 
+
     return (
         <div className={cl.personalWrapper}>
             <div className={cl.container}>
@@ -203,40 +208,41 @@ function Autobiography({ autobiographyInfo, setAutobiographyInfo }) {
                         )}
                     </div>
                     <div className={cl.workerBlock}>
-                        {editingId ? (
-                            
-                            <input
-                                type="text"
-                                name='autobiographyText'
-                                className={cl.workerInfo}
-                                value={editedData.autobiographyText}
-                                onChange={(e) => setEditedData({ ...editedData, autobiographyText: e.target.value })}
-                            />
-                           
+                        {autobiographyInfo && autobiographyInfo.autobiographies && autobiographyInfo.autobiographies.length > 0 ? (
+                            editingId ? (
+                                <input
+                                    type="text"
+                                    name='autobiographyText'
+                                    className={cl.workerInfo}
+                                    value={editedData.autobiographyText}
+                                    onChange={(e) => setEditedData({ ...editedData, autobiographyText: e.target.value })}
+                                />
+                            ) : (
+                                <Paper className={cl.workerInfoText}>
+                                    {firstBioText}
+                                </Paper>
+                            )
                         ) : (
-                            <p className={cl.workerInfoText}>
-                                {firstBioText}
-                            </p>
+                            <div className={cl.alert}>
+                                <FiAlertCircle style={{ color: '#1565C0', fontSize: '22px' }} />
+                                <p className={cl.alert_text}>Нет доступных записей</p>
+                            </div>
                         )}
-                        <div className={cl.relativesActionBtns} style={{ display: 'flex', justifyContent: 'space-between', gap: '5px' }}>
-                            {!editingId && (
-                                <div className={cl.actionBtn} onClick={() => handleEdit(id)}>
-                                    &#9998;
-                                </div>
-                            )}
-
-                            {editingId && (
-                                <>
-                                    <div onClick={() => handleSaveEdit(id)} className={cl.actionBtn}>
-                                        &#10003; 
+                        {autobiographyInfo && autobiographyInfo.autobiographies && autobiographyInfo.autobiographies.length > 0 && (
+                            <div className={cl.relativesActionBtns} style={{ display: 'flex', justifyContent: 'space-between', gap: '5px' }}>
+                                {!editingId && (
+                                    <div className={cl.actionBtn} onClick={() => handleEdit(id)}>
+                                        &#9998;
                                     </div>
-                                    <div className={cl.actionBtn} onClick={handleCancelEdit}>
-                                        &#x2715; 
-                                    </div>
-                                    
-                                </>
-                            )}
-                        </div>
+                                )}
+                                {editingId && (
+                                    <>
+                                        <IconButton className={cl.iconBtn}  onClick={() => handleSaveEdit(id)}><FaCheck color=' #1565C0' /></IconButton>
+                                        <IconButton className={cl.iconBtn} onClick={handleCancelEdit}><IoClose /></IconButton>
+                                    </>
+                                )}
+                            </div>
+                        )}
                     </div>
                     
                 </div>

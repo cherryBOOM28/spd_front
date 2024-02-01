@@ -51,17 +51,20 @@
 }
 
 .workerInfoText {
-  border-radius: 5px;
-  border: 1px solid #959595;
-  min-width: 985px;
+  min-height: 30px;
+  max-height: 150px;
+  overflow-y: auto;
+  min-width: 1390px;
+  max-width: 1390px;
   /* height: 30px; */
-  width: 90%;
-  padding: 6px 9px;
+  /* width: 90%; */
+  padding: 10px 10px;
   outline: none;
   font-family: "Helvetica", sans-serif;
-  color: #000;
   font-size: 16px;
   font-weight: 400;
+  word-wrap: break-word;
+  line-height: 1.5; 
 }
 
 .totalInfo {
@@ -71,44 +74,18 @@
   margin-top: 15px;
 }
 
-
-
-.inputText {
-  border-radius: 5px;
-  border: 1px solid #959595;
-  line-height: 23px;
-  padding: 6px 9px;
-  margin-left: 12px;
-  outline: none;
-  font-family: "Helvetica", sans-serif;
-  color: #000;
-  font-size: 16px;
-  font-weight: 400;
-}
-
-
 .relativesActionBtns {
-  position: absolute;
-  top: 0px;
-  right: 50px;
   display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 5px;
+  gap: 10px;
+  background: none;
 }
 
-.relativesActionBtns > div {
-  padding: 8px;
-  border-radius: 5px;
+.iconBtn {
+  font-size: 16px;
+  width: 32px;
+  height: 32px;
+  color: #1565C0;
   cursor: pointer;
-}
-
-.relativesActionBtns > div:first-child {
-  background-color: #ccc;
-
-}
-.relativesActionBtns > div:nth-child(2) {
-  background-color: #d36666;
 }
 
 .editInput {
@@ -116,4 +93,17 @@
   outline: none;
   background: none;
   width: 100%;
+}
+
+.alert {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: #1565c01e;
+  border-radius: 7px;
+}
+
+.alert_text {
+  color: #13539c;
 }

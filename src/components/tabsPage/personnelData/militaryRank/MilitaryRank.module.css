@@ -13,42 +13,6 @@
   box-sizing: border-box;
 }
 
-.customTable {
-  width: 100%;
-  border-collapse: collapse;
-  border-spacing: 0;
-}
-
-.customTable th,
-.customTable td {
-  /* border: 1px solid #ccc; */
-  padding: 8px;
-  text-align: left;
-}
-
-.customTable td {
-  border-bottom: none;
-  border-top: none;
-  border-right: 1px solid #ccc;
-}
-
-.customTable td:first-child {
-  
-  border-left: 1px solid #ccc;
-}
-
-.customTable tr {
-  border-bottom: 1px solid #ccc;
-  height: fit-content !important;
-}
-
-.customTable tr:first-child {
-  border-top: 1px solid #ccc;
-}
-
-.customTable th {
-  background-color: #f2f2f2;
-}
 
 .workerCapitalName {
   color: #4B4B4B;
@@ -76,6 +40,7 @@
 
 .rows {
   display: flex;
+  align-items: center;
 }
 
 .label {
@@ -100,31 +65,32 @@
 }
 
 .workerInfoP {
-border-radius: 5px;
-border: 1px solid #959595;
-width: 270px;
-height: 18px;
-padding: 6px 9px;
-margin-left: 12px;
-outline: none;
-font-family: "Helvetica", sans-serif;
-color: #000;
-font-size: 16px;
-font-weight: 400;
-}
-
-.workerInfoSelect {
+  display: flex;
+  align-items: center;
+  padding: 0px 8px;
   border-radius: 5px;
-  border: 1px solid #959595;
-  width: 290px;
-  height: 30px;
-  padding: 2px 9px;
+  background-color: #fff;
+  width: 270px;
+  height: 40px;
   margin-left: 12px;
   outline: none;
+  border: none;
   font-family: "Helvetica", sans-serif;
   color: #000;
   font-size: 16px;
   font-weight: 400;
+}
+
+.workerInfoSelect {
+  width: 290px;
+  height: 40px;
+  padding: 0px 9px;
+  /* margin-left: 12px; */
+  font-family: "Helvetica", sans-serif;
+  color: #000;
+  font-size: 16px;
+  font-weight: 400;
+  /* margin-left: 12px; */
 }
 
 .workerInfoText {
@@ -177,24 +143,18 @@ font-weight: 400;
 }
 
 .relativesActionBtns {
-display: flex;
-flex-direction: row;
-align-items: center;
-gap: 5px;
+  display: flex;
+  gap: 10px;
+  background: none;
 }
 
-.relativesActionBtns > div {
-padding: 8px;
-border-radius: 5px;
-cursor: pointer;
-}
-
-.relativesActionBtns > div:first-child {
-background-color: #ccc;
-
-}
-.relativesActionBtns > div:nth-child(2) {
-background-color: #d36666;
+.iconBtn {
+  margin-top: 30px;
+  position: fixed;
+  font-size: 16px;
+  width: 32px;
+  height: 32px;
+  color: #1565C0;
 }
 
 .editInput {

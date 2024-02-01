@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import cl from './MilitaryRank.module.css';
-import { Button } from '@mui/material';
 import { useParams } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import { GoHistory } from "react-icons/go";
@@ -11,14 +10,20 @@ import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
+import { Button,TextField, Select, Box, InputLabel, MenuItem, FormControl } from '@mui/material';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
+
+import { MdEdit } from "react-icons/md";
+import { IoClose } from "react-icons/io5";
+import { FaCheck } from "react-icons/fa6";
+import IconButton from '@mui/material/IconButton';
 
 import { updateRankInfo } from '../../../../api/staff_info/military_rank/updateRankInfo';
 
 
 
-function MilitaryRank({ rankInfo, militaryRank,setRankInfo, setMilitaryRank, rankArchive }, props) {
+function MilitaryRank({ rankInfo, militaryRank,setRankInfo, rankArchive }) {
     const { id } = useParams();
     // console.log("id", id)
     const [openMilitaryHistory, setOpenMilitaryHistory] = useState(false);
@@ -156,6 +161,7 @@ function MilitaryRank({ rankInfo, militaryRank,setRankInfo, setMilitaryRank, ran
     const handleMilitaryHistory = () => {
         setOpenMilitaryHistory(!openMilitaryHistory);
     }
+    
 
     return (
         <div className={cl.totalInfoWrapper} style={{ marginTop: '40px' }}>
@@ -171,39 +177,62 @@ function MilitaryRank({ rankInfo, militaryRank,setRankInfo, setMilitaryRank, ran
                         <label className={cl.label}>Вид присвоения</label>
                         {editing ? (
                             <div className={cl.datePickerContainer}>
-                            <input
-                                type="text"
-                                name='receivedType'
-                                className={cl.workerInfo}
-                                value={editedWorker.receivedType}
-                                onChange={handleInputChange}
-                            />
+                            <Box>
+                                {/* <label className={cl.label}>Должность</label> */}
+                                <FormControl size="small" fullWidth>
+                                    <InputLabel id="demo-simple-select-label">Вид присвоения</InputLabel>
+                                    <Select
+                                    labelId="demo-simple-select-label"
+                                    id="demo-simple-select"
+                                    label="Вид присвоения"
+                                    name='receivedType'
+                                    className={cl.workerInfoSelect}
+                                    value={editedWorker.receivedType}
+                                    onChange={handleInputChange}
+                                    >
+                                        <MenuItem value="">Выберите вид присвоения</MenuItem>
+                                        <MenuItem value="Досрочное присвоение">Досрочное присвоение</MenuItem>
+                                        <MenuItem value="Внеочередное">Внеочередное</MenuItem>
+                                        <MenuItem value="На одну ступень выше специального звания">На одну ступень выше специального звания</MenuItem>
+                                    </Select>
+                                </FormControl>
+                            </Box>
+                        
                             </div>
                         ) : (
-                            <p className={cl.workerInfo}>{rankInfo.receivedType}</p>
+                            <Paper className={cl.workerInfoP}>{rankInfo.receivedType}</Paper>    
                         )}
                     </div>
                     <div className={cl.rows}>
                         <label className={cl.label}>Звание</label>
                         {editing ? (
                             <div className={cl.datePickerContainer}>
-                
-                            <select  
-                                onChange={(e) => setSelectedRank(e.target.value)}
-                                value={selectedRank}
-                                className={cl.workerInfoSelect}
-                                name='militaryRank'
-                            >
-                                <option value="" disabled>Выберите звание</option>
-                                {militaryRankOption.map(rank => (
-                                <option key={rank.id} value={rank.rankTitle}>
-                                    {rank.rankTitle}
-                                </option>
-                                ))}
-                            </select>
+                                <Box>
+                                    {/* <label className={cl.label}>Должность</label> */}
+                                    <FormControl size="small" fullWidth>
+                                        <InputLabel id="demo-simple-select-label">Звание</InputLabel>
+                                        <Select
+                                        labelId="demo-simple-select-label"
+                                        id="demo-simple-select"
+                                        label="Звание"
+                                        name='militaryRank'
+                                        className={cl.workerInfoSelect}
+                                        onChange={(e) => setSelectedRank(e.target.value)}
+                                        value={selectedRank}
+                                        >
+                                           
+                                            <MenuItem value="" disabled>Выберите звание</MenuItem>
+                                            {militaryRankOption.map(rank => (
+                                            <MenuItem key={rank.id} value={rank.rankTitle}>
+                                                {rank.rankTitle}
+                                            </MenuItem>
+                                            ))}
+                                        </Select>
+                                    </FormControl>
+                                </Box>
                             </div>
                         ) : (
-                            <p className={cl.workerInfo}>{militaryRank.rankTitle}</p>
+                            <Paper className={cl.workerInfoP}>{militaryRank.rankTitle}</Paper>    
                         )}
                     </div>
                 </div>
@@ -212,35 +241,37 @@ function MilitaryRank({ rankInfo, militaryRank,setRankInfo, setMilitaryRank, ran
                         <label className={cl.label}>Дата получения</label>
                         {editing ? (
                         <div className={cl.datePickerContainer}>
-                            <input
-                            type="date"
-                            name='receivedDate'
-                            className={cl.workerInfo}
-                            value={editedWorker.receivedDate || ''}
-                            onChange={(e) =>
-                                setEditedWorker((prevWorker) => ({
-                                ...prevWorker,
-                                receivedDate: e.target.value,
-                                }))
-                            }
+                            <TextField 
+                                type="date"
+                                id="outlined-basic" 
+                                variant="outlined"  
+                                size="small"
+                                className={cl.workerInfo}
+                                name='receivedDate' 
+                                value={editedWorker.receivedDate || ''}
+                                onChange={(e) =>
+                                    setEditedWorker((prevWorker) => ({
+                                    ...prevWorker,
+                                    receivedDate: e.target.value,
+                                    }))
+                                }
                             />
-                        
                         </div>
                         ) : (
-                        <p className={cl.workerInfo}>{rankInfo.receivedDate}</p>
+                            <Paper className={cl.workerInfoP}>{rankInfo.receivedDate}</Paper>    
                         )}
                     </div>
                 <div>
             </div>
         </div>      
-        <div className={cl.relativesActionBtns} style={{ marginTop: '22px' }}>
+        <div  style={{ marginTop: '30px' }} className={cl.relativesActionBtns}>
             {editing ? (
-                <>
-                    <div onClick={() => handleSaveEdit()}>&#9998;</div>
-                    <div onClick={handleCancelEdit}>&#x2715;</div>
-                </>
+                <div>
+                    <IconButton className={cl.iconBtn}  onClick={() => handleSaveEdit()}><FaCheck color=' #1565C0' /></IconButton>
+                    <IconButton className={cl.iconBtn} onClick={handleCancelEdit}><IoClose /></IconButton>
+                </div>
             ) : (
-                <div onClick={() => handleEdit(id, editedWorker)}>&#9998;</div>
+                <IconButton className={cl.iconBtn} onClick={() => handleEdit(id, editedWorker)}><MdEdit /></IconButton>
             )}
         </div>
         </div>
