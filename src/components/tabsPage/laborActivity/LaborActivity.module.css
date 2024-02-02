@@ -7,7 +7,7 @@
   border: none;
   font-size: 14px;
   font-weight: 400;
-  width: 100px;
+  width: 290px;
   cursor: pointer;
 }
 
@@ -45,12 +45,14 @@
 
 .workerInfoText {
   width: 290px;
-  height: 34px;
+  height: 30px;
   outline: none;
   font-family: "Helvetica", sans-serif;
   color: #000;
   font-size: 16px;
   font-weight: 400;
+  padding: 0px 9px;
+
   /* margin-left: 26px; */
 }
 
@@ -134,3 +136,4 @@
   gap: 15px;
 
 }
+

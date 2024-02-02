@@ -210,7 +210,7 @@ function Autobiography({ autobiographyInfo, setAutobiographyInfo }) {
                     <div className={cl.workerBlock}>
                         {autobiographyInfo && autobiographyInfo.autobiographies && autobiographyInfo.autobiographies.length > 0 ? (
                             editingId ? (
-                                <input
+                                <textarea
                                     type="text"
                                     name='autobiographyText'
                                     className={cl.workerInfo}

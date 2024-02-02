@@ -11,14 +11,17 @@ import { IoClose } from "react-icons/io5";
 import { FaCheck } from "react-icons/fa6";
 import IconButton from '@mui/material/IconButton';
 
-import { Button,TextField } from '@mui/material';
+import Modal from '../../UI/modal/Modal';
+
+import { Button } from '@mui/material';
 import Table from '@mui/material/Table';
 import TableHead from '@mui/material/TableHead';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
+
+import { TextField, Paper, Select, Box, InputLabel, MenuItem, FormControl } from '@mui/material';
 
 import { MdFileDownload } from "react-icons/md";
 
@@ -35,6 +38,7 @@ function LaborActivity({ workingHistory, setWorkingHistory }) {
     }, [workingHistory]);
 
     const [showForm, setShowForm] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const handleShowForm = () => {
         setShowForm(!showForm);
@@ -47,6 +51,8 @@ function LaborActivity({ workingHistory, setWorkingHistory }) {
         department: '',
         organizationName: '',
         organizationAddress: '',
+        personType: '',
+        personSubType: ''
     });
 
     // Добавление данных
@@ -67,6 +73,8 @@ function LaborActivity({ workingHistory, setWorkingHistory }) {
               department: inputData.department,
               organizationName: inputData.organizationName,
               organizationAddress: inputData.organizationAddress,
+              personType: inputData.personType,
+              personSubType: inputData.personSubType,
             };
 
             // console.log(
@@ -102,6 +110,8 @@ function LaborActivity({ workingHistory, setWorkingHistory }) {
                   department: '',
                   organizationName: '',
                   organizationAddress: '',
+                  personType: '',
+                  personSubType: ''
                 });
                 handleShowForm(false)
             } else {
@@ -148,11 +158,14 @@ function LaborActivity({ workingHistory, setWorkingHistory }) {
         department: '',
         organizationName: '',
         organizationAddress: '',
+        personType: '',
+        personSubType: ''
     });
 
     const [editingId, setEditingId] = useState(null);
 
     const handleEdit = async (id, editedTableData) => {
+        setIsModalOpen(true);
         if(editingId === id) {
             try {
                 const updatedData = {
@@ -166,6 +179,8 @@ function LaborActivity({ workingHistory, setWorkingHistory }) {
                   organizationAddress: editedTableData.organizationAddress,
                   isPravoOhranka: editedTableData.isPravoOhranka,
                   HaveCoefficient: editedTableData.HaveCoefficient,
+                  personType:  editedTableData.personType,
+                  personSubType:  editedTableData.personSubType,
                 };
 
                 // console.log("updatedData", {updatedData});
@@ -192,7 +207,9 @@ function LaborActivity({ workingHistory, setWorkingHistory }) {
                     organizationName: '',
                     organizationAddress: '',
                     isPravoOhranka: '',
-                    HaveCoefficient: ''
+                    HaveCoefficient: '',
+                    personType: '',
+                    personSubType: ''
                 });
                 // console.log('Successfully updated table data')
             } catch(error) {
@@ -209,6 +226,7 @@ function LaborActivity({ workingHistory, setWorkingHistory }) {
         }
     };
 
+
     const handleSaveEdit = async (id) => {
         try {
             const updatedData = {
@@ -224,6 +242,8 @@ function LaborActivity({ workingHistory, setWorkingHistory }) {
                 isPravoOhranka: editedData.isPravoOhranka || false,
                 // isPravoOhranka: editedData.isPravoOhranka,
                 // HaveCoefficient: editedData.HaveCoefficient,
+                personType: editedData.personType,
+                personSubType: editedData.personSubType,
             };
 
             // Check if overall_experience is defined before adding to updatedData
@@ -295,6 +315,7 @@ function LaborActivity({ workingHistory, setWorkingHistory }) {
     const handleCancelEdit = () => {
         setEditingId(null);
         setEditedData({});
+        setIsModalOpen(false); 
     };
 
     const handleDownload = async () => {
@@ -327,6 +348,31 @@ function LaborActivity({ workingHistory, setWorkingHistory }) {
     const icon = showForm ? <IoClose style={{ fontSize: '18px' }} /> : <FaPlus style={{ fontSize: '16px' }} />;
 
     
+    // Опции для personSubType в зависимости от выбранного значения в personType
+    const subTypeOptions = {
+        "Впервые назначенный": [
+        "Академия правоохранительных органов",
+        "В особом порядке",
+        "Военнослужащие"
+        ],
+        "Бывший сотрудник правоохранительного органа": [
+        "Органы внутренних дел",
+        "Органы прокуратуры",
+        "Антикоррупционные службы",
+        "Органы национальной безопасности",
+        "Служба гос охраны",
+        "Органы по фин мониторингу"
+        ],
+        "Откомандирован из другого правоохранительного органа": [
+        "Органы внутренних дел",
+        "Органы прокуратуры",
+        "Антикоррупционные службы",
+        "Органы национальной безопасности",
+        "Служба гос охраны",
+        "Органы по фин мониторингу"
+        ]
+    };
+
     return (
         <div className={cl.totalInfoWrapper}>
         <div className={cl.totalInfoContent}>
@@ -450,7 +496,9 @@ function LaborActivity({ workingHistory, setWorkingHistory }) {
                                 <TableCell>Местонахожден. организации</TableCell>
                                 <TableCell>Коэфициент</TableCell>
                                 <TableCell>Правохран. орган</TableCell>
-                                <TableCell>Действие</TableCell>
+                                <TableCell>Тип сотрудника</TableCell>
+                                <TableCell>Подтип сотрудника</TableCell>
+                                <TableCell></TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -458,7 +506,7 @@ function LaborActivity({ workingHistory, setWorkingHistory }) {
                                 workingHistory.workingHistories.map((d, i) => (
                                     <TableRow key={i}>
                                         <TableCell>
-                                            {editingId === d.id ? (
+                                            {/* {editingId === d.id ? (
                                                 <div className={cl.datePickerContainer}>
                                                     <input
                                                         type="date"
@@ -477,10 +525,11 @@ function LaborActivity({ workingHistory, setWorkingHistory }) {
                                                 </div>
                                             ) : (
                                                 d.startDate
-                                            )}
+                                            )} */}
+                                            {d.startDate}
                                         </TableCell>
                                         <TableCell>
-                                            {editingId === d.id ? (
+                                            {/* {editingId === d.id ? (
                                                 <div className={cl.datePickerContainer}>
                                                     <input
                                                         type="date"
@@ -499,14 +548,68 @@ function LaborActivity({ workingHistory, setWorkingHistory }) {
                                                 </div>
                                             ) : (
                                                 d.endDate
-                                            )}
+                                            )} */}
+                                            {d.endDate}
                                         </TableCell>
-                                        <TableCell>{editingId === d.id ? <input type="text" className={cl.editInput} name='department' value={editedData.department} onChange={(e) => setEditedData({ ...editedData, department: e.target.value })} /> : d.department}</TableCell>
-                                        <TableCell>{editingId === d.id ? <input type="text" className={cl.editInput} name='positionName' value={editedData.positionName} onChange={(e) => setEditedData({ ...editedData, positionName: e.target.value })} /> : d.positionName}</TableCell>
-                                        <TableCell>{editingId === d.id ? <input type="text" className={cl.editInput} name='organizationName' value={editedData.organizationName} onChange={(e) => setEditedData({ ...editedData, organizationName: e.target.value })} /> : d.organizationName}</TableCell>
-                                        <TableCell>{editingId === d.id ? <input type="text" className={cl.editInput} name='organizationAddress' value={editedData.organizationAddress} onChange={(e) => setEditedData({ ...editedData, organizationAddress: e.target.value })} /> : d.organizationAddress}</TableCell>
                                         <TableCell>
-                                            {editingId === d.id ? (
+                                            {/* {editingId === d.id ? (
+                                                <input 
+                                                    type="text" 
+                                                    className={cl.editInput} 
+                                                    name='department' 
+                                                    value={editedData.department} 
+                                                    onChange={(e) => setEditedData({ ...editedData, department: e.target.value })} 
+                                                />
+                                            ) : (
+                                                d.department
+                                            )} */}
+                                            { d.department}
+                                        </TableCell>
+                                        <TableCell>
+                                            {/* {editingId === d.id ? (
+                                                <input 
+                                                    type="text" 
+                                                    className={cl.editInput} 
+                                                    name='positionName' 
+                                                    value={editedData.positionName} 
+                                                    onChange={(e) => setEditedData({ ...editedData, positionName: e.target.value })} 
+                                                />
+                                            ) : (
+                                                d.positionName
+                                            )} */}
+                                            {d.positionName}
+                                        </TableCell>
+
+                                        <TableCell>
+                                            {/* {editingId === d.id ? (
+                                                <input 
+                                                    type="text" 
+                                                    className={cl.editInput} 
+                                                    name='organizationName' 
+                                                    value={editedData.organizationName} 
+                                                    onChange={(e) => setEditedData({ ...editedData, organizationName: e.target.value })} 
+                                                />
+                                            ) : (
+                                                d.organizationName
+                                            )} */}
+                                            {d.organizationName}
+                                        </TableCell>
+                                        <TableCell>
+                                            {/* {editingId === d.id ? (
+                                                <input 
+                                                    type="text" 
+                                                    className={cl.editInput} 
+                                                    name='organizationAddress' 
+                                                    value={editedData.organizationAddress} 
+                                                    onChange={(e) => setEditedData({ ...editedData, organizationAddress: e.target.value })} 
+                                                />
+                                            ) : (
+                                                d.organizationAddress
+                                            )} */}
+                                            {d.organizationAddress}
+                                        </TableCell>
+                                        <TableCell>
+                                            {/* {editingId === d.id ? (
                                                 <input
                                                 type="checkbox"
                                                 name="HaveCoefficient"
@@ -520,10 +623,11 @@ function LaborActivity({ workingHistory, setWorkingHistory }) {
                                                 />
                                             ) : (
                                                 d.HaveCoefficient ? "Да" : "Нет"
-                                            )}
+                                            )} */}
+                                            { d.HaveCoefficient ? "Да" : "Нет"}
                                         </TableCell>
                                         <TableCell>
-                                            {editingId === d.id ? (
+                                            {/* {editingId === d.id ? (
                                                 <input
                                                 type="checkbox"
                                                 name="isPravoOhranka"
@@ -537,18 +641,74 @@ function LaborActivity({ workingHistory, setWorkingHistory }) {
                                                 />
                                             ) : (
                                                 d.isPravoOhranka ? "Да" : "Нет"
-                                            )}
+                                            )} */}
+                                            { d.isPravoOhranka ? "Да" : "Нет"}
+                                        </TableCell>
+                                        <TableCell>
+                                            {/* {editingId === d.id ? (
+                                                <Box sx={{ minWidth: 120 }}>
+                                                <FormControl fullWidth>
+                                                  <InputLabel id="demo-simple-select-label">Тип сотрудника</InputLabel>
+                                                  <Select
+                                                    labelId="demo-simple-select-label"
+                                                    id="demo-simple-select"
+                                                    label="Тип сотрудника"
+                                                    name='personType'
+                                                    className={cl.workerInfoSelect}
+                                                    value={editedData.personType}
+                                                    onChange={(e) => {
+                                                        const selectedType = e.target.value;
+                                                        const updatedSubTypes = subTypeOptions[selectedType] || [];
+                                                        setEditedData({ ...editedData, personType: selectedType, personSubType: "", personSubTypes: updatedSubTypes });
+                                                      }}
+                                                  >
+                                                    <MenuItem value="">Выберите тип сотрудника</MenuItem>
+                                                    <MenuItem value="Впервые назначенный">Впервые назначенный</MenuItem>
+                                                    <MenuItem value="Бывший сотрудник правоохранительного органа"> Бывший сотрудник правоохранительного органа</MenuItem>
+                                                    <MenuItem value="Откомандирован из другого правоохранительного органа">Откомандирован из другого правоохранительного органа</MenuItem>
+
+                                                  </Select>
+                                                </FormControl>
+                                              </Box>
+                                            ) : (
+                                                d.personType
+                                            )} */}
+                                            {d.personType}
+                                        </TableCell>
+                                        <TableCell>
+                                            {/* {editingId === d.id ? (
+                                                <Box sx={{ minWidth: 120 }}>
+                                                <FormControl fullWidth>
+                                                  <InputLabel id="demo-simple-select-label">Подтип сотрудника</InputLabel>
+                                                  <Select
+                                                    labelId="demo-simple-select-label"
+                                                    id="demo-simple-select"
+                                                    label="Подтип сотрудника"
+                                                    name='personSubType'
+                                                    className={cl.workerInfoSelect}
+                                                    value={editedData.personSubType}
+                                                    onChange={(e) => setEditedData({ ...editedData, personSubType: e.target.value })}
+                                                  >
+                                                    <MenuItem value="">Выберите подтип сотрудника</MenuItem>
+                                                    {editedData.personSubTypes && editedData.personSubTypes.map((subType, index) => (
+                                                        <MenuItem key={index} value={subType}>{subType}</MenuItem>
+                                                    ))}
+                                                  </Select>
+                                                </FormControl>
+                                              </Box>
+                                            ) : (
+                                                d.personSubType
+                                            )} */}
+                                            {d.personSubType}
                                         </TableCell>
                                         <TableCell className={cl.relativesActionBtns} >
                                             {editingId === d.id ? (
                                                 <div>
-                                                    <IconButton className={cl.iconBtn} onClick={() => handleSaveEdit(d.id)}><FaCheck color=' #1565C0' /></IconButton>
-                                                    <IconButton className={cl.iconBtn} onClick={handleCancelEdit}><IoClose /></IconButton>
+                                                    <IconButton className={cl.iconBtn} onClick={() => handleEdit(d.id)}><MdEdit /></IconButton>
                                                 </div>
                                             ) : (
                                                 <>
                                                     <IconButton className={cl.iconBtn} onClick={() => handleEdit(d.id)}><MdEdit /></IconButton>
-                                                    <IconButton className={cl.iconBtn} onClick={() => handleDelete(d.id)}><FaTrash /></IconButton>
                                                 </>
                                             )}
                                         </TableCell>
@@ -565,7 +725,189 @@ function LaborActivity({ workingHistory, setWorkingHistory }) {
                         </TableBody>
                     </Table>
                 </TableContainer>
+                {isModalOpen && (
+                    <Modal visible={isModalOpen} setVisible={setIsModalOpen} className={cl.myModal}>
+                        <div>
+                            {workingHistory && workingHistory.workingHistories && workingHistory.workingHistories.map((d, i) => (
+                                <div key={i}>
+                                    <div style={{ display: 'flex', gap: '30px', marginBottom: '20px' }}>
+                                        <div>
+                                            {editingId === d.id ? (
+                                                <div className={cl.datePickerContainer}>
+                                                    <TextField
+                                                        type="date"
+                                                        className={cl.workerInfoText}
+                                                        placeholder="Начало периода"
+                                                        name='startDate'
+                                                        value={editedData.startDate || ''}
+                                                        onChange={(e) => {
+                                                            const newDate = e.target.value;
+                                                            setEditedData((prevData) => ({
+                                                            ...prevData,
+                                                            startDate: newDate,
+                                                            }));
+                                                        }}
+                                                    />
+                                                </div>
+                                            ) : (
+                                                d.startDate
+                                            )}
+                                        </div>
+
+                                        <div>
+                                        {editingId === d.id ? (
+                                            <div className={cl.datePickerContainer}>
+                                                <TextField
+                                                    type="date"
+                                                    className={cl.workerInfoText}
+                                                    placeholder="Конец периода"
+                                                    name='endDate'
+                                                    value={editedData.endDate || ''}
+                                                    onChange={(e) => {
+                                                        const newDate = e.target.value;
+                                                        setEditedData((prevData) => ({
+                                                        ...prevData,
+                                                        endDate: newDate,
+                                                        }));
+                                                    }}
+                                                />
+                                            </div>
+                                        ) : (
+                                            d.endDate
+                                        )}
+                                        </div>
+                                    </div>
+
+                                    <div style={{ display: 'flex', gap: '30px', marginBottom: '40px' }}>
+                                        <div>{editingId === d.id ? <TextField type="text" className={cl.workerInfoText} name='department' value={editedData.department} onChange={(e) => setEditedData({ ...editedData, department: e.target.value })} /> : d.department}</div>
+                                        <div>{editingId === d.id ? <TextField type="text" className={cl.workerInfoText} name='positionName' value={editedData.positionName} onChange={(e) => setEditedData({ ...editedData, positionName: e.target.value })} /> : d.positionName}</div>
+                                    </div>
+
+                                    <div style={{ display: 'flex', gap: '30px', marginBottom: '40px' }}>
+                                        <div>{editingId === d.id ? <TextField type="text" className={cl.workerInfoText} name='organizationName' value={editedData.organizationName} onChange={(e) => setEditedData({ ...editedData, organizationName: e.target.value })} /> : d.organizationName}</div>
+                                        <div>{editingId === d.id ? <TextField type="text" className={cl.workerInfoText} name='organizationAddress' value={editedData.organizationAddress} onChange={(e) => setEditedData({ ...editedData, organizationAddress: e.target.value })} /> : d.organizationAddress}</div>
+                                    </div>
+                                    
+                                    <div style={{ display: 'flex', gap: '30px', marginBottom: '40px' }}>
+                                        <div>
+                                            {editingId === d.id ? (
+                                                <input
+                                                type="checkbox"
+                                                name="HaveCoefficient"
+                                                checked={editedData.HaveCoefficient || false}
+                                                onChange={(e) =>
+                                                    setEditedData((prevData) => ({
+                                                    ...prevData,
+                                                    HaveCoefficient: e.target.checked,
+                                                    }))
+                                                }
+                                                />
+                                            ) : (
+                                                d.HaveCoefficient ? "Да" : "Нет"
+                                            )}
+                                        </div>
+                                        <div>
+                                            {editingId === d.id ? (
+                                                <input
+                                                type="checkbox"
+                                                name="isPravoOhranka"
+                                                checked={editedData.isPravoOhranka || false}
+                                                onChange={(e) =>
+                                                    setEditedData((prevData) => ({
+                                                    ...prevData,
+                                                    isPravoOhranka: e.target.checked,
+                                                    }))
+                                                }
+                                                />
+                                            ) : (
+                                                d.isPravoOhranka ? "Да" : "Нет"
+                                            )}
+                                        </div>
+                                    </div>
+                                    
+                                    <div  style={{ display: 'flex', gap: '30px', marginBottom: '40px' }}>
+                                        <div>
+                                            {editingId === d.id ? (
+                                                <Box sx={{ minWidth: 120 }}>
+                                                <FormControl fullWidth>
+                                                    <InputLabel id="demo-simple-select-label">Тип сотрудника</InputLabel>
+                                                    <Select
+                                                    labelId="demo-simple-select-label"
+                                                    id="demo-simple-select"
+                                                    label="Тип сотрудника"
+                                                    name='personType'
+                                                    className={cl.workerInfoSelect}
+                                                    value={editedData.personType}
+                                                    onChange={(e) => {
+                                                        const selectedType = e.target.value;
+                                                        const updatedSubTypes = subTypeOptions[selectedType] || [];
+                                                        setEditedData({ ...editedData, personType: selectedType, personSubType: "", personSubTypes: updatedSubTypes });
+                                                        }}
+                                                    >
+                                                    <MenuItem value="">Выберите тип сотрудника</MenuItem>
+                                                    <MenuItem value="Впервые назначенный">Впервые назначенный</MenuItem>
+                                                    <MenuItem value="Бывший сотрудник правоохранительного органа"> Бывший сотрудник правоохранительного органа</MenuItem>
+                                                    <MenuItem value="Откомандирован из другого правоохранительного органа">Откомандирован из другого правоохранительного органа</MenuItem>
+
+                                                    </Select>
+                                                </FormControl>
+                                                </Box>
+                                            ) : (
+                                                d.personType
+                                            )}
+                                        </div>
+
+                                        <div>
+                                            {editingId === d.id ? (
+                                                <Box sx={{ minWidth: 120 }}>
+                                                <FormControl fullWidth>
+                                                    <InputLabel id="demo-simple-select-label">Подтип сотрудника</InputLabel>
+                                                    <Select
+                                                    labelId="demo-simple-select-label"
+                                                    id="demo-simple-select"
+                                                    label="Подтип сотрудника"
+                                                    name='personSubType'
+                                                    className={cl.workerInfoSelect}
+                                                    value={editedData.personSubType}
+                                                    onChange={(e) => setEditedData({ ...editedData, personSubType: e.target.value })}
+                                                    >
+                                                    <MenuItem value="">Выберите подтип сотрудника</MenuItem>
+                                                    {editedData.personSubTypes && editedData.personSubTypes.map((subType, index) => (
+                                                        <MenuItem key={index} value={subType}>{subType}</MenuItem>
+                                                    ))}
+                                                    </Select>
+                                                </FormControl>
+                                                </Box>
+                                            ) : (
+                                                d.personSubType
+                                            )}
+                                            
+                                        </div>
+                                    </div>
+
+                                    
+                                    <div className={cl.relativesActionBtns} >
+                                        {editingId === d.id ? (
+                                            <div>
+                                                <IconButton className={cl.iconBtn} onClick={() => handleSaveEdit(d.id)}><FaCheck color=' #1565C0' /></IconButton>
+                                                <IconButton className={cl.iconBtn} onClick={handleCancelEdit}><IoClose /></IconButton>
+                                            </div>
+                                        ) : (
+                                            <>
+                                                <IconButton className={cl.iconBtn} onClick={() => handleEdit(d.id)}><MdEdit /></IconButton>
+                                                <IconButton className={cl.iconBtn} onClick={() => handleDelete(d.id)}><FaTrash /></IconButton>
+                                            </>
+                                        )}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    {/* <FormForEditing data={editingData} /> */}
+                    </Modal>
+                )}
             </Paper>
+
+            
 
             <Paper sx={{ width: '100%', overflow: 'hidden', marginTop: '20px' }}>
                 <TableContainer sx={{ maxHeight: 440 }}>
@@ -612,3 +954,192 @@ function LaborActivity({ workingHistory, setWorkingHistory }) {
 }
 
 export default LaborActivity;
+
+// function FormForEditing({ data }) {
+//     const [editedData, setEditedData] = useState(data || {});
+
+//     const handleChange = (e) => {
+//         const { name, value } = e.target;
+//         setEditedData(prevData => ({
+//             ...prevData,
+//             [name]: value
+//         }));
+//     };
+
+//     const handleSave = () => {
+//         // Обработка сохранения изменений
+//     };
+
+//     // Опции для personSubType в зависимости от выбранного значения в personType
+//     const subTypeOptions = {
+//         "Впервые назначенный": [
+//         "Академия правоохранительных органов",
+//         "В особом порядке",
+//         "Военнослужащие"
+//         ],
+//         "Бывший сотрудник правоохранительного органа": [
+//         "Органы внутренних дел",
+//         "Органы прокуратуры",
+//         "Антикоррупционные службы",
+//         "Органы национальной безопасности",
+//         "Служба гос охраны",
+//         "Органы по фин мониторингу"
+//         ],
+//         "Откомандирован из другого правоохранительного органа": [
+//         "Органы внутренних дел",
+//         "Органы прокуратуры",
+//         "Антикоррупционные службы",
+//         "Органы национальной безопасности",
+//         "Служба гос охраны",
+//         "Органы по фин мониторингу"
+//         ]
+//     };
+
+//     return (
+//         <form>
+//             <div>
+//                 <div style={{ display: 'flex', gap: '20px', marginBottom: '25px' }}>
+//                     <TextField 
+//                         id="outlined-basic" 
+//                         label="Имя" 
+//                         variant="outlined" 
+//                         size="small"
+//                         type="date"
+//                         className={cl.formInput}
+//                         placeholder="Начало периода"
+//                         name='startDate'
+//                         value={editedData.startDate || ''}
+//                         onChange={handleChange}
+//                     />
+//                     <TextField 
+//                         id="outlined-basic" 
+//                         label="Имя" 
+//                         variant="outlined" 
+//                         size="small"
+//                         type="date"
+//                         className={cl.formInput}
+//                         placeholder="Начало периода"
+//                         name='endDate'
+//                         value={editedData.endDate || ''}
+//                         onChange={handleChange}
+//                     />
+//                 </div>
+
+//                 <div style={{ display: 'flex', gap: '20px', marginBottom: '25px'  }}>
+//                     <TextField 
+//                         id="outlined-basic" 
+//                         label="Подразделение" 
+//                         variant="outlined" 
+//                         size="small"
+//                         type="text"
+//                         className={cl.formInput}
+//                         placeholder="Подразделение"
+//                         name='department'
+//                         value={editedData.department}
+//                         onChange={handleChange}
+//                     />
+//                     <TextField 
+//                         id="outlined-basic" 
+//                         label="Должность" 
+//                         variant="outlined" 
+//                         size="small"
+//                         type="text"
+//                         className={cl.formInput}
+//                         placeholder="Должность"
+//                         name='positionName'
+//                         value={editedData.positionName}
+//                         onChange={handleChange}
+//                     />
+//                 </div>
+//                 <div style={{ display: 'flex', gap: '20px', marginBottom: '25px'  }}>
+//                     <TextField 
+//                         id="outlined-basic" 
+//                         label="Учреждение4" 
+//                         variant="outlined" 
+//                         size="small"
+//                         type="text"
+//                         className={cl.formInput}
+//                         placeholder="Учреждение"
+//                         name='organizationName'
+//                         value={editedData.organizationName}
+//                         onChange={handleChange}
+//                     />
+//                     <TextField 
+//                         id="outlined-basic" 
+//                         label="Местонахожден. организации" 
+//                         variant="outlined" 
+//                         size="small"
+//                         type="text"
+//                         className={cl.formInput}
+//                         placeholder="Местонахожден. организации"
+//                         name='organizationAddress'
+//                         value={editedData.organizationAddress}
+//                         onChange={handleChange}
+//                     />
+//                 </div>
+//                 <div style={{ display: 'flex', gap: '20px', marginBottom: '25px'  }}>
+//                     <input
+//                     type="checkbox"
+//                     name="HaveCoefficient"
+//                     checked={editedData.HaveCoefficient || false}
+//                     onChange={handleChange}
+//                     />
+//                     <input
+//                     type="checkbox"
+//                     name="isPravoOhranka"
+//                     checked={editedData.isPravoOhranka || false}
+//                     onChange={handleChange}
+//                     />
+//                 </div>
+//                 <div style={{ display: 'flex', gap: '20px', marginBottom: '25px'  }}>
+//                     <Box sx={{ minWidth: 120 }}>
+//                         <FormControl fullWidth>
+//                             <InputLabel id="demo-simple-select-label">Тип сотрудника</InputLabel>
+//                             <Select
+//                             labelId="demo-simple-select-label"
+//                             id="demo-simple-select"
+//                             label="Тип сотрудника"
+//                             name='personType'
+//                             className={cl.workerInfoSelect}
+//                             value={editedData.personType}
+//                             onChange={(e) => {
+//                                 const selectedType = e.target.value;
+//                                 const updatedSubTypes = subTypeOptions[selectedType] || [];
+//                                 setEditedData({ ...editedData, personType: selectedType, personSubType: "", personSubTypes: updatedSubTypes });
+//                                 }}
+//                             >
+//                             <MenuItem value="">Выберите тип сотрудника</MenuItem>
+//                             <MenuItem value="Впервые назначенный">Впервые назначенный</MenuItem>
+//                             <MenuItem value="Бывший сотрудник правоохранительного органа"> Бывший сотрудник правоохранительного органа</MenuItem>
+//                             <MenuItem value="Откомандирован из другого правоохранительного органа">Откомандирован из другого правоохранительного органа</MenuItem>
+
+//                             </Select>
+//                         </FormControl>
+//                     </Box>
+//                     <Box sx={{ minWidth: 120 }}>
+//                         <FormControl fullWidth>
+//                             <InputLabel id="demo-simple-select-label">Подтип сотрудника</InputLabel>
+//                             <Select
+//                             labelId="demo-simple-select-label"
+//                             id="demo-simple-select"
+//                             label="Подтип сотрудника"
+//                             name='personSubType'
+//                             className={cl.workerInfoSelect}
+//                             value={editedData.personSubType}
+//                             onChange={(e) => setEditedData({ ...editedData, personSubType: e.target.value })}
+//                             >
+//                             <MenuItem value="">Выберите подтип сотрудника</MenuItem>
+//                             {editedData.personSubTypes && editedData.personSubTypes.map((subType, index) => (
+//                                 <MenuItem key={index} value={subType}>{subType}</MenuItem>
+//                             ))}
+//                             </Select>
+//                         </FormControl>
+//                         </Box>
+//                 </div>
+//             </div>
+         
+           
+//             <button onClick={handleSave}>Сохранить</button>
+//         </form>
+//     );
+// }

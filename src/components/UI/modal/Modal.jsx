@@ -14,6 +14,9 @@ function Modal({ children, visible, setVisible, className, ...props }) {
         setVisible(false)
     };
 
+    console.log('Visible:', visible); // Проверяем значение visible в консоли
+    console.log('SetVisible:', typeof setVisible); // Проверяем setVisible в консоли
+
     return (
         <div className={rootClasses.join(' ')}
              {...props}
