@@ -4,7 +4,8 @@ import cl from './ReportOrders.module.css';
 import { Paper, Button } from '@mui/material';
 import Cookies from 'js-cookie';
 import { IoMdDownload } from "react-icons/io";
-
+import { FaCheck } from "react-icons/fa6";
+import { FaXmark } from "react-icons/fa6";
 
 function ReportOrders({ decreeInfo }) {
     // const { id } = useParams();
@@ -66,7 +67,17 @@ function ReportOrders({ decreeInfo }) {
                                         {decree.decreeNumber}
                                     </div>
                                     <div><label className={cl.label}>Дата создания приказа:</label>{decree.decreeDate}</div>
-                                    <div><label className={cl.label}>Согласовано:</label>{decree.isConfirmed ? 'Да' : 'Нет'}</div>
+                                    <div>
+                                        <label className={cl.label}>Согласовано:</label>
+                                        {decree.isConfirmed ? (
+                                            <span style={{ color: '#1565C0', verticalAlign: 'middle' }}>
+                                                <FaCheck style={{ verticalAlign: 'middle', marginRight: '4px' }} /> Да
+                                            </span>
+                                        ) : (
+                                            <span><FaXmark   style={{ verticalAlign: 'middle', fontSize: '16px', marginRight: '5px' }}/>Нет</span>
+                                        )}
+                                    </div>
+
                                 </div>
                                 <Button
                                     variant="contained"
