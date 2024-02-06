@@ -45,34 +45,80 @@
 
 .workerInfoText {
   width: 290px;
-  height: 30px;
+  /* height: 10px; */
+  /* padding: 0px 9px; */
   outline: none;
   font-family: "Helvetica", sans-serif;
   color: #000;
   font-size: 16px;
   font-weight: 400;
-  padding: 0px 9px;
-
   /* margin-left: 26px; */
 }
 
-.workerInfoSelect {
-  width: 290px;
-  height: 40px;
-  padding: 0px 9px;
-  /* margin-left: 12px; */
-  font-family: "Helvetica", sans-serif;
-  color: #000;
-  font-size: 16px;
-  font-weight: 400;
-  /* margin-left: 12px; */
+.selects {
+  position: relative;
+  z-index: 10000; 
 }
+
+
+/* Обертка для селекта */
+.selectContainer {
+  position: relative;
+}
+
+/* Стили для лейбла селекта */
+.selectLabel {
+  position: absolute;
+  top: 50%;
+  left: 12px;
+  transform: translateY(-50%);
+  color: rgba(0, 0, 0, 0.54);
+  font-size: 0.875rem;
+  line-height: 1.5;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Стили для самого селекта */
+.workerInfoSelect {
+  appearance: none;
+  height: 40px;
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid rgba(0, 0, 0, 0.23);
+  border-radius: 4px;
+  background-color: transparent;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: rgba(0, 0, 0, 0.87);
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  z-index: 0;
+}
+
+/* Стили для option */
+.workerInfoSelect option {
+  background-color: #fff;
+  color: rgba(0, 0, 0, 0.87);
+  height: 20px;
+  padding: 5px 8px;
+}
+
+/* Стили для option при наведении */
+.workerInfoSelect option:hover {
+  background-color: #f5f5f5;
+}
+
+/* Стили для option в выбранном состоянии */
+.workerInfoSelect option:checked {
+  background-color: #1976D2;
+  color: #fff;
+}
+
 
 .submitBtn {
   height: 40px;
   margin-top: 25px;
 }
-
 
 /* calendar */
 .datePickerContainer {
@@ -105,9 +151,11 @@
 
 .relativesActionBtns {
   display: flex;
+  justify-content: center;
   gap: 10px;
-  background: none;
+  width: 100%;
 }
+
 
 
 .editInput {
@@ -134,6 +182,8 @@
 .experience {
   display: flex;
   gap: 15px;
-
 }
 
+.headline {
+  font-size: 20px;
+}

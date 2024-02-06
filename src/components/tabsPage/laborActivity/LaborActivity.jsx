@@ -165,72 +165,77 @@ function LaborActivity({ workingHistory, setWorkingHistory }) {
     const [editingId, setEditingId] = useState(null);
 
     const handleEdit = async (id, editedTableData) => {
+        const selectedRow = workingHistory.workingHistories.find(row => row.id === id);
+        setEditedData(selectedRow);
         setIsModalOpen(true);
-        if(editingId === id) {
-            try {
-                const updatedData = {
-                  id: id,
-                  personId: id,
-                  positionName: editedTableData.positionName,
-                  startDate: editedTableData.startDate,
-                  endDate: editedTableData.endDate,
-                  department: editedTableData.department,
-                  organizationName: editedTableData.organizationName,
-                  organizationAddress: editedTableData.organizationAddress,
-                  isPravoOhranka: editedTableData.isPravoOhranka,
-                  HaveCoefficient: editedTableData.HaveCoefficient,
-                  personType:  editedTableData.personType,
-                  personSubType:  editedTableData.personSubType,
-                };
-
-                // console.log("updatedData", {updatedData});
-
-                await UpdateWorkingHistory(id, updatedData);
-
-                setWorkingHistory(prevData => {
-                    return prevData.map(tableData => {
-                        if(tableData.id === id) {
-                            return {...tableData, ...updatedData}
-                        }
-                        return tableData;
-                    })
-                });
-                // console.log(updatedData)
-
-                setEditingId(null);
-                setEditedData({
-                    id: id,
-                    positionName: '',
-                    startDate: '',
-                    endDate: '',
-                    department: '',
-                    organizationName: '',
-                    organizationAddress: '',
-                    isPravoOhranka: '',
-                    HaveCoefficient: '',
-                    personType: '',
-                    personSubType: ''
-                });
-                // console.log('Successfully updated table data')
-            } catch(error) {
-                console.error('Error updating table data:', error);
-            }
-           
-        } else {
-            setEditingId(id)
-            const dataToEdit = workingHistory.workingHistories.find(tableData => tableData.id === id);
-            if(dataToEdit) {
-                setEditedData(dataToEdit);
-            }
-            // console.log(personnelData)
-        }
-    };
-
-
-    const handleSaveEdit = async (id) => {
+    
         try {
             const updatedData = {
                 id: id,
+                personId: id,
+                positionName: editedTableData.positionName,
+                startDate: editedTableData.startDate,
+                endDate: editedTableData.endDate,
+                department: editedTableData.department,
+                organizationName: editedTableData.organizationName,
+                organizationAddress: editedTableData.organizationAddress,
+                isPravoOhranka: editedTableData.isPravoOhranka,
+                HaveCoefficient: editedTableData.HaveCoefficient,
+                personType:  editedTableData.personType,
+                personSubType:  editedTableData.personSubType,
+            };
+    
+            await UpdateWorkingHistory(id, updatedData);
+    
+            setWorkingHistory(prevData => {
+                return prevData.map(tableData => {
+                    if(tableData.id === id) {
+                        return {...tableData, ...updatedData}
+                    }
+                    return tableData;
+                })
+            });
+    
+            setEditingId(null);
+            setEditedData({
+                id: id,
+                positionName: '',
+                startDate: '',
+                endDate: '',
+                department: '',
+                organizationName: '',
+                organizationAddress: '',
+                isPravoOhranka: '',
+                HaveCoefficient: '',
+                personType: '',
+                personSubType: ''
+            });
+        } catch(error) {
+            console.error('Error updating table data:', error);
+        }
+    };
+    
+
+    // const handleEdit = async (id) => {
+    //     setIsModalOpen(true);
+    //     const selectedRow = workingHistory.workingHistories.find(row => row.id === id);
+    //     setEditingId(id); 
+
+    //     console.log(selectedRow)
+
+    //     if (selectedRow) {
+    //         setEditedData(selectedRow); 
+    //     }
+    // };
+
+
+    const handleSaveEdit = async (id) => {
+        id = editedData.id; // Преобразуем переменную id в число
+        console.log("Type of id:", typeof id);
+        console.log("ID переданный в handleSaveEdit:", id);
+        try {
+            const updatedData = {
+                id: editedData.id,
                 personId: editedData.personId,
                 positionName: editedData.positionName,
                 startDate: editedData.startDate,
@@ -271,13 +276,14 @@ function LaborActivity({ workingHistory, setWorkingHistory }) {
             console.log('editedData:', editedData);
 
 
-
-    
+            
+            
             const response = await UpdateWorkingHistory(id, updatedData);
             console.log('Before API Call - workingHistory:', workingHistory);
-            console.log('After API Call - response:', response.data);
+            // console.log('After API Call - response:', response.data);
             console.log('After API Call - workingHistory:', workingHistory);
-
+            
+            console.log("Response from server:", response);
   
             if (response.status === 200) {
                 setWorkingHistory((prevData) => ({
@@ -478,6 +484,52 @@ function LaborActivity({ workingHistory, setWorkingHistory }) {
                                 value={inputData.organizationAddress}
                                 onChange={(e) => setInputData({ ...inputData, organizationAddress: e.target.value })}
                             />
+                        </div>
+
+                        <div style={{ display: 'flex', gap: '10px', marginTop: '30px', marginBottom: '50px' }}>
+                            <Box sx={{ minWidth: 120 }}>
+                                <FormControl fullWidth>
+                                    <InputLabel id="demo-simple-select-label">Тип сотрудника</InputLabel>
+                                    <Select
+                                    labelId="demo-simple-select-label"
+                                    id="demo-simple-select"
+                                    label="Тип сотрудника"
+                                    name='personType'
+                                    className={cl.workerInfoSelect}
+                                    value={editedData.personType}
+                                    onChange={(e) => {
+                                        const selectedType = e.target.value;
+                                        const updatedSubTypes = subTypeOptions[selectedType] || [];
+                                        setEditedData({ ...editedData, personType: selectedType, personSubType: "", personSubTypes: updatedSubTypes });
+                                        }}
+                                    >
+                                    <MenuItem value="">Выберите тип сотрудника</MenuItem>
+                                    <MenuItem value="Впервые назначенный">Впервые назначенный</MenuItem>
+                                    <MenuItem value="Бывший сотрудник правоохранительного органа"> Бывший сотрудник правоохранительного органа</MenuItem>
+                                    <MenuItem value="Откомандирован из другого правоохранительного органа">Откомандирован из другого правоохранительного органа</MenuItem>
+
+                                    </Select>
+                                </FormControl>
+                            </Box>
+                            <Box sx={{ minWidth: 120 }}>
+                                <FormControl fullWidth>
+                                    <InputLabel id="demo-simple-select-label">Подтип сотрудника</InputLabel>
+                                    <Select
+                                    labelId="demo-simple-select-label"
+                                    id="demo-simple-select"
+                                    label="Подтип сотрудника"
+                                    name='personSubType'
+                                    className={cl.workerInfoSelect}
+                                    value={editedData.personSubType}
+                                    onChange={(e) => setEditedData({ ...editedData, personSubType: e.target.value })}
+                                    >
+                                    <MenuItem value="">Выберите подтип сотрудника</MenuItem>
+                                    {editedData.personSubTypes && editedData.personSubTypes.map((subType, index) => (
+                                        <MenuItem key={index} value={subType}>{subType}</MenuItem>
+                                    ))}
+                                    </Select>
+                                </FormControl>
+                            </Box>
                         </div>
                     </form>
                 )}
@@ -705,10 +757,12 @@ function LaborActivity({ workingHistory, setWorkingHistory }) {
                                             {editingId === d.id ? (
                                                 <div>
                                                     <IconButton className={cl.iconBtn} onClick={() => handleEdit(d.id)}><MdEdit /></IconButton>
+                                                    <IconButton className={cl.iconBtn} onClick={() => handleDelete(d.id)}><FaTrash /></IconButton>
                                                 </div>
                                             ) : (
                                                 <>
                                                     <IconButton className={cl.iconBtn} onClick={() => handleEdit(d.id)}><MdEdit /></IconButton>
+                                                    <IconButton className={cl.iconBtn} onClick={() => handleDelete(d.id)}><FaTrash /></IconButton>
                                                 </>
                                             )}
                                         </TableCell>
@@ -722,187 +776,167 @@ function LaborActivity({ workingHistory, setWorkingHistory }) {
                                 </TableRow>
                             )}
 
+
                         </TableBody>
                     </Table>
                 </TableContainer>
-                {isModalOpen && (
+                {isModalOpen && editedData && (
                     <Modal visible={isModalOpen} setVisible={setIsModalOpen} className={cl.myModal}>
                         <div>
-                            {workingHistory && workingHistory.workingHistories && workingHistory.workingHistories.map((d, i) => (
-                                <div key={i}>
-                                    <div style={{ display: 'flex', gap: '30px', marginBottom: '20px' }}>
-                                        <div>
-                                            {editingId === d.id ? (
-                                                <div className={cl.datePickerContainer}>
-                                                    <TextField
-                                                        type="date"
-                                                        className={cl.workerInfoText}
-                                                        placeholder="Начало периода"
-                                                        name='startDate'
-                                                        value={editedData.startDate || ''}
-                                                        onChange={(e) => {
-                                                            const newDate = e.target.value;
-                                                            setEditedData((prevData) => ({
-                                                            ...prevData,
-                                                            startDate: newDate,
-                                                            }));
-                                                        }}
-                                                    />
-                                                </div>
-                                            ) : (
-                                                d.startDate
-                                            )}
-                                        </div>
+                            <div style={{ display: 'flex', alignItems: 'center', marginBottom: '40px', gap: '8px' }}>
+                                <MdEdit style={{ fontSize: '18px' }} />
+                                <h1 className={cl.headline}>Трудовая деятельность</h1>
+                            </div>
+                            <div style={{ display: 'flex', gap: '30px', marginBottom: '30px' }}>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '5px', marginTop: '8px' }}>
+                                    <label style={{ fontSize: '14px', color: '#4B4B4B', marginLeft: '2px' }}>Начало периода</label>
+                                    <TextField
+                                            type="date"
+                                            size='small'
+                                            className={cl.workerInfoText}
+                                            placeholder="Начало периода"
+                                            name='startDate'
+                                            value={editedData.startDate || ''}
+                                            onChange={(e) => {
+                                                const newDate = e.target.value;
+                                                setEditedData((prevData) => ({
+                                                ...prevData,
+                                                startDate: newDate,
+                                                }));
+                                            }}
+                                        />
+                                </div>
 
-                                        <div>
-                                        {editingId === d.id ? (
-                                            <div className={cl.datePickerContainer}>
-                                                <TextField
-                                                    type="date"
-                                                    className={cl.workerInfoText}
-                                                    placeholder="Конец периода"
-                                                    name='endDate'
-                                                    value={editedData.endDate || ''}
-                                                    onChange={(e) => {
-                                                        const newDate = e.target.value;
-                                                        setEditedData((prevData) => ({
-                                                        ...prevData,
-                                                        endDate: newDate,
-                                                        }));
-                                                    }}
-                                                />
-                                            </div>
-                                        ) : (
-                                            d.endDate
-                                        )}
-                                        </div>
-                                    </div>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '5px', marginTop: '8px' }}>
+                                    <label style={{ fontSize: '14px', color: '#4B4B4B', marginLeft: '2px' }}>Конец периода</label>
+                                    <TextField
+                                        type="date"
+                                        className={cl.workerInfoText}
+                                        placeholder="Конец периода"
+                                        name='endDate'
+                                        size='small'
+                                        value={editedData.endDate || ''}
+                                        onChange={(e) => {
+                                            const newDate = e.target.value;
+                                            setEditedData((prevData) => ({
+                                            ...prevData,
+                                            endDate: newDate,
+                                            }));
+                                        }}
+                                    />
+                                </div>
+                            </div>
 
-                                    <div style={{ display: 'flex', gap: '30px', marginBottom: '40px' }}>
-                                        <div>{editingId === d.id ? <TextField type="text" className={cl.workerInfoText} name='department' value={editedData.department} onChange={(e) => setEditedData({ ...editedData, department: e.target.value })} /> : d.department}</div>
-                                        <div>{editingId === d.id ? <TextField type="text" className={cl.workerInfoText} name='positionName' value={editedData.positionName} onChange={(e) => setEditedData({ ...editedData, positionName: e.target.value })} /> : d.positionName}</div>
-                                    </div>
+                            <div style={{ display: 'flex', gap: '30px', marginBottom: '30px' }}>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '5px', marginTop: '8px' }}>
+                                    <label style={{ fontSize: '14px', color: '#4B4B4B', marginLeft: '2px' }}>Подразделение</label>
+                                    <TextField size='small' type="text" className={cl.workerInfoText} name='department' value={editedData.department} onChange={(e) => setEditedData({ ...editedData, department: e.target.value })} /> 
+                                </div>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '5px', marginTop: '8px' }}>
+                                    <label style={{ fontSize: '14px', color: '#4B4B4B', marginLeft: '2px' }}>Должность</label>
+                                    <TextField size='small' type="text" className={cl.workerInfoText} name='positionName' value={editedData.positionName} onChange={(e) => setEditedData({ ...editedData, positionName: e.target.value })} /> 
+                                </div>
+                            </div>
 
-                                    <div style={{ display: 'flex', gap: '30px', marginBottom: '40px' }}>
-                                        <div>{editingId === d.id ? <TextField type="text" className={cl.workerInfoText} name='organizationName' value={editedData.organizationName} onChange={(e) => setEditedData({ ...editedData, organizationName: e.target.value })} /> : d.organizationName}</div>
-                                        <div>{editingId === d.id ? <TextField type="text" className={cl.workerInfoText} name='organizationAddress' value={editedData.organizationAddress} onChange={(e) => setEditedData({ ...editedData, organizationAddress: e.target.value })} /> : d.organizationAddress}</div>
-                                    </div>
+                            <div style={{ display: 'flex', gap: '30px', marginBottom: '30px' }}>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '5px', marginTop: '8px' }}>
+                                    <label style={{ fontSize: '14px', color: '#4B4B4B', marginLeft: '2px' }}>Учреждение</label>
+                                    <TextField size='small' type="text" className={cl.workerInfoText} name='organizationName' value={editedData.organizationName} onChange={(e) => setEditedData({ ...editedData, organizationName: e.target.value })} /> 
+                                </div>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '5px', marginTop: '8px' }}>
+                                    <label style={{ fontSize: '14px', color: '#4B4B4B', marginLeft: '2px' }}>Местонахождение организации</label>
+                                    <TextField size='small' type="text" className={cl.workerInfoText} name='organizationAddress' value={editedData.organizationAddress} onChange={(e) => setEditedData({ ...editedData, organizationAddress: e.target.value })} /> 
+                                </div>
+                            </div>
                                     
-                                    <div style={{ display: 'flex', gap: '30px', marginBottom: '40px' }}>
-                                        <div>
-                                            {editingId === d.id ? (
-                                                <input
-                                                type="checkbox"
-                                                name="HaveCoefficient"
-                                                checked={editedData.HaveCoefficient || false}
-                                                onChange={(e) =>
-                                                    setEditedData((prevData) => ({
-                                                    ...prevData,
-                                                    HaveCoefficient: e.target.checked,
-                                                    }))
-                                                }
-                                                />
-                                            ) : (
-                                                d.HaveCoefficient ? "Да" : "Нет"
-                                            )}
-                                        </div>
-                                        <div>
-                                            {editingId === d.id ? (
-                                                <input
-                                                type="checkbox"
-                                                name="isPravoOhranka"
-                                                checked={editedData.isPravoOhranka || false}
-                                                onChange={(e) =>
-                                                    setEditedData((prevData) => ({
-                                                    ...prevData,
-                                                    isPravoOhranka: e.target.checked,
-                                                    }))
-                                                }
-                                                />
-                                            ) : (
-                                                d.isPravoOhranka ? "Да" : "Нет"
-                                            )}
-                                        </div>
-                                    </div>
+                            <div style={{ display: 'flex', gap: '30px', marginBottom: '40px' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '5px', marginTop: '8px' }}>
+                                    <label style={{ fontSize: '14px', color: '#4B4B4B', marginLeft: '2px' }}>Коэфициент</label>
+                                    <input
+                                    type="checkbox"
+                                    name="HaveCoefficient"
+                                    checked={editedData.HaveCoefficient || false}
+                                    onChange={(e) =>
+                                        setEditedData((prevData) => ({
+                                        ...prevData,
+                                        HaveCoefficient: e.target.checked,
+                                        }))
+                                    }
+                                    />
+                                </div>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '5px', marginTop: '8px' }}>
+                                    <label style={{ fontSize: '14px', color: '#4B4B4B', marginLeft: '2px' }}>Правохран. орган</label>
+                                    <input
+                                    type="checkbox"
+                                    name="isPravoOhranka"
+                                    checked={editedData.isPravoOhranka || false}
+                                    onChange={(e) =>
+                                        setEditedData((prevData) => ({
+                                        ...prevData,
+                                        isPravoOhranka: e.target.checked,
+                                        }))
+                                    }
+                                    />
+                                </div>
+                            </div>
                                     
-                                    <div  style={{ display: 'flex', gap: '30px', marginBottom: '40px' }}>
-                                        <div>
-                                            {editingId === d.id ? (
-                                                <Box sx={{ minWidth: 120 }}>
-                                                <FormControl fullWidth>
-                                                    <InputLabel id="demo-simple-select-label">Тип сотрудника</InputLabel>
-                                                    <Select
-                                                    labelId="demo-simple-select-label"
-                                                    id="demo-simple-select"
-                                                    label="Тип сотрудника"
-                                                    name='personType'
-                                                    className={cl.workerInfoSelect}
-                                                    value={editedData.personType}
-                                                    onChange={(e) => {
-                                                        const selectedType = e.target.value;
-                                                        const updatedSubTypes = subTypeOptions[selectedType] || [];
-                                                        setEditedData({ ...editedData, personType: selectedType, personSubType: "", personSubTypes: updatedSubTypes });
-                                                        }}
-                                                    >
-                                                    <MenuItem value="">Выберите тип сотрудника</MenuItem>
-                                                    <MenuItem value="Впервые назначенный">Впервые назначенный</MenuItem>
-                                                    <MenuItem value="Бывший сотрудник правоохранительного органа"> Бывший сотрудник правоохранительного органа</MenuItem>
-                                                    <MenuItem value="Откомандирован из другого правоохранительного органа">Откомандирован из другого правоохранительного органа</MenuItem>
-
-                                                    </Select>
-                                                </FormControl>
-                                                </Box>
-                                            ) : (
-                                                d.personType
-                                            )}
-                                        </div>
-
-                                        <div>
-                                            {editingId === d.id ? (
-                                                <Box sx={{ minWidth: 120 }}>
-                                                <FormControl fullWidth>
-                                                    <InputLabel id="demo-simple-select-label">Подтип сотрудника</InputLabel>
-                                                    <Select
-                                                    labelId="demo-simple-select-label"
-                                                    id="demo-simple-select"
-                                                    label="Подтип сотрудника"
-                                                    name='personSubType'
-                                                    className={cl.workerInfoSelect}
-                                                    value={editedData.personSubType}
-                                                    onChange={(e) => setEditedData({ ...editedData, personSubType: e.target.value })}
-                                                    >
-                                                    <MenuItem value="">Выберите подтип сотрудника</MenuItem>
-                                                    {editedData.personSubTypes && editedData.personSubTypes.map((subType, index) => (
-                                                        <MenuItem key={index} value={subType}>{subType}</MenuItem>
-                                                    ))}
-                                                    </Select>
-                                                </FormControl>
-                                                </Box>
-                                            ) : (
-                                                d.personSubType
-                                            )}
-                                            
-                                        </div>
-                                    </div>
-
-                                    
-                                    <div className={cl.relativesActionBtns} >
-                                        {editingId === d.id ? (
-                                            <div>
-                                                <IconButton className={cl.iconBtn} onClick={() => handleSaveEdit(d.id)}><FaCheck color=' #1565C0' /></IconButton>
-                                                <IconButton className={cl.iconBtn} onClick={handleCancelEdit}><IoClose /></IconButton>
-                                            </div>
-                                        ) : (
-                                            <>
-                                                <IconButton className={cl.iconBtn} onClick={() => handleEdit(d.id)}><MdEdit /></IconButton>
-                                                <IconButton className={cl.iconBtn} onClick={() => handleDelete(d.id)}><FaTrash /></IconButton>
-                                            </>
-                                        )}
+                            <div  style={{ display: 'flex', gap: '30px', marginBottom: '20px' }}>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', marginTop: '8px' }}>
+                                    <label style={{ fontSize: '14px', color: '#4B4B4B', marginLeft: '2px' }}>Тип сотрудника</label>
+                                    <div className={cl.selectContainer}>
+                                        <select
+                                            style={{ width: '134%' }}
+                                            id="personType"
+                                            name="personType"
+                                            value={editedData.personType}
+                                            className={cl.workerInfoSelect}
+                                            onChange={(e) => {
+                                                const selectedType = e.target.value;
+                                                const updatedSubTypes = subTypeOptions[selectedType] || [];
+                                                setEditedData({ ...editedData, personType: selectedType, personSubType: "", personSubTypes: updatedSubTypes });
+                                            }}
+                                        >
+                                            <option value="">Выберите тип сотрудника</option>
+                                            <option value="Впервые назначенный">Впервые назначенный</option>
+                                            <option value="Бывший сотрудник правоохранительного органа">Бывший сотрудник правоохранительного органа</option>
+                                            <option value="Откомандирован из другого правоохранительного органа">Откомандирован из другого правоохранительного органа</option>
+                                        </select>
                                     </div>
                                 </div>
-                            ))}
+
+                            </div>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', marginTop: '8px' }}>
+                                    <label style={{ fontSize: '14px', color: '#4B4B4B', marginLeft: '2px' }}>Подтип сотрудника</label>
+                                    <div>
+                                        <div style={{ minWidth: '120px' }}>
+                                            <select
+                                                id="demo-simple-select"
+                                                name='personSubType'
+                                                className={cl.workerInfoSelect}
+                                                value={editedData.personSubType}
+                                                onChange={(e) => setEditedData({ ...editedData, personSubType: e.target.value })}
+                                            >
+                                                <option value="">Выберите подтип сотрудника</option>
+                                                {editedData.personSubTypes && editedData.personSubTypes.map((subType, index) => (
+                                                    <option key={index} value={subType}>{subType}</option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                    
+                                <div className={cl.relativesActionBtns} style={{ marginTop: '20px' }}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', gap: '10px' }}>
+                                        <Button variant="contained" style={{ width: '300px' }} onClick={handleSaveEdit}>Сохранить</Button>
+                                        <Button variant="outlined" style={{  width: '300px' }} onClick={handleCancelEdit}>Отменить</Button>
+                                    </div>
+                                </div>
+
                         </div>
-                    {/* <FormForEditing data={editingData} /> */}
+                        
+                  
                     </Modal>
                 )}
             </Paper>

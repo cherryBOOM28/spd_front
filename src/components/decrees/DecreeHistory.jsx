@@ -119,7 +119,6 @@ function DecreeHistory() {
   // : decreeList;
 
   
-
   const filteredDecrees = () => {
     const filteredDecrees = selectedDecreeType
       ? decreeList.filter((decree) => {
@@ -141,7 +140,6 @@ function DecreeHistory() {
   }, [selectedDecreeType, decreeList]);
   
 
-
   const handleInputChange = (event) => {
     const inputValue = event.target.value.toLowerCase(); // Приводим введенный текст к нижнему регистру
     setSearchText(inputValue);
@@ -156,7 +154,6 @@ function DecreeHistory() {
     setFilteredDecreesList(filtered);
   };
   
-
   const handleClearClick = () => {
     setSearchText('');
     setShowClearBtn(false);
@@ -317,7 +314,7 @@ function DecreeHistory() {
                   <div className={cl.info_text_block}>
                     <Paper  className={cl.info_text_2}>
                       <label className={cl.label_2}>Должность</label>
-                      {info.decreeInfo.person.positionInfo}
+                      {info.decreeInfo.person.positionInfo.position.positionTitle}
                     </Paper>
                   </div>
                 </div>
@@ -431,7 +428,7 @@ function DecreeHistory() {
                   <div className={cl.info_text_block}>
                     <Paper  className={cl.info_text_2}>
                       <label className={cl.label_2}>Должность</label>
-                      {info.decreeInfo.person.positionInfo}
+                      {info.decreeInfo.person.positionInfo.position.positionTitle}
                     </Paper>
                   </div>
                 </div>
@@ -544,7 +541,7 @@ function DecreeHistory() {
                   <div className={cl.info_text_block}>
                     <Paper  className={cl.info_text_2}>
                       <label className={cl.label_2}>Должность</label>
-                      {info.decreeInfo.person.positionInfo}
+                      {info.decreeInfo.person.positionInfo.position.positionTitle}
                     </Paper>
                   </div>
                 </div>

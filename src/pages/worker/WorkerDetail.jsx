@@ -18,6 +18,7 @@ import Paper from '@mui/material/Paper';
 
 import axios from 'axios';
 import Cookies from 'js-cookie';
+import ReportOrders from '../../components/tabsPage/reportOrders/ReportOrders';
 
 
 function WorkerDetail() {
@@ -78,6 +79,8 @@ function WorkerDetail() {
   const [rankInfo, setRankInfo] = useState([]);
   const [militaryRank, setMilitaryRank] = useState({});
 
+  const [decreeInfo, setDecreeInfo] = useState({});
+
   const [loading] = useState(false); // Initialize loading state
 
   const accessToken = Cookies.get('jwtAccessToken');
@@ -134,7 +137,9 @@ function WorkerDetail() {
         setRankInfo(response.data.Person.rankInfo);
         setMilitaryRank(response.data.Person.rankInfo.militaryRank);
 
-        // console.log(response.data.Person.rankInfo);
+        setDecreeInfo(response.data.DecreeListInfo);
+
+        // console.log(response.data.DecreeListInfo);
       } else {
         console.log(response.statusText);
       }
@@ -182,6 +187,12 @@ function WorkerDetail() {
                           onClick={() => handleTabClick(4)}
                       >
                         Кадровые данные 
+                      </div>
+                      <div 
+                          className={activeTab === 5 ? cl.btnTab + ' ' + cl.activeTab : cl.btnTab}
+                          onClick={() => handleTabClick(5)}
+                      >
+                        Приказы
                       </div>
                     </Paper >
 
@@ -350,6 +361,25 @@ function WorkerDetail() {
                               rankArchive={rankArchive}
                             />
                           </div> 
+                            
+                        </div>
+                      }
+                      {
+                        activeTab === 5 && 
+
+                        <div className={cl.basic__info}>
+                          <BasicInfo id={id}
+                            photo={photo}
+                            person={person} 
+                            birthInfo={birthInfo}
+                            gender={gender}
+                          />
+                          <div className={cl.totalInfo}>
+                            <ReportOrders
+                              id={id}
+                              decreeInfo={decreeInfo}
+                            />
+                          </div>  
                             
                         </div>
                       }

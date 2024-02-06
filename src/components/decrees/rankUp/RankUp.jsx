@@ -161,8 +161,8 @@ function RankUp() {
         setShowResults(false);
     };
 
-    const base = [
-        'Досрочное присвоение',
+    const receivedType = [
+        'Досрочное',
         'Внеочередное',
         'На одну ступень выше специального звания',
     ];
@@ -246,24 +246,24 @@ function RankUp() {
                 </FormControl>
             </Box>
             <Box sx={{ minWidth: 480 }}>
-                        <FormControl size="small" fullWidth>
-                            <InputLabel id="demo-simple-select-label">Вид присвоения</InputLabel>
-                            <Select
-                            labelId="demo-simple-select-label"
-                            id="demo-simple-select"
-                            label="Вид присвоения"
-                            value={formData.base}
-                            onChange={(e) => setFormData({ ...formData, base: e.target.value })}
-                            
-                            >
-                                {base.map((base) => (
-                                    <MenuItem key={base} value={base}>
-                                    {base}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
-                    </Box>
+                <FormControl size="small" fullWidth>
+                    <InputLabel id="demo-simple-select-label">Вид присвоения</InputLabel>
+                    <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    label="Вид присвоения"
+                    value={formData.receivedType}
+                    onChange={(e) => setFormData({ ...formData, receivedType: e.target.value })}
+                    
+                    >
+                        {receivedType.map((receivedType) => (
+                            <MenuItem key={receivedType} value={receivedType}>
+                            {receivedType}
+                            </MenuItem>
+                        ))}
+                    </Select>
+                </FormControl>
+            </Box>
             <TextField 
                 type='date'
                 id="outlined-basic" 

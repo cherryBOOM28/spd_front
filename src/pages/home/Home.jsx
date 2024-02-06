@@ -354,7 +354,7 @@ function Home(props) {
         if (selectedDepartment) {
           const accessToken = Cookies.get('jwtAccessToken');
     
-          axios.get(`http://127.0.0.1:8000/api/v1/staffing_table/getStaffingTable?department_id=${selectedDepartment}`, {
+          axios.get(`http://127.0.0.1:8000/api/v1/staffing-table/getStaffingTable?department_id=${selectedDepartment}`, {
             headers: {
               'Authorization': `Bearer ${accessToken}`,
             }
