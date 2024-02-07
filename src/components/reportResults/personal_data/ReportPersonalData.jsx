@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import cl from './ReportPersonalData.module.css';
-import { Button } from '@mui/material';
+import { Button, TextField, Select, InputLabel, FormControl, MenuItem, Box } from '@mui/material';
 import { MdArrowDropDown, MdExpandLess } from 'react-icons/md';
 import { updateFormData } from '../../../pages/reports/Reports';
 import { BsExclamationCircle } from "react-icons/bs";
@@ -72,7 +71,7 @@ function ReportPersonalData(props) {
         { id: "education:educationDateIn", label: "Дата поступления", isRange: false },
         { id: "education:educationDateOut", label: "Дата окончания", isRange: false },
         { id: "education:speciality", label: "Специальность", isRange: false },
-        { id: "education:diplomaNumber", label: "Номер диплома", isRange: false },
+        { id: "education:educationForm", label: "Вид обучения", selectOptions: ["Очное", "Заочное", "Дистанционное"], isRange: false },
     ];
 
     const owning_languages_options = [
@@ -164,13 +163,6 @@ function ReportPersonalData(props) {
           });
           delete formData[option];
 
-        //   Удаляем поле из formData
-        //   updateFormData(option, undefined, formData);
-        //   if (option === undefined || option === null || option === '') {
-        //     delete updatedFormData[key];
-        //   } else {
-        //     updatedFormData[key] = value;
-        //   }
         } else {
           setSelectedPersonalOptions([...selectedPersonalOptions, option]);
           // Если пользователь выбрал "Пол", "Дата рождения" или другие опции, 
@@ -507,47 +499,57 @@ export function renderFamilyOptions(selectedFamilyOptions, formData, handleInput
   return (
     selectedFamilyOptions.length > 0 && (
       <div className={cl.input__container}>
-        <p className={cl.input__name}>Личные данные</p>
+        <p className={cl.headline}>Личные данные</p>
         <div className={cl.tooltipTextMain}> <BsExclamationCircle style={{ color: '#1565C0' }} /> Заполните все поля</div>
         {selectedFamilyOptions.map((option) => (
           <div key={option} className={cl.wrapper__input}>
             <label className={cl.label__name}>{family_compositions_options.find((o) => o.id === option).label}:</label>
             {option === "familycomposition:relativeType" ? (
                <div className={cl.tooltipWrapper}>
-               <select
-                 value={formData[option] || ''}
-                 className={cl.workerInfoSelect}
-                 onChange={(e) => handleInputChange(option, e.target.value)}
-                 required
-                 title="Выберите тип родственника" // Добавлен атрибут title
-               >
-                 <option value="" disabled hidden>
-                   Выберите тип родственника
-                 </option>
-                 {family_compositions_options.find((o) => o.id === option).selectOptions.map((genderOption) => (
-                   <option key={genderOption} value={genderOption}>
-                     {genderOption}
-                   </option>
-                 ))}
-               </select>
+                    <FormControl fullWidth >
+                        {/* <InputLabel id="demo-simple-select-label">{options.find((o) => o.id === option).label}</InputLabel> */}
+                        <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            // label='Страна рождения'
+                            value={formData[option] || ''}
+                            onChange={(e) => handleInputChange(option, e.target.value)}
+                            required
+                            title="Выберите тип родственника" // Добавлен атрибут title
+                            size='small'
+                            // style={{ marginLeft: '12px' }}
+                            className={cl.workerInfoSelect}
+                        >
+                            <MenuItem value="" disabled hidden>
+                            Выберите тип родственника
+                            </MenuItem>
+                            {family_compositions_options.find((o) => o.id === option).selectOptions.map((genderOption) => (
+                            <MenuItem key={genderOption} value={genderOption}>
+                                {genderOption}
+                            </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
                <div className={cl.tooltipText}> <BsExclamationCircle />Выберите тип родственника</div>
              </div>
             ) : option === "familycomposition:relBirthDate" ? (
               <div className={cl.data__wrapper}>
-                <div>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
                   <label style={{ marginRight: '5px', marginLeft: '13px' }}>От</label>
-                  <input
+                  <TextField
                     type="date"
+                    size='small'
                     className={cl.workerInfoDate}
                     value={formData[option]?.start_date || ''}
                     onChange={(e) => handleInputChange(option, { ...formData[option], start_date: e.target.value })}
                   />
                  
                 </div>
-                <div>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
                   <label style={{ marginRight: '5px', marginLeft: '13px' }}>До</label>
-                  <input
+                  <TextField
                     type="date"
+                    size='small'
                     className={cl.workerInfoDate}
                     value={formData[option]?.end_date || ''}
                     onChange={(e) => handleInputChange(option, { ...formData[option], end_date: e.target.value })}
@@ -556,8 +558,9 @@ export function renderFamilyOptions(selectedFamilyOptions, formData, handleInput
                 </div>
               </div>
             ) : (
-              <input
+              <TextField
                 type="text"
+                size='small'
                 className={cl.workerInfo}
                 value={formData[option] || ''}
                 placeholder={`${family_compositions_options.find((o) => o.id === option).label}`}
@@ -575,6 +578,7 @@ export function renderPersonalOptions(selectedPersonalOptions, formData, handleI
     return(
         selectedPersonalOptions.length > 0 && (
             <div className={cl.input__container}>
+                <p className={cl.headline}>Личные данные</p>
                 {selectedPersonalOptions.map((option) => (
                     <div key={option} className={cl.wrapper__input}>
                         {personal_data_options && personal_data_options.length > 0 && (
@@ -583,21 +587,30 @@ export function renderPersonalOptions(selectedPersonalOptions, formData, handleI
                                     {personal_data_options.find((o) => o.id === option)?.label}:
                                 </label>
                                 {option === "familyStatus:statusName" ? (
-                                    <select
-                                        value={formData[option] || ''}
-                                        className={cl.workerInfoSelect}
-                                        onChange={(e) => handleInputChange(option, e.target.value)}
-                                    >
-                                        {personal_data_options.find((o) => o.id === option)?.selectOptions.map((genderOption) => (
-                                            <option key={genderOption} value={genderOption}>
+                                    <FormControl fullWidth >
+                                        {/* <InputLabel id="demo-simple-select-label">{options.find((o) => o.id === option).label}</InputLabel> */}
+                                        <Select
+                                            labelId="demo-simple-select-label"
+                                            id="demo-simple-select"
+                                            // label='Страна рождения'
+                                            value={formData[option] || ''}
+                                            className={cl.workerInfoSelect}
+                                            onChange={(e) => handleInputChange(option, e.target.value)}
+                                            size='small'
+                                            style={{ marginLeft: '42px' }}
+                                        >
+                                            {personal_data_options.find((o) => o.id === option)?.selectOptions.map((genderOption) => (
+                                            <MenuItem key={genderOption} value={genderOption}>
                                                 {genderOption}
-                                            </option>
-                                        ))}
-                                    </select>
+                                            </MenuItem>
+                                            ))}
+                                        </Select>
+                                    </FormControl>
                                 ) : (
-                                    <input
+                                    <TextField
                                         type="text"
                                         className={cl.workerInfo}
+                                        size='small'
                                         value={formData[option] || ''}
                                         placeholder={`${personal_data_options.find((o) => o.id === option)?.label}`}
                                         onChange={(e) => {
@@ -619,37 +632,59 @@ export function renderEducationOptions(selectedEducationOptions, formData, handl
     return(
         selectedEducationOptions.length > 0 && (
             <div className={cl.input__container}>
+                <p className={cl.headline}>Личные данные</p>
+                <div className={cl.tooltipTextMain}> <BsExclamationCircle style={{ color: '#1565C0' }} /> Заполните все поля</div>
                 {selectedEducationOptions.map((option) => (
                     <div key={option} className={cl.wrapper__input}>
                         <label className={cl.label__name}>{educations_options.find((o) => o.id === option).label}:</label>
                         {option === "education:educationType" ? (
-                            <select
-                            value={formData[option] || ''}
-                            className={cl.workerInfoSelect}
-                            onChange={(e) => handleInputChange(option, e.target.value)}
-                            >
-                            {educations_options.find((o) => o.id === option).selectOptions.map((genderOption) => (
-                                <option key={genderOption} value={genderOption}>
-                                {genderOption}
-                                </option>
-                            ))}
-                            </select>
+                            <div className={cl.tooltipWrapper}>
+                            <FormControl fullWidth >
+                                {/* <InputLabel id="demo-simple-select-label">{options.find((o) => o.id === option).label}</InputLabel> */}
+                                <Select
+                                    labelId="demo-simple-select-label"
+                                    id="demo-simple-select"
+                                    // label='Страна рождения'
+                                    required
+                                    title="Выберите вид образования" // Добавлен атрибут title
+                                    size='small'
+                                    style={{ marginLeft: '12px' }}
+                                    value={formData[option] || ''}
+                                    className={cl.workerInfoSelect}
+                                    onChange={(e) => handleInputChange(option, e.target.value)}
+                                >
+                                    <MenuItem value="" disabled hidden>
+                                    Выберите вид образования
+                                    </MenuItem>
+                                    {educations_options.find((o) => o.id === option).selectOptions.map((genderOption) => (
+                                        <MenuItem key={genderOption} value={genderOption}>
+                                        {genderOption}
+                                        </MenuItem>
+                                    ))}
+                                   
+                                </Select>
+                            </FormControl>
+                       <div className={cl.tooltipText}> <BsExclamationCircle />Выберите вид образования</div>
+                     </div>
                 
                         ) : option === "education:educationDateIn" ? (
                             <div className={cl.data__wrapper}>
-                                <div>
+                                <div style={{ display: 'flex', alignItems: 'center' }}>
                                 <label style={{ marginRight: '5px', marginLeft: '13px' }}>От</label>
-                                <input
+                                <TextField
                                     type="date"
+                                    size='small'
+
                                     className={cl.workerInfoDate}
                                     value={formData[option]?.start_date || ''}
                                     onChange={(e) => handleInputChange(option, { ...formData[option], start_date: e.target.value })}
                                 />
                                 </div>
-                                <div>
+                                <div style={{ display: 'flex', alignItems: 'center' }}>
                                 <label style={{ marginRight: '5px', marginLeft: '13px' }}>До</label>
-                                <input
+                                <TextField
                                     type="date"
+                                    size='small'
                                     className={cl.workerInfoDate}
                                     value={formData[option]?.end_date || ''}
                                     onChange={(e) => handleInputChange(option, { ...formData[option], end_date: e.target.value })}
@@ -658,28 +693,60 @@ export function renderEducationOptions(selectedEducationOptions, formData, handl
                             </div>
                          ) :  option === "education:educationDateOut" ? (
                             <div className={cl.data__wrapper}>
-                                <div>
+                                <div style={{ display: 'flex', alignItems: 'center' }}>
                                 <label style={{ marginRight: '5px', marginLeft: '13px' }}>От</label>
-                                <input
+                                <TextField
                                     type="date"
+                                    size='small'
                                     className={cl.workerInfoDate}
                                     value={formData[option]?.start_date || ''}
                                     onChange={(e) => handleInputChange(option, { ...formData[option], start_date: e.target.value })}
                                 />
                                 </div>
-                                <div>
+                                <div style={{ display: 'flex', alignItems: 'center' }}>
                                 <label style={{ marginRight: '5px', marginLeft: '13px' }}>До</label>
-                                <input
+                                <TextField
                                     type="date"
+                                    size='small'
                                     className={cl.workerInfoDate}
                                     value={formData[option]?.end_date || ''}
                                     onChange={(e) => handleInputChange(option, { ...formData[option], end_date: e.target.value })}
                                 />
                                 </div>
                             </div>
+                         )
+                          : option === "education:educationForm" ? (
+                            <div className={cl.data__wrapper}>
+                                <FormControl fullWidth >
+                                {/* <InputLabel id="demo-simple-select-label">{options.find((o) => o.id === option).label}</InputLabel> */}
+                                <Select
+                                    labelId="demo-simple-select-label"
+                                    id="demo-simple-select"
+                                    // label='Страна рождения'
+                                    required
+                                    title="Выберите вид обучения" // Добавлен атрибут title
+                                    size='small'
+                                    style={{ marginLeft: '12px' }}
+                                    value={formData[option] || ''}
+                                    className={cl.workerInfoSelect}
+                                    onChange={(e) => handleInputChange(option, e.target.value)}
+                                >
+                                    <MenuItem value="" disabled hidden>
+                                    Выберите вид обучения
+                                    </MenuItem>
+                                    {educations_options.find((o) => o.id === option).selectOptions.map((genderOption) => (
+                                        <MenuItem key={genderOption} value={genderOption}>
+                                        {genderOption}
+                                        </MenuItem>
+                                    ))}
+                                   
+                                </Select>
+                            </FormControl>
+                            </div>
                          ) : ( 
-                        <input
+                        <TextField
                             type="text"
+                            size='small'
                             className={cl.workerInfo}
                             value={formData[option] || ''}
                             placeholder={`${educations_options.find((o) => o.id === option).label}`}
@@ -699,6 +766,7 @@ export function renderLanguageOptions(selectedLanguageOptions, formData, handleI
     return(
         selectedLanguageOptions.length > 0 && (
             <div className={cl.input__container}>
+                <p className={cl.headline}>Личные данные</p>
                 {selectedLanguageOptions.map((option) => (
                     <div key={option} className={cl.wrapper__input}>
                         <label className={cl.label__name}>{owning_languages_options.find((o) => o.id === option).label}:</label>
@@ -737,6 +805,7 @@ export function renderCourseOptions(selectedCoursesOptions, formData, handleInpu
     return(
         selectedCoursesOptions.length > 0 && (
             <div className={cl.input__container}>
+               <p className={cl.headline}>Личные данные</p>
                 {selectedCoursesOptions.map((option) => (
                     <div key={option} className={cl.wrapper__input}>
                         <label className={cl.label__name}>{courses_options.find((o) => o.id === option).label}:</label>
@@ -817,6 +886,7 @@ export function renderAcademicDegreeOptions(selectedAcademicDegreeOptions, formD
     return(
         selectedAcademicDegreeOptions.length > 0 && (
             <div className={cl.input__container}>
+                <p className={cl.headline}>Личные данные</p>
                 {selectedAcademicDegreeOptions.map((option) => (
                     <div key={option} className={cl.wrapper__input}>
                         <label className={cl.label__name}>{academic_degree_options.find((o) => o.id === option).label}:</label>
@@ -876,6 +946,7 @@ export function renderSportOptions(selectedSportOptions, formData, handleInputCh
     return(
         selectedSportOptions.length > 0 && (
             <div className={cl.input__container}>
+                <p className={cl.headline}>Личные данные</p>
                 {selectedSportOptions.map((option) => (
                     <div key={option} className={cl.wrapper__input}>
                         <label className={cl.label__name}>{sport_results_options.find((o) => o.id === option).label}:</label>

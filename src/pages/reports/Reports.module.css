@@ -140,11 +140,7 @@
 }
 
 .workerInfo {
-  border-radius: 5px;
-  border: 1px solid #959595;
-  width: 200px;
-  /* height: 30px; */
-  padding: 6px 9px;
+  width: 220px;
   margin-left: 12px;
   outline: none;
   font-family: "Helvetica", sans-serif, sans-serif;
@@ -154,13 +150,10 @@
 }
 
 .workerInfoSelect {
-  border-radius: 5px;
-  border: 1px solid #959595;
   width: 220px;
-  height: 32px;
-  padding: 4px 9px;
-  margin-left: 12px;
-  outline: none;
+  /* margin-left: 12px; */
+  /* padding-left: 12px; */
+  /* outline: none; */
   font-family: "Helvetica", sans-serif, sans-serif;
   color: #000;
   font-size: 16px;
@@ -174,11 +167,8 @@
 }
 
 .workerInfoDate {
-  border-radius: 5px;
-  border: 1px solid #959595;
-  width: 160px;
+  width: 182px;
   /* height: 32px; */
-  padding: 6px 9px;
   margin-left: 12px;
   outline: none;
   font-family: "Helvetica", sans-serif, sans-serif;
@@ -220,8 +210,8 @@
 }
 
 .input__name {
-  font-size: 16px;
-  font-weight: 500;
+  font-size: 18px;
+  font-weight: 600;
   margin-bottom: 15px;
 }
 

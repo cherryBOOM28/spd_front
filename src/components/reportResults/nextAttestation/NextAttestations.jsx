@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
-import Button from '../../UI/button/Button';
+import { TextField ,Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
+import {Button} from '@mui/material';
 import { NotificationContainer, NotificationManager } from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
 import cl from './NextAttestations.module.css';
@@ -55,36 +55,28 @@ const NextAttestations = () => {
   
     return (
     <div className={cl.wrapper}>
-        {/* <label htmlFor="datePicker">Выберите дату:</label>
-        <input
-            type="date"
-            id="datePicker"
-            className={cl.workerInfo}
-            value={selectedDate}
-            onChange={handleDateChange}
-        /> */}
-
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <div>
+            <div style={{ display: 'flex', alignItems: 'center' }}>
                 <label htmlFor="datePicker">Выберите дату:</label>
-                <input
+                <TextField
                     type="date"
                     id="datePicker"
+                    size='small'
                     className={cl.workerInfo}
                     value={selectedDate}
                     onChange={handleDateChange}
                 />
             </div>
             <div style={{ display: 'flex',  gap: "10px"  }}>
-                <Button onClick={handleSubmit} style={{ height: '34.5px' }}>Найти</Button>
-                <Button variant="contained" onClick={handleDownloadExcel} style={{ display: 'flex', gap: "10px", height: '34.5px' }}>
+                <Button variant="contained" onClick={handleSubmit} style={{ height: '34.5px', textTransform: 'none' }}>Найти</Button>
+                <Button variant="contained" onClick={handleDownloadExcel} style={{ display: 'flex', gap: "10px", height: '34.5px', textTransform: 'none' }}>
                     Excel
                     <AiFillPrinter style={{ fontSize: '16px' }} />
                 </Button>
             </div>
         </div>
 
-        <TableContainer component={Paper}>
+        <TableContainer component={Paper} style={{ marginTop: '40px' }}>
             <Table>
                 <TableHead>
                     <TableRow>

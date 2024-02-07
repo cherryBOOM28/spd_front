@@ -486,7 +486,7 @@ export function renderSpecChecksOptions(selectedSpecChecksOptions, formData, han
     return(
         selectedSpecChecksOptions.length > 0 && (
             <div className={cl.input__container}>
-                <p className={cl.input__name}>Кадровые данные</p>
+                <p className={cl.headline}>Кадровые данные</p>
                 {selectedSpecChecksOptions.map((option) => (
                     <div key={option} className={cl.wrapper__input}>
                         <label className={cl.label__name}>{spec_checks_options.find((o) => o.id === option).label}:</label>
@@ -546,7 +546,7 @@ export function renderAttestationOptions(selectedAttestationsOptions, formData, 
     return(
         selectedAttestationsOptions.length > 0 && (
             <div className={cl.input__container}>
-                <p className={cl.input__name}>Аттестация</p>
+                <p className={cl.headline}>Аттестация</p>
                 {selectedAttestationsOptions.map((option) => (
                     <div key={option} className={cl.wrapper__input}>
                         <label className={cl.label__name}>{attestations_options.find((o) => o.id === option).label}:</label>
@@ -628,7 +628,7 @@ export function renderCategoryOptions(selectedCategoryOptions, formData, handleI
     return(
         selectedCategoryOptions.length > 0 && (
             <div className={cl.input__container}>
-                <p className={cl.input__name}>Классные категории</p>
+                <p className={cl.headline}>Классные категории</p>
                 {selectedCategoryOptions.map((option) => (
                     <div key={option} className={cl.wrapper__input}>
                         <label className={cl.label__name}>{class_categories_options.find((o) => o.id === option).label}:</label>
@@ -667,7 +667,7 @@ export function renderMilitaryRankOptions(selectedMilitaryRankOptions, formData,
     return(
         selectedMilitaryRankOptions.length > 0 && (
             <div className={cl.input__container}>
-                <p className={cl.input__name}>Классные категории</p>
+                <p className={cl.headline}>Классные категории</p>
                 {selectedMilitaryRankOptions.map((option) => (
                     <div key={option} className={cl.wrapper__input}>
                         <label className={cl.label__name}>{military_rank_options.find((o) => o.id === option).label}:</label>
@@ -727,7 +727,7 @@ export function renderAwardsOptions(selectedAwardsOptions, formData, handleInput
     return(
         selectedAwardsOptions.length > 0 && (
             <div className={cl.input__container}>
-                <p className={cl.input__name}>Награды</p>
+                <p className={cl.headline}>Награды</p>
                 {selectedAwardsOptions.map((option) => (
                     <div key={option} className={cl.wrapper__input}>
                         <label className={cl.label__name}>{awards_options.find((o) => o.id === option).label}:</label>
@@ -787,7 +787,7 @@ export function renderSickLeavesOptions(selectedSickLeavesOptions, formData, han
     return(
         selectedSickLeavesOptions.length > 0 && (
             <div className={cl.input__container}>
-                <p className={cl.input__name}>Награды</p>
+                <p className={cl.headline}>Награды</p>
                 {selectedSickLeavesOptions.map((option) => (
                     <div key={option} className={cl.wrapper__input}>
                         <label className={cl.label__name}>{sick_leaves_options.find((o) => o.id === option).label}:</label>
@@ -847,7 +847,7 @@ export function renderInvestigationRetrievalsOptions(selectedInvestigationRetrie
     return(
         selectedInvestigationRetrievalsOptions.length > 0 && (
             <div className={cl.input__container}>
-                <p className={cl.input__name}>Награды</p>
+                <p className={cl.headline}>Награды</p>
                 {selectedInvestigationRetrievalsOptions.map((option) => (
                     <div key={option} className={cl.wrapper__input}>
                         <label className={cl.label__name}>{investigation_retrievals_options.find((o) => o.id === option).label}:</label>

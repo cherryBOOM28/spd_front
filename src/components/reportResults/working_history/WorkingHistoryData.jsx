@@ -97,7 +97,7 @@ export function renderWorkingHistoryOptions(selectedWorkingHistoryOptions, formD
     return(
         selectedWorkingHistoryOptions.length > 0 && (
             <div className={cl.input__container}>
-                <p className={cl.input__name}>Трудовая деятельность</p>
+                <p className={cl.headline}>Трудовая деятельность</p>
                 {selectedWorkingHistoryOptions.map((option) => (
                     <div key={option} className={cl.wrapper__input}>
                         <label className={cl.label__name}>{working_history_options.find((o) => o.id === option).label}:</label>

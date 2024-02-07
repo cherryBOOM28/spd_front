@@ -3,8 +3,7 @@ import axios from 'axios';
 import cl from './Reports.module.css';
 import Navigation from '../../components/navigation/Navigation';
 import Header from '../../components/header/Header';
-// import Button from '../../components/UI/button/Button';
-import { Button } from '@mui/material';
+import { Button, TextField, Select, InputLabel, FormControl, MenuItem, Box } from '@mui/material';
 import { MdArrowDropDown, MdExpandLess } from 'react-icons/md';
 import { AiFillPrinter } from 'react-icons/ai';
 import ResultsTable from '../../components/reportResults/resultsTable/ResultsTable';
@@ -195,18 +194,18 @@ function Reports(props, queryParams) {
         { id: "firstName", label: "Имя", isRange: false },
         { id: "patronymic", label: "Отчество", isRange: false },
         { id: "nationality", label: " Национальность", isRange: false },
-        { id: "gender:genderName", label: "Пол", selectOptions: ["Выберите пол", "Мужской", "Женский"], isRange: false },
+        { id: "gender:genderName", label: "Пол", selectOptions: ["Мужской", "Женский"], isRange: false },
         // { id: "phone_number", label: "Номер телефона", isRange: false  },
         { id: "pin", label: "ПИН", isRange: false  },
         // { id: "group", label: "Группа", isRange: false  },
 
         { id: "birthinfo:birth_date", label: "Дата рождения", isRange: true },
-        { id: "birthinfo:country", label: "Страна рождения", isRange: false },
-        { id: "birthinfo:city", label: "Город рождения", isRange: false },
-        { id: "birthinfo:region", label: "Регион рождения", isRange: false },
+        { id: "birthinfo:country", label: "Страна рождения", selectOptions: ["Россия", "Украина", "Беларусь", "Казахстан", "Армения", "Узбекистан", "Туркменистан", "Молдова", "Киргизия", "Таджикистан"], isRange: false },
+        { id: "birthinfo:city", label: "Город рождения", selectOptions: ["Астана", "Алматы", "Шымкент", "Актобе", "Караганда", "Тараз", "Павлодар", "Уральск", "Семей", "Костанай", "Атырау", "Кызылорда", "Актау", "Туркестан", "Кокшетау", "Талдыкорган", "Экибастуз", "Рудный", "Темиртау", "Жезказган", "Аксай", "Байконур"], isRange: false },
+        { id: "birthinfo:region", label: "Регион/район рождения", isRange: false },
 
-        { id: "residentinfo:resCountry", label: "Страна прожвания", isRange: false },
-        { id: "residentinfo:resCity", label: "Город прожвания", isRange: false },
+        { id: "residentinfo:resCountry", label: "Страна прожвания", selectOptions: ["Россия", "Украина", "Беларусь", "Казахстан", "Армения", "Узбекистан", "Туркменистан", "Молдова", "Киргизия", "Таджикистан"], isRange: false },
+        { id: "residentinfo:resCity", label: "Город прожвания", selectOptions: ["Астана", "Алматы", "Шымкент", "Актобе", "Караганда", "Тараз", "Павлодар", "Уральск", "Семей", "Костанай", "Атырау", "Кызылорда", "Актау", "Туркестан", "Кокшетау", "Талдыкорган", "Экибастуз", "Рудный", "Темиртау", "Жезказган", "Аксай", "Байконур"], isRange: false },
         { id: "residentinfo:resRegion", label: "Регион/район проживания", isRange: false  },
 
         { id: "identitycardinfo:identityCardNumber", label: "Номер удостоверения", isRange: false },
@@ -237,7 +236,7 @@ function Reports(props, queryParams) {
         { id: "education:educationDateIn", label: "Дата поступления", isRange: false },
         { id: "education:educationDateOut", label: "Дата окончания", isRange: false },
         { id: "education:speciality", label: "Специальность", isRange: false },
-        { id: "education:diplomaNumber", label: "Номер диплома", isRange: false },
+        { id: "education:educationForm", label: "Вид обучения", selectOptions: ["Очное", "Заочное", "Дистанционное"], isRange: false },
     ];
 
     const owning_languages_options = [
@@ -317,8 +316,7 @@ function Reports(props, queryParams) {
     ];
 
     const orders_list_options = [
-        { id: "decreelist:decreeType", label: "Вид приказа", selectOptions: ["Выберите вид приказа", "О назначение", "Перемещение", "Отпуск", "Командирование", "О присвоение звания", "Наложение дисциплинарного взыскания", "Снятие дисциплинарного взыскания", "Поощерение/Премирование", "Зачисление в распоряжение", "Служебные расследования", "Об увольнении"], isRange: false },
-        { id: "decreelist:decreeSubType", label: "Вид подприказа", isRange: false },
+        { id: "decreelist:decreeType", label: "Вид приказа", selectOptions:  ["Присвоение звания", "Назначение", "Перемещение", "Отпуск", "Командировка", "Увольнение"], isRange: false },
         { id: "decreelist:decreeDate", label: "Дата приказа", isRange: false },
     ];
 
@@ -690,6 +688,7 @@ function Reports(props, queryParams) {
                                                     setSelectedOrderListOptions={setSelectedOrderListOptions}
 
                                                     formData={formData}
+                                                    setFormData={setFormData}
                                                     handleInputChange={handleInputChange}
 
                                                     orders_list_options={orders_list_options}
@@ -708,32 +707,187 @@ function Reports(props, queryParams) {
                                                                         <>
                                                                             <label className={cl.label__name}>{options.find((o) => o.id === option).label}:</label>
                                                                             {option === "gender:genderName" ? (
-                                                                                <select
-                                                                                    value={formData[option] || ''}
-                                                                                    className={cl.workerInfoSelect}
-                                                                                    onChange={(e) => handleInputChange(option, e.target.value)}
-                                                                                >
-                                                                                    {options.find((o) => o.id === option).selectOptions.map((genderOption) => (
-                                                                                        <option key={genderOption} value={genderOption}>
-                                                                                            {genderOption}
-                                                                                        </option>
-                                                                                    ))}
-                                                                                </select>
-                                                                            ) : option === "birthinfo:birth_date" ? (
+                                                                                <Box>
+                                                                                    <FormControl fullWidth>
+                                                                                        {/* <InputLabel id="demo-simple-select-label">Пол</InputLabel> */}
+                                                                                        <Select
+                                                                                        labelId="demo-simple-select-label"
+                                                                                        id="demo-simple-select"
+                                                                                        // label="Пол"
+                                                                                        placeholder='Пол'
+                                                                                        size="small"
+                                                                                        value={formData[option] || ''}
+                                                                                        className={cl.workerInfoSelect}
+                                                                                        onChange={(e) => handleInputChange(option, e.target.value)}
+                                                                                        style={{ marginLeft: '12px' }}
+                                                                                        >   
+                                                                                        <MenuItem value="" disabled hidden>
+                                                                                        Выберите пол
+                                                                                        </MenuItem>
+                                                                                            {options.find((o) => o.id === option).selectOptions.map((genderOption) => (
+                                                                                                <MenuItem key={genderOption} value={genderOption}>
+                                                                                                    {genderOption}
+                                                                                                </MenuItem>
+                                                                                            ))}
+                                                                                        </Select>
+                                                                                    </FormControl>
+                                                                                </Box>
+                                                                            )  : option === "birthinfo:country" ? (
+                                                                                <Box>
+                                                                                    <FormControl fullWidth >
+                                                                                        {/* <InputLabel id="demo-simple-select-label">{options.find((o) => o.id === option).label}</InputLabel> */}
+                                                                                        <Select
+                                                                                            labelId="demo-simple-select-label"
+                                                                                            id="demo-simple-select"
+                                                                                            // label='Страна рождения'
+                                                                                            value={formData[option] || ''}
+                                                                                            onChange={(e) => handleInputChange(option, e.target.value)}
+                                                                                            size='small'
+                                                                                            style={{ marginLeft: '12px' }}
+                                                                                            className={cl.workerInfoSelect}
+                                                                                        >
+                                                                                            <MenuItem value="" disabled hidden>
+                                                                                            Выберите страну рождения
+                                                                                            </MenuItem>
+                                                                                            {options.find((o) => o.id === option).selectOptions.map((countryOption) => (
+                                                                                                <MenuItem key={countryOption} value={countryOption}>
+                                                                                                    {countryOption}
+                                                                                                </MenuItem>
+                                                                                            ))}
+                                                                                        </Select>
+                                                                                    </FormControl>
+                                                                                    <TextField
+                                                                                        type="text"
+                                                                                        size='small'
+                                                                                        style={{ marginTop: '12px', marginLeft: '12px' }}
+                                                                                        className={cl.workerInfo}
+                                                                                        placeholder={`${options.find((o) => o.id === option).label}`}
+                                                                                        onChange={(e) => handleInputChange(option, e.target.value)}
+                                                                                    />
+                                                                                </Box>
+                                                                            ) 
+                                                                            : option === "birthinfo:city" ? (
+                                                                                <Box>
+                                                                                    <FormControl fullWidth >
+                                                                                        {/* <InputLabel id="demo-simple-select-label">{options.find((o) => o.id === option).label}</InputLabel> */}
+                                                                                        <Select
+                                                                                            labelId="demo-simple-select-label"
+                                                                                            id="demo-simple-select"
+                                                                                            // label='Страна рождения'
+                                                                                            value={formData[option] || ''}
+                                                                                            onChange={(e) => handleInputChange(option, e.target.value)}
+                                                                                            size='small'
+                                                                                            style={{ marginLeft: '12px' }}
+                                                                                            className={cl.workerInfoSelect}
+                                                                                        >
+                                                                                            <MenuItem value="" disabled hidden>
+                                                                                            Выберите город рождения
+                                                                                            </MenuItem>
+                                                                                            {options.find((o) => o.id === option).selectOptions.map((countryOption) => (
+                                                                                                <MenuItem key={countryOption} value={countryOption}>
+                                                                                                    {countryOption}
+                                                                                                </MenuItem>
+                                                                                            ))}
+                                                                                        </Select>
+                                                                                    </FormControl>
+                                                                                    <TextField
+                                                                                        type="text"
+                                                                                        size='small'
+                                                                                        style={{ marginTop: '12px', marginLeft: '12px' }}
+                                                                                        className={cl.workerInfo}
+                                                                                        placeholder={`${options.find((o) => o.id === option).label}`}
+                                                                                        onChange={(e) => handleInputChange(option, e.target.value)}
+                                                                                    />
+                                                                                </Box>
+                                                                            )
+                                                                              : option === "residentinfo:resCountry" ? (
+                                                                                <Box>
+                                                                                    <FormControl fullWidth >
+                                                                                        {/* <InputLabel id="demo-simple-select-label">{options.find((o) => o.id === option).label}</InputLabel> */}
+                                                                                        <Select
+                                                                                            labelId="demo-simple-select-label"
+                                                                                            id="demo-simple-select"
+                                                                                            // label='Страна рождения'
+                                                                                            value={formData[option] || ''}
+                                                                                            onChange={(e) => handleInputChange(option, e.target.value)}
+                                                                                            size='small'
+                                                                                            style={{ marginLeft: '12px' }}
+                                                                                            className={cl.workerInfoSelect}
+                                                                                        >
+                                                                                            <MenuItem value="" disabled hidden>
+                                                                                                Выберите страну прожвания
+                                                                                            </MenuItem>
+                                                                                            {options.find((o) => o.id === option).selectOptions.map((countryOption) => (
+                                                                                                <MenuItem key={countryOption} value={countryOption}>
+                                                                                                    {countryOption}
+                                                                                                </MenuItem>
+                                                                                            ))}
+                                                                                        </Select>
+                                                                                    </FormControl>
+                                                                                    <TextField
+                                                                                        type="text"
+                                                                                        size='small'
+                                                                                        style={{ marginTop: '12px', marginLeft: '12px' }}
+                                                                                        className={cl.workerInfo}
+                                                                                        placeholder={`${options.find((o) => o.id === option).label}`}
+                                                                                        onChange={(e) => handleInputChange(option, e.target.value)}
+                                                                                    />
+                                                                                </Box>
+                                                                            ) 
+                                                                            : option === "residentinfo:resCity" ? (
+                                                                                <Box>
+                                                                                    <FormControl fullWidth >
+                                                                                        {/* <InputLabel id="demo-simple-select-label">{options.find((o) => o.id === option).label}</InputLabel> */}
+                                                                                        <Select
+                                                                                            labelId="demo-simple-select-label"
+                                                                                            id="demo-simple-select"
+                                                                                            // label='Страна рождения'
+                                                                                            value={formData[option] || ''}
+                                                                                            onChange={(e) => handleInputChange(option, e.target.value)}
+                                                                                            size='small'
+                                                                                            title="Выберите город прожвания"
+                                                                                            style={{ marginLeft: '12px' }}
+                                                                                            className={cl.workerInfoSelect}
+                                                                                        >
+                                                                                            <MenuItem value="" disabled hidden>
+                                                                                                Выберите город прожвания
+                                                                                            </MenuItem>
+                                                                                            {options.find((o) => o.id === option).selectOptions.map((countryOption) => (
+                                                                                                <MenuItem key={countryOption} value={countryOption}>
+                                                                                                    {countryOption}
+                                                                                                </MenuItem>
+                                                                                            ))}
+                                                                                        </Select>
+                                                                                    </FormControl>
+                                                                                    <TextField
+                                                                                        type="text"
+                                                                                        size='small'
+                                                                                        style={{ marginTop: '12px', marginLeft: '12px' }}
+                                                                                        className={cl.workerInfo}
+                                                                                        placeholder={`${options.find((o) => o.id === option).label}`}
+                                                                                        onChange={(e) => handleInputChange(option, e.target.value)}
+                                                                                    />
+                                                                                </Box>
+                                                                            )
+                                                                             : option === "birthinfo:birth_date" ? (
                                                                                 <div className={cl.data__wrapper}>
-                                                                                    <div>
+                                                                                    <div style={{ display: 'flex', alignItems: 'center' }}>
                                                                                         <label style={{ marginRight: '5px', marginLeft: '13px' }}>От</label>
-                                                                                        <input
+                                                                                        <TextField
                                                                                             type="date"
+                                                                                            size='small'
                                                                                             className={cl.workerInfoDate}
+                                                                                            style={{ marginLeft: '12px' }}
                                                                                             value={formData[option] != null ? formData[option].start_date : ''}
                                                                                             onChange={(e) => { handleInputChange(option, { ...formData[option], start_date: e.target.value }) }}
                                                                                         />
                                                                                     </div>
                                                                                     <div>
                                                                                         <label style={{ marginRight: '5px', marginLeft: '13px' }}>До</label>
-                                                                                        <input
+                                                                                        <TextField
                                                                                             type="date"
+                                                                                            size='small'
+                                                                                            style={{ marginLeft: '12px' }}
                                                                                             className={cl.workerInfoDate}
                                                                                             value={formData[option] != null ? formData[option].end_date : ''}
                                                                                             onChange={(e) => handleInputChange(option, { ...formData[option], end_date: e.target.value })}
@@ -742,10 +896,12 @@ function Reports(props, queryParams) {
                                                                                 </div>
                                                                             ) : option === "identitycardinfo:dateOfIssue" && options.find((o) => o.id === option).isRange ? (
                                                                                 <div className={cl.data__wrapper}>
-                                                                                    <div>
+                                                                                    <div style={{ display: 'flex', alignItems: 'center' }}>
                                                                                         <label style={{ marginRight: '5px', marginLeft: '13px' }}>От</label>
-                                                                                        <input
+                                                                                        <TextField
                                                                                             type="date"
+                                                                                            size='small'
+                                                                                            style={{ marginLeft: '12px' }}
                                                                                             className={cl.workerInfoDate}
                                                                                             value={formData[option] != null ? formData[option].start_date : ''}
                                                                                             onChange={(e) => handleInputChange(option, { ...formData[option], from: e.target.value })}
@@ -753,8 +909,10 @@ function Reports(props, queryParams) {
                                                                                     </div>
                                                                                     <div>
                                                                                         <label style={{ marginRight: '5px', marginLeft: '13px' }}>До</label>
-                                                                                        <input
+                                                                                        <TextField
                                                                                             type="date"
+                                                                                            size='small'
+                                                                                            style={{ marginLeft: '12px' }}
                                                                                             className={cl.workerInfoDate}
                                                                                             value={formData[option] != null ? formData[option].end_date : ''}
                                                                                             onChange={(e) => handleInputChange(option, { ...formData[option], to: e.target.value })}
@@ -762,8 +920,10 @@ function Reports(props, queryParams) {
                                                                                     </div>
                                                                                 </div>
                                                                             ) : (
-                                                                                <input
+                                                                                <TextField
                                                                                     type="text"
+                                                                                    size='small'
+                                                                                    style={{ marginLeft: '12px' }}
                                                                                     className={cl.workerInfo}
                                                                                     value={formData[option] || ''}
                                                                                     placeholder={`${options.find((o) => o.id === option).label}`}
@@ -778,7 +938,7 @@ function Reports(props, queryParams) {
                                                     )}
                                                 </div>
 
-                                                <div>   
+                                                <div>             
                                                     {personalDataOptions}
                                                     {familyOptions}
                                                     {educationsDataOptions}
@@ -831,6 +991,7 @@ function Reports(props, queryParams) {
                                                                 ...selectedAwardsOptions,
                                                                 ...selectedSickLeavesOptions,
                                                                 ...selectedInvestigationRetrievalsOptions,
+                                                                ...selectedOrderListOptions
                                                             ]} 
                                                             optionsData={[
                                                                 ...options,
@@ -880,6 +1041,7 @@ function Reports(props, queryParams) {
                                                     ...selectedAwardsOptions,
                                                     ...selectedSickLeavesOptions,
                                                     ...selectedInvestigationRetrievalsOptions,
+                                                    ...selectedOrderListOptions
                                                 ]} 
                                                 columns={[
                                                     ...options,

@@ -37,7 +37,7 @@ const ResultTable = ({results, setResults, formData, selected, columns, count, n
           setTable(results);
           // Other state updates...
         }
-        // console.log("results", results);
+        console.log("results", results);
       }, [results]);
     // const [countLocal, setCount] = useState(count)
     const [prevLocal, setPrevious] = useState('')
@@ -64,6 +64,7 @@ const ResultTable = ({results, setResults, formData, selected, columns, count, n
 
     const removePrefix = (fieldName) => {
         const lastColonIndex = fieldName.lastIndexOf(':');
+        console.log(fieldName);
         return lastColonIndex !== -1 ? fieldName.slice(lastColonIndex + 1) : fieldName;
     };
 
@@ -91,7 +92,7 @@ const ResultTable = ({results, setResults, formData, selected, columns, count, n
                     </TableHead>
 
                     <TableBody>
-                    {/* {console.log('Selected Fields:', selected)} */}
+                    {console.log('Selected Fields:', selected)}
                         {table.map((person) => (
                             <TableRow 
                                 key={person.id}
