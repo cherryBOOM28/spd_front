@@ -23,7 +23,7 @@ import Paper from '@mui/material/Paper';
 import { deleteSport } from '../../../../api/persona_info/sport/deleteSport';
 import { updateSport } from '../../../../api/persona_info/sport/updateSport';
 
-import list from '../../../data/kindsOfSports';
+import listOfSports from '../../../data/kindsOfSports';
 
 
 function Sport({sportSkill, setSportSkill}, props) {
@@ -46,8 +46,8 @@ function Sport({sportSkill, setSportSkill}, props) {
     // Лист языков
     const fetchKindOfSports = async () => {
       try {
-        setKindsOfSport(list)
-        return list;
+        setKindsOfSport(listOfSports)
+        return listOfSports;
  
       } catch (error) {
         console.error('Error fetching kinds of sport:', error);

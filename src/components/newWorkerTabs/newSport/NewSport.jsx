@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import cl from './NewSport.module.css';
 import Button from '../../UI/button/Button';
-import list from '../../data/kindsOfSports';
+import listOfSports from '../../data/kindsOfSports';
 import { useForm } from '../formProvider/FormProvider';
 
 const NewSport = (props) => {
@@ -27,8 +27,8 @@ const NewSport = (props) => {
     // Лист языков
     const fetchKindOfSports = async () => {
       try {
-        setKindsOfSport(list)
-        return list;
+        setKindsOfSport(listOfSports)
+        return listOfSports;
  
       } catch (error) {
         console.error('Error fetching kinds of sport:', error);

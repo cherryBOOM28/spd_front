@@ -12,10 +12,16 @@
   .arrow {
     font-size: 24px;
   }
+
+  .accordion_text {
+    margin: 0;
+    padding: 0;
+    
+  }
   
   .dropdown__content {
     padding: 8px;
-    background: #F8F8F8;
+    background: #ffffff;
     width: 185px;
     border-radius: 5px;
   }
@@ -93,7 +99,7 @@
 }
 
 .subMenuFamily {
-  display: none; 
+  /* display: none;  */
   position: absolute;
   right: -163px; 
   top: 0; 
@@ -304,6 +310,7 @@
   display: flex;
   align-items: center;
   gap: 5px;
+  color: rgb(200, 16, 16);
 }
 
 .headline {

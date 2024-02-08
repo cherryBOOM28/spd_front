@@ -54,11 +54,7 @@
   }
   
   .workerInfo {
-    border-radius: 5px;
-    border: 1px solid #959595;
-    width: 200px;
-    /* height: 30px; */
-    padding: 6px 9px;
+    width: 220px;
     margin-left: 12px;
     outline: none;
     font-family: "Helvetica", sans-serif, sans-serif;
@@ -68,31 +64,20 @@
   }
   
   .workerInfoSelect {
-    border-radius: 5px;
-    border: 1px solid #959595;
     width: 220px;
-    height: 32px;
-    padding: 4px 9px;
-    margin-left: 12px;
-    outline: none;
+    /* margin-left: 12px; */
+    /* padding-left: 12px; */
+    /* outline: none; */
     font-family: "Helvetica", sans-serif, sans-serif;
     color: #000;
     font-size: 16px;
     font-weight: 400;
   }
-  
-  .data__wrapper {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
+
   
   .workerInfoDate {
-    border-radius: 5px;
-    border: 1px solid #959595;
-    width: 160px;
+    width: 182px;
     /* height: 32px; */
-    padding: 6px 9px;
     margin-left: 12px;
     outline: none;
     font-family: "Helvetica", sans-serif, sans-serif;
@@ -143,4 +128,25 @@
   font-size: 18px;
   margin-bottom: 20px;
   font-weight: 600;
+}
+
+.tooltipTextMain {
+  margin: 0 0 15px 0;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.tooltipText {
+  margin: 10px 0 0 11px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: rgb(200, 16, 16);
+}
+
+
+.tooltipWrapper {
+  margin-bottom: 15px;
 }

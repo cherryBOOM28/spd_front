@@ -32,7 +32,7 @@
 
 .employeeWrapper {
   border-radius: 5px;
-  background: #F8F8F8;
+  background: #fbf9f9;
   padding: 10px;
   margin: 10px 0;
   /* padding: 10px; */
@@ -52,7 +52,7 @@
   justify-content: space-around;
   padding: 20px 24px;
   border-radius: 5px;
-  background: #F3F3F3;
+  background: #e5e5e5;
 }
 
 .activeTab {
@@ -74,7 +74,7 @@
   display: flex;
   justify-content: space-between;
   border-radius: 5px;
-  background: #FFF;
+  background: #F8F8F8;
   padding: 10px 5px;
   /* max-width: 795px; */
   /* width: 100%; */
@@ -104,7 +104,7 @@
 
 .dropdown__content {
   padding: 8px;
-  background: #F8F8F8;
+  background: #ffffff;
   width: 185px;
   border-radius: 5px;
 }

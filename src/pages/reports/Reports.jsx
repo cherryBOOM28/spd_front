@@ -9,7 +9,7 @@ import { AiFillPrinter } from 'react-icons/ai';
 import ResultsTable from '../../components/reportResults/resultsTable/ResultsTable';
 import ReportPersonalData from '../../components/reportResults/personal_data/ReportPersonalData';
 import { renderFamilyOptions } from '../../components/reportResults/personal_data/ReportPersonalData';
-import { renderPersonalOptions } from '../../components/reportResults/personal_data/ReportPersonalData';
+import { RenderPersonalOptions } from '../../components/reportResults/personal_data/ReportPersonalData';
 import { renderEducationOptions } from '../../components/reportResults/personal_data/ReportPersonalData';
 import { renderLanguageOptions } from '../../components/reportResults/personal_data/ReportPersonalData';
 import { renderCourseOptions } from '../../components/reportResults/personal_data/ReportPersonalData';
@@ -31,7 +31,8 @@ import ExcelGenerator from '../../components/excelGenerator/ExcelGenerator';
 import NextAttestations from '../../components/reportResults/nextAttestation/NextAttestations';
 import NextRunkUp from '../../components/reportResults/nextRunkUp/NextRunkUp';
 import PensionList from '../../components/reportResults/pensionList/PensionList';
-
+import { NotificationContainer, NotificationManager } from 'react-notifications';
+import 'react-notifications/lib/notifications.css';
 
 
 function Reports(props, queryParams) {
@@ -214,14 +215,14 @@ function Reports(props, queryParams) {
     ];
     
     const personal_data_options = [
-        { id: "familyStatus:statusName", label: "Семейное положение", selectOptions: ["Выберите семейное положение", "Не женат/не замужем", "Женат/замужем", "Вдова/вдовец", "Разведена/разведен"], isRange: false },
+        { id: "familyStatus:statusName", label: "Семейное положение", selectOptions: ["Не женат/не замужем", "Женат/замужем", "Вдова/вдовец", "Разведена/разведен"], isRange: false },
         { id: "positionInfo:department:DepartmentName", label: "Подразделение", isRange: false },
         { id: "positionInfo:position:positionTitle", label: "Должность", isRange: false },
         { id: "positionInfo:department:LocationName", label: "Город", isRange: false },
     ];
 
     const family_compositions_options = [
-        { id: "familycomposition:relativeType", label: "Степень родства", selectOptions: ["Выберите", "супруг/супруга", "сын/дочь", "мать/отец", "брат/сестра"], isRange: false },
+        { id: "familycomposition:relativeType", label: "Степень родства", selectOptions: ["супруг/супруга", "сын/дочь", "мать/отец", "брат/сестра"], isRange: false },
         { id: "familycomposition:relName", label: "Имя", isRange: false },
         { id: "familycomposition:relSurname", label: "Фамилия", isRange: false },
         { id: "familycomposition:relPatronymic", label: "Отчество", isRange: false },
@@ -231,7 +232,7 @@ function Reports(props, queryParams) {
     ];
 
     const educations_options = [
-        { id: "education:educationType", label: "Вид образования", selectOptions: ["Выберите вид образования", "Высшее", "Магистратура"], isRange: false },
+        { id: "education:educationType", label: "Вид образования", selectOptions: ["Высшее", "Магистратура"], isRange: false },
         { id: "education:educationPlace", label: "Учебное заведение", isRange: false },
         { id: "education:educationDateIn", label: "Дата поступления", isRange: false },
         { id: "education:educationDateOut", label: "Дата окончания", isRange: false },
@@ -241,11 +242,11 @@ function Reports(props, queryParams) {
 
     const owning_languages_options = [
         { id: "languageskill:langName", label: "Язык", isRange: false },
-        { id: "languageskill:skillLvl", label: "Уровень владения языком", selectOptions: ["Выберите уровень", "Cо словарем", "Начальный", "Ниже среднего", "Средний", "Выше среднего", "Продвинутый", "Профессиональный", "Родной"], isRange: false },
+        { id: "languageskill:skillLvl", label: "Уровень владения языком", selectOptions: ["Cо словарем", "Начальный", "Ниже среднего", "Средний", "Выше среднего", "Продвинутый", "Профессиональный", "Родной"], isRange: false },
     ];
 
     const courses_options = [
-        { id: "course:courseType", label: "Вид переподготовки", selectOptions: ["Выберите вид переподготовки", "Повышение", "Подготовка"], isRange: false },
+        { id: "course:courseType", label: "Вид переподготовки", selectOptions: ["Повышение", "Подготовка"], isRange: false },
         { id: "course:courseOrg", label: "Учебное заведение", isRange: false },
         { id: "course:startDate", label: "Дата начала", isRange: false },
         { id: "course:endDate", label: "Дата окончания", isRange: false },
@@ -255,14 +256,14 @@ function Reports(props, queryParams) {
 
     const academic_degree_options = [
         { id: "academicdegree:academicPlace", label: "Учебное заведение", isRange: false },
-        { id: "academicdegree:academicDegree", label: "Вид образования", selectOptions: ["Выберите вид образования", "Бакалавр", "Магистр", "Кандидат", "Доктор"], isRange: false },
+        { id: "academicdegree:academicDegree", label: "Вид образования", selectOptions: ["Бакалавр", "Магистр", "Кандидат", "Доктор"], isRange: false },
         { id: "academicdegree:academicDiplomaNumber", label: "Номер диплома", isRange: false },
         { id: "academicdegree:academicDiplomaDate", label: "Дата диплома", isRange: false },
     ];
 
     const sport_results_options = [
         { id: "sportskill:sportType", label: "Вид спорта", isRange: false },
-        { id: "sportskill:sportSkillLvl", label: "Степень владения", selectOptions: ["Выберите степень владения", "Любитель", "Первый спортивный разряд", "Второй спортивный разряд", "Третий спортивный разряд", "Кандидат мастера спорта", "Мастер спорта"], isRange: false },
+        { id: "sportskill:sportSkillLvl", label: "Степень владения", selectOptions: ["Любитель", "Первый спортивный разряд", "Второй спортивный разряд", "Третий спортивный разряд", "Кандидат мастера спорта", "Мастер спорта"], isRange: false },
     ];
 
     const working_history_options = [
@@ -286,12 +287,12 @@ function Reports(props, queryParams) {
     ];
 
     const class_categories_options = [
-        { id: "classcategory:categoryType", label: "Классная категория", selectOptions:["Выберите категорию", "Спец 2 категории", "Спец 1 категории", "Наставник"], isRange: false },
+        { id: "classcategory:categoryType", label: "Классная категория", selectOptions:["Спец 2 категории", "Спец 1 категории", "Наставник"], isRange: false },
     ]
 
     const military_rank_options = [
         { id: "rankInfo:militaryRank:rankTitle", label: "Звание", 
-        selectOptions:["Выберите звание", "Рядовой", "Ефрейтор", "Наставник", "Младший сержант", "Сержант", "Старший сержант", "Сержант третьего класса",
+        selectOptions:["Рядовой", "Ефрейтор", "Наставник", "Младший сержант", "Сержант", "Старший сержант", "Сержант третьего класса",
         "Сержант второго класса", "Сержант первого класса", "Штаб-сержант", "Мастер-сержант", "Лейтенант", "Старший лейтенант", "Капитан",
         "Майор", "Подполковник", "Полковник", "Генерал-майор", "Генерал-лейтенант", "Генерал-полковник", "Генерал армии"], isRange: false },
         { id: "rankInfo:receivedDate", label: "Дата получения", isRange: false },
@@ -299,7 +300,7 @@ function Reports(props, queryParams) {
     ];
 
     const awards_options = [
-        { id: "reward:rewardType", label: "Тип награды", isRange: false, selectOptions: ["Выберите тип награды", 'Благодарность', "Грамота", "Почетная грамота", "Нагрудной знак - Қаржылық мониторинг органдарының үздігі", "Медаль - Экономикалық қауіпсіздікті қамтамасыз етуге қосқан үлесі үшін", 'Мінсіз қызметі үшін ІІІ дәрежелі', 'Мінсіз қызметі үшін ІІ дәрежелі', 'Мінсіз қызметі үшін І дәрежелі' ] },
+        { id: "reward:rewardType", label: "Тип награды", isRange: false, selectOptions: ['Благодарность', "Грамота", "Почетная грамота", "Нагрудной знак - Қаржылық мониторинг органдарының үздігі", "Медаль - Экономикалық қауіпсіздікті қамтамасыз етуге қосқан үлесі үшін", 'Мінсіз қызметі үшін ІІІ дәрежелі', 'Мінсіз қызметі үшін ІІ дәрежелі', 'Мінсіз қызметі үшін І дәрежелі' ] },
         { id: "reward:rewardDocNumber", label: "Номер приказа", isRange: false },
         { id: "reward:rewardDate", label: "Дата приказа", isRange: false },
     ];
@@ -310,7 +311,7 @@ function Reports(props, queryParams) {
     ];
 
     const investigation_retrievals_options = [
-        { id: "investigation:investigation_decree_type", label: "Тип приказа", isRange: false, selectOptions: ["Выберите вид взыскания", "Замечания", 'Выговор', 'Строгий выговор', 'Неполное служебное соответствие', 'Увольнение'] },
+        { id: "investigation:investigation_decree_type", label: "Тип приказа", isRange: false, selectOptions: ["Замечания", 'Выговор', 'Строгий выговор', 'Неполное служебное соответствие', 'Увольнение'] },
         { id: "investigation:investigation_decree_number", label: "Номер приказа служебного расследования", isRange: false },
         { id: "investigation:investigation_date", label: "Дата приказа", isRange: false },
     ];
@@ -499,7 +500,13 @@ function Reports(props, queryParams) {
             console.log("queryParams", formData);
             })
             .catch((error) => {
-            console.error('Ошибка при получении данных:', error);
+                console.error('Ошибка при получении данных:', error);
+                if (error.response && error.response.status === 400) {
+                    const errorMessage = error.response.data.error || 'Неизвестная ошибка';
+                    NotificationManager.error(errorMessage, 'Ошибка', 3000);
+                } else {
+                    NotificationManager.error('Произошла ошибка', 'Ошибка', 3000);
+                }
             })
             .finally(() => {
                 // for (const key in formData) {
@@ -512,7 +519,7 @@ function Reports(props, queryParams) {
     }; 
     
     const familyOptions = renderFamilyOptions(selectedFamilyOptions, formData, handleInputChange, family_compositions_options);
-    const personalDataOptions = renderPersonalOptions(selectedPersonalOptions, formData, handleInputChange, personal_data_options);
+    const personalDataOptions = RenderPersonalOptions(selectedPersonalOptions, formData, handleInputChange, personal_data_options);
     const educationsDataOptions = renderEducationOptions(selectedEducationOptions, formData, handleInputChange, educations_options);
     const languageDataOptions = renderLanguageOptions(selectedLanguageOptions, formData, handleInputChange, owning_languages_options);
     const courseDataOptions = renderCourseOptions(selectedCoursesOptions, formData, handleInputChange, courses_options);

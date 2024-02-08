@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import cl from './WorkingHistoryData.module.css'
-import { Button } from '@mui/material';
 import { MdArrowDropDown, MdExpandLess } from 'react-icons/md';
+import { Button, TextField, Select, InputLabel, FormControl, MenuItem, Box } from '@mui/material';
+
 
 function WorkingHistoryData(props) {
     const [selectedWorkingHistoryOptions, setSelectedWorkingHistoryOptions] = useState([]);
@@ -50,12 +51,6 @@ function WorkingHistoryData(props) {
         }
     };
 
-    const handleInputChange = (option, value) => {
-        setFormData({
-          ...formData,
-          [option]: value,
-        });
-      };
 
     return (
         <div className={cl.dropdown}>
@@ -101,64 +96,60 @@ export function renderWorkingHistoryOptions(selectedWorkingHistoryOptions, formD
                 {selectedWorkingHistoryOptions.map((option) => (
                     <div key={option} className={cl.wrapper__input}>
                         <label className={cl.label__name}>{working_history_options.find((o) => o.id === option).label}:</label>
-                        {option === "academic_degree" ? (
-                            <select
-                            value={formData[option] || ''}
-                            className={cl.workerInfoSelect}
-                            onChange={(e) => handleInputChange(option, e.target.value)}
-                            >
-                            {working_history_options.find((o) => o.id === option).selectOptions.map((genderOption) => (
-                                <option key={genderOption} value={genderOption}>
-                                {genderOption}
-                                </option>
-                            ))}
-                            </select>
-                
-                        ) : option === "workinghistory:workingHistories:startDate" ? (
+                        {option === "workinghistory:startDate" ? (
                             <div className={cl.data__wrapper}>
-                                <div>
-                                <label style={{ marginRight: '5px', marginLeft: '13px' }}>От</label>
-                                <input
-                                    type="date"
-                                    className={cl.workerInfoDate}
-                                    value={formData[option]?.start_date || ''}
-                                    onChange={(e) => handleInputChange(option, { ...formData[option], start_date: e.target.value })}
-                                />
+                                <div style={{ display: 'flex', alignItems: 'center' }}>
+                                    <label style={{ marginRight: '5px', marginLeft: '13px' }}>От</label>
+                                    <TextField
+                                        type="date"
+                                        size='small'
+                                        className={cl.workerInfoDate}
+                                        value={formData[option] != null ? formData[option].start_date : ''}
+                                        // value={formData[option]?.start_date || ''}
+                                        onChange={(e) => handleInputChange(option, { ...formData[option], start_date: e.target.value })}
+                                    />
                                 </div>
-                                <div>
-                                <label style={{ marginRight: '5px', marginLeft: '13px' }}>До</label>
-                                <input
-                                    type="date"
-                                    className={cl.workerInfoDate}
-                                    value={formData[option]?.end_date || ''}
-                                    onChange={(e) => handleInputChange(option, { ...formData[option], end_date: e.target.value })}
-                                />
+                                <div style={{ display: 'flex', alignItems: 'center' }}>
+                                    <label style={{ marginRight: '5px', marginLeft: '13px' }}>До</label>
+                                    <TextField
+                                        type="date"
+                                        size='small'
+                                        className={cl.workerInfoDate}
+                                        value={formData[option] != null ? formData[option].end_date : ''}
+                                        // value={formData[option]?.end_date || ''}
+                                        onChange={(e) => handleInputChange(option, { ...formData[option], end_date: e.target.value })}
+                                    />
                                 </div>
                             </div>
-                         ) :  option === "workinghistory:workingHistories:endDate" ? (
+                         ) :  option === "workinghistory:endDate" ? (
                             <div className={cl.data__wrapper}>
-                                <div>
-                                <label style={{ marginRight: '5px', marginLeft: '13px' }}>От</label>
-                                <input
-                                    type="date"
-                                    className={cl.workerInfoDate}
-                                    value={formData[option]?.start_date || ''}
-                                    onChange={(e) => handleInputChange(option, { ...formData[option], start_date: e.target.value })}
-                                />
+                                <div style={{ display: 'flex', alignItems: 'center' }}>
+                                    <label style={{ marginRight: '5px', marginLeft: '13px' }}>От</label>
+                                    <TextField
+                                        type="date"
+                                        size='small'
+                                        className={cl.workerInfoDate}
+                                        // value={formData[option]?.start_date || ''}
+                                        value={formData[option] != null ? formData[option].start_date : ''}
+                                        onChange={(e) => handleInputChange(option, { ...formData[option], start_date: e.target.value })}
+                                    />
                                 </div>
-                                <div>
-                                <label style={{ marginRight: '5px', marginLeft: '13px' }}>До</label>
-                                <input
-                                    type="date"
-                                    className={cl.workerInfoDate}
-                                    value={formData[option]?.end_date || ''}
-                                    onChange={(e) => handleInputChange(option, { ...formData[option], end_date: e.target.value })}
-                                />
+                                <div style={{ display: 'flex', alignItems: 'center' }}>
+                                    <label style={{ marginRight: '5px', marginLeft: '13px' }}>До</label>
+                                    <TextField
+                                        type="date"
+                                        size='small'
+                                        className={cl.workerInfoDate}
+                                        value={formData[option] != null ? formData[option].end_date : ''}
+                                        // value={formData[option]?.end_date || ''}
+                                        onChange={(e) => handleInputChange(option, { ...formData[option], end_date: e.target.value })}
+                                    />
                                 </div>
                             </div>
                          ) : ( 
-                        <input
+                        <TextField
                             type="text"
+                            size='small'
                             className={cl.workerInfo}
                             value={formData[option] || ''}
                             placeholder={`${working_history_options.find((o) => o.id === option).label}`}

@@ -4,6 +4,12 @@ import { Button, TextField, Select, InputLabel, FormControl, MenuItem, Box } fro
 import { MdArrowDropDown, MdExpandLess } from 'react-icons/md';
 import { updateFormData } from '../../../pages/reports/Reports';
 import { BsExclamationCircle } from "react-icons/bs";
+import list from '../../data/languages';
+import listOfSports from '../../data/kindsOfSports';
+import axios from 'axios';
+import Cookies from 'js-cookie';
+import { Accordion, AccordionSummary, AccordionDetails, Typography } from '@mui/material';
+
 
 
 function ReportPersonalData(props) {
@@ -15,7 +21,9 @@ function ReportPersonalData(props) {
     const [selectedAcademicDegreeOptions, setSelectedAcademicDegreeOptions] = useState([]);
     const [selectedSportOptions, setSelectedSportOptions] = useState([]);
 
-    const {formData, setFormData} = props;
+    
+
+    const {formData, setFormData} = props; // Состояние для хранения данных из инпутов
     // const [formData, setFormData] = useState({}); // Состояние для хранения данных из инпутов
 
     useEffect(() => {
@@ -56,7 +64,7 @@ function ReportPersonalData(props) {
     ];
 
     const family_compositions_options = [
-        { id: "familycomposition:relativeType", label: "Степень родства", selectOptions: ["Выберите", "супруг/супруга", "сын/дочь", "мать/отец", "брат/сестра"], isRange: false },
+        { id: "familycomposition:relativeType", label: "Степень родства", selectOptions: ["супруг/супруга", "сын/дочь", "мать/отец", "брат/сестра"], isRange: false },
         { id: "familycomposition:relName", label: "Имя", isRange: false },
         { id: "familycomposition:relSurname", label: "Фамилия", isRange: false },
         { id: "familycomposition:relPatronymic", label: "Отчество", isRange: false },
@@ -103,55 +111,46 @@ function ReportPersonalData(props) {
     const [isOpenPersonal, setIsOpenPersonal] = useState(false);
     const togglePersonalDropdown = () => {
         setIsOpenPersonal(!isOpenPersonal);
+
+        setExpanded(false);
+        setExpandedEdu(false);
+        setExpandedLanguage(false);
+        setExpandedAcademicDegree(false);
+        setExpandedSport(false);
+        setExpandedCourse(false);
     };
 
-    const [subMenuOpen, setSubMenuOpen] = useState(false);
-    const toggleSubMenu = () => {
-      setSubMenuOpen(!subMenuOpen);
+ 
+    const [expanded, setExpanded] = useState(false);
+    const handleChange = (panel) => (event, isExpanded) => {
+        setExpanded(isExpanded ? panel : false);
     };
 
-    const [educationSubMenuOpen, setEducationSubMenuOpen] = useState(false);
-    const toggleEducationSubMenu = () => {
-        setEducationSubMenuOpen(!educationSubMenuOpen);
+    const [expandedEdu, setExpandedEdu] = useState(false);
+    const handleChangeEducation = (panel) => (event, isExpanded) => {
+        setExpandedEdu(isExpanded ? panel : false);
     };
 
-    const [languageSubMenuOpen, setLanguageSubMenuOpen] = useState(false);
-    const toggleLanguageSubMenu = () => {
-        setLanguageSubMenuOpen(!languageSubMenuOpen);
+    const [expandedLanguage, setExpandedLanguage] = useState(false);
+    const handleChangeLanguage = (panel) => (event, isExpanded) => {
+        setExpandedLanguage(isExpanded ? panel : false);
     };
-
-    const [coursesSubMenuOpen, setCoursesSubMenuOpen] = useState(false);
-    const toggleCoursesSubMenu = () => {
-        setCoursesSubMenuOpen(!coursesSubMenuOpen);
-    };
-
-    const [academicDegreeSubMenuOpen, setAcademicDegreeSubMenuOpen] = useState(false);
-    const toggleAcademicDegreeSubMenu = () => {
-        setAcademicDegreeSubMenuOpen(!academicDegreeSubMenuOpen);
-    };
-
-    const [sportSubMenuOpen, setSportSubMenuOpen] = useState(false);
-    const toggleSportSubMenu = () => {
-        setSportSubMenuOpen(!sportSubMenuOpen);
-    };
-
     
-    // const togglePersonalOption = (option) => {
-    //     if (selectedPersonalOptions.includes(option)) {
-    //         setSelectedPersonalOptions(selectedPersonalOptions.filter((item) => item !== option));
-    //         delete formData[option];
-    //     } else {
-    //         setSelectedPersonalOptions([...selectedPersonalOptions, option]);
-    //         // Если пользователь выбрал "Пол", "Дата рождения" или другие опции, 
-    //         // то сразу устанавливаем их значения в formData
-    //         if (option === "familyStatus:statusName") {
-    //             setFormData({
-    //               ...formData,
-    //               [option]: option === "familyStatus:statusName" ? personal_data_options.find((o) => o.id === option).selectOptions[0] : {start_date: '', end_date: ''},
-    //             });
-    //         }
-    //     }
-    // };
+    const [expandedCourse, setExpandedCourse] = useState(false);
+    const handleChangeCourse = (panel) => (event, isExpanded) => {
+        setExpandedCourse(isExpanded ? panel : false);
+    };
+    
+    const [expandedAcademicDegree, setExpandedAcademicDegree] = useState(false);
+    const handleChangeAcademicDegree = (panel) => (event, isExpanded) => {
+        setExpandedAcademicDegree(isExpanded ? panel : false);
+    };
+
+    const [expandedSport, setExpandedSport] = useState(false);
+    const handleChangeSport = (panel) => (event, isExpanded) => {
+        setExpandedSport(isExpanded ? panel : false);
+    };
+ 
 
     const togglePersonalOption = (option) => {
 
@@ -178,7 +177,6 @@ function ReportPersonalData(props) {
 
         console.log(selectedPersonalOptions)
     };
-      
       
 
     const toggleOption = (option) => {
@@ -310,14 +308,17 @@ function ReportPersonalData(props) {
                             </li>
                             ))}
                         </ul>
-                        <div className={cl.dropdownFamily} onMouseEnter={toggleSubMenu} onMouseLeave={toggleSubMenu}>
-                            <button className={cl.subMenuDropdownFamily}>
-                                Состав семьи
-                            </button>
-                            {subMenuOpen && (
-                                <div className={cl.subMenuFamily}>
-                                    <ul>
-                                        {family_compositions_options.map((option) => (
+                        <Accordion expanded={expanded === 'panel1'} onChange={handleChange('panel1')} style={{ borderRadius: '5px' }}>
+                            <AccordionSummary
+                                // expandIcon={<ExpandMoreIcon />}
+                                aria-controls="panel1bh-content"
+                                id="panel1bh-header"
+                            >
+                            <p className={cl.accordion_text} >Состав семьи</p>
+                            </AccordionSummary>
+                            <AccordionDetails>
+                                <ul>
+                                    {family_compositions_options.map((option) => (
                                         <li key={option.id} className={cl.options__label}>
                                             <label>
                                                 <input
@@ -329,53 +330,59 @@ function ReportPersonalData(props) {
                                                 {option.label}
                                             </label>
                                             {selectedFamilyOptions.includes(option.id) && option.id !== "education_type" && (
-                                            <div>
-                                            
-                                            </div>
+                                                <div>
+
+                                                </div>
                                             )}
                                         </li>
                                     ))}
-                                    </ul>
-                                </div>
-                            )}
-                        </div>
-                        <div className={cl.dropdownEdu} onMouseEnter={toggleEducationSubMenu} onMouseLeave={toggleEducationSubMenu} style={{ marginTop: '10px' }}>
-                            <button className={cl.subMenuDropdownEdu}>
-                                Образование
-                            </button>
-                            {educationSubMenuOpen && (
-                                <div className={cl.subMenuEdu}>
-                                    <ul>
-                                        {educations_options.map((option) => (
-                                        <li key={option.id} className={cl.options__label}>
-                                            <label>
-                                                <input
-                                                    type="checkbox"
-                                                    value={option.id}
-                                                    checked={selectedEducationOptions.includes(option.id)}
-                                                    onChange={() => toggleEducationOption(option.id)}
-                                                />
-                                                {option.label}
-                                            </label>
-                                            {selectedEducationOptions.includes(option.id) && option.id !== "relative_type" && (
-                                            <div>
-                                            
-                                            </div>
-                                            )}
-                                        </li>
+                                </ul>
+                            </AccordionDetails>
+                        </Accordion>
+
+                        <Accordion expandedEdu={expandedEdu === 'panel1'} onChange={handleChangeEducation('panel1')} style={{ borderRadius: '5px' }}>
+                            <AccordionSummary
+                                // expandIcon={<ExpandMoreIcon />}
+                                aria-controls="panel1bh-content"
+                                id="panel1bh-header"
+                            >
+                            <p className={cl.accordion_text} >Образование</p>
+                            </AccordionSummary>
+                            <AccordionDetails>
+                                <ul>
+                                    {educations_options.map((option) => (
+                                                <li key={option.id} className={cl.options__label}>
+                                                    <label>
+                                                        <input
+                                                            type="checkbox"
+                                                            value={option.id}
+                                                            checked={selectedEducationOptions.includes(option.id)}
+                                                            onChange={() => toggleEducationOption(option.id)}
+                                                        />
+                                                        {option.label}
+                                                    </label>
+                                                    {selectedEducationOptions.includes(option.id) && option.id !== "relative_type" && (
+                                                    <div>
+                                                    
+                                                    </div>
+                                                    )}
+                                                </li>
                                     ))}
-                                    </ul>
-                                </div>
-                            )}
-                        </div>
-                        <div className={cl.dropdownLang} onMouseEnter={toggleLanguageSubMenu} onMouseLeave={toggleLanguageSubMenu} style={{ marginTop: '10px' }}>
-                            <button className={cl.subMenuDropdownLang}>
-                                Владения языками
-                            </button>
-                            {languageSubMenuOpen && (
-                                <div className={cl.subMenuLang}>
-                                    <ul>
-                                        {owning_languages_options.map((option) => (
+                                </ul>
+                            </AccordionDetails>
+                        </Accordion>
+
+                        <Accordion expandedLanguage={expandedLanguage === 'panel1'} onChange={handleChangeLanguage('panel1')} style={{ borderRadius: '5px' }}>
+                            <AccordionSummary
+                                // expandIcon={<ExpandMoreIcon />}
+                                aria-controls="panel1bh-content"
+                                id="panel1bh-header"
+                            >
+                            <p className={cl.accordion_text} >Владение языками</p>
+                            </AccordionSummary>
+                            <AccordionDetails>
+                                <ul>
+                                    {owning_languages_options.map((option) => (
                                         <li key={option.id} className={cl.options__label}>
                                             <label>
                                                 <input
@@ -393,18 +400,21 @@ function ReportPersonalData(props) {
                                             )}
                                         </li>
                                     ))}
-                                    </ul>
-                                </div>
-                            )}
-                        </div>
-                        <div className={cl.dropdownCourse} onMouseEnter={toggleCoursesSubMenu} onMouseLeave={toggleCoursesSubMenu} style={{ marginTop: '10px' }}>
-                            <button className={cl.subMenuDropdownCourse}>
-                                Курсы подготовки и повышения квалификаций
-                            </button>
-                            {coursesSubMenuOpen && (
-                                <div className={cl.subMenuCourse}>
-                                    <ul>
-                                        {courses_options.map((option) => (
+                                </ul>
+                            </AccordionDetails>
+                        </Accordion>
+
+                        <Accordion expandedCourse={expandedCourse === 'panel1'} onChange={handleChangeCourse('panel1')} style={{ borderRadius: '5px' }}>
+                            <AccordionSummary
+                                // expandIcon={<ExpandMoreIcon />}
+                                aria-controls="panel1bh-content"
+                                id="panel1bh-header"
+                            >
+                            <p className={cl.accordion_text} >Курсы подготовки и повышения квалификаций</p>
+                            </AccordionSummary>
+                            <AccordionDetails>
+                                <ul>
+                                    {courses_options.map((option) => (
                                         <li key={option.id} className={cl.options__label}>
                                             <label>
                                                 <input
@@ -422,18 +432,21 @@ function ReportPersonalData(props) {
                                             )}
                                         </li>
                                     ))}
-                                    </ul>
-                                </div>
-                            )}
-                        </div>
-                        <div className={cl.dropdownDegree} onMouseEnter={toggleAcademicDegreeSubMenu} onMouseLeave={toggleAcademicDegreeSubMenu} style={{ marginTop: '10px' }}>
-                            <button className={cl.subMenuDropdownDegree}>
-                                Ученые степени
-                            </button>
-                            {academicDegreeSubMenuOpen && (
-                                <div className={cl.subMenuDegree}>
-                                    <ul>
-                                        {academic_degree_options.map((option) => (
+                                </ul>
+                            </AccordionDetails>
+                        </Accordion>
+
+                        <Accordion expandedAcademicDegree={expandedAcademicDegree === 'panel1'} onChange={handleChangeAcademicDegree('panel1')} style={{ borderRadius: '5px' }}>
+                            <AccordionSummary
+                                // expandIcon={<ExpandMoreIcon />}
+                                aria-controls="panel1bh-content"
+                                id="panel1bh-header"
+                            >
+                            <p className={cl.accordion_text} >Ученые степени</p>
+                            </AccordionSummary>
+                            <AccordionDetails>
+                                <ul>
+                                    {academic_degree_options.map((option) => (
                                         <li key={option.id} className={cl.options__label}>
                                             <label>
                                                 <input
@@ -451,18 +464,21 @@ function ReportPersonalData(props) {
                                             )}
                                         </li>
                                     ))}
-                                    </ul>
-                                </div>
-                            )}
-                        </div>
-                        <div className={cl.dropdownSport} onMouseEnter={toggleSportSubMenu} onMouseLeave={toggleSportSubMenu} style={{ marginTop: '10px' }}>
-                            <button className={cl.subMenuDropdownSport}>
-                                Отношение к спорту
-                            </button>
-                            {sportSubMenuOpen && (
-                                <div className={cl.subMenuSport}>
-                                    <ul>
-                                        {sport_results_options.map((option) => (
+                                </ul>
+                            </AccordionDetails>
+                        </Accordion>
+
+                        <Accordion expandedSport={expandedSport === 'panel1'} onChange={handleChangeSport('panel1')} style={{ borderRadius: '5px' }}>
+                            <AccordionSummary
+                                // expandIcon={<ExpandMoreIcon />}
+                                aria-controls="panel1bh-content"
+                                id="panel1bh-header"
+                            >
+                            <p className={cl.accordion_text} > Отношение к спорту</p>
+                            </AccordionSummary>
+                            <AccordionDetails>
+                                <ul>
+                                    {sport_results_options.map((option) => (
                                         <li key={option.id} className={cl.options__label}>
                                             <label>
                                                 <input
@@ -480,11 +496,9 @@ function ReportPersonalData(props) {
                                             )}
                                         </li>
                                     ))}
-                                    </ul>
-                                </div>
-                            )}
-                        </div>
-                    
+                                </ul>
+                            </AccordionDetails>
+                        </Accordion>
                     </div>
                 )}
             </div>
@@ -505,7 +519,7 @@ export function renderFamilyOptions(selectedFamilyOptions, formData, handleInput
           <div key={option} className={cl.wrapper__input}>
             <label className={cl.label__name}>{family_compositions_options.find((o) => o.id === option).label}:</label>
             {option === "familycomposition:relativeType" ? (
-               <div className={cl.tooltipWrapper}>
+                <div className={cl.tooltipWrapper}>
                     <FormControl fullWidth >
                         {/* <InputLabel id="demo-simple-select-label">{options.find((o) => o.id === option).label}</InputLabel> */}
                         <Select
@@ -530,8 +544,8 @@ export function renderFamilyOptions(selectedFamilyOptions, formData, handleInput
                             ))}
                         </Select>
                     </FormControl>
-               <div className={cl.tooltipText}> <BsExclamationCircle />Выберите тип родственника</div>
-             </div>
+                    <div className={cl.tooltipText}> <BsExclamationCircle />Выберите тип родственника</div>
+                </div>
             ) : option === "familycomposition:relBirthDate" ? (
               <div className={cl.data__wrapper}>
                 <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -540,7 +554,7 @@ export function renderFamilyOptions(selectedFamilyOptions, formData, handleInput
                     type="date"
                     size='small'
                     className={cl.workerInfoDate}
-                    value={formData[option]?.start_date || ''}
+                    value={formData[option] != null ? formData[option].start_date : ''}
                     onChange={(e) => handleInputChange(option, { ...formData[option], start_date: e.target.value })}
                   />
                  
@@ -551,7 +565,7 @@ export function renderFamilyOptions(selectedFamilyOptions, formData, handleInput
                     type="date"
                     size='small'
                     className={cl.workerInfoDate}
-                    value={formData[option]?.end_date || ''}
+                    value={formData[option] != null ? formData[option].end_date : ''}
                     onChange={(e) => handleInputChange(option, { ...formData[option], end_date: e.target.value })}
                   />
                   
@@ -574,7 +588,49 @@ export function renderFamilyOptions(selectedFamilyOptions, formData, handleInput
   );
 };
 
-export function renderPersonalOptions(selectedPersonalOptions, formData, handleInputChange, personal_data_options) {
+export function RenderPersonalOptions(selectedPersonalOptions, formData, handleInputChange, personal_data_options) {
+    const [locations, setLocations] = useState([]); // для отображении городов в личных данных
+    const [positions, setPositions] = useState([]); // для отображении должностей в личных данных
+
+
+    useEffect(() => {
+        // Функция для загрузки списка городов из API
+        const accessToken = Cookies.get('jwtAccessToken');
+        const fetchLocations = async () => {
+          try {
+            const response = await axios.get('http://127.0.0.1:8000/api/v1/location', {
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`,
+                }
+            });
+            setLocations(response.data.map(location => location.LocationName));
+          } catch (error) {
+            console.error('Ошибка при загрузке городов:', error);
+          }
+        };
+    
+        fetchLocations(); // Вызываем функцию загрузки при монтировании компонента
+    }, []);
+
+    useEffect(() => {
+        // Функция для загрузки списка городов из API
+        const accessToken = Cookies.get('jwtAccessToken');
+        const fetchLocations = async () => {
+          try {
+            const response = await axios.get('http://127.0.0.1:8000/api/v1/position', {
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`,
+                }
+            });
+            setPositions(response.data.map(position => position.positionTitle));
+          } catch (error) {
+            console.error('Ошибка при загрузке:', error);
+          }
+        };
+    
+        fetchLocations(); // Вызываем функцию загрузки при монтировании компонента
+    }, []);
+
     return(
         selectedPersonalOptions.length > 0 && (
             <div className={cl.input__container}>
@@ -586,7 +642,7 @@ export function renderPersonalOptions(selectedPersonalOptions, formData, handleI
                                 <label className={cl.label__name}>
                                     {personal_data_options.find((o) => o.id === option)?.label}:
                                 </label>
-                                {option === "familyStatus:statusName" ? (
+                                {option === "positionInfo:department:LocationName" ? (
                                     <FormControl fullWidth >
                                         {/* <InputLabel id="demo-simple-select-label">{options.find((o) => o.id === option).label}</InputLabel> */}
                                         <Select
@@ -597,16 +653,44 @@ export function renderPersonalOptions(selectedPersonalOptions, formData, handleI
                                             className={cl.workerInfoSelect}
                                             onChange={(e) => handleInputChange(option, e.target.value)}
                                             size='small'
-                                            style={{ marginLeft: '42px' }}
+                                            style={{ marginLeft: '32px' }}
                                         >
-                                            {personal_data_options.find((o) => o.id === option)?.selectOptions.map((genderOption) => (
-                                            <MenuItem key={genderOption} value={genderOption}>
-                                                {genderOption}
+                                            <MenuItem value="" disabled hidden>
+                                            Выберите город
+                                            </MenuItem>
+                                            {locations.map((city) => (
+                                            <MenuItem key={city} value={city}>
+                                                {city}
                                             </MenuItem>
                                             ))}
                                         </Select>
                                     </FormControl>
-                                ) : (
+                                )  : option === "positionInfo:position:positionTitle" ? (
+                                    <div className={cl.data__wrapper}>
+                                        <FormControl fullWidth >
+                                            {/* <InputLabel id="demo-simple-select-label">{options.find((o) => o.id === option).label}</InputLabel> */}
+                                            <Select
+                                                labelId="demo-simple-select-label"
+                                                id="demo-simple-select"
+                                                // label='Страна рождения'
+                                                value={formData[option] || ''}
+                                                className={cl.workerInfoSelect}
+                                                onChange={(e) => handleInputChange(option, e.target.value)}
+                                                size='small'
+                                                style={{ marginLeft: '32px' }}
+                                            >
+                                                <MenuItem value="" disabled hidden>
+                                                Выберите должность
+                                                </MenuItem>
+                                                {positions.map((position) => (
+                                                    <MenuItem key={position} value={position}>
+                                                        {position}
+                                                    </MenuItem>
+                                                ))}
+                                            </Select>
+                                        </FormControl>
+                                    </div>
+                                 ) : (
                                     <TextField
                                         type="text"
                                         className={cl.workerInfo}
@@ -632,40 +716,40 @@ export function renderEducationOptions(selectedEducationOptions, formData, handl
     return(
         selectedEducationOptions.length > 0 && (
             <div className={cl.input__container}>
-                <p className={cl.headline}>Личные данные</p>
+                <p className={cl.headline}>Образование</p>
                 <div className={cl.tooltipTextMain}> <BsExclamationCircle style={{ color: '#1565C0' }} /> Заполните все поля</div>
                 {selectedEducationOptions.map((option) => (
                     <div key={option} className={cl.wrapper__input}>
                         <label className={cl.label__name}>{educations_options.find((o) => o.id === option).label}:</label>
                         {option === "education:educationType" ? (
                             <div className={cl.tooltipWrapper}>
-                            <FormControl fullWidth >
-                                {/* <InputLabel id="demo-simple-select-label">{options.find((o) => o.id === option).label}</InputLabel> */}
-                                <Select
-                                    labelId="demo-simple-select-label"
-                                    id="demo-simple-select"
-                                    // label='Страна рождения'
-                                    required
-                                    title="Выберите вид образования" // Добавлен атрибут title
-                                    size='small'
-                                    style={{ marginLeft: '12px' }}
-                                    value={formData[option] || ''}
-                                    className={cl.workerInfoSelect}
-                                    onChange={(e) => handleInputChange(option, e.target.value)}
-                                >
-                                    <MenuItem value="" disabled hidden>
-                                    Выберите вид образования
-                                    </MenuItem>
-                                    {educations_options.find((o) => o.id === option).selectOptions.map((genderOption) => (
-                                        <MenuItem key={genderOption} value={genderOption}>
-                                        {genderOption}
+                                <FormControl fullWidth >
+                                    {/* <InputLabel id="demo-simple-select-label">{options.find((o) => o.id === option).label}</InputLabel> */}
+                                    <Select
+                                        labelId="demo-simple-select-label"
+                                        id="demo-simple-select"
+                                        // label='Страна рождения'
+                                        required
+                                        title="Выберите вид образования" // Добавлен атрибут title
+                                        size='small'
+                                        style={{ marginLeft: '12px' }}
+                                        value={formData[option] || ''}
+                                        className={cl.workerInfoSelect}
+                                        onChange={(e) => handleInputChange(option, e.target.value)}
+                                    >
+                                        <MenuItem value="" disabled hidden>
+                                        Выберите вид образования
                                         </MenuItem>
-                                    ))}
-                                   
-                                </Select>
-                            </FormControl>
-                       <div className={cl.tooltipText}> <BsExclamationCircle />Выберите вид образования</div>
-                     </div>
+                                        {educations_options.find((o) => o.id === option).selectOptions.map((genderOption) => (
+                                            <MenuItem key={genderOption} value={genderOption}>
+                                            {genderOption}
+                                            </MenuItem>
+                                        ))}
+                                    
+                                    </Select>
+                                </FormControl>
+                                <div className={cl.tooltipText}> <BsExclamationCircle />Выберите вид образования</div>
+                            </div>
                 
                         ) : option === "education:educationDateIn" ? (
                             <div className={cl.data__wrapper}>
@@ -676,7 +760,7 @@ export function renderEducationOptions(selectedEducationOptions, formData, handl
                                     size='small'
 
                                     className={cl.workerInfoDate}
-                                    value={formData[option]?.start_date || ''}
+                                    value={formData[option] != null ? formData[option].start_date : ''}
                                     onChange={(e) => handleInputChange(option, { ...formData[option], start_date: e.target.value })}
                                 />
                                 </div>
@@ -686,7 +770,7 @@ export function renderEducationOptions(selectedEducationOptions, formData, handl
                                     type="date"
                                     size='small'
                                     className={cl.workerInfoDate}
-                                    value={formData[option]?.end_date || ''}
+                                    value={formData[option] != null ? formData[option].end_date : ''}
                                     onChange={(e) => handleInputChange(option, { ...formData[option], end_date: e.target.value })}
                                 />
                                 </div>
@@ -699,7 +783,7 @@ export function renderEducationOptions(selectedEducationOptions, formData, handl
                                     type="date"
                                     size='small'
                                     className={cl.workerInfoDate}
-                                    value={formData[option]?.start_date || ''}
+                                    value={formData[option] != null ? formData[option].start_date : ''}
                                     onChange={(e) => handleInputChange(option, { ...formData[option], start_date: e.target.value })}
                                 />
                                 </div>
@@ -709,7 +793,7 @@ export function renderEducationOptions(selectedEducationOptions, formData, handl
                                     type="date"
                                     size='small'
                                     className={cl.workerInfoDate}
-                                    value={formData[option]?.end_date || ''}
+                                    value={formData[option] != null ? formData[option].end_date : ''}
                                     onChange={(e) => handleInputChange(option, { ...formData[option], end_date: e.target.value })}
                                 />
                                 </div>
@@ -751,6 +835,7 @@ export function renderEducationOptions(selectedEducationOptions, formData, handl
                             value={formData[option] || ''}
                             placeholder={`${educations_options.find((o) => o.id === option).label}`}
                             onChange={(e) => handleInputChange(option, e.target.value)}
+                            style={{ marginLeft: '12px' }}
                         />
                         ) 
                     }
@@ -763,29 +848,69 @@ export function renderEducationOptions(selectedEducationOptions, formData, handl
 };
 
 export function renderLanguageOptions(selectedLanguageOptions, formData, handleInputChange, owning_languages_options) {
+    const languageOptions = Object.entries(list);
     return(
         selectedLanguageOptions.length > 0 && (
             <div className={cl.input__container}>
-                <p className={cl.headline}>Личные данные</p>
+                <p className={cl.headline}>Язык</p>
                 {selectedLanguageOptions.map((option) => (
                     <div key={option} className={cl.wrapper__input}>
                         <label className={cl.label__name}>{owning_languages_options.find((o) => o.id === option).label}:</label>
                         {option === "languageskill:skillLvl" ? (
-                            <select
-                            value={formData[option] || ''}
-                            className={cl.workerInfoSelect}
-                            onChange={(e) => handleInputChange(option, e.target.value)}
-                            >
-                            {owning_languages_options.find((o) => o.id === option).selectOptions.map((genderOption) => (
-                                <option key={genderOption} value={genderOption}>
-                                {genderOption}
-                                </option>
-                            ))}
-                            </select>
-                
-                        ) : (
-                        <input
+                            <FormControl fullWidth >
+                                {/* <InputLabel id="demo-simple-select-label">{options.find((o) => o.id === option).label}</InputLabel> */}
+                                <Select
+                                    labelId="demo-simple-select-label"
+                                    id="demo-simple-select"
+                                    // label='Страна рождения'
+                                    value={formData[option] || ''}
+                                    className={cl.workerInfoSelect}
+                                    onChange={(e) => handleInputChange(option, e.target.value)}
+                                    size='small'
+                                    style={{ marginLeft: '44px' }}
+                                >
+                                    <MenuItem value="" disabled hidden>
+                                    Выберите уровень владения
+                                    </MenuItem>
+                                    {owning_languages_options.find((o) => o.id === option).selectOptions.map((genderOption) => (
+                                        <MenuItem key={genderOption} value={genderOption}>
+                                        {genderOption}
+                                        </MenuItem>
+                                    ))}
+                                    
+                                </Select>
+                            </FormControl>
+                        )
+                        : option === "languageskill:langName" ? (
+                            <div className={cl.data__wrapper}>
+                               <FormControl fullWidth >
+                                {/* <InputLabel id="demo-simple-select-label">{options.find((o) => o.id === option).label}</InputLabel> */}
+                                <Select
+                                    labelId="demo-simple-select-label"
+                                    id="demo-simple-select"
+                                    // label='Страна рождения'
+                                    value={formData[option] || ''}
+                                    className={cl.workerInfoSelect}
+                                    onChange={(e) => handleInputChange(option, e.target.value)}
+                                    size='small'
+                                    style={{ marginLeft: '12px' }}
+                                >
+                                    <MenuItem value="" disabled hidden>
+                                    Выберите язык
+                                    </MenuItem>
+                                    {languageOptions.map(([code, language]) => (
+                                        <MenuItem key={code} value={language}>
+                                        {language}
+                                        </MenuItem>
+                                    ))}
+                                    
+                                </Select>
+                                </FormControl>
+                            </div>
+                          ) : (
+                        <TextField
                             type="text"
+                            size='small'
                             className={cl.workerInfo}
                             value={formData[option] || ''}
                             placeholder={`${owning_languages_options.find((o) => o.id === option).label}`}
@@ -805,68 +930,89 @@ export function renderCourseOptions(selectedCoursesOptions, formData, handleInpu
     return(
         selectedCoursesOptions.length > 0 && (
             <div className={cl.input__container}>
-               <p className={cl.headline}>Личные данные</p>
+               <p className={cl.headline}>Курсы</p>
                 {selectedCoursesOptions.map((option) => (
                     <div key={option} className={cl.wrapper__input}>
                         <label className={cl.label__name}>{courses_options.find((o) => o.id === option).label}:</label>
                         {option === "course:courseType" ? (
-                            <select
-                            value={formData[option] || ''}
-                            className={cl.workerInfoSelect}
-                            onChange={(e) => handleInputChange(option, e.target.value)}
-                            >
-                            {courses_options.find((o) => o.id === option).selectOptions.map((genderOption) => (
-                                <option key={genderOption} value={genderOption}>
-                                {genderOption}
-                                </option>
-                            ))}
-                            </select>
+                            <div className={cl.tooltipWrapper}>
+                            <FormControl fullWidth >
+                                {/* <InputLabel id="demo-simple-select-label">{options.find((o) => o.id === option).label}</InputLabel> */}
+                                <Select
+                                    labelId="demo-simple-select-label"
+                                    id="demo-simple-select"
+                                    // label='Страна рождения'
+                                    value={formData[option] || ''}
+                                    onChange={(e) => handleInputChange(option, e.target.value)}
+                                    required
+                                    title="Выберите тип родственника" // Добавлен атрибут title
+                                    size='small'
+                                    style={{ marginLeft: '12px' }}
+                                    className={cl.workerInfoSelect}
+                                >
+                                    <MenuItem value="" disabled hidden>
+                                    Выберите вид подготовки
+                                    </MenuItem>
+                                    {courses_options.find((o) => o.id === option).selectOptions.map((genderOption) => (
+                                        <MenuItem key={genderOption} value={genderOption}>
+                                        {genderOption}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                            <div className={cl.tooltipText}> <BsExclamationCircle />Выберите  вид подготовки</div>
+                            </div>
                 
                         ) : option === "course:startDate" ? (
                             <div className={cl.data__wrapper}>
-                                <div>
-                                <label style={{ marginRight: '5px', marginLeft: '13px' }}>От</label>
-                                <input
-                                    type="date"
-                                    className={cl.workerInfoDate}
-                                    value={formData[option]?.start_date || ''}
-                                    onChange={(e) => handleInputChange(option, { ...formData[option], start_date: e.target.value })}
-                                />
-                                </div>
-                                <div>
-                                <label style={{ marginRight: '5px', marginLeft: '13px' }}>До</label>
-                                <input
-                                    type="date"
-                                    className={cl.workerInfoDate}
-                                    value={formData[option]?.end_date || ''}
-                                    onChange={(e) => handleInputChange(option, { ...formData[option], end_date: e.target.value })}
-                                />
+                                <div style={{ display: 'flex', alignItems: 'center' }}>
+                                    <label style={{ marginRight: '5px', marginLeft: '13px' }}>От</label>
+                                    <TextField
+                                        type="date"
+                                        size='small'
+                                        className={cl.workerInfoDate}
+                                        value={formData[option] != null ? formData[option].start_date : ''}
+                                        onChange={(e) => handleInputChange(option, { ...formData[option], start_date: e.target.value })}
+                                    />
+                                    </div>
+                                    <div>
+                                    <label style={{ marginRight: '5px', marginLeft: '13px' }}>До</label>
+                                    <TextField
+                                        type="date"
+                                        size='small'
+                                        className={cl.workerInfoDate}
+                                        value={formData[option] != null ? formData[option].end_date : ''}
+                                        onChange={(e) => handleInputChange(option, { ...formData[option], end_date: e.target.value })}
+                                    />
                                 </div>
                             </div>
                          ) :  option === "course:endDate" ? (
                             <div className={cl.data__wrapper}>
-                                <div>
-                                <label style={{ marginRight: '5px', marginLeft: '13px' }}>От</label>
-                                <input
-                                    type="date"
-                                    className={cl.workerInfoDate}
-                                    value={formData[option]?.start_date || ''}
-                                    onChange={(e) => handleInputChange(option, { ...formData[option], start_date: e.target.value })}
-                                />
+                                <div style={{ display: 'flex', alignItems: 'center' }}>
+                                    <label style={{ marginRight: '5px', marginLeft: '13px' }}>От</label>
+                                    <TextField
+                                        type="date"
+                                        size='small'
+                                        className={cl.workerInfoDate}
+                                        value={formData[option] != null ? formData[option].start_date : ''}
+                                        onChange={(e) => handleInputChange(option, { ...formData[option], start_date: e.target.value })}
+                                    />
                                 </div>
-                                <div>
-                                <label style={{ marginRight: '5px', marginLeft: '13px' }}>До</label>
-                                <input
-                                    type="date"
-                                    className={cl.workerInfoDate}
-                                    value={formData[option]?.end_date || ''}
-                                    onChange={(e) => handleInputChange(option, { ...formData[option], end_date: e.target.value })}
-                                />
+                                <div style={{ display: 'flex', alignItems: 'center' }}>
+                                    <label style={{ marginRight: '5px', marginLeft: '13px' }}>До</label>
+                                    <TextField
+                                        type="date"
+                                        size='small'
+                                        className={cl.workerInfoDate}
+                                        value={formData[option] != null ? formData[option].end_date : ''}
+                                        onChange={(e) => handleInputChange(option, { ...formData[option], end_date: e.target.value })}
+                                    />
                                 </div>
                             </div>
                          ) : ( 
-                        <input
+                        <TextField
                             type="text"
+                            size='small'
                             className={cl.workerInfo}
                             value={formData[option] || ''}
                             placeholder={`${courses_options.find((o) => o.id === option).label}`}
@@ -886,47 +1032,66 @@ export function renderAcademicDegreeOptions(selectedAcademicDegreeOptions, formD
     return(
         selectedAcademicDegreeOptions.length > 0 && (
             <div className={cl.input__container}>
-                <p className={cl.headline}>Личные данные</p>
+                <p className={cl.headline}>Ученые степени</p>
                 {selectedAcademicDegreeOptions.map((option) => (
                     <div key={option} className={cl.wrapper__input}>
                         <label className={cl.label__name}>{academic_degree_options.find((o) => o.id === option).label}:</label>
                         {option === "academicdegree:academicDegree" ? (
-                            <select
-                            value={formData[option] || ''}
-                            className={cl.workerInfoSelect}
-                            onChange={(e) => handleInputChange(option, e.target.value)}
-                            >
-                            {academic_degree_options.find((o) => o.id === option).selectOptions.map((genderOption) => (
-                                <option key={genderOption} value={genderOption}>
-                                {genderOption}
-                                </option>
-                            ))}
-                            </select>
+                            <div className={cl.tooltipWrapper}>
+                                <FormControl fullWidth >
+                                    {/* <InputLabel id="demo-simple-select-label">{options.find((o) => o.id === option).label}</InputLabel> */}
+                                    <Select
+                                        labelId="demo-simple-select-label"
+                                        id="demo-simple-select"
+                                        // label='Страна рождения'
+                                        value={formData[option] || ''}
+                                        onChange={(e) => handleInputChange(option, e.target.value)}
+                                        required
+                                        title="Выберите  вид образования" // Добавлен атрибут title
+                                        size='small'
+                                        style={{ marginLeft: '12px' }}
+                                        className={cl.workerInfoSelect}
+                                    >
+                                        <MenuItem value="" disabled hidden>
+                                        Выберите вид образования
+                                        </MenuItem>
+                                        {academic_degree_options.find((o) => o.id === option).selectOptions.map((genderOption) => (
+                                            <MenuItem key={genderOption} value={genderOption}>
+                                            {genderOption}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                                <div className={cl.tooltipText}> <BsExclamationCircle />Выберите  вид образования</div>
+                            </div>
                 
                         ) : option === "academicdegree:academicDiplomaDate" ? (
                             <div className={cl.data__wrapper}>
-                                <div>
-                                <label style={{ marginRight: '5px', marginLeft: '13px' }}>От</label>
-                                <input
-                                    type="date"
-                                    className={cl.workerInfoDate}
-                                    value={formData[option]?.start_date || ''}
-                                    onChange={(e) => handleInputChange(option, { ...formData[option], start_date: e.target.value })}
-                                />
+                                <div style={{ display: 'flex', alignItems: 'center' }}>
+                                    <label style={{ marginRight: '5px', marginLeft: '13px' }}>От</label>
+                                    <TextField
+                                        type="date"
+                                        size='small'
+                                        className={cl.workerInfoDate}
+                                        value={formData[option] != null ? formData[option].start_date : ''}
+                                        onChange={(e) => handleInputChange(option, { ...formData[option], start_date: e.target.value })}
+                                    />
                                 </div>
-                                <div>
-                                <label style={{ marginRight: '5px', marginLeft: '13px' }}>До</label>
-                                <input
-                                    type="date"
-                                    className={cl.workerInfoDate}
-                                    value={formData[option]?.end_date || ''}
-                                    onChange={(e) => handleInputChange(option, { ...formData[option], end_date: e.target.value })}
-                                />
+                                <div style={{ display: 'flex', alignItems: 'center' }}>
+                                    <label style={{ marginRight: '5px', marginLeft: '13px' }}>До</label>
+                                    <TextField
+                                        type="date"
+                                        size='small'
+                                        className={cl.workerInfoDate}
+                                        value={formData[option] != null ? formData[option].end_date : ''}
+                                        onChange={(e) => handleInputChange(option, { ...formData[option], end_date: e.target.value })}
+                                    />
                                 </div>
                             </div>
                          ) : ( 
-                        <input
+                        <TextField
                             type="text"
+                            size='small'
                             className={cl.workerInfo}
                             value={formData[option] || ''}
                             placeholder={`${academic_degree_options.find((o) => o.id === option).label}`}
@@ -943,26 +1108,64 @@ export function renderAcademicDegreeOptions(selectedAcademicDegreeOptions, formD
 };
 
 export function renderSportOptions(selectedSportOptions, formData, handleInputChange, sport_results_options) {
+    const sportOptions = Object.entries(listOfSports);
     return(
         selectedSportOptions.length > 0 && (
             <div className={cl.input__container}>
-                <p className={cl.headline}>Личные данные</p>
+                <p className={cl.headline}>Спорт</p>
                 {selectedSportOptions.map((option) => (
                     <div key={option} className={cl.wrapper__input}>
                         <label className={cl.label__name}>{sport_results_options.find((o) => o.id === option).label}:</label>
                         {option === "sportskill:sportSkillLvl" ? (
-                            <select
-                            value={formData[option] || ''}
-                            className={cl.workerInfoSelect}
-                            onChange={(e) => handleInputChange(option, e.target.value)}
-                            >
-                            {sport_results_options.find((o) => o.id === option).selectOptions.map((genderOption) => (
-                                <option key={genderOption} value={genderOption}>
-                                {genderOption}
-                                </option>
-                            ))}
-                            </select>
-                
+                            <FormControl fullWidth >
+                                {/* <InputLabel id="demo-simple-select-label">{options.find((o) => o.id === option).label}</InputLabel> */}
+                                <Select
+                                    labelId="demo-simple-select-label"
+                                    id="demo-simple-select"
+                                    // label='Страна рождения'
+                                    value={formData[option] || ''}
+                                    className={cl.workerInfoSelect}
+                                    onChange={(e) => handleInputChange(option, e.target.value)}
+                                    size='small'
+                                    style={{ marginLeft: '44px' }}
+                                >
+                                    <MenuItem value="" disabled hidden>
+                                    Выберите уровень владения
+                                    </MenuItem>
+                                    {sport_results_options.find((o) => o.id === option).selectOptions.map((genderOption) => (
+                                        <MenuItem key={genderOption} value={genderOption}>
+                                        {genderOption}
+                                        </MenuItem>
+                                    ))}
+                                    
+                                </Select>
+                            </FormControl>
+                        ) :
+                        option === "sportskill:sportType" ? (
+                            <div className={cl.data__wrapper}>
+                               <FormControl fullWidth >
+                                {/* <InputLabel id="demo-simple-select-label">{options.find((o) => o.id === option).label}</InputLabel> */}
+                                <Select
+                                    labelId="demo-simple-select-label"
+                                    id="demo-simple-select"
+                                    value={formData[option] || ''}
+                                    className={cl.workerInfoSelect}
+                                    onChange={(e) => handleInputChange(option, e.target.value)}
+                                    size='small'
+                                    style={{ marginLeft: '12px' }}
+                                >
+                                    <MenuItem value="" disabled hidden>
+                                    Выберите вид спорта
+                                    </MenuItem>
+                                    {sportOptions.map(([code, sport]) => (
+                                        <MenuItem key={code} value={sport}>
+                                        {sport}
+                                        </MenuItem>
+                                    ))}
+                                    
+                                </Select>
+                                </FormControl>
+                            </div>
                         ) : (
                         <input
                             type="text"

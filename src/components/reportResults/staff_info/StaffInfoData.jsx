@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import cl from './StaffInfoData.module.css';
-import { Button } from '@mui/material';
 import { MdArrowDropDown, MdExpandLess } from 'react-icons/md';
+import { Button, TextField, Select, FormControl, MenuItem, Box } from '@mui/material';
+import { BsExclamationCircle } from "react-icons/bs";
+import { Accordion, AccordionSummary, AccordionDetails, Typography } from '@mui/material';
+
 
 function StaffInfoData(props) {
     // const [formData, setFormData] = useState({}); // Состояние для хранения данных из инпутов
@@ -486,47 +489,37 @@ export function renderSpecChecksOptions(selectedSpecChecksOptions, formData, han
     return(
         selectedSpecChecksOptions.length > 0 && (
             <div className={cl.input__container}>
-                <p className={cl.headline}>Кадровые данные</p>
+                <p className={cl.headline}>Спец проверка</p>
                 {selectedSpecChecksOptions.map((option) => (
                     <div key={option} className={cl.wrapper__input}>
                         <label className={cl.label__name}>{spec_checks_options.find((o) => o.id === option).label}:</label>
-                        {option === "owning_lvl" ? (
-                            <select
-                            value={formData[option] || ''}
-                            className={cl.workerInfoSelect}
-                            onChange={(e) => handleInputChange(option, e.target.value)}
-                            >
-                            {spec_checks_options.find((o) => o.id === option).selectOptions.map((genderOption) => (
-                                <option key={genderOption} value={genderOption}>
-                                {genderOption}
-                                </option>
-                            ))}
-                            </select>
-                
-                        ) : option === "speccheck:docDate" ? (
+                        {option === "speccheck:docDate" ? (
                             <div className={cl.data__wrapper}>
-                                <div>
-                                <label style={{ marginRight: '5px', marginLeft: '13px' }}>От</label>
-                                <input
-                                    type="date"
-                                    className={cl.workerInfoDate}
-                                    value={formData[option]?.start_date || ''}
-                                    onChange={(e) => handleInputChange(option, { ...formData[option], start_date: e.target.value })}
-                                />
+                                <div style={{ display: 'flex', alignItems: 'center' }}>
+                                    <label style={{ marginRight: '5px', marginLeft: '13px' }}>От</label>
+                                    <TextField
+                                        type="date"
+                                        size='small'
+                                        className={cl.workerInfoDate}
+                                        value={formData[option] != null ? formData[option].start_date : ''}
+                                        onChange={(e) => handleInputChange(option, { ...formData[option], start_date: e.target.value })}
+                                    />
                                 </div>
-                                <div>
-                                <label style={{ marginRight: '5px', marginLeft: '13px' }}>До</label>
-                                <input
-                                    type="date"
-                                    className={cl.workerInfoDate}
-                                    value={formData[option]?.end_date || ''}
-                                    onChange={(e) => handleInputChange(option, { ...formData[option], end_date: e.target.value })}
-                                />
+                                <div style={{ display: 'flex', alignItems: 'center' }}>
+                                    <label style={{ marginRight: '5px', marginLeft: '13px' }}>До</label>
+                                    <TextField
+                                        size='small'
+                                        type="date"
+                                        className={cl.workerInfoDate}
+                                        value={formData[option] != null ? formData[option].end_date : ''}
+                                        onChange={(e) => handleInputChange(option, { ...formData[option], end_date: e.target.value })}
+                                    />
                                 </div>
                             </div>
                          ) : (
-                        <input
+                        <TextField
                             type="text"
+                            size='small'
                             className={cl.workerInfo}
                             value={formData[option] || ''}
                             placeholder={`${spec_checks_options.find((o) => o.id === option).label}`}
@@ -550,36 +543,25 @@ export function renderAttestationOptions(selectedAttestationsOptions, formData, 
                 {selectedAttestationsOptions.map((option) => (
                     <div key={option} className={cl.wrapper__input}>
                         <label className={cl.label__name}>{attestations_options.find((o) => o.id === option).label}:</label>
-                        {option === "owning_lvl" ? (
-                            <select
-                            value={formData[option] || ''}
-                            className={cl.workerInfoSelect}
-                            onChange={(e) => handleInputChange(option, e.target.value)}
-                            >
-                            {attestations_options.find((o) => o.id === option).selectOptions.map((genderOption) => (
-                                <option key={genderOption} value={genderOption}>
-                                {genderOption}
-                                </option>
-                            ))}
-                            </select>
-                
-                        ) : option === "attestation:lastAttDate" ? (
+                        {option === "attestation:lastAttDate" ? (
                             <div className={cl.data__wrapper}>
-                                <div>
-                                <label style={{ marginRight: '5px', marginLeft: '13px' }}>От</label>
-                                <input
-                                    type="date"
-                                    className={cl.workerInfoDate}
-                                    value={formData[option]?.start_date || ''}
-                                    onChange={(e) => handleInputChange(option, { ...formData[option], start_date: e.target.value })}
-                                />
+                                <div style={{ display: 'flex', alignItems: 'center' }}>
+                                    <label style={{ marginRight: '5px', marginLeft: '13px' }}>От</label>
+                                    <TextField
+                                        type="date"
+                                        size='small'
+                                        className={cl.workerInfoDate}
+                                        value={formData[option] != null ? formData[option].start_date : ''}
+                                        onChange={(e) => handleInputChange(option, { ...formData[option], start_date: e.target.value })}
+                                    />
                                 </div>
                                 <div>
                                 <label style={{ marginRight: '5px', marginLeft: '13px' }}>До</label>
-                                <input
+                                <TextField
                                     type="date"
+                                    size='small'
                                     className={cl.workerInfoDate}
-                                    value={formData[option]?.end_date || ''}
+                                    value={formData[option] != null ? formData[option].end_date : ''}
                                     onChange={(e) => handleInputChange(option, { ...formData[option], end_date: e.target.value })}
                                 />
                                 </div>
@@ -587,28 +569,31 @@ export function renderAttestationOptions(selectedAttestationsOptions, formData, 
                          ) : (
                             option === "attestation:nextAttDateMin" ? (
                                 <div className={cl.data__wrapper}>
-                                    <div>
-                                    <label style={{ marginRight: '5px', marginLeft: '13px' }}>От</label>
-                                    <input
-                                        type="date"
-                                        className={cl.workerInfoDate}
-                                        value={formData[option]?.start_date || ''}
-                                        onChange={(e) => handleInputChange(option, { ...formData[option], start_date: e.target.value })}
-                                    />
+                                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                                        <label style={{ marginRight: '5px', marginLeft: '13px' }}>От</label>
+                                        <TextField
+                                            type="date"
+                                            size='small'
+                                            className={cl.workerInfoDate}
+                                            value={formData[option] != null ? formData[option].start_date : ''}
+                                            onChange={(e) => handleInputChange(option, { ...formData[option], start_date: e.target.value })}
+                                        />
                                     </div>
-                                    <div>
-                                    <label style={{ marginRight: '5px', marginLeft: '13px' }}>До</label>
-                                    <input
-                                        type="date"
-                                        className={cl.workerInfoDate}
-                                        value={formData[option]?.end_date || ''}
-                                        onChange={(e) => handleInputChange(option, { ...formData[option], end_date: e.target.value })}
-                                    />
+                                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                                        <label style={{ marginRight: '5px', marginLeft: '13px' }}>До</label>
+                                        <TextField
+                                            type="date"
+                                            size='small'
+                                            className={cl.workerInfoDate}
+                                            value={formData[option] != null ? formData[option].end_date : ''}
+                                            onChange={(e) => handleInputChange(option, { ...formData[option], end_date: e.target.value })}
+                                        />
                                     </div>
                                 </div>
                             ) :
-                        <input
+                        <TextField
                             type="text"
+                            size='small'
                             className={cl.workerInfo}
                             value={formData[option] || ''}
                             placeholder={`${attestations_options.find((o) => o.id === option).label}`}
@@ -633,17 +618,31 @@ export function renderCategoryOptions(selectedCategoryOptions, formData, handleI
                     <div key={option} className={cl.wrapper__input}>
                         <label className={cl.label__name}>{class_categories_options.find((o) => o.id === option).label}:</label>
                         {option === "classcategory:categoryType" ? (
-                            <select
-                            value={formData[option] || ''}
-                            className={cl.workerInfoSelect}
-                            onChange={(e) => handleInputChange(option, e.target.value)}
-                            >
-                            {class_categories_options.find((o) => o.id === option).selectOptions.map((genderOption) => (
-                                <option key={genderOption} value={genderOption}>
-                                {genderOption}
-                                </option>
-                            ))}
-                            </select>
+                            <FormControl fullWidth >
+                                {/* <InputLabel id="demo-simple-select-label">{options.find((o) => o.id === option).label}</InputLabel> */}
+                                <Select
+                                    labelId="demo-simple-select-label"
+                                    id="demo-simple-select"
+                                    // label='Страна рождения'
+                                    required
+                                    title="Выберите вид обучения" // Добавлен атрибут title
+                                    size='small'
+                                    style={{ marginLeft: '12px' }}
+                                    value={formData[option] || ''}
+                                    className={cl.workerInfoSelect}
+                                    onChange={(e) => handleInputChange(option, e.target.value)}
+                                >
+                                    <MenuItem value="" disabled hidden>
+                                    Выберите категорию
+                                    </MenuItem>
+                                    {class_categories_options.find((o) => o.id === option).selectOptions.map((genderOption) => (
+                                        <MenuItem key={genderOption} value={genderOption}>
+                                        {genderOption}
+                                        </MenuItem>
+                                    ))}
+                                
+                                </Select>
+                            </FormControl>
                 
                         ) : (
                         <input
@@ -672,42 +671,62 @@ export function renderMilitaryRankOptions(selectedMilitaryRankOptions, formData,
                     <div key={option} className={cl.wrapper__input}>
                         <label className={cl.label__name}>{military_rank_options.find((o) => o.id === option).label}:</label>
                         {option === "rankInfo:militaryRank:rankTitle" ? (
-                            <select
-                            value={formData[option] || ''}
-                            className={cl.workerInfoSelect}
-                            onChange={(e) => handleInputChange(option, e.target.value)}
-                            >
-                            {military_rank_options.find((o) => o.id === option).selectOptions.map((genderOption) => (
-                                <option key={genderOption} value={genderOption}>
-                                {genderOption}
-                                </option>
-                            ))}
-                            </select>
-                
+                            <div className={cl.tooltipWrapper}>
+                            <FormControl fullWidth >
+                                {/* <InputLabel id="demo-simple-select-label">{options.find((o) => o.id === option).label}</InputLabel> */}
+                                <Select
+                                    labelId="demo-simple-select-label"
+                                    id="demo-simple-select"
+                                    // label='Страна рождения'
+                                    required
+                                    title="Выберите звание" // Добавлен атрибут title
+                                    size='small'
+                                    style={{ marginLeft: '12px' }}
+                                    value={formData[option] || ''}
+                                    className={cl.workerInfoSelect}
+                                    onChange={(e) => handleInputChange(option, e.target.value)}
+                                >
+                                    <MenuItem value="" disabled hidden>
+                                    Выберите звание
+                                    </MenuItem>
+                                    {military_rank_options.find((o) => o.id === option).selectOptions.map((genderOption) => (
+                                        <MenuItem key={genderOption} value={genderOption}>
+                                        {genderOption}
+                                        </MenuItem>
+                                    ))}
+                                
+                                </Select>
+                            </FormControl>
+                        <div className={cl.tooltipText}> <BsExclamationCircle />Выберите звание</div>
+                            </div>
+                         
                         ) : option === "rankInfo:receivedDate" ? (
                             <div className={cl.data__wrapper}>
-                                <div>
-                                <label style={{ marginRight: '5px', marginLeft: '13px' }}>От</label>
-                                <input
-                                    type="date"
-                                    className={cl.workerInfoDate}
-                                    value={formData[option]?.start_date || ''}
-                                    onChange={(e) => handleInputChange(option, { ...formData[option], start_date: e.target.value })}
-                                />
+                                <div style={{ display: 'flex', alignItems: 'center' }}>
+                                    <label style={{ marginRight: '5px', marginLeft: '13px' }}>От</label>
+                                    <TextField
+                                        type="date"
+                                        size='small'
+                                        className={cl.workerInfoDate}
+                                        value={formData[option] != null ? formData[option].start_date : ''}
+                                        onChange={(e) => handleInputChange(option, { ...formData[option], start_date: e.target.value })}
+                                    />
                                 </div>
-                                <div>
-                                <label style={{ marginRight: '5px', marginLeft: '13px' }}>До</label>
-                                <input
-                                    type="date"
-                                    className={cl.workerInfoDate}
-                                    value={formData[option]?.end_date || ''}
-                                    onChange={(e) => handleInputChange(option, { ...formData[option], end_date: e.target.value })}
-                                />
+                                <div style={{ display: 'flex', alignItems: 'center' }}>
+                                    <label style={{ marginRight: '5px', marginLeft: '13px' }}>До</label>
+                                    <TextField
+                                        type="date"
+                                        size='small'
+                                        className={cl.workerInfoDate}
+                                        value={formData[option] != null ? formData[option].end_date : ''}
+                                        onChange={(e) => handleInputChange(option, { ...formData[option], end_date: e.target.value })}
+                                    />
                                 </div>
                             </div>
                          ) : ( 
-                        <input
+                        <TextField
                             type="text"
+                            size='small'
                             className={cl.workerInfo}
                             value={formData[option] || ''}
                             placeholder={`${military_rank_options.find((o) => o.id === option).label}`}
@@ -732,42 +751,62 @@ export function renderAwardsOptions(selectedAwardsOptions, formData, handleInput
                     <div key={option} className={cl.wrapper__input}>
                         <label className={cl.label__name}>{awards_options.find((o) => o.id === option).label}:</label>
                         {option === "reward:rewardType" ? (
-                            <select
-                            value={formData[option] || ''}
-                            className={cl.workerInfoSelect}
-                            onChange={(e) => handleInputChange(option, e.target.value)}
-                            >
-                            {awards_options.find((o) => o.id === option).selectOptions.map((genderOption) => (
-                                <option key={genderOption} value={genderOption}>
-                                {genderOption}
-                                </option>
-                            ))}
-                            </select>
+                        <div className={cl.tooltipWrapper}>
+                            <FormControl fullWidth >
+                                {/* <InputLabel id="demo-simple-select-label">{options.find((o) => o.id === option).label}</InputLabel> */}
+                                <Select
+                                    labelId="demo-simple-select-label"
+                                    id="demo-simple-select"
+                                    // label='Страна рождения'
+                                    required
+                                    title="Выберите тип награды" // Добавлен атрибут title
+                                    size='small'
+                                    style={{ marginLeft: '12px' }}
+                                    value={formData[option] || ''}
+                                    className={cl.workerInfoSelect}
+                                    onChange={(e) => handleInputChange(option, e.target.value)}
+                                >
+                                    <MenuItem value="" disabled hidden>
+                                    Выберите тип награды
+                                    </MenuItem>
+                                    {awards_options.find((o) => o.id === option).selectOptions.map((genderOption) => (
+                                        <MenuItem key={genderOption} value={genderOption}>
+                                        {genderOption}
+                                        </MenuItem>
+                                    ))}
+                                
+                                </Select>
+                            </FormControl>
+                            <div className={cl.tooltipText}> <BsExclamationCircle />Выберите тип награды</div>
+                        </div>
                 
                         ) : option === "reward:rewardDate" ? (
                             <div className={cl.data__wrapper}>
-                                <div>
-                                <label style={{ marginRight: '5px', marginLeft: '13px' }}>От</label>
-                                <input
-                                    type="date"
-                                    className={cl.workerInfoDate}
-                                    value={formData[option]?.start_date || ''}
-                                    onChange={(e) => handleInputChange(option, { ...formData[option], start_date: e.target.value })}
-                                />
+                                <div style={{ display: 'flex', alignItems: 'center' }}>
+                                    <label style={{ marginRight: '5px', marginLeft: '13px' }}>От</label>
+                                    <TextField
+                                        type="date"
+                                        size='small'
+                                        className={cl.workerInfoDate}
+                                        value={formData[option] != null ? formData[option].start_date : ''}
+                                        onChange={(e) => handleInputChange(option, { ...formData[option], start_date: e.target.value })}
+                                    />
                                 </div>
-                                <div>
-                                <label style={{ marginRight: '5px', marginLeft: '13px' }}>До</label>
-                                <input
-                                    type="date"
-                                    className={cl.workerInfoDate}
-                                    value={formData[option]?.end_date || ''}
-                                    onChange={(e) => handleInputChange(option, { ...formData[option], end_date: e.target.value })}
-                                />
+                                <div style={{ display: 'flex', alignItems: 'center' }}>
+                                    <label style={{ marginRight: '5px', marginLeft: '13px' }}>До</label>
+                                    <TextField
+                                        type="date"
+                                        size='small'
+                                        className={cl.workerInfoDate}
+                                        value={formData[option] != null ? formData[option].end_date : ''}
+                                        onChange={(e) => handleInputChange(option, { ...formData[option], end_date: e.target.value })}
+                                    />
                                 </div>
                             </div>
                          ) : ( 
-                        <input
+                        <TextField
                             type="text"
+                            size='small'
                             className={cl.workerInfo}
                             value={formData[option] || ''}
                             placeholder={`${awards_options.find((o) => o.id === option).label}`}
@@ -791,43 +830,33 @@ export function renderSickLeavesOptions(selectedSickLeavesOptions, formData, han
                 {selectedSickLeavesOptions.map((option) => (
                     <div key={option} className={cl.wrapper__input}>
                         <label className={cl.label__name}>{sick_leaves_options.find((o) => o.id === option).label}:</label>
-                        {option === "" ? (
-                            <select
-                            value={formData[option] || ''}
-                            className={cl.workerInfoSelect}
-                            onChange={(e) => handleInputChange(option, e.target.value)}
-                            >
-                            {sick_leaves_options.find((o) => o.id === option).selectOptions.map((genderOption) => (
-                                <option key={genderOption} value={genderOption}>
-                                {genderOption}
-                                </option>
-                            ))}
-                            </select>
-                
-                        ) : option === "sickleave:sickDocDate" ? (
+                        {option === "sickleave:sickDocDate" ? (
                             <div className={cl.data__wrapper}>
-                                <div>
-                                <label style={{ marginRight: '5px', marginLeft: '13px' }}>От</label>
-                                <input
-                                    type="date"
-                                    className={cl.workerInfoDate}
-                                    value={formData[option]?.start_date || ''}
-                                    onChange={(e) => handleInputChange(option, { ...formData[option], start_date: e.target.value })}
-                                />
+                                <div style={{ display: 'flex', alignItems: 'center' }}>
+                                    <label style={{ marginRight: '5px', marginLeft: '13px' }}>От</label>
+                                    <TextField
+                                        type="date"
+                                        size='small'
+                                        className={cl.workerInfoDate}
+                                        value={formData[option] != null ? formData[option].start_date : ''}
+                                        onChange={(e) => handleInputChange(option, { ...formData[option], start_date: e.target.value })}
+                                    />
                                 </div>
-                                <div>
-                                <label style={{ marginRight: '5px', marginLeft: '13px' }}>До</label>
-                                <input
-                                    type="date"
-                                    className={cl.workerInfoDate}
-                                    value={formData[option]?.end_date || ''}
-                                    onChange={(e) => handleInputChange(option, { ...formData[option], end_date: e.target.value })}
+                                <div style={{ display: 'flex', alignItems: 'center' }}>
+                                    <label style={{ marginRight: '5px', marginLeft: '13px' }}>До</label>
+                                    <TextField
+                                        type="date"
+                                        size='small'
+                                        className={cl.workerInfoDate}
+                                        value={formData[option] != null ? formData[option].end_date : ''}
+                                        onChange={(e) => handleInputChange(option, { ...formData[option], end_date: e.target.value })}
                                 />
                                 </div>
                             </div>
                          ) : ( 
-                        <input
+                        <TextField
                             type="text"
+                            size='small'
                             className={cl.workerInfo}
                             value={formData[option] || ''}
                             placeholder={`${sick_leaves_options.find((o) => o.id === option).label}`}
@@ -847,47 +876,66 @@ export function renderInvestigationRetrievalsOptions(selectedInvestigationRetrie
     return(
         selectedInvestigationRetrievalsOptions.length > 0 && (
             <div className={cl.input__container}>
-                <p className={cl.headline}>Награды</p>
+                <p className={cl.headline}>Служебные взыскания</p>
                 {selectedInvestigationRetrievalsOptions.map((option) => (
                     <div key={option} className={cl.wrapper__input}>
                         <label className={cl.label__name}>{investigation_retrievals_options.find((o) => o.id === option).label}:</label>
                         {option === "investigation:investigation_decree_type" ? (
-                            <select
-                            value={formData[option] || ''}
-                            className={cl.workerInfoSelect}
-                            onChange={(e) => handleInputChange(option, e.target.value)}
-                            >
-                            {investigation_retrievals_options.find((o) => o.id === option).selectOptions.map((genderOption) => (
-                                <option key={genderOption} value={genderOption}>
-                                {genderOption}
-                                </option>
-                            ))}
-                            </select>
-                
+                        <div className={cl.tooltipWrapper}>
+                            <FormControl fullWidth >
+                                {/* <InputLabel id="demo-simple-select-label">{options.find((o) => o.id === option).label}</InputLabel> */}
+                                <Select
+                                    labelId="demo-simple-select-label"
+                                    id="demo-simple-select"
+                                    // label='Страна рождения'
+                                    required
+                                    title="Выберите вид взыскания" // Добавлен атрибут title
+                                    size='small'
+                                    style={{ marginLeft: '12px' }}
+                                    value={formData[option] || ''}
+                                    className={cl.workerInfoSelect}
+                                    onChange={(e) => handleInputChange(option, e.target.value)}
+                                >
+                                    <MenuItem value="" disabled hidden>
+                                    Выберите вид взыскания
+                                    </MenuItem>
+                                    {investigation_retrievals_options.find((o) => o.id === option).selectOptions.map((genderOption) => (
+                                        <MenuItem key={genderOption} value={genderOption}>
+                                        {genderOption}
+                                        </MenuItem>
+                                    ))}
+                                
+                                </Select>
+                            </FormControl>
+                            <div className={cl.tooltipText}> <BsExclamationCircle />Выберите вид взыскания</div>
+                        </div>
                         ) : option === "investigation:investigation_date" ? (
                             <div className={cl.data__wrapper}>
-                                <div>
-                                <label style={{ marginRight: '5px', marginLeft: '13px' }}>От</label>
-                                <input
-                                    type="date"
-                                    className={cl.workerInfoDate}
-                                    value={formData[option]?.start_date || ''}
-                                    onChange={(e) => handleInputChange(option, { ...formData[option], start_date: e.target.value })}
-                                />
+                                <div style={{ display: 'flex', alignItems: 'center' }}>
+                                    <label style={{ marginRight: '5px', marginLeft: '13px' }}>От</label>
+                                    <TextField
+                                        type="date"
+                                        size='small'
+                                        className={cl.workerInfoDate}
+                                        value={formData[option] != null ? formData[option].start_date : ''}
+                                        onChange={(e) => handleInputChange(option, { ...formData[option], start_date: e.target.value })}
+                                    />
                                 </div>
-                                <div>
-                                <label style={{ marginRight: '5px', marginLeft: '13px' }}>До</label>
-                                <input
-                                    type="date"
-                                    className={cl.workerInfoDate}
-                                    value={formData[option]?.end_date || ''}
-                                    onChange={(e) => handleInputChange(option, { ...formData[option], end_date: e.target.value })}
-                                />
+                                <div style={{ display: 'flex', alignItems: 'center' }}>
+                                    <label style={{ marginRight: '5px', marginLeft: '13px' }}>До</label>
+                                    <TextField
+                                        type="date"
+                                        size='small'
+                                        className={cl.workerInfoDate}
+                                        value={formData[option] != null ? formData[option].end_date : ''}
+                                        onChange={(e) => handleInputChange(option, { ...formData[option], end_date: e.target.value })}
+                                    />
                                 </div>
                             </div>
                          ) : ( 
-                        <input
+                        <TextField
                             type="text"
+                            size='small'
                             className={cl.workerInfo}
                             value={formData[option] || ''}
                             placeholder={`${investigation_retrievals_options.find((o) => o.id === option).label}`}

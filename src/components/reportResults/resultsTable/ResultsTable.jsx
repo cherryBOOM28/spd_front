@@ -71,7 +71,7 @@ const ResultTable = ({results, setResults, formData, selected, columns, count, n
   return (
     <Paper style={{ marginTop: '20px', borderRadius: '5px' }} sx={{  width: '80.2vw', overflow: 'hidden' }}>
         <div>
-            <TableContainer sx={{  maxHeight: 440 }}>
+            <TableContainer sx={{  maxHeight: 740 }}>
                 <Table stickyHeader aria-label="sticky table">
 
                     <TableHead>
@@ -92,45 +92,50 @@ const ResultTable = ({results, setResults, formData, selected, columns, count, n
                     </TableHead>
 
                     <TableBody>
-                    {console.log('Selected Fields:', selected)}
-                        {table.map((person) => (
+                        {console.log('Selected Fields:', selected)}
+                        {table.length === 0 ? (
+                            <TableRow>
+                                <TableCell colSpan={9} align="center">Ничего не найдено</TableCell>
+                            </TableRow>
+                        ) : (
+                            table.map((person) => (
                             <TableRow 
                                 key={person.id}
                                 sx={{ '&:hover': { backgroundColor: '#f0f0f0' } }}
                             >
                                 <TableCell style={{ minWidth: 50 }}>
-                                    {person.firstName}
+                                {person.firstName}
                                 </TableCell>
                                 <TableCell style={{ minWidth: 50 }}>
-                                    {person.surname}
+                                {person.surname}
                                 </TableCell>
                                 <TableCell style={{ minWidth: 50 }}>
-                                    {person.patronymic}
+                                {person.patronymic}
                                 </TableCell>
-           
+                            
                                 {selected
-                                    .filter(item => item !== 'selectAll' && item !== 'firstName' && item !== 'surname' && item !== 'patronymic')
-                                    .map((fieldName) => {
-                                    return (
-                                        <TableCell key={fieldName} style={{ minWidth: 50 }}>
-                                            {person[removePrefix(fieldName)]}
-                                        </TableCell> 
-                                    )     
-                                })}   
-                               
+                                .filter(item => item !== 'selectAll' && item !== 'firstName' && item !== 'surname' && item !== 'patronymic')
+                                .map((fieldName) => (
+                                    <TableCell key={fieldName} style={{ minWidth: 50 }}>
+                                    {person[removePrefix(fieldName)]}
+                                    </TableCell> 
+                                ))}
+                                
                                 <TableCell style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                                    <Button 
-                                        variant="outlined" 
-                                        style={{ textTransform: 'none', display: 'flex', gap: '10px', cursor: 'pointer', width: '195px' }}
-                                        onClick={() => handleRowClick(person.id)}
-                                    >
-                                        <VscAccount />
-                                        Перейти в профиль
-                                    </Button>
+                                <Button 
+                                    variant="outlined" 
+                                    style={{ textTransform: 'none', display: 'flex', gap: '10px', cursor: 'pointer', width: '195px' }}
+                                    onClick={() => handleRowClick(person.id)}
+                                >
+                                    <VscAccount />
+                                    Перейти в профиль
+                                </Button>
                                 </TableCell>
                             </TableRow>  
-                        ))}
+                            ))
+                        )}
                     </TableBody>
+
                 </Table>
             </TableContainer>
             {/* <TablePagination

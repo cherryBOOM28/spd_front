@@ -1,4 +1,4 @@
-const list = {
+const listOfSports = {
     "basketball": "Баскетбол",
     "football": "Футбол",
     "tennis": "Теннис",
@@ -33,4 +33,4 @@ const list = {
     "triathlon": "Триатлон"
 }
   
-export default list
+export default listOfSports;

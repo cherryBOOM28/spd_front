@@ -54,10 +54,9 @@ const PensionList = () => {
   
     return (
     <div className={cl.wrapper}>
-
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <div style={{ display: 'flex', alignItems: 'center' }}>
-                <label htmlFor="datePicker">Выберите дату:</label>
+                <label htmlFor="datePicker" style={{ marginRight: '12px' }}>Выберите дату:</label>
                 <TextField
                     type="date"
                     id="datePicker"

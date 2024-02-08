@@ -19,7 +19,7 @@
 
 .dropdown__content {
   padding: 8px;
-  background: #F8F8F8;
+  background: #ffffff;
   width: 204px;
   border-radius: 5px;
 }
@@ -55,11 +55,7 @@
 }
 
 .workerInfo {
-  border-radius: 5px;
-  border: 1px solid #959595;
-  width: 200px;
-  /* height: 30px; */
-  padding: 6px 9px;
+  width: 220px;
   margin-left: 12px;
   outline: none;
   font-family: "Helvetica", sans-serif, sans-serif;
@@ -89,11 +85,8 @@
 }
 
 .workerInfoDate {
-  border-radius: 5px;
-  border: 1px solid #959595;
-  width: 160px;
+  width: 182px;
   /* height: 32px; */
-  padding: 6px 9px;
   margin-left: 12px;
   outline: none;
   font-family: "Helvetica", sans-serif, sans-serif;
@@ -111,7 +104,7 @@ display: none;
 position: absolute;
 right: -120px; 
 top: 0; 
-background-color: #F8F8F8;
+background-color: #ffffff;
 padding: 8px;
 border-radius: 5px;
 }
