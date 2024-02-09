@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import cl from './StaffInfoData.module.css';
 import { MdArrowDropDown, MdExpandLess } from 'react-icons/md';
-import { Button, TextField, Select, FormControl, MenuItem, Box } from '@mui/material';
+import { Paper, Button, TextField, Select, FormControl, MenuItem, Box } from '@mui/material';
 import { BsExclamationCircle } from "react-icons/bs";
 import { Accordion, AccordionSummary, AccordionDetails, Typography } from '@mui/material';
 
@@ -131,6 +131,44 @@ function StaffInfoData(props) {
     const [isOpenStaffInfo, setIsOpenStaffInfo] = useState(false);
     const toggleStaffInfoDropdown = () => {
         setIsOpenStaffInfo(!isOpenStaffInfo);
+
+        setExpanded(false);
+
+    };
+
+    const [expanded, setExpanded] = useState(false);
+    const handleChange = (panel) => (event, isExpanded) => {
+        setExpanded(isExpanded ? panel : false);
+    };
+
+    const [expandedAttestation, setExpandedAttestation] = useState(false);
+    const handleChangeAttestation = (panel) => (event, isExpanded) => {
+        setExpandedAttestation(isExpanded ? panel : false);
+    };
+
+    const [expandedCategory, setExpandedCategory] = useState(false);
+    const handleChangeCategory = (panel) => (event, isExpanded) => {
+        setExpandedCategory(isExpanded ? panel : false);
+    };
+
+    const [expandedMilitaryRank, setExpandedMilitaryRank] = useState(false);
+    const handleChangeMilitaryRank = (panel) => (event, isExpanded) => {
+        setExpandedMilitaryRank(isExpanded ? panel : false);
+    };
+
+    const [expandedAwards, setExpandedAwards] = useState(false);
+    const handleChangeAwards = (panel) => (event, isExpanded) => {
+        setExpandedAwards(isExpanded ? panel : false);
+    };
+
+    const [expandedSickLeaves, setExpandedSickLeaves] = useState(false);
+    const handleChangeSickLeaves = (panel) => (event, isExpanded) => {
+        setExpandedSickLeaves(isExpanded ? panel : false);
+    };
+
+    const [expandedInvestigationRetrievals, setExpandedInvestigationRetrievals] = useState(false);
+    const handleChangeInvestigationRetrievals = (panel) => (event, isExpanded) => {
+        setExpandedInvestigationRetrievals(isExpanded ? panel : false);
     };
 
     const [subMenuOpen, setSubMenuOpen] = useState(false);
@@ -271,16 +309,18 @@ function StaffInfoData(props) {
                     {isOpenStaffInfo ? <MdExpandLess className={cl.arrow} /> : <MdArrowDropDown className={cl.arrow} />}
                 </Button>
                 {isOpenStaffInfo && (
-                    <div className={cl.dropdown__content}>
-                        
-                        <div className={cl.dropdown} onMouseEnter={toggleSubMenu} onMouseLeave={toggleSubMenu}>
-                            <button className={cl.subMenuDropdown}>
-                                Спец проверка
-                            </button>
-                            {subMenuOpen && (
-                                <div className={cl.subMenu}>
-                                    <ul>
-                                        {spec_checks_options.map((option) => (
+                    <Paper className={cl.dropdown__content}>
+                        <Accordion expanded={expanded === 'panel1'} onChange={handleChange('panel1')} style={{ borderRadius: '5px' }}>
+                            <AccordionSummary
+                                // expandIcon={<ExpandMoreIcon />}
+                                aria-controls="panel1bh-content"
+                                id="panel1bh-header"
+                            >
+                            <p className={cl.accordion_text}>Спец проверка</p>
+                            </AccordionSummary>
+                            <AccordionDetails>
+                                <ul>
+                                    {spec_checks_options.map((option) => (
                                         <li key={option.id} className={cl.options__label}>
                                             <label>
                                                 <input
@@ -298,18 +338,21 @@ function StaffInfoData(props) {
                                             )}
                                         </li>
                                     ))}
-                                    </ul>
-                                </div>
-                            )}
-                        </div>
-                        <div className={cl.dropdown} onMouseEnter={toggleAttestationSubMenu} onMouseLeave={toggleAttestationSubMenu} style={{ marginTop: '10px' }}>
-                            <button className={cl.subMenuDropdown}>
-                                Аттестация
-                            </button>
-                            {subAttestationMenuOpen && (
-                                <div className={cl.subMenu}>
-                                    <ul>
-                                        {attestations_options.map((option) => (
+                                </ul>
+                            </AccordionDetails>
+                        </Accordion>
+                        
+                        <Accordion expandedAttestation={expandedAttestation === 'panel1'} onChange={handleChangeAttestation('panel1')} style={{ borderRadius: '5px' }}>
+                            <AccordionSummary
+                                // expandIcon={<ExpandMoreIcon />}
+                                aria-controls="panel1bh-content"
+                                id="panel1bh-header"
+                            >
+                            <p className={cl.accordion_text}>Аттестация</p>
+                            </AccordionSummary>
+                            <AccordionDetails>
+                                <ul>
+                                    {attestations_options.map((option) => (
                                         <li key={option.id} className={cl.options__label}>
                                             <label>
                                                 <input
@@ -327,18 +370,21 @@ function StaffInfoData(props) {
                                             )}
                                         </li>
                                     ))}
-                                    </ul>
-                                </div>
-                            )}
-                        </div>
-                        <div className={cl.dropdownCategory} onMouseEnter={toggleCategorySubMenu} onMouseLeave={toggleCategorySubMenu} style={{ marginTop: '10px' }}>
-                            <button className={cl.subMenuDropdownCategory}>
-                                Классные категории
-                            </button>
-                            {subCategoryMenuOpen && (
-                                <div className={cl.subMenuCategory}>
-                                    <ul>
-                                        {class_categories_options.map((option) => (
+                                </ul>
+                            </AccordionDetails>
+                        </Accordion>
+
+                        <Accordion expandedCategory={expandedCategory === 'panel1'} onChange={handleChangeCategory('panel1')} style={{ borderRadius: '5px' }}>
+                            <AccordionSummary
+                                // expandIcon={<ExpandMoreIcon />}
+                                aria-controls="panel1bh-content"
+                                id="panel1bh-header"
+                            >
+                            <p className={cl.accordion_text}>Классные категории</p>
+                            </AccordionSummary>
+                            <AccordionDetails>
+                                <ul>
+                                    {class_categories_options.map((option) => (
                                         <li key={option.id} className={cl.options__label}>
                                             <label>
                                                 <input
@@ -356,18 +402,21 @@ function StaffInfoData(props) {
                                             )}
                                         </li>
                                     ))}
-                                    </ul>
-                                </div>
-                            )}
-                        </div>
-                        <div className={cl.dropdownRank} onMouseEnter={toggleMilitaryRankSubMenu} onMouseLeave={toggleMilitaryRankSubMenu} style={{ marginTop: '10px' }}>
-                            <button className={cl.subMenuDropdownRank}>
-                                Звания
-                            </button>
-                            {subMilitaryRankMenuOpen && (
-                                <div className={cl.subMenuRank}>
-                                    <ul>
-                                        {military_rank_options.map((option) => (
+                                </ul>
+                            </AccordionDetails>
+                        </Accordion>
+
+                        <Accordion expandedMilitaryRank={expandedMilitaryRank === 'panel1'} onChange={handleChangeMilitaryRank('panel1')} style={{ borderRadius: '5px' }}>
+                            <AccordionSummary
+                                // expandIcon={<ExpandMoreIcon />}
+                                aria-controls="panel1bh-content"
+                                id="panel1bh-header"
+                            >
+                            <p className={cl.accordion_text}>Звания</p>
+                            </AccordionSummary>
+                            <AccordionDetails>
+                                <ul>
+                                    {military_rank_options.map((option) => (
                                         <li key={option.id} className={cl.options__label}>
                                             <label>
                                                 <input
@@ -385,18 +434,21 @@ function StaffInfoData(props) {
                                             )}
                                         </li>
                                     ))}
-                                    </ul>
-                                </div>
-                            )}
-                        </div>
-                        <div className={cl.dropdownRank} onMouseEnter={toggleAwardsSubMenu} onMouseLeave={toggleAwardsSubMenu} style={{ marginTop: '10px' }}>
-                            <button className={cl.subMenuDropdownRank}>
-                            Награды
-                            </button>
-                            {subAwardsMenuOpen && (
-                                <div className={cl.subMenuRank}>
-                                    <ul>
-                                        {awards_options.map((option) => (
+                                </ul>
+                            </AccordionDetails>
+                        </Accordion>
+                      
+                        <Accordion expandedAwards={expandedAwards === 'panel1'} onChange={handleChangeAwards('panel1')} style={{ borderRadius: '5px' }}>
+                            <AccordionSummary
+                                // expandIcon={<ExpandMoreIcon />}
+                                aria-controls="panel1bh-content"
+                                id="panel1bh-header"
+                            >
+                            <p className={cl.accordion_text}>Награды</p>
+                            </AccordionSummary>
+                            <AccordionDetails>
+                                <ul>
+                                    {awards_options.map((option) => (
                                         <li key={option.id} className={cl.options__label}>
                                             <label>
                                                 <input
@@ -414,18 +466,21 @@ function StaffInfoData(props) {
                                             )}
                                         </li>
                                     ))}
-                                    </ul>
-                                </div>
-                            )}
-                        </div>
-                        <div className={cl.dropdownRank} onMouseEnter={toggleSickLeavesSubMenu} onMouseLeave={toggleSickLeavesSubMenu} style={{ marginTop: '10px' }}>
-                            <button className={cl.subMenuDropdownRank}>
-                            Больничные листы
-                            </button>
-                            {subSickLeavesMenuOpen && (
-                                <div className={cl.subMenuRank}>
-                                    <ul>
-                                        {sick_leaves_options.map((option) => (
+                                </ul>
+                            </AccordionDetails>
+                        </Accordion>
+
+                        <Accordion expandedSickLeaves={expandedSickLeaves === 'panel1'} onChange={handleChangeSickLeaves('panel1')} style={{ borderRadius: '5px' }}>
+                            <AccordionSummary
+                                // expandIcon={<ExpandMoreIcon />}
+                                aria-controls="panel1bh-content"
+                                id="panel1bh-header"
+                            >
+                            <p className={cl.accordion_text}>Больничные листы</p>
+                            </AccordionSummary>
+                            <AccordionDetails>
+                                <ul>
+                                    {sick_leaves_options.map((option) => (
                                         <li key={option.id} className={cl.options__label}>
                                             <label>
                                                 <input
@@ -443,18 +498,21 @@ function StaffInfoData(props) {
                                             )}
                                         </li>
                                     ))}
-                                    </ul>
-                                </div>
-                            )}
-                        </div>
-                        <div className={cl.dropdownInvestigationRetrievals} onMouseEnter={toggleInvestigationRetrievalsSubMenu} onMouseLeave={toggleInvestigationRetrievalsSubMenu} style={{ marginTop: '10px' }}>
-                            <button className={cl.subMenuDropdownInvestigationRetrievals}>
-                            Служебные расследования, взыскания
-                            </button>
-                            {subInvestigationRetrievalsMenuOpen && (
-                                <div className={cl.subMenuInvestigationRetrievals}>
-                                    <ul>
-                                        {investigation_retrievals_options.map((option) => (
+                                </ul>
+                            </AccordionDetails>
+                        </Accordion>
+                     
+                        <Accordion expandedInvestigationRetrievals={expandedInvestigationRetrievals === 'panel1'} onChange={handleChangeInvestigationRetrievals('panel1')} style={{ borderRadius: '5px' }}>
+                            <AccordionSummary
+                                // expandIcon={<ExpandMoreIcon />}
+                                aria-controls="panel1bh-content"
+                                id="panel1bh-header"
+                            >
+                            <p className={cl.accordion_text}>Служебные расследования, взыскания</p>
+                            </AccordionSummary>
+                            <AccordionDetails>
+                                <ul>
+                                    {investigation_retrievals_options.map((option) => (
                                         <li key={option.id} className={cl.options__label}>
                                             <label>
                                                 <input
@@ -472,11 +530,10 @@ function StaffInfoData(props) {
                                             )}
                                         </li>
                                     ))}
-                                    </ul>
-                                </div>
-                            )}
-                        </div>
-                    </div>
+                                </ul>
+                            </AccordionDetails>
+                        </Accordion>
+                    </Paper>
                 )}
             </div>
         </div>

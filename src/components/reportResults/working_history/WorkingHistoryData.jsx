@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import cl from './WorkingHistoryData.module.css'
 import { MdArrowDropDown, MdExpandLess } from 'react-icons/md';
-import { Button, TextField, Select, InputLabel, FormControl, MenuItem, Box } from '@mui/material';
+import {Paper,  Button, TextField, Select, InputLabel, FormControl, MenuItem, Box } from '@mui/material';
 
 
 function WorkingHistoryData(props) {
@@ -59,7 +59,7 @@ function WorkingHistoryData(props) {
                 {isOpenWorkingHistory ? <MdExpandLess className={cl.arrow} /> : <MdArrowDropDown className={cl.arrow} />}
             </Button>
             {isOpenWorkingHistory && (
-                <div className={cl.dropdown__content}>
+                <Paper className={cl.dropdown__content}>
                     <ul>
                         {working_history_options.map((option) => (
                         <li key={option.id} className={cl.options__label}>
@@ -80,7 +80,7 @@ function WorkingHistoryData(props) {
                         </li>
                         ))}
                     </ul>
-                </div>
+                </Paper>
             )}
         </div>
     );

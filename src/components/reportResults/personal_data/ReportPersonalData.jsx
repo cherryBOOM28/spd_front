@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import cl from './ReportPersonalData.module.css';
-import { Button, TextField, Select, InputLabel, FormControl, MenuItem, Box } from '@mui/material';
+import { Paper, Button, TextField, Select, InputLabel, FormControl, MenuItem, Box } from '@mui/material';
 import { MdArrowDropDown, MdExpandLess } from 'react-icons/md';
 import { updateFormData } from '../../../pages/reports/Reports';
 import { BsExclamationCircle } from "react-icons/bs";
@@ -287,7 +287,7 @@ function ReportPersonalData(props) {
                     {isOpenPersonal ? <MdExpandLess className={cl.arrow} /> : <MdArrowDropDown className={cl.arrow} />}
                 </Button>
                 {isOpenPersonal && (
-                    <div className={cl.dropdown__content}>
+                    <Paper className={cl.dropdown__content}>
                         <ul>
                             {personal_data_options.map((option) => (
                             <li key={option.id} className={cl.options__label}>
@@ -499,7 +499,7 @@ function ReportPersonalData(props) {
                                 </ul>
                             </AccordionDetails>
                         </Accordion>
-                    </div>
+                    </Paper>
                 )}
             </div>
         </div>
@@ -665,7 +665,33 @@ export function RenderPersonalOptions(selectedPersonalOptions, formData, handleI
                                             ))}
                                         </Select>
                                     </FormControl>
-                                )  : option === "positionInfo:position:positionTitle" ? (
+                                )  : option === "familyStatus:statusName" ? (
+                                    <div className={cl.data__wrapper}>
+                                        <FormControl fullWidth >
+                                            {/* <InputLabel id="demo-simple-select-label">{options.find((o) => o.id === option).label}</InputLabel> */}
+                                            <Select
+                                                labelId="demo-simple-select-label"
+                                                id="demo-simple-select"
+                                                // label='Страна рождения'
+                                                value={formData[option] || ''}
+                                                className={cl.workerInfoSelect}
+                                                onChange={(e) => handleInputChange(option, e.target.value)}
+                                                size='small'
+                                                style={{ marginLeft: '32px' }}
+                                            >
+                                                <MenuItem value="" disabled hidden>
+                                                Выберите семейное положение
+                                                </MenuItem>
+                                                {personal_data_options.find((o) => o.id === option).selectOptions.map((genderOption) => (
+                                                    <MenuItem key={genderOption} value={genderOption}>
+                                                    {genderOption}
+                                                    </MenuItem>
+                                                ))}
+                                            </Select>
+                                        </FormControl>
+                                    </div>
+                                 ) 
+                                 : option === "positionInfo:position:positionTitle" ? (
                                     <div className={cl.data__wrapper}>
                                         <FormControl fullWidth >
                                             {/* <InputLabel id="demo-simple-select-label">{options.find((o) => o.id === option).label}</InputLabel> */}
@@ -690,7 +716,7 @@ export function RenderPersonalOptions(selectedPersonalOptions, formData, handleI
                                             </Select>
                                         </FormControl>
                                     </div>
-                                 ) : (
+                                 ): (
                                     <TextField
                                         type="text"
                                         className={cl.workerInfo}

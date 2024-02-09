@@ -3,6 +3,8 @@ import axios from 'axios';
 import cl from './NewPersonal.module.css';
 import { useForm } from '../formProvider/FormProvider';
 import Cookies from 'js-cookie';
+import { Button,TextField, Select, Box, InputLabel, MenuItem, FormControl } from '@mui/material';
+
 
 
 function NewPersonal() {
@@ -35,7 +37,7 @@ function NewPersonal() {
         }
 
       } else {
-        console.log(response.statusText);
+        // console.log(response.statusText);
       }
     } catch (error) {
       console.error('Error fetching data:', error); 
@@ -54,8 +56,8 @@ function NewPersonal() {
     );
   
     if (selectedDepartment) {
-      console.log("Selected Department ID:", selectedDepartment.id);
-      console.log("Selected  DepartmentName:", selectedDepartment.DepartmentName);
+      // console.log("Selected Department ID:", selectedDepartment.id);
+      // console.log("Selected  DepartmentName:", selectedDepartment.DepartmentName);
 
       handleInputChange(setPositionInfo, 'department', selectedDepartment.DepartmentName);
       setSelectedDepartment(selectedDepartmentName);
@@ -77,7 +79,7 @@ function NewPersonal() {
 
       if (response.status === 200) {
         setPositions(response.data.positions);
-        console.log('Positions:', response.data.positions);
+        // console.log('Positions:', response.data.positions);
       }
     } catch (error) {
       console.error('Error fetching positions:', error);
@@ -94,55 +96,86 @@ function NewPersonal() {
                 <div className={cl.column}>
                     <div className={cl.rows}>
                         <label className={cl.label}>Департамент*</label>
-                        <select 
-                          onChange={(e) => handleDropdownChange(e.target.value)}
-                          className={cl.workerInfoSelect}
-                          value={positionInfo.department}
-                        >
-                        <option value="">Выберите департамент</option>
-                        {departments.map((department) => (
-                          <option key={department.id} value={department.DepartmentName}>
-                            {department.DepartmentName}
-                          </option>
-                        ))}
-                        </select>
+                        <Box>
+                            {/* <label className={cl.label}>Должность</label> */}
+                            <FormControl size="small" fullWidth>
+                                <InputLabel id="demo-simple-select-label">Департамент</InputLabel>
+                                <Select
+                                labelId="demo-simple-select-label"
+                                id="demo-simple-select"
+                                label="Департамент"
+                                name='attResult'
+                                onChange={(e) => handleDropdownChange(e.target.value)}
+                                className={cl.workerInfoSelect}
+                                value={positionInfo.department}
+                                
+                                >
+                                    <MenuItem value="Бакалавр" disabled>Выберите департамент</MenuItem>
+                                    {departments.map((department) => (
+                                      <MenuItem key={department.id} value={department.DepartmentName}>
+                                        {department.DepartmentName}
+                                      </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </Box>
                     </div>
                     <div className={cl.rows}>
                         <label className={cl.label}>Должность*</label>
-                            <select 
-                              onChange={(e) => handleInputChange(setPositionInfo, 'position', e.target.value)}
-                              value={positionInfo.position}
-                              className={cl.workerInfoSelect}
-                            >
-                              <option value="">Выберите должность</option>
-                              {positions.map((position) => (
-                                <option key={position.id} value={position.positionTitle}>
-                                  {position.positionTitle}
-                                </option>
-                              ))}
-                          </select>
+                          <Box>
+                            {/* <label className={cl.label}>Должность</label> */}
+                            <FormControl size="small" fullWidth>
+                                <InputLabel id="demo-simple-select-label">Департамент</InputLabel>
+                                <Select
+                                labelId="demo-simple-select-label"
+                                id="demo-simple-select"
+                                label="Департамент"
+                                name='attResult'
+                                onChange={(e) => handleInputChange(setPositionInfo, 'position', e.target.value)}
+                                value={positionInfo.position}
+                                className={cl.workerInfoSelect}
+                                >
+                                    <MenuItem value="Бакалавр" disabled>Выберите должность</MenuItem>
+                                    {positions.map((position) => (
+                                      <MenuItem key={position.id} value={position.positionTitle}>
+                                        {position.positionTitle}
+                                      </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </Box>
                     </div>
                 </div>
                 <div className={cl.column}>
                     <div className={cl.rows}>
                         <label className={cl.label}>Семейное положение*</label>
-                            <select
-                            className={cl.workerInfoSelect}
-                            name="familyStatus"
-                            value={person.familyStatus}
-                            onChange={(e) => handleInputChange(setPerson, 'familyStatus', e.target.value)}
-                            >
-                                <option value="">Выберите семейное положение</option>
-                                <option value="Не женат/не замужем">Не женат/не замужем</option>
-                                <option value="Женат/замужем">Женат/замужем</option>
-                                <option value="Вдова/вдовец">Вдова/вдовец</option>
-                                <option value="Разведена/разведен">Разведен/разведена</option>
-                            </select>
+                            <Box>
+                                {/* <label className={cl.label}>Должность</label> */}
+                                <FormControl size="small" fullWidth>
+                                    <InputLabel id="demo-simple-select-label">Семейное положение</InputLabel>
+                                    <Select
+                                    labelId="demo-simple-select-label"
+                                    id="demo-simple-select"
+                                    label="Семейное положение"
+                                    name='attResult'
+                                    onChange={(e) => handleInputChange(setPositionInfo, 'position', e.target.value)}
+                                    value={positionInfo.position}
+                                    className={cl.workerInfoSelect}
+                                    >
+                                      <MenuItem value="" disabled>Выберите семейное положение</MenuItem>
+                                      <MenuItem value="Не женат/не замужем">Не женат/не замужем</MenuItem>
+                                      <MenuItem value="Женат/замужем">Женат/замужем</MenuItem>
+                                      <MenuItem value="Вдова/вдовец">Вдова/вдовец</MenuItem>
+                                      <MenuItem value="Разведена/разведен">Разведен/разведена</MenuItem>
+                                    </Select>
+                                </FormControl>
+                            </Box>
                     </div>
                     <div className={cl.rows}>
                         <label className={cl.label}>Дата назначения*</label>
-                        <input
+                        <TextField
                             type="date"
+                            size='small'
                             className={cl.workerInfo}
                             required
                             name="receivedDate"

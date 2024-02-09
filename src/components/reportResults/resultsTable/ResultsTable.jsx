@@ -7,7 +7,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate  } from 'react-router-dom';
 import { Button } from '@mui/material';
 import { VscAccount } from "react-icons/vsc";
 
@@ -20,25 +20,19 @@ const ResultTable = ({results, setResults, formData, selected, columns, count, n
 
     const navigate = useNavigate();
 
-    useEffect(()=> {
-        setTable(results)
-        setPrevious(previous)
-        setNext(next)
-        // console.log("results",table);
-        // console.log("results table",results);
+    // useEffect(() => {
+    //     // Преобразвание в строку JSON и сохраните в `localStorage`
+    //     console.log(results)
+    //     localStorage.setItem('searchResults', JSON.stringify(results));
+    //     localStorage.setItem('selectedFields', JSON.stringify(selected));
 
-        // console.log(nextLocal);
-        // console.log(previous);
-        // console.log(selected);
-    })
+    //     console.log(localStorage.getItem('searchResults'))
+    //     // localStorage.getItem('searchResults', JSON.parse(results));
 
-    useEffect(() => {
-        if (results) {
-          setTable(results);
-          // Other state updates...
-        }
-        console.log("results", results);
-      }, [results]);
+
+    // }, [results]); // Запускается  эффект при каждом обновлении `results`
+
+
     // const [countLocal, setCount] = useState(count)
     const [prevLocal, setPrevious] = useState('')
     const [nextLocal, setNext] = useState('')
@@ -59,12 +53,13 @@ const ResultTable = ({results, setResults, formData, selected, columns, count, n
     }
 
     const handleRowClick = (id) => {
-        navigate(`/${id}`);
+        const url = `/${id}`;
+        window.open(url, '_blank');
     };
 
     const removePrefix = (fieldName) => {
         const lastColonIndex = fieldName.lastIndexOf(':');
-        console.log(fieldName);
+        // console.log(fieldName);
         return lastColonIndex !== -1 ? fieldName.slice(lastColonIndex + 1) : fieldName;
     };
 
@@ -92,13 +87,13 @@ const ResultTable = ({results, setResults, formData, selected, columns, count, n
                     </TableHead>
 
                     <TableBody>
-                        {console.log('Selected Fields:', selected)}
-                        {table.length === 0 ? (
+                        {/* {console.log('Selected Fields:', selected)} */}
+                        {results.length === 0 ? (
                             <TableRow>
                                 <TableCell colSpan={9} align="center">Ничего не найдено</TableCell>
                             </TableRow>
                         ) : (
-                            table.map((person) => (
+                            results.map((person) => (
                             <TableRow 
                                 key={person.id}
                                 sx={{ '&:hover': { backgroundColor: '#f0f0f0' } }}

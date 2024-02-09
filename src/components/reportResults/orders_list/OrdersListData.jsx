@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import cl from './OrdersListData.module.css';
 import { MdArrowDropDown, MdExpandLess } from 'react-icons/md';
-import { Button, TextField, Select, InputLabel, FormControl, MenuItem, Box } from '@mui/material';
+import { Paper, Button, TextField, Select, InputLabel, FormControl, MenuItem, Box } from '@mui/material';
 import { BsExclamationCircle } from "react-icons/bs";
 
 
@@ -57,7 +57,7 @@ function OrdersListData(props) {
                     {isOpenOrderList ? <MdExpandLess className={cl.arrow} /> : <MdArrowDropDown className={cl.arrow} />}
                 </Button>
                 {isOpenOrderList && (
-                    <div className={cl.dropdown__content}>
+                    <Paper className={cl.dropdown__content}>
                         <ul>
                             {orders_list_options.map((option) => (
                             <li key={option.id} className={cl.options__label}>
@@ -78,7 +78,7 @@ function OrdersListData(props) {
                             </li>
                             ))}
                         </ul>
-                    </div>
+                    </Paper>
                 )}
             </div>
         </div>

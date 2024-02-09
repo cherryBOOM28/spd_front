@@ -33,7 +33,7 @@
     flex-direction: column;
     flex-wrap: wrap;
     gap: 10px;
-    background: #F8F8F8;
+    /* background: #F8F8F8; */
   }
   
   .options__label {

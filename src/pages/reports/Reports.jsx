@@ -3,7 +3,7 @@ import axios from 'axios';
 import cl from './Reports.module.css';
 import Navigation from '../../components/navigation/Navigation';
 import Header from '../../components/header/Header';
-import { Button, TextField, Select, InputLabel, FormControl, MenuItem, Box } from '@mui/material';
+import { Paper, Button, TextField, Select, InputLabel, FormControl, MenuItem, Box } from '@mui/material';
 import { MdArrowDropDown, MdExpandLess } from 'react-icons/md';
 import { AiFillPrinter } from 'react-icons/ai';
 import ResultsTable from '../../components/reportResults/resultsTable/ResultsTable';
@@ -66,10 +66,14 @@ function Reports(props, queryParams) {
 
     const [selectedOrderListOptions, setSelectedOrderListOptions] = useState([]);
    
-    const [showResults, setShowResults] = useState(false);
+    const [showResults, setShowResults] = useState(true);
     const [showExcelButton, setShowExcelButton] = useState(false);
+    // const [results, setResults] = useState(JSON.parse(localStorage.getItem('searchResults')).length > 0 ? JSON.parse(localStorage.getItem('searchResults')) : []);
     const [results, setResults] = useState([]);
+    const [tableResults, setTableResults] = useState([]);
     const [formData, setFormData] = useState({}); // Состояние для хранения данных из инпутов
+
+
 
     useEffect(() => {
         // console.log(selectedPersonalOptions)
@@ -449,26 +453,6 @@ function Reports(props, queryParams) {
             }
         }
 
-        // for (const key in queryParams) {
-        //     queryParams[key] = '';
-        // }
-
-        // for (const key in updatedQueryParams) {
-        //     if (updatedQueryParams.hasOwnProperty(key)) {
-        //         const value = updatedQueryParams[key];
-        //         // console.log(key, value);
-        //         if (value !== undefined) {
-        //             // console.log(key, encodeURIComponent(value));
-        //             queryParams[key] = value;
-        //         }
-        //     }
-        // }
-
-        // console.log("queryParams", queryParams);
-        // console.log(updatedQueryParams);
-
-        // console.log("formData:", formData);
-
         console.log(queryParams)
 
         const queryString = new URLSearchParams(queryParams).toString();
@@ -491,6 +475,10 @@ function Reports(props, queryParams) {
             setIsOpenGeneral(false);
             setIsOpenPersonal(false);
             setIsOpenFamily(false);
+
+            // Сохраняем результаты запроса в состоянии компонента таблицы
+            setTableResults(response.data);
+
 
             // setSelectedOptions([]);
             // console.log(response);
@@ -517,6 +505,8 @@ function Reports(props, queryParams) {
         setShowResults(true);
         setShowExcelButton(true);
     }; 
+
+
     
     const familyOptions = renderFamilyOptions(selectedFamilyOptions, formData, handleInputChange, family_compositions_options);
     const personalDataOptions = RenderPersonalOptions(selectedPersonalOptions, formData, handleInputChange, personal_data_options);
@@ -548,9 +538,9 @@ function Reports(props, queryParams) {
                 <Header className={cl.header} personalData={personalData}/>
                 <div className={cl.content}>
                     <div className={cl.container}>
-                        <div className={cl.employeeWrapper}>
+                        <Paper className={cl.employeeWrapper}>
                             <div className={cl.tabContent}>
-                                <div className={cl.tabHeader}>
+                                <Paper className={cl.tabHeader}>
                                     <div 
                                         className={activeTab === 1 ? cl.btnTab + ' ' + cl.activeTab : cl.btnTab}
                                         onClick={() => handleTabClick(1)}
@@ -575,11 +565,11 @@ function Reports(props, queryParams) {
                                         >
                                     Пенсия
                                     </div>
-                                </div>
+                                </Paper>
                                 <div className={cl.tabBody}>
                                     {
                                         activeTab === 1 && 
-                                        <div className={cl.basic__info}>
+                                        <div className={cl.basic__info}>  
                                             <div className={cl.employees}>
                                                 <div className={cl.dropdown}>
                                                     <Button variant="contained" style={{ textTransform: 'none', flex: 1 }}  onClick={toggleGeneralDropdown} className={cl.actionBtn}>
@@ -587,7 +577,7 @@ function Reports(props, queryParams) {
                                                         {isOpenGeneral ? <MdExpandLess className={cl.arrow} /> : <MdArrowDropDown className={cl.arrow} />}
                                                     </Button>
                                                     {isOpenGeneral && (
-                                                        <div className={cl.dropdown__content}>
+                                                        <Paper className={cl.dropdown__content}>
                                                             <ul>
                                                                 {options.map((option) => (
                                                                 <li key={option.id} className={cl.options__label}>
@@ -619,7 +609,7 @@ function Reports(props, queryParams) {
                                                                 </li>
                                                                 ))}
                                                             </ul>
-                                                        </div>
+                                                        </Paper>
                                                     )}
                                                 </div>
                                                 <ReportPersonalData 
@@ -699,7 +689,7 @@ function Reports(props, queryParams) {
                                                     handleInputChange={handleInputChange}
 
                                                     orders_list_options={orders_list_options}
-                                                />
+                                                       />
                                             </div>
                         
                                             <div style={{ display: 'flex', flexWrap: 'wrap', width: '100%' }}>
@@ -1099,7 +1089,7 @@ function Reports(props, queryParams) {
                                 </div>
                             </div>
                             
-                        </div>
+                        </Paper>
                     </div>
                 </div>
             </div>

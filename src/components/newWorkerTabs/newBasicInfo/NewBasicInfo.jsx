@@ -3,9 +3,8 @@ import axios from 'axios';
 import cl from './NewBasicInfo.module.css';
 import defaultPhoto from '../../../assets/images/default.jpeg';
 import { useForm } from '../formProvider/FormProvider';
-import { eventWrapper } from '@testing-library/user-event/dist/utils';
-import { red } from '@mui/material/colors';
-import TextField from '@mui/material/TextField';
+import { Button,TextField, Select, Box, InputLabel, MenuItem, FormControl } from '@mui/material';
+
 
 
 function  NewBasicInfo() {
@@ -76,7 +75,10 @@ function  NewBasicInfo() {
                 <div className={cl.column}>
                 <div className={cl.rows}>
                     <label className={cl.label}>Имя*</label>
-                        <input
+                        <TextField
+                            size='small'
+                            id="outlined-basic" 
+                            label="Имя" 
                             type="text"
                             className={cl.workerInfo}
                             name="firstName"
@@ -89,7 +91,10 @@ function  NewBasicInfo() {
                 </div>
                 <div className={cl.rows}>
                     <label className={cl.label}>Фамилия*</label>
-                        <input
+                        <TextField
+                            size='small'
+                            id="outlined-basic" 
+                            label="Фамилия" 
                             type="text"
                             className={cl.workerInfo}
                             name="surname"
@@ -100,7 +105,10 @@ function  NewBasicInfo() {
                 </div>
                 <div className={cl.rows}>
                     <label className={cl.label}>Отчество</label>
-                        <input
+                        <TextField
+                            size='small'
+                            id="outlined-basic" 
+                            label="Отчество" 
                             type="text"
                             className={cl.workerInfo}
                             name="patronymic"
@@ -110,21 +118,32 @@ function  NewBasicInfo() {
                 </div>
                 <div className={cl.rows}>
                     <label className={cl.label}>Пол*</label>
-                        <select
-                        className={cl.workerInfoSelect}
-                        name="gender"
-                        required
-                        value={person.gender}
-                        onChange={(e) => handleInputChange(setPerson, 'gender', e.target.value)}
-                        >
-                        <option value="">Выберите пол</option>
-                        <option value="Женский">Женский</option>
-                        <option value="Мужской">Мужской</option>
-                        </select>
+                        <Box sx={{ minWidth: 120 }} style={{ marginLeft: '12px'  }}>
+                            <FormControl fullWidth>
+                            <Select
+                                labelId="demo-simple-select-label"
+                                id="demo-simple-select"
+                                size='small'
+                                className={cl.workerInfoSelect}
+                                name="gender"
+                                required
+                                value={person.gender}
+                                onChange={(e) => handleInputChange(setPerson, 'gender', e.target.value)}
+                            >
+                                <MenuItem value="" disabled>Выберите пол</MenuItem>
+                                <MenuItem value="Женский">Женский</MenuItem>
+                                <MenuItem value="Мужской">Мужской</MenuItem>
+                            </Select>
+                            </FormControl>
+                        </Box>
                 </div>
                 <div className={cl.rows}>
                     <label className={cl.label}>Национальность*</label>
-                        <input
+                        <TextField
+                            size='small'
+                            id="outlined-basic" 
+                            label="Национальность"
+                            style={{ marginLeft: '12px' }}
                             type="text"
                             className={cl.workerInfo}
                             name="nationality"
@@ -138,7 +157,9 @@ function  NewBasicInfo() {
                 <div className={cl.column}>
                 <div className={cl.rows}>
                     <label className={cl.label}>Дата рождения*</label>
-                        <input
+                        <TextField
+                        size='small'
+                        id="outlined-basic" 
                         type="date"
                         className={cl.workerInfo}
                         name="birth_date"
@@ -149,7 +170,10 @@ function  NewBasicInfo() {
                 </div>
                 <div className={cl.rows}>
                     <label className={cl.label}>Страна*</label>
-                        <input
+                        <TextField
+                            size='small'
+                            id="outlined-basic" 
+                            label="Страна"
                             type="text"
                             className={cl.workerInfo}
                             name="country"
@@ -160,7 +184,10 @@ function  NewBasicInfo() {
                 </div>
                 <div className={cl.rows}>
                     <label className={cl.label}>Город*</label>
-                        <input
+                        <TextField
+                            size='small'
+                            id="outlined-basic" 
+                            label="Город"
                             type="text"
                             className={cl.workerInfo}
                             name="city"
@@ -171,7 +198,10 @@ function  NewBasicInfo() {
                 </div>
                 <div className={cl.rows}>
                     <label className={cl.label}>Регион*</label>
-                        <input
+                        <TextField
+                            size='small'
+                            id="outlined-basic" 
+                            label="Регион"
                             type="text"
                             className={cl.workerInfo}
                             name="region"
@@ -182,7 +212,10 @@ function  NewBasicInfo() {
                 </div>
                 <div className={cl.rows}>
                     <label className={cl.label}>ИИН*</label>
-                        <input
+                        <TextField
+                            size='small'
+                            id="outlined-basic" 
+                            label="ИИН"
                             type="number"
                             className={cl.workerInfo}
                             required
@@ -198,7 +231,10 @@ function  NewBasicInfo() {
                 <div className={cl.column}>
                     <div className={cl.rows}>
                         <label className={cl.label}>Номер удостоверения*</label>
-                            <input
+                            <TextField
+                                size='small'
+                                id="outlined-basic" 
+                                label="Номер удостоверения"
                                 type="number"
                                 className={cl.workerInfo}
                                 required
@@ -209,7 +245,10 @@ function  NewBasicInfo() {
                     </div>
                     <div className={cl.rows}>
                         <label className={cl.label}>Дата выдачи*</label>
-                            <input
+                            <TextField
+                            size='small'
+                            id="outlined-basic" 
+                            // label="Дата выдачи"
                             type="date"
                             className={cl.workerInfo}
                             required
@@ -220,7 +259,10 @@ function  NewBasicInfo() {
                     </div>
                     <div className={cl.rows}>
                         <label className={cl.label}>Выдан*</label>
-                            <input
+                            <TextField
+                                size='small'
+                                id="outlined-basic" 
+                                label="Выдан"
                                 type="text"
                                 className={cl.workerInfo}
                                 required
@@ -239,7 +281,10 @@ function  NewBasicInfo() {
                                 value={person.pin}
                                 onChange={(e) => handleInputChange(setPerson, 'pin', e.target.value)}
                             /> */}
-                              <input
+                               <TextField
+                                size='small'
+                                id="outlined-basic" 
+                                label="ПИН"
                                 type="text"
                                 className={cl.workerInfo}
                                 required
@@ -252,7 +297,10 @@ function  NewBasicInfo() {
                 <div className={cl.column}> 
                     <div className={cl.rows}>
                         <label className={cl.label}>Страна проживания*</label>
-                            <input
+                            <TextField
+                                size='small'
+                                id="outlined-basic" 
+                                label="Страна проживания*"
                                 type="text"
                                 className={cl.workerInfo}
                                 required
@@ -263,7 +311,10 @@ function  NewBasicInfo() {
                     </div>
                     <div className={cl.rows}>
                         <label className={cl.label}>Город проживания*</label>
-                            <input
+                            <TextField
+                                size='small'
+                                id="outlined-basic" 
+                                label="Город проживания*"
                                 type="text"
                                 className={cl.workerInfo}
                                 required
@@ -274,7 +325,10 @@ function  NewBasicInfo() {
                     </div>
                     <div className={cl.rows}>
                         <label className={cl.label}>Регион проживания*</label>
-                            <input
+                            <TextField
+                                size='small'
+                                id="outlined-basic" 
+                                label="Регион проживания*"
                                 type="text"
                                 className={cl.workerInfo}
                                 required

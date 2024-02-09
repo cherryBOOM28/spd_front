@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import cl from './Create.module.css';
 import Navigation from '../../components/navigation/Navigation';
 import Header from '../../components/header/Header';
+import Paper from '@mui/material/Paper';
+
 // import Cookies from 'js-cookie';
 
 import NewBasicInfo from '../../components/newWorkerTabs/newBasicInfo/NewBasicInfo';
@@ -42,87 +44,87 @@ function Create(props) {
                 <div className={cl.content}>
                     <div className={cl.container}>
                     <FormProvider>
-                        <div className={cl.tabContent}>
-                        <div className={cl.tabHeader}>
-                            <div 
-                                className={activeTab === 1 ? cl.btnTab + ' ' + cl.activeTab : cl.btnTab}
-                                onClick={() => handleTabClick(1)}
-                                >
-                            Общие данные
-                            </div>
-                            <div 
-                                className={activeTab === 2 ? cl.btnTab + ' ' + cl.activeTab : cl.btnTab}
-                                onClick={() => handleTabClick(2)}
-                                >
-                            Личные данные
-                            </div>
-                            <div 
-                                className={activeTab === 3 ? cl.btnTab + ' ' + cl.activeTab : cl.btnTab}
-                                onClick={() => handleTabClick(3)}
-                                >
-                                Трудовая деятельность 
-                            </div>
-                            <div 
-                                className={activeTab === 4 ? cl.btnTab + ' ' + cl.activeTab : cl.btnTab}
-                                onClick={() => handleTabClick(4)}
-                                >
-                            Кадровые данные 
-                            </div>
-                            {/* <div 
-                                className={activeTab === 5 ? cl.btnTab + ' ' + cl.activeTab : cl.btnTab}
-                                onClick={() => handleTabClick(5)}
-                                >
-                            Приказы рапорта 
-                            </div> */}
-                        </div>
-
-                        <div className={cl.tabBody}>
-                            {
-                                activeTab === 1 && 
-                                <div className={cl.basic__info}>
-                                    <NewBasicInfo/>
+                        <Paper className={cl.tabContent}>
+                            <Paper className={cl.tabHeader}>
+                                <div 
+                                    className={activeTab === 1 ? cl.btnTab + ' ' + cl.activeTab : cl.btnTab}
+                                    onClick={() => handleTabClick(1)}
+                                    >
+                                Общие данные
                                 </div>
-                            }
-                            {
-                                activeTab === 2 && 
-                                <div className={cl.basic__info}>
-                                <div className={cl.totalInfo}>
-                                    <NewPersonal/>
-                                    <NewFamilyComposition />
-                                    <NewEducation />
-                                    <NewLanguage />
-                                    <NewAcademicDegree />
-                                    <NewCourses />
-                                    <NewSport />
-                                </div>  
-                            </div>
-                            }
-                            {
-                                activeTab === 3 &&                       
-                                <div className={cl.basic__info}>
-                                <div className={cl.totalInfo}>
-                                    <NewLaborActivity />
-                                </div>                 
-                            </div>
-                            }
-                            {
-                                activeTab === 4 && 
-                                <div className={cl.basic__info}>
-                                <div className={cl.totalInfo}>
-                                    <NewPersonnelData />
-                                </div>         
-                            </div>
-                            }
-                            {/* {
-                                activeTab === 5 && 
-                                <div className={cl.basic__info}>
-                                <div className={cl.totalInfo}>
-                                    <NewReportOrders />
-                                </div>      
-                            </div>
-                            } */}
-                        </div>                
-                        </div>
+                                <div 
+                                    className={activeTab === 2 ? cl.btnTab + ' ' + cl.activeTab : cl.btnTab}
+                                    onClick={() => handleTabClick(2)}
+                                    >
+                                Личные данные
+                                </div>
+                                <div 
+                                    className={activeTab === 3 ? cl.btnTab + ' ' + cl.activeTab : cl.btnTab}
+                                    onClick={() => handleTabClick(3)}
+                                    >
+                                    Трудовая деятельность 
+                                </div>
+                                <div 
+                                    className={activeTab === 4 ? cl.btnTab + ' ' + cl.activeTab : cl.btnTab}
+                                    onClick={() => handleTabClick(4)}
+                                    >
+                                Кадровые данные 
+                                </div>
+                                {/* <div 
+                                    className={activeTab === 5 ? cl.btnTab + ' ' + cl.activeTab : cl.btnTab}
+                                    onClick={() => handleTabClick(5)}
+                                    >
+                                Приказы рапорта 
+                                </div> */}
+                            </Paper>
+
+                            <div className={cl.tabBody}>
+                                {
+                                    activeTab === 1 && 
+                                    <div className={cl.basic__info}>
+                                        <NewBasicInfo/>
+                                    </div>
+                                }
+                                {
+                                    activeTab === 2 && 
+                                    <div className={cl.basic__info}>
+                                    <div className={cl.totalInfo}>
+                                        <NewPersonal/>
+                                        <NewFamilyComposition />
+                                        <NewEducation />
+                                        <NewLanguage />
+                                        <NewAcademicDegree />
+                                        <NewCourses />
+                                        <NewSport />
+                                    </div>  
+                                </div>
+                                }
+                                {
+                                    activeTab === 3 &&                       
+                                    <div className={cl.basic__info}>
+                                    <div className={cl.totalInfo}>
+                                        <NewLaborActivity />
+                                    </div>                 
+                                </div>
+                                }
+                                {
+                                    activeTab === 4 && 
+                                    <div className={cl.basic__info}>
+                                    <div className={cl.totalInfo}>
+                                        <NewPersonnelData />
+                                    </div>         
+                                </div>
+                                }
+                                {/* {
+                                    activeTab === 5 && 
+                                    <div className={cl.basic__info}>
+                                    <div className={cl.totalInfo}>
+                                        <NewReportOrders />
+                                    </div>      
+                                </div>
+                                } */}
+                            </div>                
+                        </Paper>
                     </FormProvider>
                     </div>
                 </div>
