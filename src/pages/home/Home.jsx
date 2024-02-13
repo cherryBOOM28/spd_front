@@ -228,7 +228,7 @@ function Home(props) {
             const fileURL = window.URL.createObjectURL(new Blob([response.data]));
             const link = document.createElement('a');
             link.href = fileURL;
-            link.setAttribute('download', 'staffing_table.xlsx');
+            link.setAttribute('download', 'staffing_table.docx');
             document.body.appendChild(link);
             link.click();
         } catch (error) {

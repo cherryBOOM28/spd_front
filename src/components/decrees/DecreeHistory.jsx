@@ -221,10 +221,10 @@ function DecreeHistory() {
             <TableBody>
               {filteredDecreesList.map((decree) => (
                 <TableRow key={decree.decreeId} onClick={() => handleWorkerClick(decree.person.id)} className={cl.workerRow}>
-                  <TableCell><img src={`data:image/jpeg;base64,${decree.person.photo}`} alt="worker" className={cl.workerImg} /></TableCell>
+                  {/* <TableCell><img src={`data:image/jpeg;base64,${decree.person.photo}`} alt="worker" className={cl.workerImg} /></TableCell> */}
                   <TableCell>{decree.decreeType}</TableCell>
                   <TableCell>{decree.decreeDate}</TableCell>
-                  <TableCell>{decree.person.iin}</TableCell>
+                  {/* <TableCell>{decree.person.iin}</TableCell> */}
                   <TableCell>
                     <div className={cl.fio}>
                       <div>{decree.person.firstName}</div>

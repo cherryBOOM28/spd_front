@@ -1,10 +1,12 @@
 .appointmentForm {
     margin: 20px 0;
+    /* background: #F8F8F8; */
     border-radius: 10px;
     padding: 40px;
     width: 60%;
     height: 100%;
     margin: 0 auto;
+    margin-bottom: 100px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -25,13 +27,14 @@
     gap: 20px;
   }
   
+
   .row {
     display: flex;
     gap: 30px;
+    width: 100%;
   }
   
   .btn {
-    margin-top: 40px;
     margin: 40px auto;
     width: 270px;
   }
@@ -56,7 +59,7 @@
     width: 290px;
     height: 34px;
     padding: 2px 9px;
-    /* margin-left: 12px; */
+    margin-left: 12px;
     outline: none;
     font-family: 'Helvetica';
     color: #000;
@@ -83,12 +86,13 @@
   
   .searchWrapper {
     position: relative;
+    /* width: 100%; */
   }
   
   .search__input {
     padding: 0 0 0 35px;
     border: 1px solid #ccc;
-    width: 92%;
+    width: 443px;
     height: 40px;
     border-radius: 5px;
   }
@@ -122,7 +126,7 @@
   .search_list {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 10px;
     /* background:  #e6e6e6; */
     /* border: 1px solid #e6e6e6; */
     border-radius: 5px;
@@ -132,7 +136,7 @@
   .search_row {
     display: flex;
     justify-content: space-between;
-    padding: 4px 10px;
+    padding: 2px 10px;
     border-radius: 5px;
   }
   
@@ -154,7 +158,6 @@
     height: 30px;
     border-radius: 50%;
     object-fit: cover;
-  
   }
   
   
@@ -183,4 +186,5 @@
     align-items: center;
     justify-content: space-between;
   }
+  
   

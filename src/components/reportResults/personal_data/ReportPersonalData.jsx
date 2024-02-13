@@ -288,7 +288,7 @@ function ReportPersonalData(props) {
                 </Button>
                 {isOpenPersonal && (
                     <Paper className={cl.dropdown__content}>
-                        <ul>
+                        <ul> 
                             {personal_data_options.map((option) => (
                             <li key={option.id} className={cl.options__label}>
                                 <label>
@@ -346,7 +346,7 @@ function ReportPersonalData(props) {
                                 aria-controls="panel1bh-content"
                                 id="panel1bh-header"
                             >
-                            <p className={cl.accordion_text} >Образование</p>
+                            <p className={cl.accordion_text}>Образование</p>
                             </AccordionSummary>
                             <AccordionDetails>
                                 <ul>

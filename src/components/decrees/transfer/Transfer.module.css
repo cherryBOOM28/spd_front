@@ -156,4 +156,29 @@ margin-top: 8px;
   object-fit: cover;
 }
 
+.noResults {
+  text-align: center;
+  font-size: 14px;
+}
 
+.selectedPersonWrapper {
+  padding: 15px;
+  width: 450px;
+  min-height: 50px;
+  max-height: 150px;
+  overflow: auto;
+  margin-top: 8px;
+}
+
+.selectedPersonsText {
+  font-size: 17px;
+  margin-bottom: 10px;
+  margin-left: 11px;
+}
+
+.selectedPersons {
+  padding: 0 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}

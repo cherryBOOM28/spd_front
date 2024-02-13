@@ -19,7 +19,7 @@ import searchIcon from '../../../assets/icons/search.svg';
 
 function RankUp() {
     const [formData, setFormData] = useState({
-        personId: '',
+        persons: [],
         newRank: '',
         rankUpDate: '',
         receivedType: '',
@@ -31,54 +31,98 @@ function RankUp() {
     const [ showClearBtn, setShowClearBtn ] = useState(false);
     const [showResults, setShowResults] = useState(false);
     const [selectedPersonIds, setSelectedPersonIds] = useState([]);
+    const [selectedPersons, setSelectedPersons] = useState([]);
+
     
 
     const handleFormSubmit = async () => {
         console.log("handleFormSubmit is called");console.log('Form Data:', formData);
         
         try {
-            if (!formData.personId || !formData.newRank || !formData.rankUpDate ) {
+            if (!formData.persons.length || !formData.newRank || !formData.rankUpDate ) {
                 // Show a warning notification
                 NotificationManager.warning('Пожалуйста, зполните все поля!', 'Поля пустые', 3000);
                 return; // Stop form submission
             };
+
+            // Modify the structure of persons array
+            const modifiedPersons = formData.persons.map(personId => ({ personId }));
+
+            const requestData = {
+                ...formData,
+                persons: modifiedPersons,
+            };
+
             // console.log("formData before axios request:", formData);
             const accessToken = Cookies.get('jwtAccessToken');
-            const response = await axios.post(' http://127.0.0.1:8000/api/v1/generate-rankup-decree/', formData, {
+            const response = await axios.post(' http://127.0.0.1:8000/api/v1/generate-rankup-decree/', requestData, {
                 headers: {
-                'Authorization': `Bearer ${accessToken}`,
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${accessToken}`,
                 },
+                responseType: 'blob'
             });
 
             console.log("formData after axios request:", formData);
  
+            if (response.status != 400) {
+                const blob = new Blob([response.data], { type: response.headers['content-type'] });
 
-            // console.log("Server Response", response);
+                // Создание URL для скачивания файла
+                const url = window.URL.createObjectURL(blob);
 
-            // Create a blob from the response data
-            const blob = new Blob([response.data], { type: response.headers['content-type'] });
+                // Создание ссылки для скачивания файла
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', 'document.docx'); // Имя файла, которое будет использоваться при скачивании
 
-            // Create a download link
-            const url = window.URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.setAttribute('download', 'document.docx'); // Set the desired file name with the correct extension
-            document.body.appendChild(link);
+                // Добавление ссылки на страницу
+                document.body.appendChild(link);
 
-            // Trigger the download
-            link.click();
+                // Симуляция клика по ссылке для запуска скачивания файла
+                link.click();
 
-            // Clean up
-            document.body.removeChild(link);
-            window.URL.revokeObjectURL(url);
-            NotificationManager.success('Документ успешно создан', 'Успех', 3000);
-            // console.log("formData after download:", formData);
+                // Удаление ссылки после завершения скачивания
+                document.body.removeChild(link);
+
+                // Освобождение ресурсов
+                window.URL.revokeObjectURL(url);
+                NotificationManager.success('Документ успешно создан', 'Успех', 3000);
+            }
+
             } catch (error) {
             console.error('Error submitting form:', error);
 
+            // if (error.response && error.response.status === 400) {
+            //     const errorMessage = error.response.data.error || 'Неизвестная ошибка';
+            //     NotificationManager.error(errorMessage, 'Ошибка', 3000);
+            // } else {
+            //     NotificationManager.error('Произошла ошибка', 'Ошибка', 3000);
+            // }
             if (error.response && error.response.status === 400) {
-                const errorMessage = error.response.data.error || 'Неизвестная ошибка';
-                NotificationManager.error(errorMessage, 'Ошибка', 3000);
+                console.log('Response Data Type:', typeof error.response.data); // Verify that it's a Blob
+                
+                // Read the Blob data as a string
+                const reader = new FileReader();
+                reader.onload = function() {
+                    try {
+                        // Parse the string data as JSON
+                        const jsonData = JSON.parse(reader.result);
+                        console.log('Parsed JSON Data:', jsonData);
+            
+                        // Now you can access the JSON data and handle it accordingly
+                        const errorMessage = jsonData.error || 'Неизвестная ошибка';
+                        NotificationManager.error(errorMessage, 'Ошибка', 3000);
+                    } catch (parseError) {
+                        console.error('Error parsing JSON:', parseError);
+                        NotificationManager.error('Ошибка при обработке ответа от сервера', 'Ошибка', 3000);
+                    }
+                };
+                reader.onerror = function() {
+                    console.error('Error reading the Blob data');
+                    NotificationManager.error('Ошибка при чтении ответа от сервера', 'Ошибка', 3000);
+                };
+                reader.readAsText(error.response.data); // Read the Blob as text
             } else {
                 NotificationManager.error('Произошла ошибка', 'Ошибка', 3000);
             }
@@ -132,26 +176,43 @@ function RankUp() {
         }
     };
 
+    // const handleCheckboxChange = (personId) => {
+    //     setSelectedPersonIds((prevSelectedPersonIds) => {
+    //         const isSelected = prevSelectedPersonIds.includes(personId);
+    
+    //         // If checkbox is checked, add the personId to selectedPersonIds
+    //         // If checkbox is unchecked, remove the personId from selectedPersonIds
+    //         const updatedSelectedPersonIds = isSelected
+    //             ? prevSelectedPersonIds.filter((id) => id !== personId)
+    //             : [...prevSelectedPersonIds, personId];
+    
+    //         // Update the selectedPersonIds state
+    //         setFormData((prevFormData) => ({
+    //             ...prevFormData,
+    //             personId: Number(personId),
+    //         }));
+    
+    //         console.log("Selected Person IDs:", updatedSelectedPersonIds);
+    //         return updatedSelectedPersonIds;
+    //     });
+    // };
+
     const handleCheckboxChange = (personId) => {
-        setSelectedPersonIds((prevSelectedPersonIds) => {
-            const isSelected = prevSelectedPersonIds.includes(personId);
-    
-            // If checkbox is checked, add the personId to selectedPersonIds
-            // If checkbox is unchecked, remove the personId from selectedPersonIds
-            const updatedSelectedPersonIds = isSelected
-                ? prevSelectedPersonIds.filter((id) => id !== personId)
-                : [...prevSelectedPersonIds, personId];
-    
-            // Update the selectedPersonIds state
-            setFormData((prevFormData) => ({
-                ...prevFormData,
-                personId: Number(personId),
-            }));
-    
-            console.log("Selected Person IDs:", updatedSelectedPersonIds);
-            return updatedSelectedPersonIds;
-        });
+        setFormData(prevFormData => ({
+            ...prevFormData,
+            persons: formData.persons.includes(personId)
+                ? formData.persons.filter(id => id !== personId)
+                : [...formData.persons, personId]
+        }));
+
+        // Обновленный обработчик изменения чекбокса
+        if (selectedPersons.includes(personId)) {
+            setSelectedPersons(selectedPersons.filter(id => id !== personId));
+        } else {
+            setSelectedPersons([...selectedPersons, personId]);
+        }
     };
+
 
     const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
@@ -224,10 +285,34 @@ function RankUp() {
                             )}
                         </div>
                     )}
+                </div>
 
+                <div>
+                    {formData.persons.length > 0 && (
+                        <Paper className={cl.selectedPersonWrapper}>
+                            <p className={cl.selectedPersonsText}>Выбранные люди:</p>
+                            {formData.persons.map(personId => {
+                                const person = foundPersons.find(person => person.id === personId);
+                                if (person) {
+                                    return (
+                                        <div key={personId} className={cl.selectedPersons}>
+                                            {`${person.firstName} ${person.surname} ${person.patronymic}`}
+                                            <Checkbox
+                                                type="checkbox"
+                                                checked={true}
+                                                onChange={() => handleCheckboxChange(personId)}
+                                            />
+                                        </div>
+                                    );
+                                } else {
+                                    return null;
+                                }
+                            })}
+                        </Paper>
+                    )}
                 </div>
                  
-            <Box sx={{ minWidth: 290, marginTop: 2 }}>
+            <Box sx={{ minWidth: 290 }}>
                 <FormControl size="small" fullWidth>
                     <InputLabel id="rank-label">Звание</InputLabel>
                     <Select

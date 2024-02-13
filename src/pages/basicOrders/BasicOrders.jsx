@@ -9,8 +9,14 @@ import { MdOutlineWork } from "react-icons/md";
 import { MdDriveFileMoveRtl } from "react-icons/md";
 import Appointment from '../../components/decrees/appointment/Appointment';
 import Transfer from '../../components/decrees/transfer/Transfer';
-import { GiRank3 } from "react-icons/gi";
+import { MdMilitaryTech } from "react-icons/md";
 import RunkUp from '../../components/decrees/rankUp/RankUp';
+import { ImUserMinus } from "react-icons/im";
+import Dismissal from '../../components/decrees/dismissal/Dismissal';
+
+import { BsFillSuitcase2Fill } from "react-icons/bs";
+import { RiExchangeBoxFill } from "react-icons/ri";
+import Vacation from '../../components/decrees/vacation/Vacation';
 
 
 function BasicOrders() {
@@ -71,6 +77,9 @@ function BasicOrders() {
                                 {selectedDecreeType === 'appointment' && <Appointment />}
                                 {selectedDecreeType === 'transfer' && <Transfer />}
                                 {selectedDecreeType === 'rankUp' && <RunkUp />}
+                                {selectedDecreeType === 'dismissal' && <Dismissal />}
+                                {selectedDecreeType === 'vacation' && <Vacation />}
+
                             </div>
                         )}
                         {!isCreateDecreeClicked && !isDecreeHistoryOpen && (
@@ -97,8 +106,32 @@ function BasicOrders() {
                                         className={`${cl.decree_btn}`}
                                         onClick={() => handleDecreeTypeClick('rankUp')}
                                     >
-                                        <GiRank3 />
+                                        <MdMilitaryTech />
                                         <p>Приказ о присвоении звания</p>
+                                    </div>
+                                </div>
+
+                                <div className={cl.decree_row}>
+                                    <div elevation={3}
+                                        className={cl.decree_btn}
+                                        onClick={() => handleDecreeTypeClick('dismissal')}
+                                    >
+                                        <ImUserMinus />
+                                        <p>Приказ об увольнении</p>
+                                    </div>
+                                    <div elevation={3}
+                                        className={`${cl.decree_btn}`}
+                                        onClick={() => handleDecreeTypeClick('vacation')}
+                                    >
+                                        <RiExchangeBoxFill />
+                                        <p>Приказ о командировке</p>
+                                    </div>
+                                    <div elevation={3}
+                                        className={`${cl.decree_btn}`}
+                                        onClick={() => handleDecreeTypeClick('vacation')}
+                                    >
+                                        <BsFillSuitcase2Fill />
+                                        <p>Приказ об отпуске</p>
                                     </div>
                                     
                                 </div>

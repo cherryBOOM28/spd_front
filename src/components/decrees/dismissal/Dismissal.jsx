@@ -3,8 +3,8 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 import { NotificationContainer, NotificationManager } from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
+import cl from './Dismissal.module.css';
 
-import cl from './Appointment.module.css'
 import TextField from '@mui/material/TextField';
 import { Button } from '@mui/material';
 import Paper from '@mui/material/Paper';
@@ -16,14 +16,10 @@ import Select from '@mui/material/Select';
 import searchIcon from '../../../assets/icons/search.svg';
 import Checkbox from '@mui/material/Checkbox';
 
-
-function Appointment() {
+function Dismissal() {
     const [formData, setFormData] = useState({
         persons: [],
         decreeDate: '',
-        monthCount: 0,
-        base: '',
-        appointmentType: ''
     });
 
     const [foundPersons, setFoundPersons] = useState([]);
@@ -32,24 +28,9 @@ function Appointment() {
     const [showResults, setShowResults] = useState(false);
     const [selectedPersons, setSelectedPersons] = useState([]);
 
-
-
-    const base = [
-        'представление',
-        'рапорт',
-        'заявление',
-        'протокол и докладная записка',
-    ];
-
-    const appointmentType = [
-        'Впервые принятый',
-        'Вновь принятый'
-    ];
-
-
     const handleFormSubmit = async () => {
         try {
-            if (!formData.persons.length || !formData.decreeDate || !formData.base || !formData.appointmentType) {
+            if (!formData.persons.length || !formData.decreeDate) {
                 // Show a warning notification
                 NotificationManager.warning('Пожалуйста, зполните все поля!', 'Поля пустые', 3000);
                 return; // Stop form submission
@@ -64,14 +45,15 @@ function Appointment() {
             };
 
             const accessToken = Cookies.get('jwtAccessToken');
-            const response = await axios.post('http://127.0.0.1:8000/api/v1/generate-appointment-decree/', requestData, {
+            const response = await axios.post('http://127.0.0.1:8000/api/v1/generate-firing-decree/', requestData, {
                 headers: {
                     'Authorization': `Bearer ${accessToken}`,
                 },
                 responseType: 'blob'
             });
-            console.log(response.json)
 
+            console.log(response.data)
+            console.log('Response Data Type:', typeof response.data);
             if (response.status != 400) {
                 const blob = new Blob([response.data], { type: response.headers['content-type'] });
 
@@ -96,15 +78,20 @@ function Appointment() {
                 window.URL.revokeObjectURL(url);
                 NotificationManager.success('Документ успешно создан', 'Успех', 3000);
             }
-        } 
+            
+            
+          
+            } 
         catch (error) {
             console.log(error)
             // if (error.response && error.response.status === 400) {
+            //     console.log('Response Data Type:', typeof error.response.data);
             //     const errorMessage = error.response.data.error || 'Неизвестная ошибка';
             //     NotificationManager.error(errorMessage, 'Ошибка', 3000);
             // } else {
             //     NotificationManager.error('Произошла ошибка', 'Ошибка', 3000);
             // }
+
             if (error.response && error.response.status === 400) {
                 console.log('Response Data Type:', typeof error.response.data); // Verify that it's a Blob
                 
@@ -132,6 +119,7 @@ function Appointment() {
             } else {
                 NotificationManager.error('Произошла ошибка', 'Ошибка', 3000);
             }
+            
         }
     };
 
@@ -175,26 +163,6 @@ function Appointment() {
         }
     };
 
-    // const handleCheckboxChange = (personId) => {
-    //     setSelectedPersonIds((prevSelectedPersonIds) => {
-    //         const isSelected = prevSelectedPersonIds.includes(personId);
-    
-    //         // If checkbox is checked, add the personId to selectedPersonIds
-    //         // If checkbox is unchecked, remove the personId from selectedPersonIds
-    //         const updatedSelectedPersonIds = isSelected
-    //             ? prevSelectedPersonIds.filter((id) => id !== personId)
-    //             : [...prevSelectedPersonIds, personId];
-    
-    //         // Update the selectedPersonIds state
-    //         setFormData((prevFormData) => ({
-    //             ...prevFormData,
-    //             personId: Number(personId),
-    //         }));
-    
-    //         console.log("Selected Person IDs:", updatedSelectedPersonIds);
-    //         return updatedSelectedPersonIds;
-    //     });
-    // };
 
     const handleCheckboxChange = (personId) => {
         setFormData(prevFormData => ({
@@ -212,15 +180,6 @@ function Appointment() {
         }
     };
 
-    const handleSelectedPersonsList = (personId) => {
-        // Обновленный обработчик изменения чекбокса
-        if (selectedPersons.includes(personId)) {
-            setSelectedPersons(selectedPersons.filter(id => id !== personId));
-        } else {
-            setSelectedPersons([...selectedPersons, personId]);
-        }
-    }
-
     const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
     const handleClearClick = () => {
@@ -232,7 +191,7 @@ function Appointment() {
     return (
         <Paper  elevation={3} className={cl.appointmentForm} style={{ marginTop: '80px' }}>
             <div>
-                <p className={cl.headline}>Приказ о назначении</p>  
+                <p className={cl.headline}>Приказ об увольнении</p>  
             </div>
         
             <div className={cl.form}>
@@ -313,46 +272,11 @@ function Appointment() {
                     )}
                 </div>
 
-                <div className={cl.row}>
-                    <Box sx={{ minWidth: 480 }}>
-                        <FormControl size="small" fullWidth>
-                            <InputLabel id="demo-simple-select-label">Тип назначения</InputLabel>
-                            <Select
-                            labelId="demo-simple-select-label"
-                            id="demo-simple-select"
-                            label="Тип назначения"
-                            value={formData.appointmentType}
-                            onChange={(e) => setFormData({ ...formData, appointmentType: e.target.value })}
-                            >
-                                {appointmentType.map((type) => (
-                                    <MenuItem key={type} value={type}>
-                                    {type}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
-                    </Box>
-                </div>
+        
                 
                 <div className={cl.row}>
-                    {formData.appointmentType === 'Впервые принятый' && (
-                        <div>
-                           
-                            <TextField 
-                                sx={{ minWidth: 480 }}
-                                id="outlined-basic" 
-                                label="Срок испытательного периода" 
-                                variant="outlined"  
-                                size="small"
-                                value={formData.monthCount}
-                                onChange={(e) => setFormData({ ...formData, monthCount: e.target.value })}
-                            />
-                        </div>
-                    )}
-                </div>
-                <div className={cl.row}>
                     <div>
-                    <label className={cl.label}>Срок испытательного периода</label>
+                    <label className={cl.label}>Дата приказа</label>
                         <TextField 
                             sx={{ minWidth: 480 }}
                             id="outlined-basic" 
@@ -365,26 +289,6 @@ function Appointment() {
                         />
                     </div>
                 </div>
-                <div className={cl.row}>
-                    <Box sx={{ minWidth: 480 }}>
-                        <FormControl size="small" fullWidth>
-                            <InputLabel id="demo-simple-select-label">Oснование</InputLabel>
-                            <Select
-                            labelId="demo-simple-select-label"
-                            id="demo-simple-select"
-                            label="Oснование"
-                            value={formData.base}
-                            onChange={(e) => setFormData({ ...formData, base: e.target.value })}
-                            >
-                                {base.map((base) => (
-                                    <MenuItem key={base} value={base}>
-                                    {base}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
-                    </Box>
-                </div>
                 
                 
             </div>
@@ -392,6 +296,7 @@ function Appointment() {
             <NotificationContainer />
         </Paper>
     )
-}
 
-export default Appointment;
+};
+
+export default Dismissal;
