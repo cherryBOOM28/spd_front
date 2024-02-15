@@ -157,9 +157,9 @@ function NewPersonal() {
                                     labelId="demo-simple-select-label"
                                     id="demo-simple-select"
                                     label="Семейное положение"
-                                    name='attResult'
-                                    onChange={(e) => handleInputChange(setPositionInfo, 'position', e.target.value)}
-                                    value={positionInfo.position}
+                                    name='familyStatus'
+                                    onChange={(e) => handleInputChange(setPerson, 'familyStatus', e.target.value)}
+                                    value={person.familyStatus}
                                     className={cl.workerInfoSelect}
                                     >
                                       <MenuItem value="" disabled>Выберите семейное положение</MenuItem>

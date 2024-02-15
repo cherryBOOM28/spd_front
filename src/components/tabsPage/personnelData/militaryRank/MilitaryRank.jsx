@@ -23,7 +23,7 @@ import { updateRankInfo } from '../../../../api/staff_info/military_rank/updateR
 
 
 
-function MilitaryRank({ rankInfo, militaryRank,setRankInfo, rankArchive }) {
+function MilitaryRank({ rankInfo, militaryRank, setRankInfo, rankArchive }) {
     const { id } = useParams();
     // console.log("id", id)
     const [openMilitaryHistory, setOpenMilitaryHistory] = useState(false);
@@ -171,6 +171,7 @@ function MilitaryRank({ rankInfo, militaryRank,setRankInfo, rankArchive }) {
                     <Button variant="outlined" onClick={handleMilitaryHistory} style={{ textTransform: 'none'}} className={cl.historyBtn}> <GoHistory /> История приказов</Button>
                 </div>
             </div>
+            {/* {militaryRank && specCheckInfo.militaryRank && specCheckInfo.militaryRank.map((d, i) => ( */}
             <div className={cl.workerBlock}>
                 <div className={cl.column}>
                     <div className={cl.rows}>
@@ -200,7 +201,7 @@ function MilitaryRank({ rankInfo, militaryRank,setRankInfo, rankArchive }) {
                         
                             </div>
                         ) : (
-                            <Paper className={cl.workerInfoP}>{rankInfo.receivedType}</Paper>    
+                            <Paper className={cl.workerInfoP}>{rankInfo &&  rankInfo.receivedType}</Paper>    
                         )}
                     </div>
                     <div className={cl.rows}>
@@ -232,7 +233,7 @@ function MilitaryRank({ rankInfo, militaryRank,setRankInfo, rankArchive }) {
                                 </Box>
                             </div>
                         ) : (
-                            <Paper className={cl.workerInfoP}>{militaryRank.rankTitle}</Paper>    
+                            <Paper className={cl.workerInfoP}>{ militaryRank &&  militaryRank.rankTitle}</Paper>    
                         )}
                     </div>
                 </div>
@@ -258,7 +259,7 @@ function MilitaryRank({ rankInfo, militaryRank,setRankInfo, rankArchive }) {
                             />
                         </div>
                         ) : (
-                            <Paper className={cl.workerInfoP}>{rankInfo.receivedDate}</Paper>    
+                            <Paper className={cl.workerInfoP}>{ rankInfo && rankInfo.receivedDate}</Paper>    
                         )}
                     </div>
                 <div>
@@ -274,7 +275,9 @@ function MilitaryRank({ rankInfo, militaryRank,setRankInfo, rankArchive }) {
                 <IconButton className={cl.iconBtn} onClick={() => handleEdit(id, editedWorker)}><MdEdit /></IconButton>
             )}
         </div>
-        </div>
+            </div>
+
+
         {openMilitaryHistory && (
             <Paper sx={{ width: '100%', overflow: 'hidden', marginTop: '40px' }}>
                 <TableContainer sx={{ maxHeight: 440 }}>

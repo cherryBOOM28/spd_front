@@ -154,7 +154,7 @@ function Home(props) {
             setPatronymic(response.data[0].patronymic);
             setGender(response.data[0].gender.genderName);
             setPositionTitle(response.data[0].positionInfo.position.positionTitle);
-            // console.log("data[0][2]",response.data[0].positionInfo.position.positionTitle)
+            console.log("data[0][2]",response.data)
         })
         .catch(error => {
             console.error("Error fetching personal data:", error);

@@ -139,7 +139,9 @@ function WorkerDetail() {
 
         setDecreeInfo(response.data.DecreeListInfo);
 
-        // console.log(response.data.DecreeListInfo);
+        console.log(response.data.Person.rankInfo);
+        console.log(response.data.Person.rankInfo.militaryRank);
+
       } else {
         console.log(response.statusText);
       }

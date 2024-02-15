@@ -121,7 +121,7 @@ function BasicOrders() {
                                     </div>
                                     <div elevation={3}
                                         className={`${cl.decree_btn}`}
-                                        onClick={() => handleDecreeTypeClick('vacation')}
+                                        onClick={() => handleDecreeTypeClick('sd')}
                                     >
                                         <RiExchangeBoxFill />
                                         <p>Приказ о командировке</p>

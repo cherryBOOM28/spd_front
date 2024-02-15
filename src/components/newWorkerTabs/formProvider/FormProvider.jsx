@@ -75,7 +75,8 @@ export const FormProvider = ({ children }) => {
     gender: '',
     nationality: '',
     iin: '',
-    pin: ''
+    pin: '',
+    familyStatus: ''
   });
 
   const [birthInfo, setBirthInfo] = useState({

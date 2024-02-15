@@ -99,24 +99,7 @@ function DecreeHistory() {
     }
   };
 
-  // const filteredDecrees = selectedDecreeType
-  // ? decreeList.filter((decree) => {
-  //     const trimmedSelectedDecreeType = selectedDecreeType.trim();
-  //     const trimmedDecreeType = decree.decreeType.trim();
 
-  //     if (trimmedSelectedDecreeType === "Все приказы") {
-  //       return true; // Возвращаем true, чтобы отобразить все приказы
-  //     }
-
-  //     const match = trimmedDecreeType === trimmedSelectedDecreeType;
-
-  //     // console.log(`Selected Decree Type: '${trimmedSelectedDecreeType}'`);
-  //     // console.log(`Decree Type for ID ${decree.decreeId}: '${trimmedDecreeType}'`);
-  //     // console.log(`Decree ID ${decree.decreeId} - Match: ${match}`);
-
-  //     return match;
-  //   })
-  // : decreeList;
 
   
   const filteredDecrees = () => {
@@ -204,14 +187,12 @@ function DecreeHistory() {
       </div>
 
       <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-          <TableContainer sx={{ maxHeight: 840 }}>
-          <Table className={cl.customTable}>
+        <TableContainer sx={{ maxHeight: 840 }}>
+          <Table>
             <TableHead>
               <TableRow>
-                <TableCell></TableCell>
                 <TableCell>Вид приказа</TableCell>
                 <TableCell>Дата получения</TableCell>
-                <TableCell>ИИН</TableCell>
                 <TableCell>ФИО</TableCell>
                 <TableCell>Должность</TableCell>
                 <TableCell>Звание</TableCell>
@@ -219,39 +200,43 @@ function DecreeHistory() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {filteredDecreesList.map((decree) => (
-                <TableRow key={decree.decreeId} onClick={() => handleWorkerClick(decree.person.id)} className={cl.workerRow}>
-                  {/* <TableCell><img src={`data:image/jpeg;base64,${decree.person.photo}`} alt="worker" className={cl.workerImg} /></TableCell> */}
-                  <TableCell>{decree.decreeType}</TableCell>
-                  <TableCell>{decree.decreeDate}</TableCell>
-                  {/* <TableCell>{decree.person.iin}</TableCell> */}
-                  <TableCell>
-                    <div className={cl.fio}>
-                      <div>{decree.person.firstName}</div>
-                      <div>{decree.person.surname}</div>
-                      <div>{decree.person.patronymic}</div>
-                    </div>
-                  </TableCell>
-                  <TableCell>{decree.person.positionInfo}</TableCell>
-                  <TableCell>{decree.person.rankInfo}</TableCell>
-                  <TableCell>
-                    {decree.decreeIsConfirmed ? (
-                      <div style={{ color: '#2E7D32', display: 'flex', alignItems: 'center', gap: '5px' }}> <FaCheck />Согласовано</div>
-                    ) : (
-                      <Button onClick={() => openModal(decree.decreeId)} style={{ textTransform: 'none' }}>Согласовать</Button>
+              {filteredDecreesList.map((decree, decreeIndex) => (
+                decree.forms.map((person, personIndex) => (
+                  <TableRow key={personIndex}>
+                    {personIndex === 0 && ( // Проверяем первого человека в списке, чтобы выводить данные о приказе только один раз
+                      <>
+                        <TableCell rowSpan={decree.forms.length}>{decree.decreeType}</TableCell>
+                        <TableCell rowSpan={decree.forms.length}>{decree.decreeDate}</TableCell>
+                      </>
                     )}
-                  </TableCell>
-                </TableRow>
+                    <TableCell>{`${person.person.surname} ${person.person.firstName} ${person.person.patronymic}`}</TableCell>
+                    <TableCell>{person.person.positionInfo ? person.person.positionInfo.position.positionTitle : 'Нет информации о должности'}</TableCell>
+                    <TableCell>{person.person.rankInfo ? person.rankInfo.person.rankTitle : 'Нет звания'}</TableCell>
+                    {personIndex === 0 && ( // Проверяем первого человека в списке, чтобы выводить данные о приказе только один раз
+                      <>
+                        <TableCell rowSpan={decree.forms.length}>
+                          {person.person.decreeIsConfirmed ? (
+                            <div style={{ color: '#2E7D32', display: 'flex', alignItems: 'center', gap: '5px' }}> <FaCheck />Согласовано</div>
+                          ) : (
+                            <Button onClick={() => openModal(decree.decreeId)} style={{ textTransform: 'none' }}>Согласовать</Button>
+                          )}
+                        </TableCell>
+                      </>
+                    )}
+                    
+                  </TableRow>
+                ))
               ))}
             </TableBody>
           </Table>
         </TableContainer>
       </Paper>
-
+  
       <Modal visible={isModalVisible} setVisible={setIsModalVisible} decreeId={selectedDecreeId}>
         <div className={cl.modal_wrapper}>
           <h2 className={cl.headline} style={{ marginBottom: '35px' }}>Согласование приказа</h2>
           <div>
+
             {decreeInfo.transferInfo && decreeInfo.transferInfo.map((info) => (
               <div className={cl.form_wrapper} key={info.decreeInfo.decreeId}>
                 <div className={cl.worker_info}>
