@@ -115,6 +115,7 @@ object-fit: cover;
 
 .worker_info {
   display: flex;
+  flex-direction: column;
   gap: 20px;
 }
 
@@ -126,7 +127,8 @@ object-fit: cover;
 
 .workerPic {
   width: 90px;
-  height: 120px;
+  min-height: 120px;
+  height: 100%;
   border-radius: 5px;
   object-fit: cover;
 
@@ -151,6 +153,20 @@ object-fit: cover;
   font-weight: 500;
 }
 
+.label_3 {
+  font-family: 'Helvetica Meduim', sans-serif;
+  width: 180px;
+  margin-right: 8px;
+  font-weight: 500;
+}
+
+.label_4 {
+  font-family: 'Helvetica Meduim', sans-serif;
+  width: 180px;
+  margin-right: 8px;
+  font-weight: 500;
+}
+
 .info_text {
   padding: 8px 8px;
   width: 160px;
@@ -161,6 +177,18 @@ object-fit: cover;
   padding: 8px 8px;
   width: 454px;
   display: flex;
+}
+
+.info_text_3 {
+  padding: 8px 8px;
+  width: 347px;
+  display: flex;
+}
+
+.info_text_4 {
+  padding: 8px 8px;
+  width: 447px;
+  display: flex
 }
 
 .info_text_long {
@@ -308,4 +336,10 @@ margin-top: 8px;
   display: flex;
   align-items: center;
   gap: 10px;
+}
+
+.childModalBtn {
+  display: flex;
+  gap: 8px;
+  width: 100%;
 }

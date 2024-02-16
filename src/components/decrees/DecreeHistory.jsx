@@ -252,305 +252,329 @@ function DecreeHistory() {
           <h2 className={cl.headline} style={{ marginBottom: '35px' }}>Согласование приказа</h2>
           <div>
 
-            {decreeInfo.transferInfo && decreeInfo.transferInfo.map((info, decreeIndex) => (
-              <div className={cl.form_wrapper} key={decreeIndex}>
+            {decreeInfo && decreeInfo.transferInfo && decreeInfo.transferInfo.decreeInfo && (
+              <div className={cl.form_wrapper}>
+              <div className={cl.worker_info}>
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '10px', marginBottom: '25px' }}>
+                    <div className={cl.info_text_block}>
+                      <Paper className={cl.info_text_2}>
+                        <label className={cl.label_2}>Вид приказа</label>
+                        {decreeInfo.transferInfo.decreeInfo.decreeType}
+                      </Paper>
+                    </div>
+                    <div className={cl.info_text_block}>
+                      <Paper className={cl.info_text_2}>
+                        <label className={cl.label_2}>Дата приказа</label>
+                        {decreeInfo.transferInfo.decreeInfo.decreeDate}
+                      </Paper>
+                    </div>
+                    <div className={cl.info_text_block}>
+                      <Paper className={cl.info_text_2}>
+                        <label className={cl.label_2}>Номер приказа</label>
+                        {decreeInfo.transferInfo.decreeInfo.decreeNumber}
+                      </Paper>
+                    </div>
+                  </div>
+            
+                  {/* Проверяем наличие данных о лице в приказе */}
+                  {decreeInfo.transferInfo && decreeInfo.transferInfo.decreeInfo && decreeInfo.transferInfo.decreeInfo.forms && decreeInfo.transferInfo.decreeInfo.forms.map((personInfo, personIndex) => (
+                    <div key={personIndex}>
+                      <div className={cl.childModalBtnWrapper}>
+                        <Button 
+                          onClick={() => handleOpenChildModal(personIndex)} 
+                          variant="contained"
+                          className={cl.childModalBtn}
+                          style={{ textTransform: 'none', marginBottom: '10px' }}
+                        >
+                          {/* Выводим фото и данные о лице */}
+                          <img src={`data:image/jpeg;base64,${personInfo.person.photo.photoBinary}`} alt="" style={{ width: '32px', height: '32px', borderRadius: '50%', objectFit: 'cover' }} />
+                          <div>
+                            <p style={{ margin: 0 }}>{personInfo.person.surname} {personInfo.person.firstName}</p>
+                          </div>
+                        </Button>
+                      </div>
+
+                      {/* Отображаем модальное окно с информацией о лице, если оно видимо */}
+                      {isChildModalVisible && selectedPersonIndex === personIndex && (
+                        <ChildModal visibleChild={isChildModalVisible} setVisibleChild={setIsChildModalVisible}>
+                          <div className={cl.worker_info}>
+                            <div style={{ display: 'flex', gap: '10px' }}>
+                              <div>
+                                {/* Выводим фото */}
+                                <img className={cl.workerPic} src={`data:image/jpeg;base64,${personInfo.person.photo?.photoBinary}`} alt=""  />
+                              </div>
+                              <div style={{ display: 'flex', flexDirection: 'column' }}>
+
+                                <div className={cl.worker_info_fio}>
+                                  <Paper className={cl.info_text_long}>
+                                    <div style={{ display: 'flex', gap: '8px' }}>
+                                      {/* Выводим ФИО */}
+                                      <p>{personInfo.person.surname}</p>
+                                      <p>{personInfo.person.firstName}</p>
+                                      <p>{personInfo.person.patronymic}</p>
+                                    </div>
+                                  </Paper>
+                                </div>
+
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                                  <div style={{ display: 'flex', gap: '10px' }}>
+                                    <div className={cl.info_text_block}>
+                                      <Paper className={cl.info_text}>
+                                        <label className={cl.label}>ПИН</label>
+                                        {personInfo.person.pin}
+                                      </Paper>
+                                    </div>
+                                    <div className={cl.info_text_block}>
+                                      <Paper className={cl.info_text}>
+                                        <label className={cl.label}>Звание</label>
+                                        {/* Выводим звание */}
+                                        {personInfo.person.rankInfo ? personInfo.person.rankInfo.rankTitle : "Нет звания"}
+                                      </Paper>
+                                    </div>
+                                  </div>
+                                  <div className={cl.info_text_block}>
+                                    <Paper className={cl.info_text_3}>
+                                      <label className={cl.label_3}>Должность</label>
+                                      {/* Выводим должность */}
+                                      {personInfo.person.positionInfo.position.positionTitle}
+                                    </Paper>
+                                  </div>
+                                </div>
+                              </div>
+                              </div>
+
+                              <div className={cl.info_text_block}>
+                                <Paper className={cl.info_text_4}>
+                                  <label className={cl.label_4}>Департамент</label>
+                                  {/* Выводим информацию о департаменте */}
+                                  {personInfo.person.positionInfo.department.DepartmentName}
+                                </Paper>
+                              </div>
+                            
+
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                              
+
+                            <div style={{ display: 'flex',   flexDirection: 'column', gap: '10px', marginTop: '40px' }}>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '5px', marginBottom: '15px' }}>
+                                <BsFillBriefcaseFill style={{ color: '#1976D2', fontSize: '20px' }} />
+                                <p className={cl.headline_2}>Предыдущяя должность</p>
+                              </div>
+                                <div className={cl.info_text_block}>
+                                  <Paper  className={cl.info_text_4}>
+                                    <label className={cl.label_4}>Департамент</label>
+                                    {personInfo.previousPosition.previousDepartment}
+                                  </Paper>
+                                </div>
+                                <div className={cl.info_text_block}>
+                                  <Paper  className={cl.info_text_4}>
+                                    <label className={cl.label_4}>Должность</label>
+                                    {personInfo.previousPosition.previousPosition}
+                                  </Paper>
+                                </div>
+                            </div>
+
+                            <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+                              <IoIosArrowDown style={{ fontSize: '28px', color: '#1565C0' }} />
+                            </div>
+
+                            <div style={{ display: 'flex',   flexDirection: 'column', gap: '10px', marginTop: '10px' }}>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '5px', marginBottom: '10px' }}>
+                                <BsFillBriefcaseFill style={{ color: '#1976D2', fontSize: '20px' }} />
+                                <p className={cl.headline_2}>Новая должность</p>
+                              </div>
+                              <div className={cl.info_text_block}>
+                                <Paper  className={cl.info_text_4}>
+                                  <label className={cl.label_4}>Департамент</label>
+                                  {personInfo.newPosition.newDepartment}
+                                </Paper>
+                              </div>
+                              <div className={cl.info_text_block}>
+                                <Paper  className={cl.info_text_4}>
+                                  <label className={cl.label_4}>Новая должность</label>
+                                  {personInfo.newPosition.newPosition}
+                                </Paper>
+                              </div>
+                            </div>
+
+
+                            </div>
+                          </div>
+                        </ChildModal>
+                      )}
+                    </div>
+                  ))}
+
+            
+                  <div style={{ display: 'flex', justifyContent: 'space-between', gap: '10px', marginTop: '20px' }}>
+                    <Button variant="contained" style={{ width: '100%' }} onClick={() => handleConfirmation(decreeInfo.transferInfo.decreeInfo.decreeId)}>Согласовать</Button>
+                    <Button variant="outlined" style={{ width: '100%' }} onClick={closeModal}>Отменить</Button>
+                  </div>
+                </div>
+              </div>
+              </div>
+            )}
+
+            {decreeInfo && decreeInfo.appointmentInfo && decreeInfo.appointmentInfo.decreeInfo && (
+              <div className={cl.form_wrapper}>
                 <div className={cl.worker_info}>
-                  
                   <div style={{ display: 'flex', flexDirection: 'column' }}>
+
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '10px', marginBottom: '25px' }}>
                       <div className={cl.info_text_block}>
                         <Paper className={cl.info_text_2}>
                           <label className={cl.label_2}>Вид приказа</label>
-                          {info.decreeInfo.decreeType}
+                          {decreeInfo.appointmentInfo.decreeInfo.decreeType}
                         </Paper>
                       </div>
-                     
                       <div className={cl.info_text_block}>
                         <Paper className={cl.info_text_2}>
                           <label className={cl.label_2}>Дата приказа</label>
-                          {info.decreeInfo.decreeDate}
+                          {decreeInfo.appointmentInfo.decreeInfo.decreeDate}
                         </Paper>
                       </div>
-
                       <div className={cl.info_text_block}>
                         <Paper className={cl.info_text_2}>
                           <label className={cl.label_2}>Номер приказа</label>
-                          {info.decreeInfo.decreeNumber}
+                          {decreeInfo.appointmentInfo.decreeInfo.decreeNumber}
                         </Paper>
                       </div>
                     </div>
-
-                    {info.decreeInfo.person && info.decreeInfo.person.map((personInfo, personIndex) => (
+              
+                    {/* Проверяем наличие данных о лице в приказе */}
+                    {decreeInfo.appointmentInfo && decreeInfo.appointmentInfo.decreeInfo && decreeInfo.appointmentInfo.decreeInfo.forms && decreeInfo.appointmentInfo.decreeInfo.forms.map((personInfo, personIndex) => (
                       <div key={personIndex}>
-                         <div  className={cl.childModalBtnWrapper}>
-                            <Button 
-                              onClick={() => handleOpenChildModal(personIndex)} 
-                              variant="contained"
-                              className={cl.childModalBtn}
-                              style={{ textTransform: 'none', marginBottom: '10px' }}
-                            >   
-                                <IoMdInformationCircleOutline style={{ fontSize: '18px' }} />
+                        <div className={cl.childModalBtnWrapper}>
+                          <Button 
+                            onClick={() => handleOpenChildModal(personIndex)} 
+                            variant="contained"
+                            className={cl.childModalBtn}
+                            style={{ textTransform: 'none', marginBottom: '10px' }}
+                          >
+                            {/* Выводим фото и данные о лице */}
+                            <img src={`data:image/jpeg;base64,${personInfo.person.photo.photoBinary}`} alt="" style={{ width: '32px', height: '32px', borderRadius: '50%', objectFit: 'cover' }} />
+                            <div>
+                              <p style={{ margin: 0 }}>{personInfo.person.surname} {personInfo.person.firstName}</p>
+                            </div>
+                          </Button>
+                        </div>
+
+                        {/* Отображаем модальное окно с информацией о лице, если оно видимо */}
+                        {isChildModalVisible && selectedPersonIndex === personIndex && (
+                          <ChildModal visibleChild={isChildModalVisible} setVisibleChild={setIsChildModalVisible}>
+                            <div className={cl.worker_info}>
+                              <div style={{ display: 'flex', gap: '10px' }}>
                                 <div>
-                                  <p style={{ margin: 0 }}>{personInfo.surname} {personInfo.firstName}</p>
+                                  {/* Выводим фото */}
+                                  <img className={cl.workerPic} src={`data:image/jpeg;base64,${personInfo.person.photo?.photoBinary}`} alt=""  />
                                 </div>
-                            </Button>
-                            <div></div>
-                          </div>
-                            {isChildModalVisible && selectedPersonIndex === personIndex &&
-                              <ChildModal visibleChild={isChildModalVisible} setVisibleChild={setIsChildModalVisible}>
-                                  <div className={cl.worker_info}>
-                                    <div style={{ display: 'flex', gap: '10px' }}>
-                                     
-                                      <div style={{ display: 'flex', flexDirection: 'column' }}>
-                                          <div className={cl.worker_info_fio}>
-                                            <Paper className={cl.info_text_3}>
-                                              <div style={{ display: 'flex', gap: '8px' }}>
-                                                <p>{personInfo.surname}</p>
-                                                <p>{personInfo.firstName}</p>
-                                                <p>{personInfo.patronymic}</p>
-                                              </div>
-                                            </Paper>
-                                          </div>
-                                          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                                            <div style={{ display: 'flex', gap: '10px'  }}>
-                                              <div className={cl.info_text_block}>
-                                                <Paper  className={cl.info_text_4}>
-                                                  <label className={cl.label}>ПИН</label>
-                                                  {personInfo.pin}
-                                                </Paper>
-                                              </div>
-                                              <div className={cl.info_text_block}>
-                                                <Paper  className={cl.info_text_4}>
-                                                  <label className={cl.label_4}>Звание</label>
-                                                  {personInfo.rankInfo ? personInfo.rankInfo : "Нет звания"}
-                                                </Paper>
-                                              </div>
-                                            </div>
-                                            <div className={cl.info_text_block}>
-                                              <Paper  className={cl.info_text_3}>
-                                                <label className={cl.label_3}>Должность</label>
-                                                {personInfo.positionInfo.position.positionTitle}
-                                              </Paper>
-                                            </div>
-                                          </div>
+                                <div style={{ display: 'flex', flexDirection: 'column' }}>
 
-                                          
+                                  <div className={cl.worker_info_fio}>
+                                    <Paper className={cl.info_text_long}>
+                                      <div style={{ display: 'flex', gap: '8px' }}>
+                                        {/* Выводим ФИО */}
+                                        <p>{personInfo.person.surname}</p>
+                                        <p>{personInfo.person.firstName}</p>
+                                        <p>{personInfo.person.patronymic}</p>
                                       </div>
-                                    </div>
+                                    </Paper>
+                                  </div>
 
-                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                                  <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                                    <div style={{ display: 'flex', gap: '10px' }}>
                                       <div className={cl.info_text_block}>
-                                        <Paper  className={cl.info_text_3}>
-                                          <label className={cl.label_3}>Департамент</label>
-                                          {personInfo.positionInfo.department.DepartmentName}
+                                        <Paper className={cl.info_text}>
+                                          <label className={cl.label}>ПИН</label>
+                                          {personInfo.person.pin}
                                         </Paper>
                                       </div>
-
-                                      <div style={{ display: 'flex',   flexDirection: 'column', gap: '10px', marginTop: '40px' }}>
-                                        <div style={{ display: 'flex', alignItems: 'center', gap: '5px', marginBottom: '15px' }}>
-                                          <BsFillBriefcaseFill style={{ color: '#1976D2', fontSize: '20px' }} />
-                                          <p className={cl.headline_2}>Предыдущяя должность</p>
-                                        </div>
-                                          <div className={cl.info_text_block}>
-                                            <Paper  className={cl.info_text_3}>
-                                              <label className={cl.label_3}>Департамент</label>
-                                              {personInfo.previousPosition.previousDepartment}
-                                            </Paper>
-                                          </div>
-                                          <div className={cl.info_text_block}>
-                                            <Paper  className={cl.info_text_3}>
-                                              <label className={cl.label_3}>Должность</label>
-                                              {personInfo.previousPosition.previousPosition}
-                                            </Paper>
-                                          </div>
+                                      <div className={cl.info_text_block}>
+                                        <Paper className={cl.info_text}>
+                                          <label className={cl.label}>Звание</label>
+                                          {/* Выводим звание */}
+                                          {personInfo.person.rankInfo ? personInfo.person.rankInfo.rankTitle : "Нет звания"}
+                                        </Paper>
                                       </div>
-
-                                      <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
-                                        <IoIosArrowDown style={{ fontSize: '28px', color: '#1565C0' }} />
-                                      </div>
-
-                                      <div style={{ display: 'flex',   flexDirection: 'column', gap: '10px', marginTop: '10px' }}>
-                                        <div style={{ display: 'flex', alignItems: 'center', gap: '5px', marginBottom: '10px' }}>
-                                          <BsFillBriefcaseFill style={{ color: '#1976D2', fontSize: '20px' }} />
-                                          <p className={cl.headline_2}>Новая должность</p>
-                                        </div>
-                                        <div className={cl.info_text_block}>
-                                          <Paper  className={cl.info_text_3}>
-                                            <label className={cl.label_3}>Департамент</label>
-                                            {personInfo.newPosition.newDepartment}
-                                          </Paper>
-                                        </div>
-                                        <div className={cl.info_text_block}>
-                                          <Paper  className={cl.info_text_3}>
-                                            <label className={cl.label_3}>Новая должность</label>
-                                            {personInfo.newPosition.newPosition}
-                                          </Paper>
-                                        </div>
-                                      </div>
-
+                                    </div>
+                                    <div className={cl.info_text_block}>
+                                      <Paper className={cl.info_text_3}>
+                                        <label className={cl.label_3}>Должность</label>
+                                        {/* Выводим должность */}
+                                        {personInfo.person.positionInfo.position.positionTitle}
+                                      </Paper>
                                     </div>
                                   </div>
-                              </ChildModal>
-                            }
+                                </div>
+                                </div>
+
+                                <div className={cl.info_text_block}>
+                                  <Paper className={cl.info_text_4}>
+                                    <label className={cl.label_4}>Департамент</label>
+                                    {/* Выводим информацию о департаменте */}
+                                    {personInfo.person.positionInfo.department.DepartmentName}
+                                  </Paper>
+                                </div>
+                              
+
+                              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                                
+
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '30px' }}>
+                                  <div style={{ display: 'flex', alignItems: 'center', gap: '5px', marginBottom: '10px' }}>
+                                    <BsFillBriefcaseFill style={{ color: '#1976D2', fontSize: '20px' }} />
+                                    <p className={cl.headline_2}>Новая должность</p>
+                                  </div>
+                                  <div className={cl.info_text_block}>
+                                    <Paper className={cl.info_text_4}>
+                                      <label className={cl.label_4}>Департамент</label>
+                                      {/* Выводим новый департамент */}
+                                      {personInfo.newDepartment}
+                                    </Paper>
+                                  </div>
+                                  <div className={cl.info_text_block}>
+                                    <Paper className={cl.info_text_4}>
+                                      <label className={cl.label_4}>Новая должность</label>
+                                      {/* Выводим новую должность */}
+                                      {personInfo.newPosition}
+                                    </Paper>
+                                  </div>
+                                  <div className={cl.info_text_block}>
+                                    <Paper className={cl.info_text_4}>
+                                      <label className={cl.label_4}>Тип назначения</label>
+                                      {/* Выводим тип назначения */}
+                                      {personInfo.appointmentType}
+                                    </Paper>
+                                  </div>
+                                  {/* Проверяем, если тип назначения не "Вновь принятый", и отображаем испытательный срок */}
+                                  {personInfo.appointmentType !== 'Вновь принятый' && (
+                                    <div className={cl.info_text_block}>
+                                      <Paper className={cl.info_text_4}>
+                                        <label className={cl.label_4}>Испытательный срок</label>
+                                        {/* Выводим информацию об испытательном сроке */}
+                                        {personInfo.probationMonthCount}
+                                      </Paper>
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                          </ChildModal>
+                        )}
                       </div>
                     ))}
 
+              
                     <div style={{ display: 'flex', justifyContent: 'space-between', gap: '10px', marginTop: '20px' }}>
-                      <Button variant="contained" style={{ width: '100%' }} onClick={() => handleConfirmation(info.decreeInfo.decreeId)}>Согласовать</Button>
+                      <Button variant="contained" style={{ width: '100%' }} onClick={() => handleConfirmation(decreeInfo.appointmentInfo.decreeInfo.decreeId)}>Согласовать</Button>
                       <Button variant="outlined" style={{ width: '100%' }} onClick={closeModal}>Отменить</Button>
                     </div>
                   </div>
                 </div>
-     
               </div>
-            ))}
-
-            {decreeInfo.appointmentInfo && decreeInfo.appointmentInfo.map((info, decreeIndex) => (
-              <div className={cl.form_wrapper} key={decreeIndex}>
-                <div className={cl.worker_info}>
-                  
-                  <div style={{ display: 'flex', flexDirection: 'column' }}>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '10px', marginBottom: '25px' }}>
-                      <div className={cl.info_text_block}>
-                        <Paper className={cl.info_text_2}>
-                          <label className={cl.label_2}>Вид приказа</label>
-                          {info.decreeInfo.decreeType}
-                        </Paper>
-                      </div>
-                     
-                      <div className={cl.info_text_block}>
-                        <Paper className={cl.info_text_2}>
-                          <label className={cl.label_2}>Дата приказа</label>
-                          {info.decreeInfo.decreeDate}
-                        </Paper>
-                      </div>
-
-                      <div className={cl.info_text_block}>
-                        <Paper className={cl.info_text_2}>
-                          <label className={cl.label_2}>Номер приказа</label>
-                          {info.decreeInfo.decreeNumber}
-                        </Paper>
-                      </div>
-                    </div>
-
-                    {info.decreeInfo.person && info.decreeInfo.person.map((personInfo, personIndex) => (
-                      <div key={personIndex}>
-                         <div  className={cl.childModalBtnWrapper}>
-                            <Button 
-                              onClick={() => handleOpenChildModal(personIndex)} 
-                              variant="contained"
-                              className={cl.childModalBtn}
-                              style={{ textTransform: 'none', marginBottom: '10px' }}
-                            >
-                               <img src={`data:image/jpeg;base64,${personInfo.photo}`} alt="" style={{ width: '32px', height: '32px', borderRadius: '50%', objectFit: 'cover' }} />
-                                <div>
-                                  <p style={{ margin: 0 }}>{personInfo.surname} {personInfo.firstName}</p>
-                                </div>
-                            </Button>
-                            <div></div>
-                          </div>
-                            {isChildModalVisible && selectedPersonIndex === personIndex &&
-                              <ChildModal visibleChild={isChildModalVisible} setVisibleChild={setIsChildModalVisible}>
-                                  <div className={cl.worker_info}>
-                                    <div style={{ display: 'flex', gap: '10px' }}>
-                                      <div>
-                                        <img src={`data:image/jpeg;base64,${personInfo.photo}`} alt=""  className={cl.workerPic} />
-                                      </div>
-                                      <div style={{ display: 'flex', flexDirection: 'column' }}>
-                                          <div className={cl.worker_info_fio}>
-                                            <Paper className={cl.info_text_long}>
-                                              <div style={{ display: 'flex', gap: '8px' }}>
-                                                <p>{personInfo.surname}</p>
-                                                <p>{personInfo.firstName}</p>
-                                                <p>{personInfo.patronymic}</p>
-                                              </div>
-                                            </Paper>
-                                          </div>
-                                          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                                            <div style={{ display: 'flex', gap: '10px'  }}>
-                                              <div className={cl.info_text_block}>
-                                                <Paper  className={cl.info_text}>
-                                                  <label className={cl.label}>ПИН</label>
-                                                  {personInfo.pin}
-                                                </Paper>
-                                              </div>
-                                              <div className={cl.info_text_block}>
-                                                <Paper  className={cl.info_text}>
-                                                  <label className={cl.label}>Звание</label>
-                                                  {personInfo.rankInfo ? personInfo.rankInfo : "Нет звания"}
-                                                </Paper>
-                                              </div>
-                                            </div>
-                                            <div className={cl.info_text_block}>
-                                              <Paper  className={cl.info_text_2}>
-                                                <label className={cl.label_2}>Должность</label>
-                                                {personInfo.positionInfo.position.positionTitle}
-                                              </Paper>
-                                            </div>
-                                          </div>
-
-                                          
-                                      </div>
-                                    </div>
-
-                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                                      <div className={cl.info_text_block}>
-                                        <Paper  className={cl.info_text_3}>
-                                          <label className={cl.label_3}>Департамент</label>
-                                          {personInfo.positionInfo.department.DepartmentName}
-                                        </Paper>
-                                      </div>
-
-                                      <div style={{ display: 'flex',   flexDirection: 'column', gap: '10px', marginTop: '30px' }}>
-                                        <div style={{ display: 'flex', alignItems: 'center', gap: '5px', marginBottom: '10px' }}>
-                                          <BsFillBriefcaseFill style={{ color: '#1976D2', fontSize: '20px' }} />
-                                          <p className={cl.headline_2}>Новая должность</p>
-                                        </div>
-                                        <div className={cl.info_text_block}>
-                                          <Paper  className={cl.info_text_3}>
-                                            <label className={cl.label_3}>Департамент</label>
-                                            {personInfo.newPosition.newDepartment}
-                                          </Paper>
-                                        </div>
-                                        <div className={cl.info_text_block}>
-                                          <Paper  className={cl.info_text_3}>
-                                            <label className={cl.label_3}>Новая должность</label>
-                                            {personInfo.newPosition.newPosition}
-                                          </Paper>
-                                        </div>
-                                        <div className={cl.info_text_block}>
-                                          <Paper  className={cl.info_text_3}>
-                                            <label className={cl.label_3}>Тип назначения</label>
-                                            {personInfo.newPosition.appointmentType}
-                                          </Paper>
-                                        </div>
-                                        {personInfo.newPosition.appointmentType !== 'Вновь принятый' && (
-                                          <div className={cl.info_text_block}>
-                                            <Paper  className={cl.info_text_3}>
-                                              <label className={cl.label_3}>Испытательный срок</label>
-                                              {personInfo.newPosition.probationMonthCount}
-                                            </Paper>
-                                          </div>
-                                        )}
-                                        
-                                      </div>
-
-                                    </div>
-                                  </div>
-                              </ChildModal>
-                            }
-                      </div>
-                    ))}
-
-                    <div style={{ display: 'flex', justifyContent: 'space-between', gap: '10px', marginTop: '20px' }}>
-                      <Button variant="contained" style={{ width: '100%' }} onClick={() => handleConfirmation(info.decreeInfo.decreeId)}>Согласовать</Button>
-                      <Button variant="outlined" style={{ width: '100%' }} onClick={closeModal}>Отменить</Button>
-                    </div>
-                  </div>
-                </div>
-     
-              </div>
-            ))}
+            )}
 
             {decreeInfo.rankUpInfo && decreeInfo.rankUpInfo.map((info) => (
               <div className={cl.form_wrapper} key={info.decreeInfo.decreeId}>
