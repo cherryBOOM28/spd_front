@@ -77,8 +77,6 @@ function Appointment() {
     };
     
     
-
-
     const handleFormSubmit = async () => {
         try {
             // Check if any form fields are empty
@@ -313,7 +311,7 @@ function Appointment() {
                             input={<OutlinedInput label="Основание" />}
                             renderValue={(selected) => selected.join(', ')}
                             >
-                            {['Представление', 'Рапорт', 'Заявление', 'Протокол'].map((base) => (
+                            {['представление', 'рапорт', 'заявление', 'протокол'].map((base) => (
                                 <MenuItem key={base} value={base}>
                                  <Checkbox checked={formData.bases ? formData.bases.some((item) => item.base === base) : false} /> {/* Проверяем, есть ли выбранный элемент в массиве объектов */}
                                 <ListItemText primary={base} />

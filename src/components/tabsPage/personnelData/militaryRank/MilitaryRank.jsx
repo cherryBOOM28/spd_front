@@ -18,12 +18,14 @@ import { MdEdit } from "react-icons/md";
 import { IoClose } from "react-icons/io5";
 import { FaCheck } from "react-icons/fa6";
 import IconButton from '@mui/material/IconButton';
+import { FaTrash } from "react-icons/fa";
+import { FaPlus } from "react-icons/fa";
 
 import { updateRankInfo } from '../../../../api/staff_info/military_rank/updateRankInfo';
 
 
 
-function MilitaryRank({ rankInfo, militaryRank, setRankInfo, rankArchive }) {
+function MilitaryRank({ rankInfo, militaryRank, setRankInfo, setMilitaryRank, rankArchive }) {
     const { id } = useParams();
     // console.log("id", id)
     const [openMilitaryHistory, setOpenMilitaryHistory] = useState(false);
@@ -34,6 +36,76 @@ function MilitaryRank({ rankInfo, militaryRank, setRankInfo, rankArchive }) {
         receivedType: '',
         receivedDate: '',
     });
+
+    // TABLE DATA
+    const [showForm, setShowForm] = useState(false);
+
+    const handleShowForm = () => {
+        setShowForm(!showForm);
+    };
+
+    const [inputData, setInputData] = useState({
+    militaryRank: '',
+    receivedType: '',
+    receivedDate: '',
+    });
+
+    // Добавление данных
+    const handleAddNewData = async (e) => {
+        e.preventDefault();
+        try {
+            // if (!inputData.sick_doc_numb || !inputData.sick_doc_date) {
+            //     alert('Пожалуйста, заполните все поля!');
+            //     return;
+            // }
+
+            const newData = {
+                personId: id,
+                militaryRank: {
+                    rankTitle: inputData.militaryRank,
+                    // Добавьте остальные поля, если они присутствуют в вашей структуре объекта "rankInfo"
+                },
+                receivedType: inputData.receivedType,
+                receivedDate: inputData.receivedDate,
+                // Добавьте другие поля, если они присутствуют в вашей структуре объекта "rankInfo"
+            };
+          
+            const accessToken = Cookies.get('jwtAccessToken');
+
+            const response = await axios.post('http://localhost:8000/api/v1/sick-leave/', newData, {
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`,
+                }
+            });
+
+            if (response.status === 201) {
+                setRankInfo(prevData => {
+                    if (typeof prevData === 'object' && Array.isArray(prevData.sickLeaves)) {
+                        return {
+                            ...prevData,
+                            sickLeaves: [...prevData.sickLeaves, newData],
+                        };
+                    } else {
+                        console.error("prevData is not an object or does not contain data");
+                        return prevData;
+                    }
+                });
+                setInputData({
+                    personId: id,
+                    militaryRank: '',
+                    receivedType: '',
+                    receivedDate: '',
+                });
+                handleShowForm(false);
+            } else {
+                console.error('Error adding new data');
+            }
+            console.log(newData)
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
+     
    
     const accessToken = Cookies.get('jwtAccessToken');
     useEffect(() => {
@@ -130,7 +202,7 @@ function MilitaryRank({ rankInfo, militaryRank, setRankInfo, rankArchive }) {
                     militaryRank: prevRankInfo.militaryRank.map((rank) =>
                       rank.id === id ? updatedRankInfo : rank
                     ),
-                  }));
+                }));
                   
                   
               setEditing(false);
@@ -162,14 +234,92 @@ function MilitaryRank({ rankInfo, militaryRank, setRankInfo, rankArchive }) {
         setOpenMilitaryHistory(!openMilitaryHistory);
     }
     
+    const icon = showForm ? <IoClose style={{ fontSize: '18px' }} /> : <FaPlus style={{ fontSize: '16px' }} />;
+
 
     return (
         <div className={cl.totalInfoWrapper} style={{ marginTop: '40px' }}>
             <div className={cl.totalInfoContent}>
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <p className={cl.workerCapitalName} style={{ marginBottom: '15px' }}>Звания</p>
-                    <Button variant="outlined" onClick={handleMilitaryHistory} style={{ textTransform: 'none'}} className={cl.historyBtn}> <GoHistory /> История приказов</Button>
+                <div style={{ display: 'flex',  alignItems: 'center', gap: '20px',  marginTop: '40px' }}>
+                    <p className={cl.workerCapitalName} style={{ marginBottom: '18px' }}>Звания</p>
+                    <IconButton onClick={handleShowForm} aria-label="toggle-form" style={{ marginBottom: '15px' }}>
+                        {icon}
+                    </IconButton>
                 </div>
+            </div>
+            <div>
+                {showForm && (
+                    <form onSubmit={handleAddNewData} style={{ marginTop: '10px' }}>
+                        <div style={{ display: 'flex', gap: '10px',  marginBottom: '30px'  }}>
+                            <div style={{  display: 'flex', gap: '10px', marginTop: '18px' }}>
+
+                                <Box>
+                                    {/* <label className={cl.label}>Должность</label> */}
+                                    <FormControl size="small" fullWidth>
+                                        <InputLabel id="demo-simple-select-label">Звание</InputLabel>
+                                        <Select
+                                        labelId="demo-simple-select-label"
+                                        id="demo-simple-select"
+                                        label="Звание"
+                                        name='militaryRank'
+                                        className={cl.workerInfoSelect}
+                                        value={inputData.militaryRank}
+                                        onChange={(e) => setInputData({ ...inputData, militaryRank: e.target.value })}
+                                        >
+                                            
+                                            <MenuItem value="" disabled>Выберите звание</MenuItem>
+                                            {militaryRankOption.map(rank => (
+                                            <MenuItem key={rank.id} value={rank.rankTitle}>
+                                                {rank.rankTitle}
+                                            </MenuItem>
+                                            ))}
+                                        </Select>
+                                    </FormControl>
+                                </Box>
+                                <Box >
+                                    {/* <label className={cl.label}>Должность</label> */}
+                                    <FormControl size="small" fullWidth>
+                                        <InputLabel id="demo-simple-select-label">Вид присвоения</InputLabel>
+                                        <Select
+                                        labelId="demo-simple-select-label"
+                                        id="demo-simple-select"
+                                        label="Вид присвоения"
+                                        name='receivedType'
+                                        className={cl.workerInfoSelect}
+                                        value={inputData.receivedType}
+                                        onChange={(e) => setInputData({ ...inputData, receivedType: e.target.value })}
+                                        >
+                                            <MenuItem value="">Выберите вид присвоения</MenuItem>
+                                            <MenuItem value="Досрочное присвоение">Досрочное присвоение</MenuItem>
+                                            <MenuItem value="Внеочередное">Внеочередное</MenuItem>
+                                            <MenuItem value="На одну ступень выше специального звания">На одну ступень выше специального звания</MenuItem>
+                                        </Select>
+                                    </FormControl>
+                                </Box>
+                            </div>
+                           
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                                <label style={{ fontSize: '13px', color: '#4B4B4B', marginLeft: '2px' }}>Дата получения</label>
+                                <TextField
+                                    id="outlined-basic" 
+                                    variant="outlined"  
+                                    size="small"
+                                    type="date"
+                                    className={cl.workerInfoText}
+                                    value={inputData.receivedDate || ''}
+                                    onChange={(e) => {
+                                        const newDate = e.target.value;
+                                        setInputData((prevWorker) => ({
+                                        ...prevWorker,
+                                        receivedDate: newDate,
+                                        }));
+                                    }}
+                                />
+                            </div>
+                            <Button variant="contained" type="submit" className={cl.submitBtn} >Добавить</Button>
+                        </div>
+                    </form>
+                )}
             </div>
             {/* {militaryRank && specCheckInfo.militaryRank && specCheckInfo.militaryRank.map((d, i) => ( */}
             <div className={cl.workerBlock}>

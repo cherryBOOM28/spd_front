@@ -108,20 +108,20 @@ function Transfer() {
 
     // Добавляем обработчик изменения значения для селекта департамента
    // Обработчик изменения значения для селекта департамента
-const handleDepartmentChange = (event, index) => {
-    const newSelectedDepartmentId = event.target.value;
-    const newSelectedDepartmentName = departmentsList.find(dep => dep.id === newSelectedDepartmentId)?.DepartmentName || ''; // Получаем название департамента по айди
-    setSelectedDepartmentId(prevState => {
-        const newState = [...prevState];
-        newState[index] = newSelectedDepartmentId;
-        return newState;
-    });
-    setFormData(prevState => {
-        const newForms = [...prevState.forms];
-        newForms[index].newDepartment = newSelectedDepartmentName; // Сохраняем название департамента в форме
-        return { ...prevState, forms: newForms };
-    });
-};
+    const handleDepartmentChange = (event, index) => {
+        const newSelectedDepartmentId = event.target.value;
+        const newSelectedDepartmentName = departmentsList.find(dep => dep.id === newSelectedDepartmentId)?.DepartmentName || ''; // Получаем название департамента по айди
+        setSelectedDepartmentId(prevState => {
+            const newState = [...prevState];
+            newState[index] = newSelectedDepartmentId;
+            return newState;
+        });
+        setFormData(prevState => {
+            const newForms = [...prevState.forms];
+            newForms[index].newDepartment = newSelectedDepartmentName; // Сохраняем название департамента в форме
+            return { ...prevState, forms: newForms };
+        });
+    };
 
     // Добавляем обработчик изменения значения для селекта должности
     const handlePositionChange = (event, index) => {
