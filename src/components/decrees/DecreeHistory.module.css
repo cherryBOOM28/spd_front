@@ -303,7 +303,8 @@ object-fit: cover;
 padding: 8px;
 /* background:  #e6e6e6; */
 border: 1px solid #e6e6e6;
-
+max-height: 200px; /* Установите желаемую максимальную высоту */
+overflow-y: auto;
 border-radius: 5px;
 margin-top: 8px;
 }

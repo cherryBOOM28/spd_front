@@ -120,9 +120,11 @@ const NewFamilyComposition = (props) => {
                 <div>
                     <div>
                     <form onSubmit={handleAddFamilyMember} style={{ marginTop: '10px' }}>  
-                        <Paper sx={{ width: '100%', overflow: 'hidden', marginTop: '20px' }}>
-                            <TableContainer sx={{ maxHeight: 440 }}>
-                                <Table stickyHeader aria-label="sticky table">
+                    
+
+                        <Paper>
+                            <TableContainer>
+                                <Table className={cl.customTable}>
                                     <TableHead>
                                         <TableRow>
                                             <TableCell>Степень родства</TableCell>
@@ -132,7 +134,123 @@ const NewFamilyComposition = (props) => {
                                             <TableCell>ИИН</TableCell>
                                             <TableCell>Дата рождения</TableCell>
                                             <TableCell>Место работы</TableCell>
+                                            <TableCell></TableCell>
                                         </TableRow>
+                                    </TableHead>
+                                    <TableBody >
+                                        <TableRow>
+                                            <TableCell>
+                                                <Box>
+                                                    {/* <label className={cl.label}>Должность</label> */}
+                                                    <FormControl size="small" fullWidth>
+                                                        <InputLabel id="demo-simple-select-label">Cтепень родства</InputLabel>
+                                                        <Select
+                                                        labelId="demo-simple-select-label"
+                                                        id="demo-simple-select"
+                                                        label="Cтепень родства"
+                                                        className={cl.workerInfoSelect}
+                                                        name='relative_type'
+                                                        value={inputData.workerInfoSelect}
+                                                        onChange={(e) => setInputData({ ...inputData, relativeType: e.target.value })}
+                                                        >
+                                                        <MenuItem value="">Выберите тип родственника</MenuItem>
+                                                        <MenuItem value="супруг/супруга">супруг/супруга</MenuItem>
+                                                        <MenuItem value="сын/дочь">сын/дочь</MenuItem>
+                                                        <MenuItem value="мать/отец">мать/отец</MenuItem>
+                                                        <MenuItem value="брат/сестра">брат/сестра</MenuItem>
+                                                        </Select>
+                                                    </FormControl>
+                                                </Box>
+                                            </TableCell>
+                                            <TableCell>
+                                                <input
+                                                    type="text"
+                                                    className={cl.formInput}
+                                                    placeholder="Имя"    
+                                                    name='relName'
+                                                    value={inputData.relName}
+                                                    onChange={handleInputChange}
+                                                />
+                                            </TableCell>
+                                            <TableCell>
+                                                <input
+                                                    type="text"
+                                                    className={cl.formInput}
+                                                    placeholder="Фамилия"
+                                                    name='relSurname'
+                                                    value={inputData.relSurname}
+                                                    onChange={handleInputChange}
+                                                />
+                                            </TableCell>
+                                            <TableCell>
+                                                <input
+                                                    type="text"
+                                                    className={cl.formInput}
+                                                    placeholder="Отчество"
+                                                    name='relPatronymic'
+                                                    value={inputData.relPatronymic}
+                                                    onChange={handleInputChange}
+                                                />
+                                            </TableCell>
+                                            <TableCell>
+                                                <div className={cl.datePickerContainer}>
+                                                    <input
+                                                        type="number"
+                                                        className={cl.formInput}
+                                                        name='relIin'
+                                                        placeholder="ИИН родственника"
+                                                        value={inputData.relIin}
+                                                        onChange={handleInputChange}
+                                                    />
+                                                </div>
+                                            </TableCell>
+                                            <TableCell>
+                                                <div className={cl.datePickerContainer}>
+                                                    <input
+                                                        type="date"
+                                                        className={cl.formInput}
+                                                        name='relBirthDate'
+                                                        placeholder="Дата рождения"
+                                                        value={inputData.relBirthDate || ''}
+                                                        onChange={(e) => {
+                                                        const newDate = e.target.value;
+                                                        setInputData((prevWorker) => ({
+                                                        ...prevWorker,
+                                                        relBirthDate: newDate,
+                                                        }));
+                                                        }}
+                                                    />
+                                                </div>
+                                            </TableCell>
+                                            <TableCell>
+                                                <input
+                                                    type="text"
+                                                    className={cl.formInput}
+                                                    name='relJobPlace'
+                                                    placeholder="Место работы"
+                                                    value={inputData.relJobPlace}
+                                                    onChange={handleInputChange}
+                                                />
+                                            </TableCell>
+                                            <TableCell><Button className={cl.submitBtn}  onClick={handleShowForm}>Добавить</Button></TableCell>
+                                        </TableRow>
+                                    </TableBody>
+                                </Table>
+                            </TableContainer>
+                        </Paper>
+                        
+                        </form>
+                            {showForm && (
+                                <div>
+                                <Table className={cl.customTable} style={{ marginTop: '20px' }}>
+                                    <TableHead>
+                                        <TableCell>Степень родства</TableCell>
+                                            <TableCell>Имя</TableCell>
+                                            <TableCell>Фамилия</TableCell>
+                                            <TableCell>Отчество</TableCell>
+                                            <TableCell>ИИН</TableCell>
+                                            <TableCell>Дата рождения</TableCell>
+                                            <TableCell>Место работы</TableCell>
                                     </TableHead>
                                     <TableBody>
                                         {familyComposition && familyComposition.slice(1).map((d, i) => (
@@ -187,170 +305,9 @@ const NewFamilyComposition = (props) => {
                                         ))}
                                     </TableBody>
                                 </Table>
-                            </TableContainer>
-                        </Paper>
-                        <table className={cl.customTable}>
-                            <tbody >
-                                <tr>
-                                    <td>
-                                        <select
-                                            className={cl.formInput}
-                                            value={inputData.relativeType}
-                                            onChange={(e) => setInputData({ ...inputData, relativeType: e.target.value })}
-                                        >
-                                            <option value="">Выберите тип родственника</option>
-                                            <option value="супруг/супруга">супруг/супруга</option>
-                                            <option value="сын/дочь">сын/дочь</option>
-                                            <option value="мать/отец">мать/отец</option>
-                                            <option value="брат/сестра">брат/сестра</option>
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <input
-                                            type="text"
-                                            className={cl.formInput}
-                                            placeholder="ФИО"    
-                                            name='relName'
-                                            value={inputData.relName}
-                                            onChange={handleInputChange}
-                                        />
-                                    </td>
-                                    <td>
-                                        <input
-                                            type="text"
-                                            className={cl.formInput}
-                                            placeholder="ФИО"
-                                            name='relSurname'
-                                            value={inputData.relSurname}
-                                            onChange={handleInputChange}
-                                        />
-                                    </td>
-                                    <td>
-                                        <input
-                                            type="text"
-                                            className={cl.formInput}
-                                            placeholder="ФИО"
-                                            name='relPatronymic'
-                                            value={inputData.relPatronymic}
-                                            onChange={handleInputChange}
-                                        />
-                                    </td>
-                                    <td>
-                                        <div className={cl.datePickerContainer}>
-                                            <input
-                                                type="number"
-                                                className={cl.formInput}
-                                                name='relIin'
-                                                placeholder="ИИН родственника"
-                                                value={inputData.relIin}
-                                                onChange={handleInputChange}
-                                            />
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div className={cl.datePickerContainer}>
-                                            <input
-                                                type="date"
-                                                className={cl.formInput}
-                                                name='relBirthDate'
-                                                placeholder="Дата рождения"
-                                                value={inputData.relBirthDate || ''}
-                                                onChange={(e) => {
-                                                const newDate = e.target.value;
-                                                setInputData((prevWorker) => ({
-                                                ...prevWorker,
-                                                relBirthDate: newDate,
-                                                }));
-                                                }}
-                                            />
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <input
-                                            type="text"
-                                            className={cl.formInput}
-                                            name='relJobPlace'
-                                            placeholder="Место работы"
-                                            value={inputData.relJobPlace}
-                                            onChange={handleInputChange}
-                                        />
-                                    </td>
-                                    <td><Button className={cl.submitBtn}  onClick={handleShowForm}>Добавить</Button></td>
-                                </tr>
-                                
-                            </tbody>
-                        </table>
-                    </form>
-                        {showForm && (
-                            <div>
-                            <table className={cl.customTable} style={{ marginTop: '20px' }}>
-                                <thead>
-                                    <tr>
-                                        <td>Степень родства</td>
-                                        <td>Имя</td>
-                                        <td>Фамилия</td>
-                                        <td>Отчество</td>
-                                        <td>ИИН</td>
-                                        <td>Дата рождения</td>
-                                        <td>Место работы</td>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {familyComposition && familyComposition.slice(1).map((d, i) => (
-                                        <tr key={i}>
-                                            <td>  
-                                                {editingId === d.id ? (
-                                                    <select
-                                                        className={cl.selectRelative_type}
-                                                        name='relative_type'
-                                                        value={editedData.relativeType}
-                                                        onChange={(e) => setEditedData({ ...editedData, relativeType: e.target.value })}
-                                                    >
-                                                        <option value="">Выберите тип родственника</option>
-                                                        <option value="супруг/супруга">супруг/супруга</option>
-                                                        <option value="сын/дочь">сын/дочь</option>
-                                                        <option value="мать/отец">мать/отец</option>
-                                                        <option value="брат/сестра">брат/сестра</option>
-                                                    </select>
-                                                ) : (
-                                                    d.relativeType
-                                                )}
-                                            </td>
-                                            <td>{editingId === d.id ? <input type="text" className={cl.editInput} name='relName' value={editedData.relName} onChange={(e) => setEditedData({ ...editedData, relName: e.target.value })} /> : d.relName}</td>
-                                            <td>{editingId === d.id ? <input type="text" className={cl.editInput} name='relSurname' value={editedData.relSurname} onChange={(e) => setEditedData({ ...editedData, relSurname: e.target.value })} /> : d.relSurname}</td>
-                                            <td>{editingId === d.id ? <input type="text" className={cl.editInput} name='relPatronymic' value={editedData.relPatronymic} onChange={(e) => setEditedData({ ...editedData, relPatronymic: e.target.value })} /> : d.relPatronymic}</td>
-
-                                            <td>{editingId === d.id ? <input type='number' className={cl.editInput} name='relIin'  value={editedData.relIin} onChange={(e) => setEditedData({ ...editedData, relIin: e.target.value })} /> : d.relIin}</td>
-                                            <td>
-                                                {editingId === d.id ? (
-                                                <div className={cl.datePickerContainer}>
-                                                    <input
-                                                        type="date"
-                                                        className={cl.formInput}
-                                                        name='relBirthDate'
-                                                        placeholder="Дата рождения"
-                                                        value={editedData.relBirthDate || ''}
-                                                        onChange={(e) => {
-                                                            const newDate = e.target.value;
-                                                            setEditedData((prevData) => ({
-                                                            ...prevData,
-                                                            relBirthDate: newDate,
-                                                            }));
-                                                        }}
-                                                    />
-                                                </div>
-                                            ) : (
-                                                d.relBirthDate
-                                            )}
-                                            </td>
-                                            <td>{editingId === d.id ? <input type='text' className={cl.editInput} name='relJobPlace' value={editedData.relJobPlace} onChange={(e) => setEditedData({ ...editedData, relJobPlace: e.target.value })} /> : d.relJobPlace}</td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
+                            </div>
+                            )}
                         </div>
-                        )}
-                    </div>
                  
                 </div>
             </div>

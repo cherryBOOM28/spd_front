@@ -33,19 +33,27 @@ function BasicOrders() {
           setCreateDecreeClicked(true);
             setDecreeHistoryOpen(false);
         };
+        // console.log("isCreateDecreeClicked after handleDecreeTypeClick:", isCreateDecreeClicked);
     };
     
     const handleButtonClick = () => {
         setDecreeHistoryOpen(!isDecreeHistoryOpen);
         setSelectedDecreeType(null);
         setCreateDecreeClicked(false);
+        // console.log("isCreateDecreeClicked after handleButtonClick:", isCreateDecreeClicked);
+
     };
 
     const handleReturnToDecreesClick = () => {
-        setCreateDecreeClicked(false);
+        setCreateDecreeClicked(false); // Сбросить данные о нажатии приказов
         setDecreeHistoryOpen(false);
+        setSelectedDecreeType(null); // Сбросить выбранный тип приказа при возврате к приказам
     };
     
+    
+    
+    // console.log("isCreateDecreeClicked at the beginning:", isCreateDecreeClicked);
+
 
     return (
         <div className={cl.wrapper}>

@@ -99,7 +99,7 @@ function BusinessTrip(props) {
 
             // console.log("formData before axios request:", formData);
             const accessToken = Cookies.get('jwtAccessToken');
-            const response = await axios.post(' http://127.0.0.1:8000/api/v1/generate-rankup-decree/', sendData, {
+            const response = await axios.post('http://127.0.0.1:8000/api/v1/generate-komandirovka-decree/', sendData, {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${accessToken}`,
@@ -109,7 +109,7 @@ function BusinessTrip(props) {
 
             console.log("formData after axios request:", formData);
  
-            if (response.status != 400) {
+            if (response.status !== 400) {
                 const blob = new Blob([response.data], { type: response.headers['content-type'] });
 
                 // Создание URL для скачивания файла
@@ -137,12 +137,7 @@ function BusinessTrip(props) {
             } catch (error) {
             console.error('Error submitting form:', error);
 
-            // if (error.response && error.response.status === 400) {
-            //     const errorMessage = error.response.data.error || 'Неизвестная ошибка';
-            //     NotificationManager.error(errorMessage, 'Ошибка', 3000);
-            // } else {
-            //     NotificationManager.error('Произошла ошибка', 'Ошибка', 3000);
-            // }
+ 
             if (error.response && error.response.status === 400) {
                 console.log('Response Data Type:', typeof error.response.data); // Verify that it's a Blob
                 
@@ -286,7 +281,6 @@ function BusinessTrip(props) {
     
     
 
-    const [choice, setChoice] = useState(''); // Состояние для выбора варианта
     const handleChangeRadio = (event, index) => {
         const value = event.target.value; // Получаем значение из события
         // Обновляем formData с выбранным значением choice в форме по указанному индексу
@@ -295,10 +289,6 @@ function BusinessTrip(props) {
             forms: prevState.forms.map((form, i) => i === index ? { ...form, choice: value } : form)
         }));
     };
-    
-    
-    
-    
     
     
     const transportType = [
@@ -316,6 +306,7 @@ function BusinessTrip(props) {
             forms: prevState.forms.map((form, i) => i === index ? { ...form, transport: value } : form)
         }));
     };
+
 
     return (
         <div>
@@ -438,8 +429,8 @@ function BusinessTrip(props) {
                                 
                                     >
                                         {departmentsList.map((department) => (
-                                        <MenuItem key={department.id} value={department.DepartmentName}>
-                                            {department.DepartmentName}
+                                        <MenuItem key={department.id} value={department.DepartmentNameKaz}>
+                                            {department.DepartmentNameKaz}
                                         </MenuItem>
                                         ))}
                                     </Select>
