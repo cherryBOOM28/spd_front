@@ -28,11 +28,6 @@ function RankUp() {
     })
 
     const [militaryRanksList, setMilitaryRanksList] = useState([]);
-    const [ searchText, setSearchText ] = useState('');
-    const [ showClearBtn, setShowClearBtn ] = useState(false);
-    const [showResults, setShowResults] = useState(false);
-    const [selectedPersonIds, setSelectedPersonIds] = useState([]);
-    const [selectedPersons, setSelectedPersons] = useState([]);
 
     // поиск
     const [foundPersons, setFoundPersons] = useState(Array(formData.forms.length).fill([]));
@@ -73,7 +68,7 @@ function RankUp() {
         
             try {
             // Check if any form fields are empty
-            if (formData.forms.some(form => !form.personId || !form.newRank || !form.newDeprankUpDateartment || !form.receivedType)) {
+            if (formData.forms.some(form => !form.personId || !form.newRank || !form.rankUpDate || !form.receivedType)) {
                 // Show a warning notification
                 NotificationManager.warning('Пожалуйста, заполните все поля!', 'Поля пустые', 3000);
                 return; // Stop form submission
@@ -291,6 +286,14 @@ function RankUp() {
         }));
     };
 
+    // Функция для обновления даты присвоения звания в форме по указанному индексу
+    const handleRankUpDateChange = (index, newValue) => {
+        setFormData(prevState => ({
+            ...prevState,
+            forms: prevState.forms.map((form, i) => i === index ? { ...form, rankUpDate: newValue } : form)
+        }));
+    };
+
     return (
         <div>
              <div  elevation={3} className={cl.appointmentForm} style={{ marginTop: '80px' }}>
@@ -328,7 +331,7 @@ function RankUp() {
                             input={<OutlinedInput label="Основание" />}
                             renderValue={(selected) => selected.join(', ')}
                             >
-                            {['Представление', 'Рапорт', 'Заявление', 'Протокол'].map((base) => (
+                            {['представление', 'рапорт', 'заявление', 'протокол'].map((base) => (
                                 <MenuItem key={base} value={base}>
                                  <Checkbox checked={formData.bases ? formData.bases.some((item) => item.base === base) : false} /> {/* Проверяем, есть ли выбранный элемент в массиве объектов */}
                                 <ListItemText primary={base} />
@@ -443,11 +446,12 @@ function RankUp() {
                             type='date'
                                 sx={{ minWidth: 480 }}
                                 id={`monthCount-${index}`}
-                                label="Дата присвоения"
+                                // label="Дата присвоения"
                                 variant="outlined"
                                 size="small"
                                 value={form.rankUpDate}
-                                onChange={(e) => setFormData(index, e.target.value)}
+                                // Используем handleRankUpDateChange для обработки изменений даты
+                                onChange={(e) => handleRankUpDateChange(index, e.target.value)}
                             />
                         </div>
                     

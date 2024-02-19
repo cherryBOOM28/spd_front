@@ -17,6 +17,7 @@ import Dismissal from '../../components/decrees/dismissal/Dismissal';
 import { BsFillSuitcase2Fill } from "react-icons/bs";
 import { RiExchangeBoxFill } from "react-icons/ri";
 import Vacation from '../../components/decrees/vacation/Vacation';
+import BusinessTrip from '../../components/decrees/businessTrip/BusinessTrip';
 
 
 function BasicOrders() {
@@ -79,6 +80,7 @@ function BasicOrders() {
                                 {selectedDecreeType === 'rankUp' && <RunkUp />}
                                 {selectedDecreeType === 'dismissal' && <Dismissal />}
                                 {selectedDecreeType === 'vacation' && <Vacation />}
+                                {selectedDecreeType === 'businessTrip' && <BusinessTrip />}
 
                             </div>
                         )}
@@ -121,7 +123,7 @@ function BasicOrders() {
                                     </div>
                                     <div elevation={3}
                                         className={`${cl.decree_btn}`}
-                                        onClick={() => handleDecreeTypeClick('sd')}
+                                        onClick={() => handleDecreeTypeClick('businessTrip')}
                                     >
                                         <RiExchangeBoxFill />
                                         <p>Приказ о командировке</p>

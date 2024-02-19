@@ -1,9 +1,13 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { NotificationContainer, NotificationManager } from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
-import cl from './Dismissal.module.css';
+import cl from './BusinessTrip.module.css'
+
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
 
 import { FormControl, MenuItem, OutlinedInput, Select, ListItemText } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
@@ -17,20 +21,39 @@ import Checkbox from '@mui/material/Checkbox';
 import { FaPlus } from "react-icons/fa6";
 import { MdDelete } from "react-icons/md";
 
-function Dismissal() {
+function BusinessTrip(props) {
     // сохраняется введенные данные
     const [formData, setFormData] = useState({
         decreeDate: '',
         bases: [],
-        forms: [{ personId: null, decreeDate: ''}]
+        forms: [{ personId: null, departure: '', startDate: '', endDate: '', choice: '', transport: ''}]
     });
-
 
     // поиск
     const [foundPersons, setFoundPersons] = useState(Array(formData.forms.length).fill([]));
     const [searchTexts, setSearchTexts] = useState(Array(formData.forms.length).fill(''));
     const [showClearBtnArray, setShowClearBtnArray] = useState(Array(formData.forms.length).fill(false));
     const [showResultsArray, setShowResultsArray] = useState(Array(formData.forms.length).fill(false));
+    const [selectedDepartments, setSelectedDepartments] = useState(Array(formData.forms.length).fill(''));
+
+    const [departmentsList, setDepartmentsList] = useState([]);
+
+    useEffect(() => {
+        const accessToken = Cookies.get('jwtAccessToken');
+        axios.get(`http://127.0.0.1:8000/api/v1/department`, {
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`,
+                }
+            })
+            .then(response => {
+                setDepartmentsList(response.data);
+                console.log(response.data)
+            })
+            .catch(error => {
+                console.log("Error main departments", error)
+            })
+            
+    }, []); 
 
     // для создания новой формы
     const createNewForm = () => {
@@ -40,12 +63,16 @@ function Dismissal() {
                 ...prevState.forms,
                 {
                     personId: '',
-                    decreeDate: '',
+                    departure: '',
+                    startDate: '',
+                    endDate: '',
+                    choice: '',
+                    transport: ''
                 }
             ]
         }));
     };
-
+    
     const handleChange = (event) => {
         // Формируем массив объектов с ключом "base"
         const selectedBases = event.target.value.map((base) => ({ base }));
@@ -53,10 +80,11 @@ function Dismissal() {
     };
 
     const handleFormSubmit = async () => {
-        try {
-
+        console.log("handleFormSubmit is called");console.log('Form Data:', formData);
+        
+            try {
             // Check if any form fields are empty
-            if (formData.forms.some(form => !form.personId || !form.decreeDate)) {
+            if (formData.forms.some(form => !form.personId || !form.departure || !form.startDate || !form.endDate || !form.choice || !form.transport)) {
                 // Show a warning notification
                 NotificationManager.warning('Пожалуйста, заполните все поля!', 'Поля пустые', 3000);
                 return; // Stop form submission
@@ -69,17 +97,19 @@ function Dismissal() {
                 forms: formData.forms,
             };
 
+            // console.log("formData before axios request:", formData);
             const accessToken = Cookies.get('jwtAccessToken');
-            const response = await axios.post('http://127.0.0.1:8000/api/v1/generate-firing-decree/', sendData, {
+            const response = await axios.post(' http://127.0.0.1:8000/api/v1/generate-rankup-decree/', sendData, {
                 headers: {
+                    'Content-Type': 'application/json',
                     'Authorization': `Bearer ${accessToken}`,
                 },
                 responseType: 'blob'
             });
 
-            console.log(response.data)
-            console.log('Response Data Type:', typeof response.data);
-            if (response.status !== 400) {
+            console.log("formData after axios request:", formData);
+ 
+            if (response.status != 400) {
                 const blob = new Blob([response.data], { type: response.headers['content-type'] });
 
                 // Создание URL для скачивания файла
@@ -103,20 +133,16 @@ function Dismissal() {
                 window.URL.revokeObjectURL(url);
                 NotificationManager.success('Документ успешно создан', 'Успех', 3000);
             }
-            
-            
-          
-            } 
-        catch (error) {
-            console.log(error)
+
+            } catch (error) {
+            console.error('Error submitting form:', error);
+
             // if (error.response && error.response.status === 400) {
-            //     console.log('Response Data Type:', typeof error.response.data);
             //     const errorMessage = error.response.data.error || 'Неизвестная ошибка';
             //     NotificationManager.error(errorMessage, 'Ошибка', 3000);
             // } else {
             //     NotificationManager.error('Произошла ошибка', 'Ошибка', 3000);
             // }
-
             if (error.response && error.response.status === 400) {
                 console.log('Response Data Type:', typeof error.response.data); // Verify that it's a Blob
                 
@@ -144,17 +170,9 @@ function Dismissal() {
             } else {
                 NotificationManager.error('Произошла ошибка', 'Ошибка', 3000);
             }
-            
         }
     };
 
-    // useEffect(() => {
-    //     // Update formData when selectedPersonIds change
-    //     setFormData((prevFormData) => ({
-    //         ...prevFormData,
-    //         personId: selectedPersonIds.length > 0 ? Number(selectedPersonIds[selectedPersonIds.length - 1]) : 0,
-    //     }));
-    // }, [selectedPersonIds]);
 
     // поиск
     const handleInputChange = async (event, formIndex) => {
@@ -209,6 +227,7 @@ function Dismissal() {
         }));
     };
 
+
     const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
     // для чистки поля поиска
@@ -242,19 +261,67 @@ function Dismissal() {
         setFormData({ ...formData, forms: updatedForms });
     };
 
-    // Функция для обновления даты 
-    const handleDateChange = (index, newValue) => {
+    // Функция для обновления даты присвоения звания в форме по указанному индексу
+    const handleStartDateChange = (index, newValue) => {
         setFormData(prevState => ({
             ...prevState,
-            forms: prevState.forms.map((form, i) => i === index ? { ...form, decreeDate: newValue } : form)
+            forms: prevState.forms.map((form, i) => i === index ? { ...form, startDate: newValue } : form)
+        }));
+    };
+    
+    const handleEndDateChange = (index, newValue) => {
+        setFormData(prevState => ({
+            ...prevState,
+            forms: prevState.forms.map((form, i) => i === index ? { ...form, endDate: newValue } : form)
+        }));
+    };
+
+    const handlePositionChange = (event, index) => {
+        const selectedDepartment = event.target.value; // Получаем значение выбранного департамента из события изменения
+        setFormData(prevState => ({
+            ...prevState,
+            forms: prevState.forms.map((form, i) => i === index ? { ...form, departure: selectedDepartment } : form)
+        }));
+    };
+    
+    
+
+    const [choice, setChoice] = useState(''); // Состояние для выбора варианта
+    const handleChangeRadio = (event, index) => {
+        const value = event.target.value; // Получаем значение из события
+        // Обновляем formData с выбранным значением choice в форме по указанному индексу
+        setFormData(prevState => ({
+            ...prevState,
+            forms: prevState.forms.map((form, i) => i === index ? { ...form, choice: value } : form)
+        }));
+    };
+    
+    
+    
+    
+    
+    
+    const transportType = [
+        'қызметтік автокөлігімен',
+        'теміржол көлігімен',
+        '«Тальго» жүрдек поездімен',
+    ];
+
+    const [selectedReceivedType, setSelectedReceivedType] = useState('');
+    const handleReceivedTypeChange = (event, index) => {
+        const { value } = event.target;
+        setSelectedReceivedType(value);
+        setFormData(prevState => ({
+            ...prevState,
+            forms: prevState.forms.map((form, i) => i === index ? { ...form, transport: value } : form)
         }));
     };
 
     return (
         <div>
-            <div  elevation={3} className={cl.appointmentForm} style={{ marginTop: '80px' }}>
+             <div  elevation={3} className={cl.appointmentForm} style={{ marginTop: '80px' }}>
                 <div>
-                    <p className={cl.headline}>Приказ  о присвоении звания</p>  
+                    <p className={cl.headline}>Приказ о командировке</p>  
                 </div>
             
                 <div className={cl.form}>
@@ -298,6 +365,7 @@ function Dismissal() {
                     </div>
                 </div>
             </div>
+            
 
             {formData.forms.map((form, index) => (
                 <Paper className={cl.formStyle} key={index}>
@@ -355,6 +423,43 @@ function Dismissal() {
                             </div>
                         </div>
 
+                        <div className={cl.row} style={{ marginBottom: '20px' }}>
+                            <Box sx={{ minWidth: 480 }}>
+                                {/* <label className={cl.label}>Должность</label> */}
+                                <FormControl size="small" fullWidth>
+                                    <InputLabel id="demo-simple-select-label">Департамент</InputLabel>
+                                    <Select
+                                    labelId="demo-simple-select-label"
+                                    id="demo-simple-select"
+                                    label="Департамент"
+                                    // value={formData.newDepartment}
+                                    value={form.departure}
+                                    onChange={(event) => handlePositionChange(event, index)} 
+                                
+                                    >
+                                        {departmentsList.map((department) => (
+                                        <MenuItem key={department.id} value={department.DepartmentName}>
+                                            {department.DepartmentName}
+                                        </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                            </Box>
+                        </div>
+                        
+                        <div className={cl.row} style={{ marginBottom: '20px' }}>
+                            <TextField
+                            type='date'
+                                sx={{ minWidth: 480 }}
+                                id={`monthCount-${index}`}
+                                // label="Дата присвоения"
+                                variant="outlined"
+                                size="small"
+                                value={form.startDate}
+                                // Используем handleRankUpDateChange для обработки изменений даты
+                                onChange={(e) => handleStartDateChange(index, e.target.value)}
+                            />
+                        </div>
 
                         <div className={cl.row} style={{ marginBottom: '20px' }}>
                             <TextField
@@ -364,10 +469,57 @@ function Dismissal() {
                                 // label="Дата присвоения"
                                 variant="outlined"
                                 size="small"
-                                value={form.decreeDate}
+                                value={form.endDate}
                                 // Используем handleRankUpDateChange для обработки изменений даты
-                                onChange={(e) => handleDateChange(index, e.target.value)}
+                                onChange={(e) => handleEndDateChange(index, e.target.value)}
                             />
+                        </div>
+
+                        <div className={cl.row} style={{ marginBottom: '20px' }}>
+                        <RadioGroup
+                            aria-label="choice"
+                            name="choice"
+                            value={form.choice} // Используем значение из состояния формы
+                            onChange={(event) => handleChangeRadio(event, index)} // Передаем событие и индекс
+                        >
+                            <div style={{ display: 'flex' }}>
+                            <FormControlLabel
+                                value="жолды есепке алғанда"
+                                control={<Radio />}
+                                label="жолды есепке алғанда"
+                                checked={form.choice === "жолды есепке алғанда"} // Добавьте это условие
+                                onChange={(event) => handleChangeRadio(event, index)}
+                            />
+                            <FormControlLabel
+                                value="жолды есепке алмағанда"
+                                control={<Radio />}
+                                label="жолды есепке алмағанда"
+                                checked={form.choice === "жолды есепке алмағанда"} // Добавьте это условие
+                                onChange={(event) => handleChangeRadio(event, index)}
+                            />
+                            </div>
+                        </RadioGroup>
+                        </div>
+
+                        <div className={cl.row} style={{ marginBottom: '20px' }}>
+                            <Box sx={{ minWidth: 480 }}>
+                                <FormControl size="small" fullWidth>
+                                    <InputLabel id="rank-label">Транспорт</InputLabel>
+                                    <Select
+                                        labelId="rank-label"
+                                        id="rank-select"
+                                        label="Транспорт"
+                                        value={form.transport}
+                                        onChange={e => handleReceivedTypeChange(e, index)}
+                                    >
+                                        {transportType.map((type) => (
+                                            <MenuItem key={type} value={type}>
+                                                {type}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                            </Box>
                         </div>
                     
                         
@@ -382,6 +534,7 @@ function Dismissal() {
                 </Paper>
             ))}
         
+            
             <div style={{ display: 'flex', justifyContent: 'center' }}>
                 <IconButton onClick={createNewForm} color="primary" aria-label="add an alarm">
                     <FaPlus />
@@ -393,8 +546,7 @@ function Dismissal() {
             </div>
             <NotificationContainer />
         </div>
-    )
+    );
+}
 
-};
-
-export default Dismissal;
+export default BusinessTrip;
