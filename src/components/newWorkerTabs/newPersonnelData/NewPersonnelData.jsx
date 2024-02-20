@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import cl from './NewPersonnelData.module.css';
 import { useForm } from '../formProvider/FormProvider';
+import axios from 'axios';
+import Cookies from 'js-cookie';
 
 import NewSickLeaves from './sick_leaves/NewSickLeaves';
 import NewAwards from './awards/NewAwards';
@@ -16,19 +18,54 @@ const NewPersonnelData = (props) => {
     const {classCategoriesInfo, setClassCategoriesInfo} = useForm();
     const {autobiographyInfo, setAutobiographyInfo} = useForm();
 
-    const handleInputChange = (name, value) => {
+    const [departments, setDepartments] = useState([]);
+
+    const fetchData = async (id) => {
+        try {
+          const accessToken = Cookies.get('jwtAccessToken');
+          const response = await axios.get(`http://localhost:8000/api/v1/military-rank`, {
+            headers: {
+              'Authorization': `Bearer ${accessToken}`,
+            }
+          });
+          setDepartments(response.data);
+          // console.log("response", response.data);
+      
+        } catch (error) {
+          console.error('Error fetching data:', error); 
+        }
+      };
+
+      useEffect(() => {
+        fetchData();
+        // Запрос данных о департаментах при загрузке компонента
+      }, []);
+
+    const handleInputChange = (e) => {
+        // setSpecCheckInfo((prevData) => {
+        //     let obj = prevData[0];
+        //     obj = {...obj, [name]: value}
+        //     return [obj]
+        // });
+        const { name, value } = e.target;
         setSpecCheckInfo((prevData) => {
-            let obj = prevData[0];
-            obj = {...obj, [name]: value}
-            return [obj]
+            const newData = { ...prevData, [name]: value };
+            console.log(newData); // Log the updated data
+            return newData;
         });
     };
 
-    const handleInputChangeAttestation = (name, value) => {
+    const handleInputChangeAttestation = (e) => {
+        // setAttestationInfo((prevData) => {
+        //     let obj = prevData[0];
+        //     obj = {...obj, [name]: value}
+        //     return [obj]
+        // });
+        const { name, value } = e.target;
         setAttestationInfo((prevData) => {
-            let obj = prevData[0];
-            obj = {...obj, [name]: value}
-            return [obj]
+            const newData = { ...prevData, [name]: value };
+            console.log(newData); // Log the updated data
+            return newData;
         });
     };
 
@@ -41,21 +78,34 @@ const NewPersonnelData = (props) => {
         });
     };
 
-    const handleInputChangeClassCategories = (name, value) => {
-        console.log(value)
+    const handleInputChangeClassCategories = (e) => {
+        // console.log(value)
+        // const { name, value } = e.target;
+        // setClassCategoriesInfo((prevData) => {
+        //     let obj = prevData[0];
+        //     obj = {...obj, [name]: value}
+        //     return [obj]
+        // });
+        const { name, value } = e.target;
         setClassCategoriesInfo((prevData) => {
-            let obj = prevData[0];
-            obj = {...obj, [name]: value}
-            return [obj]
+            const newData = { ...prevData, [name]: value };
+            console.log(newData); // Log the updated data
+            return newData;
         });
     };
 
 
-    const handleInputChangeAutobiography = (name, value) => {
+    const handleInputChangeAutobiography = (e) => {
+        // setAutobiographyInfo((prevData) => {
+        //     let obj = prevData[0];
+        //     obj = {...obj, [name]: value}
+        //     return [obj]
+        // });
+        const { name, value } = e.target;
         setAutobiographyInfo((prevData) => {
-            let obj = prevData[0];
-            obj = {...obj, [name]: value}
-            return [obj]
+            const newData = { ...prevData, [name]: value };
+            console.log(newData); // Log the updated data
+            return newData;
         });
     };
    
@@ -78,7 +128,9 @@ const NewPersonnelData = (props) => {
                                     className={cl.workerInfo}
                                     type="text"
                                     name="docNumber"
-                                    onChange={(e) => handleInputChange('docNumber', e.target.value)}
+                                    value={specCheckInfo.docNumber}
+                                    // onChange={(e) => handleInputChange('docNumber', e.target.value)}
+                                    onChange={handleInputChange}
                                 />
                             </div>        
                         </div>
@@ -89,7 +141,10 @@ const NewPersonnelData = (props) => {
                                     type="date"
                                     className={cl.workerInfo}
                                     name='docDate'
-                                    onChange={(e) => handleInputChange('docDate', e.target.value)}
+                                    value={specCheckInfo.docDate}
+
+                                    // onChange={(e) => handleInputChange('docDate', e.target.value)}
+                                    onChange={handleInputChange}
                                 />
                             </div>
                         </div>
@@ -112,8 +167,8 @@ const NewPersonnelData = (props) => {
                                             className={cl.workerInfo}
                                             name='lastAttDate'
                                             value={attestationInfo.lastAttDate}
-                                            // onChange={handleInputChangeAttestation}
-                                            onChange={(e) => handleInputChangeAttestation('lastAttDate', e.target.value)}
+                                            onChange={handleInputChangeAttestation}
+                                            // onChange={(e) => handleInputChangeAttestation('lastAttDate', e.target.value)}
                                         />
                                     </div>
                             </div>
@@ -126,8 +181,8 @@ const NewPersonnelData = (props) => {
                                         type="text"
                                         name="attResult"
                                         value={attestationInfo.attResult}
-                                        // onChange={handleInputChangeAttestation}
-                                        onChange={(e) => handleInputChangeAttestation('attResult', e.target.value)}
+                                        onChange={handleInputChangeAttestation}
+                                        // onChange={(e) => handleInputChangeAttestation('attResult', e.target.value)}
 
                                     />
                                 </div>
@@ -147,31 +202,22 @@ const NewPersonnelData = (props) => {
                                 <label className={cl.label}>Звание</label>
                                     <select
                                     className={cl.workerInfoSelect}
-                                    // value={rankInfo.militaryRank}
+                                    value={rankInfo.militaryRank}
                                     name='militaryRank'
                                     onChange={handleInputChangeRank}
                                 >
-                                    <option value="">Выберите звание</option>
-                                    <option value="Рядовой">Рядовой</option>
-                                    <option value="Ефрейтор">Ефрейтор</option>
-                                    <option value="Младший сержант">Младший сержант	</option>
-                                    <option value="Сержант">Сержант</option>
-                                    <option value="Старший сержант">Старший сержант	</option>
-                                    <option value="Сержант третьего класса">Сержант третьего класса</option>
-                                    <option value="Сержант второго класса">Сержант второго класса</option>
-                                    <option value="Сержант первого класса">Сержант первого класса</option>
-                                    <option value="Штаб-сержант">Штаб-сержант</option>
-                                    <option value="Мастер-сержант">Мастер-сержант</option>
-                                    <option value="Лейтенант">Лейтенант</option>
-                                    <option value="Старший лейтенант">Старший лейтенант	</option>
-                                    <option value="Капитан">Капитан</option>
-                                    <option value="Майор">Майор</option>
-                                    <option value="Подполковник">Подполковник</option>
-                                    <option value="Полковник">Полковник</option>
-                                    <option value="Генерал-майор">Генерал-майор</option>
-                                    <option value="Генерал-лейтенант">Генерал-лейтенант	</option>
-                                    <option value="Генерал-полковник">Генерал-полковник</option>
-                                    <option value="Генерал армии">Генерал армии</option>  
+                                    <option value="" disabled>Выберите звание</option>
+                                    {/* {departments.map((rank) => (
+                                      <option key={rank.id} value={rank.rankTitle}>
+                                        {rank.rankTitle}
+                                      </option>
+                                    ))} */}
+                                    {departments.map((rank) => (
+                                        <option key={rank.id}>
+                                           {rank.rankTitle}
+                                        </option>
+                                    ))}
+                         
                                 </select>
                             </div>
                             <div className={cl.rows}>
@@ -181,7 +227,7 @@ const NewPersonnelData = (props) => {
                                         type="date"
                                         className={cl.workerInfo}
                                         name='receivedDate'
-                                        // value={rankInfo.receivedDate}
+                                        value={rankInfo.receivedDate}
                                         onChange={handleInputChangeRank}
                                     />
                                     
@@ -193,7 +239,7 @@ const NewPersonnelData = (props) => {
                                 <label className={cl.label}>Вид присвоения</label>
                                     <select
                                     className={cl.workerInfoSelect}
-                                    // value={rankInfo.militaryRank}
+                                    value={rankInfo.receivedType}
                                     name='receivedType'
                                     onChange={handleInputChangeRank}
                                     >
@@ -222,8 +268,8 @@ const NewPersonnelData = (props) => {
                                     className={cl.workerInfoSelect}
                                     value={classCategoriesInfo.categoryType}
                                     name='categoryType'
-                                    // onChange={handleInputChangeClassCategories}
-                                    onChange={(e) => handleInputChangeClassCategories('categoryType', e.target.value)}
+                                    onChange={handleInputChangeClassCategories}
+                                    // onChange={(e) => handleInputChangeClassCategories('categoryType', e.target.value)}
                                 >
                                     <option value="">Выберите категорию</option>
                                     <option value="спец 2 категории">Специалист 2 категории</option>
@@ -252,9 +298,9 @@ const NewPersonnelData = (props) => {
                                 className={cl.workerInfoText}
                                 type="text"
                                 name="autobiographyText"
-                                // value={autobiographyInfo.autobiographyText}
-                                // onChange={handleInputChangeAutobiography}
-                                onChange={(e) => handleInputChangeAutobiography('autobiographyText', e.target.value)}
+                                value={autobiographyInfo.autobiographyText}
+                                onChange={handleInputChangeAutobiography}
+                                // onChange={(e) => handleInputChangeAutobiography('autobiographyText', e.target.value)}
 
                             />
                             </div>

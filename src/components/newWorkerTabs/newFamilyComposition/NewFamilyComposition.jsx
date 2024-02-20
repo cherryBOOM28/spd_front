@@ -128,7 +128,7 @@ const NewFamilyComposition = (props) => {
                         <form onSubmit={handleAddFamilyMember} style={{ marginTop: '10px' }}>  
                     
 
-                        <Paper>
+                        <Paper elevation={2}>
                             <TableContainer>
                                 <Table className={cl.customTable}>
                                     <TableHead>

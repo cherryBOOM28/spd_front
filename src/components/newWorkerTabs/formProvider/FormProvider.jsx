@@ -490,7 +490,7 @@ export const FormProvider = ({ children }) => {
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         {isLoading && <Loader loading={true} />}
       </div>
-      <Button type="submit" onClick={handleSubmit}>Сохранить</Button>
+      <Button type="submit" onClick={handleSubmit} style={{ marginBottom: '25px' }}>Сохранить</Button>
       <NotificationContainer />
     </FormContext.Provider>
   );

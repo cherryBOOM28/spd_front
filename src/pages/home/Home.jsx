@@ -106,6 +106,25 @@ function Home(props) {
           console.error('Error fetching employees:', error);
         }
     };
+
+
+    // отображаение руководства 
+    const [headDepaertment, setHeadDepaertment] = useState({});
+    const getHeadDepartment = async () => {
+        try {
+          const response = await axios.get(`http://127.0.0.1:8000/api/v1/persons_by_department/?departmentId=Руководство`);
+          setHeadDepaertment(response.data);
+          console.log("head for department", response.data);
+          // Обработка данных сотрудников
+        } catch (error) {
+          console.error('Error fetching employees:', error);
+        }
+    };
+
+    const handleRadioChangeheadDepaertment = () => {
+        setSelectedDepartment(null);
+        getHeadDepartment();
+    };
       
     // Пример использования функции с id департамента
     // getEmployeesByDepartmentId(1);
@@ -168,50 +187,6 @@ function Home(props) {
     const toggleSchedule = () => {
         setShowSchedule(!showSchedule);
     };
-
-    // Выпадашка в штатном распиании - выборка
-    const [selectedLocation, setSelectedLocation] = useState('wholeCountry');
-      
-    // скачать штатное расписание
-    // const handleDownload = () => {
-    //    if(selectedStaffingTable === 'Все управления') {
-    //     axios.get(`http://127.0.0.1:8000/api/v1/staffing-table/downloadStaffingTable?department=${selectedStaffingTable}`, {
-    //         headers: {
-    //             'Authorization': `Bearer ${accessToken}`,
-    //         }
-    //     })
-    //         .then(response => {
-
-    //         })
-    //         .catch(error => {
-    //             console.log(error);
-    //             if (error.response && error.response.status === 400) {
-    //                 const errorMessage = error.response.data.error || 'Неизвестная ошибка';
-    //                 NotificationManager.error(errorMessage, 'Ошибка', 3000);
-    //             } else {
-    //                 NotificationManager.error('Произошла ошибка', 'Ошибка', 3000);
-    //             }
-    //         })
-    //     } else {
-    //         axios.get(`http://127.0.0.1:8000/api/v1/staffing_table/getStaffingTable?department_id=${selectedStaffingTable}`, {
-    //             headers: {
-    //                 'Authorization': `Bearer ${accessToken}`,
-    //             }
-    //         })
-    //             .then(response => {
-
-    //             })
-    //             .catch(error => {
-    //                 console.log(error);
-    //                 if (error.response && error.response.status === 400) {
-    //                     const errorMessage = error.response.data.error || 'Неизвестная ошибка';
-    //                     NotificationManager.error(errorMessage, 'Ошибка', 3000);
-    //                 } else {
-    //                     NotificationManager.error('Произошла ошибка', 'Ошибка', 3000);
-    //                 }
-    //             })
-    //     } 
-    // };
 
 
     // Дропдаун с управлениями для скачивания таблиц
@@ -561,19 +536,18 @@ function Home(props) {
       return (           
         <div className={cl.employeeWrapper} >
             <div className={cl.groups}>
-                <h1 className={cl.headline}>Управления</h1>
+                <div className={cl.group_name} style={{ cursor: 'pointer' }}>
+                    <p>Руководство</p>
+                    <input
+                        type="radio"
+                        name="table"
+                        value="all"
+                    />
+                </div>
+                <h1 className={cl.headline} style={{ marginTop: '20px' }}>Управления</h1>
                 
                 <div className={cl.groups_column}>
-                    {/* <div className={cl.group_name} style={{ cursor: 'pointer' }}>
-                        <p>Все</p>
-                        <input
-                            type="radio"
-                            name="table"
-                            value="all"
-                            checked={selectedGroupId === 'all'}
-                            onChange={() => handleRadioChange('all')}
-                        />
-                    </div> */}
+                   
                     {/* <p>{selectedMainDepartment ? selectedMainDepartment.DepartmentName : 'Ничего не выбрано'}</p> */}
                   
                     {mainDepartments.map(department => (
