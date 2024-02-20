@@ -48,6 +48,8 @@ const NewFamilyComposition = (props) => {
         relJobPlace: "",
     });
 
+    console.log("Input Data:", inputData); 
+
     // console.log("inputData", inputData);
 
     const handleAddFamilyMember = async (e) => {
@@ -75,7 +77,9 @@ const NewFamilyComposition = (props) => {
             //     return updatedArray;
             // });
 
-            console.log(newFamily);
+            console.log("New Family Member:", newFamily);
+            console.log("Input Data:", inputData);
+
             
             setFamilyComposition((prevRelatives) => [...prevRelatives, newFamily]);
 
@@ -234,8 +238,20 @@ const NewFamilyComposition = (props) => {
                                                     onChange={handleInputChange}
                                                 />
                                             </TableCell>
-                                            <TableCell><Button className={cl.submitBtn}  onClick={handleShowForm}>Добавить</Button></TableCell>
+                                            <TableCell><Button type='submit' className={cl.submitBtn}  onClick={handleShowForm}>Добавить</Button></TableCell>
                                         </TableRow>
+                                        
+                                        {familyComposition && familyComposition.slice(1).map((familyMember, index) => (
+                                         <TableRow>
+                                         <TableCell>{familyMember.relativeType}</TableCell>
+                                         <TableCell>{familyMember.relName}</TableCell>
+                                         <TableCell>{familyMember.relSurname}</TableCell>
+                                         <TableCell>{familyMember.relPatronymic}</TableCell>
+                                         <TableCell>{familyMember.relIin}</TableCell>
+                                         <TableCell>{familyMember.relBirthDate}</TableCell>
+                                         <TableCell>{familyMember.relJobPlace}</TableCell>
+                                     </TableRow>
+                                    ))}
                                     </TableBody>
                                 </Table>
                             </TableContainer>
@@ -243,18 +259,10 @@ const NewFamilyComposition = (props) => {
                         
                         </form>
 
-                            {showForm && (
+                            {/* {showForm && (
                                 <div>
                                 <Table className={cl.customTable} style={{ marginTop: '20px' }}>
-                                    <TableHead>
-                                        <TableCell>Степень родства</TableCell>
-                                            <TableCell>Имя</TableCell>
-                                            <TableCell>Фамилия</TableCell>
-                                            <TableCell>Отчество</TableCell>
-                                            <TableCell>ИИН</TableCell>
-                                            <TableCell>Дата рождения</TableCell>
-                                            <TableCell>Место работы</TableCell>
-                                    </TableHead>
+                             
                                     <TableBody>
                                         {familyComposition && familyComposition.slice(1).map((d, i) => (
                                             <TableRow key={i}>
@@ -309,7 +317,7 @@ const NewFamilyComposition = (props) => {
                                     </TableBody>
                                 </Table>
                             </div>
-                            )}
+                            )} */}
                         </div>
                  
                 </div>
