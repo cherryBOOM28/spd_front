@@ -125,11 +125,11 @@ function NewPersonal() {
                           <Box>
                             {/* <label className={cl.label}>Должность</label> */}
                             <FormControl size="small" fullWidth>
-                                <InputLabel id="demo-simple-select-label">Департамент</InputLabel>
+                                <InputLabel id="demo-simple-select-label">Должность</InputLabel>
                                 <Select
                                 labelId="demo-simple-select-label"
                                 id="demo-simple-select"
-                                label="Департамент"
+                                label="Должность"
                                 name='attResult'
                                 onChange={(e) => handleInputChange(setPositionInfo, 'position', e.target.value)}
                                 value={positionInfo.position}
