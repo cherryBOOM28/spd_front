@@ -22,14 +22,14 @@ const NewFamilyComposition = (props) => {
     const { familyComposition, setFamilyComposition } = useForm();
 
   // ИЗМЕНЕНИЯ В INPUT
-    const handleInputChange = (event) => {
-        const { name, value } = event.target;
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
 
-        setInputData((prevData) => ({
-            ...prevData,
-            [name]: value,
-        }));
-    };
+    setInputData((prevData) => ({
+        ...prevData,
+        [name]: value,
+    }));
+};       
 
     // ДОБАВЛЕНИЕ ДАННЫХ
     const [showForm, setShowForm] = useState(true);
@@ -74,6 +74,8 @@ const NewFamilyComposition = (props) => {
             //     const updatedArray = [...prevArray, newFamily];
             //     return updatedArray;
             // });
+
+            console.log(newFamily);
             
             setFamilyComposition((prevRelatives) => [...prevRelatives, newFamily]);
 
@@ -119,7 +121,7 @@ const NewFamilyComposition = (props) => {
             <div className={cl.totalInfoWrapper} style={{ marginTop: '20px' }}>
                 <div>
                     <div>
-                    <form onSubmit={handleAddFamilyMember} style={{ marginTop: '10px' }}>  
+                        <form onSubmit={handleAddFamilyMember} style={{ marginTop: '10px' }}>  
                     
 
                         <Paper>
@@ -149,11 +151,11 @@ const NewFamilyComposition = (props) => {
                                                         id="demo-simple-select"
                                                         label="Cтепень родства"
                                                         className={cl.workerInfoSelect}
-                                                        name='relative_type'
-                                                        value={inputData.workerInfoSelect}
+                                                        name='relativeType'
+                                                        value={inputData.relativeType}
                                                         onChange={(e) => setInputData({ ...inputData, relativeType: e.target.value })}
                                                         >
-                                                        <MenuItem value="">Выберите тип родственника</MenuItem>
+                                                        <MenuItem value="" disabled>Выберите тип родственника</MenuItem>
                                                         <MenuItem value="супруг/супруга">супруг/супруга</MenuItem>
                                                         <MenuItem value="сын/дочь">сын/дочь</MenuItem>
                                                         <MenuItem value="мать/отец">мать/отец</MenuItem>
@@ -240,6 +242,7 @@ const NewFamilyComposition = (props) => {
                         </Paper>
                         
                         </form>
+
                             {showForm && (
                                 <div>
                                 <Table className={cl.customTable} style={{ marginTop: '20px' }}>

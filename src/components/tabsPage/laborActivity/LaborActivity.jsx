@@ -28,6 +28,9 @@ import { MdFileDownload } from "react-icons/md";
 import { deleteWorkingHistory } from '../../../api/working_history/deleteWorkingHistory';
 import { UpdateWorkingHistory } from '../../../api/working_history/updateWorkingHistory';
 
+import { NotificationContainer, NotificationManager } from 'react-notifications';
+import 'react-notifications/lib/notifications.css';
+
 function LaborActivity({ workingHistory, setWorkingHistory }) {
     const { id } = useParams();
     // console.log(`id: ${id}`);
@@ -117,6 +120,9 @@ function LaborActivity({ workingHistory, setWorkingHistory }) {
             } else {
                 console.error('Error adding new data');
             }
+            window.location.reload();
+            NotificationManager.success('Данные сохранились!', 'Успех', 3000)
+
         } catch (error) {
             console.error('Error:', error);
         }
@@ -143,8 +149,8 @@ function LaborActivity({ workingHistory, setWorkingHistory }) {
                 return prevData; // возвращаем prevData без изменений
               }
             });
-        
-            console.log("Successfully deleted");
+            window.location.reload();
+            // console.log("Successfully deleted");
           } catch (error) {
             console.error("Error deleting data in table:", error);
         }
@@ -215,18 +221,6 @@ function LaborActivity({ workingHistory, setWorkingHistory }) {
         }
     };
     
-
-    // const handleEdit = async (id) => {
-    //     setIsModalOpen(true);
-    //     const selectedRow = workingHistory.workingHistories.find(row => row.id === id);
-    //     setEditingId(id); 
-
-    //     console.log(selectedRow)
-
-    //     if (selectedRow) {
-    //         setEditedData(selectedRow); 
-    //     }
-    // };
 
 
     const handleSaveEdit = async (id) => {
@@ -313,6 +307,7 @@ function LaborActivity({ workingHistory, setWorkingHistory }) {
             }
             // console.log(updatedData);
             window.location.reload();
+            NotificationManager.success('Данные изменились!', 'Успех', 3000)
         } catch (error) {
             console.error('Error updating table data:', error);
         }
@@ -496,11 +491,11 @@ function LaborActivity({ workingHistory, setWorkingHistory }) {
                                     label="Тип сотрудника"
                                     name='personType'
                                     className={cl.workerInfoSelect}
-                                    value={editedData.personType}
+                                    value={inputData.personType}
                                     onChange={(e) => {
                                         const selectedType = e.target.value;
                                         const updatedSubTypes = subTypeOptions[selectedType] || [];
-                                        setEditedData({ ...editedData, personType: selectedType, personSubType: "", personSubTypes: updatedSubTypes });
+                                        setInputData({ ...inputData, personType: selectedType, personSubType: "", personSubTypes: updatedSubTypes });
                                         }}
                                     >
                                     <MenuItem value="">Выберите тип сотрудника</MenuItem>
@@ -520,11 +515,11 @@ function LaborActivity({ workingHistory, setWorkingHistory }) {
                                     label="Подтип сотрудника"
                                     name='personSubType'
                                     className={cl.workerInfoSelect}
-                                    value={editedData.personSubType}
-                                    onChange={(e) => setEditedData({ ...editedData, personSubType: e.target.value })}
+                                    value={inputData.personSubType}
+                                    onChange={(e) => setInputData({ ...inputData, personSubType: e.target.value })}
                                     >
                                     <MenuItem value="">Выберите подтип сотрудника</MenuItem>
-                                    {editedData.personSubTypes && editedData.personSubTypes.map((subType, index) => (
+                                    {inputData.personSubTypes && inputData.personSubTypes.map((subType, index) => (
                                         <MenuItem key={index} value={subType}>{subType}</MenuItem>
                                     ))}
                                     </Select>
@@ -542,8 +537,8 @@ function LaborActivity({ workingHistory, setWorkingHistory }) {
                             <TableRow>
                                 <TableCell>Начало периода</TableCell>
                                 <TableCell>Конец периода </TableCell>
-                                <TableCell>Должность</TableCell>
                                 <TableCell>Подразделение</TableCell>
+                                <TableCell>Должность</TableCell>
                                 <TableCell>Учреждение</TableCell>
                                 <TableCell>Местонахожден. организации</TableCell>
                                 <TableCell>Коэфициент</TableCell>
@@ -941,8 +936,6 @@ function LaborActivity({ workingHistory, setWorkingHistory }) {
                 )}
             </Paper>
 
-            
-
             <Paper sx={{ width: '100%', overflow: 'hidden', marginTop: '20px' }}>
                 <TableContainer sx={{ maxHeight: 440 }}>
                     <Table stickyHeader aria-label="sticky table">
@@ -988,192 +981,3 @@ function LaborActivity({ workingHistory, setWorkingHistory }) {
 }
 
 export default LaborActivity;
-
-// function FormForEditing({ data }) {
-//     const [editedData, setEditedData] = useState(data || {});
-
-//     const handleChange = (e) => {
-//         const { name, value } = e.target;
-//         setEditedData(prevData => ({
-//             ...prevData,
-//             [name]: value
-//         }));
-//     };
-
-//     const handleSave = () => {
-//         // Обработка сохранения изменений
-//     };
-
-//     // Опции для personSubType в зависимости от выбранного значения в personType
-//     const subTypeOptions = {
-//         "Впервые назначенный": [
-//         "Академия правоохранительных органов",
-//         "В особом порядке",
-//         "Военнослужащие"
-//         ],
-//         "Бывший сотрудник правоохранительного органа": [
-//         "Органы внутренних дел",
-//         "Органы прокуратуры",
-//         "Антикоррупционные службы",
-//         "Органы национальной безопасности",
-//         "Служба гос охраны",
-//         "Органы по фин мониторингу"
-//         ],
-//         "Откомандирован из другого правоохранительного органа": [
-//         "Органы внутренних дел",
-//         "Органы прокуратуры",
-//         "Антикоррупционные службы",
-//         "Органы национальной безопасности",
-//         "Служба гос охраны",
-//         "Органы по фин мониторингу"
-//         ]
-//     };
-
-//     return (
-//         <form>
-//             <div>
-//                 <div style={{ display: 'flex', gap: '20px', marginBottom: '25px' }}>
-//                     <TextField 
-//                         id="outlined-basic" 
-//                         label="Имя" 
-//                         variant="outlined" 
-//                         size="small"
-//                         type="date"
-//                         className={cl.formInput}
-//                         placeholder="Начало периода"
-//                         name='startDate'
-//                         value={editedData.startDate || ''}
-//                         onChange={handleChange}
-//                     />
-//                     <TextField 
-//                         id="outlined-basic" 
-//                         label="Имя" 
-//                         variant="outlined" 
-//                         size="small"
-//                         type="date"
-//                         className={cl.formInput}
-//                         placeholder="Начало периода"
-//                         name='endDate'
-//                         value={editedData.endDate || ''}
-//                         onChange={handleChange}
-//                     />
-//                 </div>
-
-//                 <div style={{ display: 'flex', gap: '20px', marginBottom: '25px'  }}>
-//                     <TextField 
-//                         id="outlined-basic" 
-//                         label="Подразделение" 
-//                         variant="outlined" 
-//                         size="small"
-//                         type="text"
-//                         className={cl.formInput}
-//                         placeholder="Подразделение"
-//                         name='department'
-//                         value={editedData.department}
-//                         onChange={handleChange}
-//                     />
-//                     <TextField 
-//                         id="outlined-basic" 
-//                         label="Должность" 
-//                         variant="outlined" 
-//                         size="small"
-//                         type="text"
-//                         className={cl.formInput}
-//                         placeholder="Должность"
-//                         name='positionName'
-//                         value={editedData.positionName}
-//                         onChange={handleChange}
-//                     />
-//                 </div>
-//                 <div style={{ display: 'flex', gap: '20px', marginBottom: '25px'  }}>
-//                     <TextField 
-//                         id="outlined-basic" 
-//                         label="Учреждение4" 
-//                         variant="outlined" 
-//                         size="small"
-//                         type="text"
-//                         className={cl.formInput}
-//                         placeholder="Учреждение"
-//                         name='organizationName'
-//                         value={editedData.organizationName}
-//                         onChange={handleChange}
-//                     />
-//                     <TextField 
-//                         id="outlined-basic" 
-//                         label="Местонахожден. организации" 
-//                         variant="outlined" 
-//                         size="small"
-//                         type="text"
-//                         className={cl.formInput}
-//                         placeholder="Местонахожден. организации"
-//                         name='organizationAddress'
-//                         value={editedData.organizationAddress}
-//                         onChange={handleChange}
-//                     />
-//                 </div>
-//                 <div style={{ display: 'flex', gap: '20px', marginBottom: '25px'  }}>
-//                     <input
-//                     type="checkbox"
-//                     name="HaveCoefficient"
-//                     checked={editedData.HaveCoefficient || false}
-//                     onChange={handleChange}
-//                     />
-//                     <input
-//                     type="checkbox"
-//                     name="isPravoOhranka"
-//                     checked={editedData.isPravoOhranka || false}
-//                     onChange={handleChange}
-//                     />
-//                 </div>
-//                 <div style={{ display: 'flex', gap: '20px', marginBottom: '25px'  }}>
-//                     <Box sx={{ minWidth: 120 }}>
-//                         <FormControl fullWidth>
-//                             <InputLabel id="demo-simple-select-label">Тип сотрудника</InputLabel>
-//                             <Select
-//                             labelId="demo-simple-select-label"
-//                             id="demo-simple-select"
-//                             label="Тип сотрудника"
-//                             name='personType'
-//                             className={cl.workerInfoSelect}
-//                             value={editedData.personType}
-//                             onChange={(e) => {
-//                                 const selectedType = e.target.value;
-//                                 const updatedSubTypes = subTypeOptions[selectedType] || [];
-//                                 setEditedData({ ...editedData, personType: selectedType, personSubType: "", personSubTypes: updatedSubTypes });
-//                                 }}
-//                             >
-//                             <MenuItem value="">Выберите тип сотрудника</MenuItem>
-//                             <MenuItem value="Впервые назначенный">Впервые назначенный</MenuItem>
-//                             <MenuItem value="Бывший сотрудник правоохранительного органа"> Бывший сотрудник правоохранительного органа</MenuItem>
-//                             <MenuItem value="Откомандирован из другого правоохранительного органа">Откомандирован из другого правоохранительного органа</MenuItem>
-
-//                             </Select>
-//                         </FormControl>
-//                     </Box>
-//                     <Box sx={{ minWidth: 120 }}>
-//                         <FormControl fullWidth>
-//                             <InputLabel id="demo-simple-select-label">Подтип сотрудника</InputLabel>
-//                             <Select
-//                             labelId="demo-simple-select-label"
-//                             id="demo-simple-select"
-//                             label="Подтип сотрудника"
-//                             name='personSubType'
-//                             className={cl.workerInfoSelect}
-//                             value={editedData.personSubType}
-//                             onChange={(e) => setEditedData({ ...editedData, personSubType: e.target.value })}
-//                             >
-//                             <MenuItem value="">Выберите подтип сотрудника</MenuItem>
-//                             {editedData.personSubTypes && editedData.personSubTypes.map((subType, index) => (
-//                                 <MenuItem key={index} value={subType}>{subType}</MenuItem>
-//                             ))}
-//                             </Select>
-//                         </FormControl>
-//                         </Box>
-//                 </div>
-//             </div>
-         
-           
-//             <button onClick={handleSave}>Сохранить</button>
-//         </form>
-//     );
-// }

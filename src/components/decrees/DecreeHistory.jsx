@@ -16,7 +16,10 @@ import { RiSearchLine } from "react-icons/ri";
 import ChildModal from '../UI/childModal/ChildModal';
 import { ImUserMinus } from "react-icons/im";
 import { RiExchangeBoxFill } from "react-icons/ri";
-import { IoMdInformationCircleOutline } from "react-icons/io";
+import { BsFillSuitcase2Fill } from "react-icons/bs";
+import { IoIosArrowRoundForward } from "react-icons/io";
+import { IoCalendarNumber } from "react-icons/io5";
+
 
 
 function DecreeHistory() {
@@ -1083,7 +1086,206 @@ function DecreeHistory() {
               </div>
             )}
 
-            
+            {decreeInfo && decreeInfo.otpuskData && decreeInfo.otpuskData.decreeInfo && (
+              <div className={cl.form_wrapper}>
+                <div className={cl.worker_info}>
+                  <div style={{ display: 'flex', flexDirection: 'column' }}>
+
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '10px', marginBottom: '25px' }}>
+                      <div className={cl.info_text_block}>
+                        <Paper className={cl.info_text_2}>
+                          <label className={cl.label_2}>Вид приказа</label>
+                          {decreeInfo.otpuskData.decreeInfo.decreeType}
+                        </Paper>
+                      </div>
+                      <div className={cl.info_text_block}>
+                        <Paper className={cl.info_text_2}>
+                          <label className={cl.label_2}>Дата приказа</label>
+                          {decreeInfo.otpuskData.decreeInfo.decreeDate}
+                        </Paper>
+                      </div>
+                      <div className={cl.info_text_block}>
+                        <Paper className={cl.info_text_2}>
+                          <label className={cl.label_2}>Номер приказа</label>
+                          {decreeInfo.otpuskData.decreeInfo.decreeNumber}
+                        </Paper>
+                      </div>
+                      <div className={cl.info_text_block}>
+                        <Paper className={cl.info_text_2}>
+                          <label className={cl.label_2}>Основание</label>
+                          {decreeInfo.otpuskData.decreeInfo.bases.map((base, index, array) => (
+                              <React.Fragment key={index}>
+                                  {base}
+                                  {index !== array.length - 1 && ", "} {/* Вставляем запятую и пробел после каждого слова, кроме последнего */}
+                              </React.Fragment>
+                          ))}
+                        </Paper>
+                      </div>
+                    </div>
+              
+                    {/* Проверяем наличие данных о лице в приказе */}
+                    {decreeInfo.otpuskData && decreeInfo.otpuskData.decreeInfo && decreeInfo.otpuskData.decreeInfo.forms && decreeInfo.otpuskData.decreeInfo.forms.map((personInfo, personIndex) => (
+                      <div key={personIndex}>
+                        <div className={cl.childModalBtnWrapper}>
+                          <Button 
+                            onClick={() => handleOpenChildModal(personIndex)} 
+                            variant="contained"
+                            className={cl.childModalBtn}
+                            style={{ textTransform: 'none', marginBottom: '10px' }}
+                          >
+                            {/* Выводим фото и данные о лице */}
+                            <img src={`data:image/jpeg;base64,${personInfo.person.photo.photoBinary}`} alt="" style={{ width: '32px', height: '32px', borderRadius: '50%', objectFit: 'cover' }} />
+                            <div>
+                              <p style={{ margin: 0 }}>{personInfo.person.surname} {personInfo.person.firstName}</p>
+                            </div>
+                          </Button>
+                        </div>
+
+                        {/* Отображаем модальное окно с информацией о лице, если оно видимо */}
+                        {isChildModalVisible && selectedPersonIndex === personIndex && (
+                          <ChildModal visibleChild={isChildModalVisible} setVisibleChild={setIsChildModalVisible}>
+                            <div className={cl.worker_info}>
+                              <div style={{ display: 'flex', gap: '10px' }}>
+                                <div>
+                                  {/* Выводим фото */}
+                                  <img className={cl.workerPic} src={`data:image/jpeg;base64,${personInfo.person.photo?.photoBinary}`} alt=""  />
+                                </div>
+                                <div style={{ display: 'flex', flexDirection: 'column' }}>
+
+                                  <div className={cl.worker_info_fio}>
+                                    <Paper className={cl.info_text_long}>
+                                      <div style={{ display: 'flex', gap: '8px' }}>
+                                        {/* Выводим ФИО */}
+                                        <p>{personInfo.person.surname}</p>
+                                        <p>{personInfo.person.firstName}</p>
+                                        <p>{personInfo.person.patronymic}</p>
+                                      </div>
+                                    </Paper>
+                                  </div>
+
+                                  <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                                    <div style={{ display: 'flex', gap: '10px' }}>
+                                      <div className={cl.info_text_block}>
+                                        <Paper className={cl.info_text}>
+                                          <label className={cl.label}>ПИН</label>
+                                          {personInfo.person.pin}
+                                        </Paper>
+                                      </div>
+                                      <div className={cl.info_text_block}>
+                                        <Paper className={cl.info_text}>
+                                          <label className={cl.label}>Звание</label>
+                                          {/* Выводим звание */}
+                                          {personInfo.person.rankInfo.militaryRank ? personInfo.person.rankInfo.militaryRank.rankTitle : "Нет звания"}
+                                        </Paper>
+                                      </div>
+                                    </div>
+                                    <div className={cl.info_text_block}>
+                                      <Paper className={cl.info_text_3}>
+                                        <label className={cl.label_3}>Должность</label>
+                                        {/* Выводим должность */}
+                                        {personInfo.person.positionInfo.position.positionTitle}
+                                      </Paper>
+                                    </div>
+                                  </div>
+                                </div>
+                                </div>
+
+                                <div className={cl.info_text_block}>
+                                  <Paper className={cl.info_text_4}>
+                                    <label className={cl.label_4}>Департамент</label>
+                                    {/* Выводим информацию о департаменте */}
+                                    {personInfo.person.positionInfo.department.DepartmentName}
+                                  </Paper>
+                                </div>
+                              
+
+                              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                                
+
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '20px' }}>
+                                  <div style={{ display: 'flex', alignItems: 'center', gap: '5px', marginBottom: '10px' }}>
+                                    <BsFillSuitcase2Fill style={{ color: '#1976D2', fontSize: '20px' }} />
+                                    <p className={cl.headline_2}>Информация об отпуске</p>
+                                  </div>
+                                  <div className={cl.info_text_block}>
+                                    <Paper className={cl.info_text_4}>
+                                      <label className={cl.label_4}>Вид отпуска</label>
+                                      {personInfo.otpuskType}
+                                    </Paper>
+                                  </div>
+                                  <div className={cl.info_text_block}>
+                                    <Paper className={cl.info_text_4}>
+                                      <label className={cl.label_4}>Дата начала</label>
+                                      {personInfo.startDate}
+                                    </Paper>
+                                  </div>
+                                  <div className={cl.info_text_block}>
+                                    <Paper className={cl.info_text_4}>
+                                      <label className={cl.label_4}>Дата конца</label>
+                                      {personInfo.endDate}
+                                    </Paper>
+                                  </div>
+
+                                  <div className={cl.info_text_block}>
+                                    <Paper className={cl.info_text_4}>
+                                      <label className={cl.label_4}>Пособие</label>
+                                      {personInfo.benefitChoice}
+                                    </Paper>
+                                  </div>
+                                 
+                                  {personInfo.otpuskType === 'Отпуск Отзыв' && (
+                                    <div className={cl.info_text_block}>
+                                      <Paper className={cl.info_text_4}>
+                                        <label className={cl.label_4}>Дата отзыва</label>
+                                        {personInfo.otzivDate}
+                                      </Paper>
+                                    </div>
+                                  )}
+
+                                  <div style={{ display: 'flex', alignItems: 'center', gap: '5px', marginBottom: '10px', marginTop: '20px' }}>
+                                    <IoCalendarNumber style={{ color: '#1976D2', fontSize: '20px' }} />
+                                    <p className={cl.headline_2}>Значения отпускных дней</p>
+                                  </div>
+
+                                  <div className={cl.info_text_block}>
+                                    <Paper className={cl.info_text_4}>
+                                      <label className={cl.label_4}>Календарные дни</label>
+                                      <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                                        {personInfo.oldBasicDaysCount} 
+                                        <IoIosArrowRoundForward  style={{ fontSize: '20px' }} />
+                                        {personInfo.newBasicDaysCount} 
+                                      </div>
+                                    </Paper>
+                                  </div>
+
+                                  <div className={cl.info_text_block}>
+                                    <Paper className={cl.info_text_4}>
+                                      <label className={cl.label_4}>Отпускные дни за выслуги лет</label>
+                                      <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                                        {personInfo.oldExperienceDaysCount} 
+                                        <IoIosArrowRoundForward  style={{ fontSize: '20px' }}  />
+                                        {personInfo.newExperienceDaysCount} 
+                                      </div>
+                                    </Paper>
+                                  </div>
+
+                                </div>
+
+                              </div>
+                            </div>
+                          </ChildModal>
+                        )}
+                      </div>
+                    ))}
+              
+                    <div style={{ display: 'flex', justifyContent: 'space-between', gap: '10px', marginTop: '20px' }}>
+                      <Button variant="contained" style={{ width: '100%' }} onClick={() => handleConfirmation(decreeInfo.otpuskData.decreeInfo.decreeId)}>Согласовать</Button>
+                      <Button variant="outlined" style={{ width: '100%' }} onClick={closeModal}>Отменить</Button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
 
           </div>
         </div>

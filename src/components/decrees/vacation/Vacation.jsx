@@ -184,18 +184,7 @@ function Vacation() {
                     }))
                     // Добавьте другие поля для отпуска кратко
                 };
-            } else if (formData.otpuskType === 'Отпуск Отзыв') {
-                sendData = {
-                    bases: formData.bases,
-                    decreeDate: formData.decreeDate,
-                    forms: formData.forms.map(form => ({
-                        personId: form.personId,
-                        otzivDate: form.otzivDate,
-                        otpuskType: 'Отпуск Отзыв'
-                    }))
-                    // Добавьте другие поля для отпуска кратко
-                };
-            }
+            } 
 
             console.log("formData before axios request:", sendData);
 
@@ -280,24 +269,23 @@ function Vacation() {
             //     return; // Stop form submission
             // };
 
-            let sendData = {};
 
-            if (formData.otpuskType === 'Отпуск Отзыв') {
-                sendData = {
+            let   sendDataOtziv = {
                     bases: formData.bases,
                     decreeDate: formData.decreeDate,
                     forms: formData.forms.map(form => ({
                         personId: form.personId,
                         otzivDate: form.otzivDate,
                         otpuskType: 'Отпуск Отзыв'
-                    }))
-            }}
+                    }))}
 
-            console.log("formData before axios request:", sendData);
+            console.log("formData before axios request:", formData);
+            console.log("formData before axios request:", sendDataOtziv);
+
 
 
             const accessToken = Cookies.get('jwtAccessToken');
-            const response = await axios.post('http://127.0.0.1:8000/api/v1/generate-otpusk-otziv/', sendData, {
+            const response = await axios.post('http://127.0.0.1:8000/api/v1/generate-otpusk-otziv/', sendDataOtziv, {
                 headers: {
                     'Authorization': `Bearer ${accessToken}`,
                 },
@@ -842,7 +830,7 @@ function Vacation() {
                                     >
                                         {/* <MenuItem value="Календарные дни">{`Календарные дни - ${priorityData.vacation_basic_days}`}</MenuItem>
                                         <MenuItem value="Отпускные дни за выслуги лет">{`Отпускные дни за выслуги лет - ${priorityData.vacation_exp_days}`}</MenuItem> */}
-                                        
+
                                         {(priorityData && priorityData.vacation_basic_days) ? (
                                             <MenuItem value="Календарные дни">{`Календарные дни - ${priorityData.vacation_basic_days}`}</MenuItem>
                                         ) : null}
@@ -972,11 +960,12 @@ function Vacation() {
                                         value={formData.otpuskType}
                                         onChange={(e) => setFormData({ ...formData, otpuskType: e.target.value })}
                                         >
-                                            {otpuskType.map((otpuskType) => (
+                                             <MenuItem value="Отпуск">Отпуск Отзыв</MenuItem>
+                                            {/* {otpuskType.map((otpuskType) => (
                                                 <MenuItem key={otpuskType} value={otpuskType}>
                                                 {otpuskType}
                                                 </MenuItem>
-                                            ))}
+                                            ))} */}
                                         </Select>
                                     </FormControl>
                                 </Box>
