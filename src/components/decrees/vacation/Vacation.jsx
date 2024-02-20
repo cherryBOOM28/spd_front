@@ -29,10 +29,6 @@ function Vacation() {
         forms: [{ personId: null, otpuskType: '', startDate: '', endDate: '', benefitChoice: '', priority: ''}]
     });
 
-    const priority = [
-        'Отпускные дни за выслуги лет',
-        'Календарные дни',
-    ];
 
     const otpuskType = [
         'Отпуск',
@@ -104,6 +100,23 @@ function Vacation() {
     
 
     // для создания новой формы
+    const createNewFormOtpusk = () => {
+        setFormData(prevState => ({
+            ...prevState,
+            forms: [
+                ...prevState.forms,
+                {
+                    personId: '',
+                    otpuskType: '',
+                    startDate: '',
+                    endDate: '',
+                    benefitChoice: '',
+                    priority: ''
+                }
+            ]
+        }));
+    };
+
     const createNewFormKratko = () => {
         setFormData(prevState => ({
             ...prevState,
@@ -132,6 +145,8 @@ function Vacation() {
             ]
         }));
     };
+
+
 
     const handleFormSubmit = async () => {
         try {
@@ -494,6 +509,12 @@ function Vacation() {
         }));
     };
     
+    // удаление формы
+    const handleDeleteForm = (index) => {
+        const updatedForms = [...formData.forms];
+        updatedForms.splice(index, 1);
+        setFormData({ ...formData, forms: updatedForms });
+    };
     
 
     return (
@@ -678,20 +699,19 @@ function Vacation() {
                                 </div>
                             </div>
 
-                            <div style={{ display: 'flex', justifyContent: 'center' }} className={cl.formWrapper}>
+                            <div style={{ display: 'flex', gap: '30px', justifyContent: 'center' }} className={cl.formWrapper}>
                                 <IconButton onClick={() => handleDeleteFormOtpuskKratko(index)} className={cl.deleteBtn}>
                                     <MdDelete style={{ color: '#D32F2F' }} />
                                 </IconButton>
-                            </div>
 
-                            <div style={{ display: 'flex', justifyContent: 'center' }}>
                                 <IconButton onClick={createNewFormKratko} color="primary" aria-label="add an alarm">
                                     <FaPlus />
                                 </IconButton>
                             </div>
 
+
                             <div style={{ display: 'flex', justifyContent: 'center' }}>
-                                <Button variant="contained" style={{ marginTop: '40px' }} onClick={handleFormSubmit} className={cl.btn}>Получить приказ</Button>
+                                <Button variant="contained" style={{ marginTop: '20px' }} onClick={handleFormSubmit} className={cl.btn}>Получить приказ</Button>
                             </div>
                             <NotificationContainer />
     
@@ -822,11 +842,15 @@ function Vacation() {
                                     >
                                         {/* <MenuItem value="Календарные дни">{`Календарные дни - ${priorityData.vacation_basic_days}`}</MenuItem>
                                         <MenuItem value="Отпускные дни за выслуги лет">{`Отпускные дни за выслуги лет - ${priorityData.vacation_exp_days}`}</MenuItem> */}
-                                        {priorityData && priorityData.vacation_basic_days && (
+                                        
+                                        {(priorityData && priorityData.vacation_basic_days) ? (
                                             <MenuItem value="Календарные дни">{`Календарные дни - ${priorityData.vacation_basic_days}`}</MenuItem>
-                                        )}
-                                        {priorityData && priorityData.vacation_exp_days && (
+                                        ) : null}
+                                        {(priorityData && priorityData.vacation_exp_days) ? (
                                             <MenuItem value="Отпускные дни за выслуги лет">{`Отпускные дни за выслуги лет - ${priorityData.vacation_exp_days}`}</MenuItem>
+                                        ) : null}
+                                        {(priorityData && priorityData.priorityField === "No need") && (
+                                            <MenuItem value="">Нет данных</MenuItem>
                                         )}
                                     </Select>
                                 </FormControl>
@@ -859,8 +883,21 @@ function Vacation() {
                                 </RadioGroup>
                             </div>
 
-                            <Button variant="contained" style={{ marginTop: '40px' }} onClick={handleFormSubmit} className={cl.btn}>Получить приказ</Button>
-    
+                            <div style={{ display: 'flex', gap: '30px', justifyContent: 'center' }} className={cl.formWrapper}>
+                                <IconButton onClick={() => handleDeleteForm(index)} className={cl.deleteBtn}>
+                                    <MdDelete style={{ color: '#D32F2F' }} />
+                                </IconButton>
+
+                                <IconButton onClick={createNewFormOtpusk} color="primary" aria-label="add an alarm">
+                                    <FaPlus />
+                                </IconButton>
+                            </div>
+
+
+                            <div style={{ display: 'flex', justifyContent: 'center' }}>
+                                <Button variant="contained" style={{ marginTop: '20px' }} onClick={handleFormSubmit} className={cl.btn}>Получить приказ</Button>
+                            </div>
+
                             </Paper>
                         ))}
                     </div>
@@ -961,21 +998,19 @@ function Vacation() {
                                 </div>
                             </div>
 
-
-                            <div style={{ display: 'flex', justifyContent: 'center' }} className={cl.formWrapper}>
+                            <div style={{ display: 'flex', gap: '30px', justifyContent: 'center' }} className={cl.formWrapper}>
                                 <IconButton onClick={() => handleDeleteFormOtpuskOtzyv(index)} className={cl.deleteBtn}>
                                     <MdDelete style={{ color: '#D32F2F' }} />
                                 </IconButton>
-                            </div>
 
-                            <div style={{ display: 'flex', justifyContent: 'center' }}>
                                 <IconButton onClick={createNewFormOtziv} color="primary" aria-label="add an alarm">
                                     <FaPlus />
                                 </IconButton>
                             </div>
 
+
                             <div style={{ display: 'flex', justifyContent: 'center' }}>
-                                <Button variant="contained" style={{ marginTop: '40px' }} onClick={handleFormSubmitOtziv} className={cl.btn}>Получить приказ</Button>
+                                <Button variant="contained" style={{ marginTop: '20px' }} onClick={handleFormSubmitOtziv} className={cl.btn}>Получить приказ</Button>
                             </div>
                             <NotificationContainer />
     
