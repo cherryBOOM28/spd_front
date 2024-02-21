@@ -109,33 +109,46 @@ function Home(props) {
 
 
     // отображаение руководства 
-    const [headDepaertment, setHeadDepaertment] = useState({});
+    const [headDepartment, setHeadDepartment] = useState([]);
+    const [showHeadDepartment, setShowHeadDepartment] = useState(false);
+
+    useEffect(() => {
+        if (showHeadDepartment) {
+            getHeadDepartment();
+        }
+    }, [showHeadDepartment]);
+
     const getHeadDepartment = async () => {
         try {
-          const response = await axios.get(`http://127.0.0.1:8000/api/v1/persons_by_department/?departmentId=Руководство`);
-          setHeadDepaertment(response.data);
-          console.log("head for department", response.data);
-          // Обработка данных сотрудников
+            const response = await axios.get('http://127.0.0.1:8000/api/v1/persons_by_department/?departmentId=Руководство');
+            setHeadDepartment(response.data.persons);
+            // console.log("head for department", response.data);
+            // Обработка данных сотрудников
         } catch (error) {
-          console.error('Error fetching employees:', error);
+            console.error('Error fetching employees:', error);
         }
     };
 
-    const handleRadioChangeheadDepaertment = () => {
-        setSelectedDepartment(null);
-        getHeadDepartment();
+    // Обработчик изменения радио-переключателя
+    const handleHeadDepartmentClick = () => {
+        setShowHeadDepartment(true);
     };
+
       
     // Пример использования функции с id департамента
     // getEmployeesByDepartmentId(1);
 
     // обновление выбранный департнамент при изменении чекбокса
     const handleCheckboxChangeMainDepartments = (department) => {
-        setSelectedMainDepartment(department);
-        getEmployeesByDepartmentId(department.id);
-
-        setSelectedDepartment(department.id); // Обновить выбранный департамент
+        if (department) {
+            // console.log("Setting selected department:", department);
+            setSelectedMainDepartment(department);
+            getEmployeesByDepartmentId(department.id);
+            setSelectedDepartment(department.id);
+            // console.log("Selected department updated:", department.id);
+        }
     };
+    
 
 
     // Выбор все на главной страницу
@@ -538,11 +551,24 @@ function Home(props) {
             <div className={cl.groups}>
                 <div className={cl.group_name} style={{ cursor: 'pointer' }}>
                     <p>Руководство</p>
-                    <input
+                    <input 
                         type="radio"
                         name="table"
                         value="all"
+                        checked={showHeadDepartment}
+                        onChange={() => {
+                            console.log("Before setShowHeadDepartment", showHeadDepartment);
+                            setShowHeadDepartment(prevState => !prevState);
+                            console.log("After setShowHeadDepartment", showHeadDepartment);
+                            if (!showHeadDepartment) {
+                                console.log("Resetting selected department and updating data");
+                                setSelectedMainDepartment(null);
+                                handleCheckboxChangeMainDepartments(null);
+                            }
+                        }}
                     />
+
+
                 </div>
                 <h1 className={cl.headline} style={{ marginTop: '20px' }}>Управления</h1>
                 
@@ -558,8 +584,14 @@ function Home(props) {
                             id={department.id}
                             name="table"
                             checked={selectedMainDepartment === department}
+                            
                             // onChange={() => handleCheckboxChangeMainDepartments(department)}
-                            onChange={() => handleCheckboxChangeMainDepartments(department)}
+
+                            onChange={() => {
+                                setSelectedMainDepartment(department);
+                                setShowHeadDepartment(false); // Установите showHeadDepartment в false при выборе других групп
+                                handleCheckboxChangeMainDepartments(department);
+                            }}
 
                             style={{
                             marginRight: '5px', 
@@ -581,13 +613,34 @@ function Home(props) {
                             </tr>
                         </thead>
                 
-                        <tbody>
-                            {showFired ? (
-                                // Display only fired people when the checkbox is checked
-                                (filteredPeople.filter(person => person.isFired && (selectedDepartment === null || person.positionInfo.department.id === selectedDepartment)).length > 0 ? (
-                                    filteredPeople.map(person => (
-                                        // Проверить соответствие выбранного департамента
-                                        (selectedDepartment === null || person.positionInfo.department.id === selectedDepartment) && person.isFired && (
+
+
+                        {/* Отображение уволенных людей и обычных сотрудников */}
+                        {!showHeadDepartment && (
+                            <tbody>
+                                {showFired ? (
+                                    // Отображение уволенных людей
+                                    (filteredPeople.filter(person => person.isFired && (selectedDepartment === null || person.positionInfo.department.id === selectedDepartment)).length > 0 ? (
+                                        filteredPeople.map(person => (
+                                            (selectedDepartment === null || person.positionInfo.department.id === selectedDepartment) && person.isFired && (
+                                                <tr key={person.id} onClick={() => handleEmployeeClick(person.id)}>
+                                                    <td><img src={`data:image/jpeg;base64,${person.photo.photoBinary}`} alt="d" className={cl.profileImg} /></td>
+                                                    <td>{`${person.surname} ${person.firstName} ${person.patronymic}`}</td>
+                                                    <td>{person.positionInfo.position.positionTitle}</td>
+                                                </tr>
+                                            )
+                                        ))
+                                    ) : (
+                                        <tr>
+                                            <td colSpan='3' style={{ textAlign: 'center' }}>Нет уволенных людей</td>
+                                        </tr>
+                                    ))
+                                ) : (
+                                    // Отображение обычных сотрудников
+                                    persons
+                                    .filter(person => !person.isFired) // Исключить уволенных людей
+                                    .map(person => (
+                                        (selectedDepartment === null || person.positionInfo.department.id === selectedDepartment) && (
                                             <tr key={person.id} onClick={() => handleEmployeeClick(person.id)}>
                                                 <td><img src={`data:image/jpeg;base64,${person.photo.photoBinary}`} alt="d" className={cl.profileImg} /></td>
                                                 <td>{`${person.surname} ${person.firstName} ${person.patronymic}`}</td>
@@ -595,27 +648,47 @@ function Home(props) {
                                             </tr>
                                         )
                                     ))
-                                ) : (
-                                    <tr>
-                                        <td colSpan='3' style={{ textAlign: 'center' }}>Нет уволенных людей</td>
-                                    </tr>
-                                ))
-                            ) : (
-                                // Display the regular list of people when the checkbox is not checked
-                                persons
-                                .filter(person => !person.isFired) // Exclude fired people
-                                .map(person => (
-                                    (selectedDepartment === null || person.positionInfo.department.id === selectedDepartment) && (
-                                        <tr key={person.id} onClick={() => handleEmployeeClick(person.id)}>
-                                            <td><img src={`data:image/jpeg;base64,${person.photo.photoBinary}`} alt="d" className={cl.profileImg} /></td>
-                                            <td>{`${person.surname} ${person.firstName} ${person.patronymic}`}</td>
-                                            <td>{person.positionInfo.position.positionTitle}</td>
-                                        </tr>
-                                    )
-                                ))
-                            )}
-                        </tbody>
+                                )}
+                            </tbody>
+                        )}
+{/* {console.log("Before head department check")}
+{console.log("showHeadDepartment:", showHeadDepartment)}
+{console.log("headDepartment:", headDepartment)}
+{console.log("headDepartment.persons:", headDepartment && headDepartment.persons)}
+
+{console.log("Before rendering head department tbody")} */}
+
+<div>
+            <button onClick={handleHeadDepartmentClick}>Руководство</button>
+            {showHeadDepartment && (
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ФИО</th>
+                            <th>Должность</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {headDepartment.persons && headDepartment.persons.map(person => (
+                            person && person.id && person.positionInfo && person.positionInfo.position && (
+                                <tr key={person.id} onClick={() => handleEmployeeClick(person.id)}>
+                                    <td>{`${person.surname} ${person.firstName} ${person.patronymic}`}</td>
+                                    <td>{person.positionInfo.position.positionTitle}</td>
+                                </tr>
+                            )
+                        ))}
+                    </tbody>
+
+
+                </table>
+            )}
+        </div>
+
+
                     </table>
+
+
+
             </div>
         </div>
     );
