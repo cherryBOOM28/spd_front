@@ -118,6 +118,12 @@ function DecreeHistory() {
       // window.location.reload();
     } catch (error) {
       console.error('Error confirming transfer cancellation:', error);
+      if (error.response && error.response.status === 400) {
+      const errorMessage = error.response.data.error || 'Неизвестная ошибка';
+      NotificationManager.error(errorMessage, 'Ошибка', 3000);
+      } else {
+          NotificationManager.error('Произошла ошибка', 'Ошибка', 3000);
+      }
     }
   };
 
@@ -244,7 +250,7 @@ function DecreeHistory() {
                           {decree.decreeIsConfirmed ? (
                             <div style={{ color: '#2E7D32', display: 'flex', alignItems: 'center', gap: '5px' }}> <FaCheck />Согласовано</div>
                           ) : (
-                            <Button onClick={() => openModal(decree.decreeId)} style={{ textTransform: 'none' }}>Согласовать</Button>
+                            <Button onClick={() => openModal(decree.decreeId)} style={{ textTransform: 'none', color: '#1b3884' }}>Согласовать</Button>
                           )}
                         </TableCell>
                       </>
