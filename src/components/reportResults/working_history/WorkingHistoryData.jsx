@@ -54,7 +54,7 @@ function WorkingHistoryData(props) {
 
     return (
         <div className={cl.dropdown}>
-            <Button variant="contained" style={{ textTransform: 'none',  flex: 1, }} onClick={toggleWorkingHistoryDropdown} className={cl.actionBtn}>
+            <Button variant="contained" style={{ textTransform: 'none',  flex: 1,  backgroundColor: '#1B3884'  }} onClick={toggleWorkingHistoryDropdown} className={cl.actionBtn}>
                 Трудовая деятельность
                 {isOpenWorkingHistory ? <MdExpandLess className={cl.arrow} /> : <MdArrowDropDown className={cl.arrow} />}
             </Button>

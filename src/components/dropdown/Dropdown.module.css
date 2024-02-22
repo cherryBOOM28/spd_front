@@ -14,7 +14,7 @@
     justify-content: space-between;
     align-items: center;
     background: #ffffff;
-    border: 1px solid #1565C0;
+    border: 1px solid #1B3884;
     border-radius: 5px;
     color: #000;
     font-size: 16px;
@@ -26,7 +26,7 @@
     height: 0;
     border-left: 7px solid transparent;
     border-right: 7px solid transparent;
-    border-top: 8px solid #1565C0;
+    border-top: 8px solid #1B3884;
     border-radius: 3px;
     transition: transform 0.3s ease;
     margin-left: 8px;
@@ -72,6 +72,6 @@
   }
   
   .accordion__title {
-    color: #1565C0;
+    color: #1B3884;
     font-size: 16px;
   }

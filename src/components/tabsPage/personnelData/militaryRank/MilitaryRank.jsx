@@ -242,19 +242,18 @@ function MilitaryRank({ rankInfo, militaryRank, setRankInfo, setMilitaryRank, ra
             <div className={cl.totalInfoContent}>
                 <div style={{ display: 'flex',  alignItems: 'center', gap: '20px',  marginTop: '40px' }}>
                     <p className={cl.workerCapitalName} style={{ marginBottom: '18px' }}>Звания</p>
-                    <IconButton onClick={handleShowForm} aria-label="toggle-form" style={{ marginBottom: '15px' }}>
+                    {/* <IconButton onClick={handleShowForm} aria-label="toggle-form" style={{ marginBottom: '15px' }}>
                         {icon}
-                    </IconButton>
+                    </IconButton> */}
                 </div>
             </div>
             <div>
-                {showForm && (
+                {/* {showForm && (
                     <form onSubmit={handleAddNewData} style={{ marginTop: '10px' }}>
                         <div style={{ display: 'flex', gap: '10px',  marginBottom: '30px'  }}>
                             <div style={{  display: 'flex', gap: '10px', marginTop: '18px' }}>
 
                                 <Box>
-                                    {/* <label className={cl.label}>Должность</label> */}
                                     <FormControl size="small" fullWidth>
                                         <InputLabel id="demo-simple-select-label">Звание</InputLabel>
                                         <Select
@@ -277,7 +276,6 @@ function MilitaryRank({ rankInfo, militaryRank, setRankInfo, setMilitaryRank, ra
                                     </FormControl>
                                 </Box>
                                 <Box >
-                                    {/* <label className={cl.label}>Должность</label> */}
                                     <FormControl size="small" fullWidth>
                                         <InputLabel id="demo-simple-select-label">Вид присвоения</InputLabel>
                                         <Select
@@ -319,9 +317,9 @@ function MilitaryRank({ rankInfo, militaryRank, setRankInfo, setMilitaryRank, ra
                             <Button variant="contained" type="submit" className={cl.submitBtn} >Добавить</Button>
                         </div>
                     </form>
-                )}
+                )} */}
             </div>
-            {/* {militaryRank && specCheckInfo.militaryRank && specCheckInfo.militaryRank.map((d, i) => ( */}
+
             <div className={cl.workerBlock}>
                 <div className={cl.column}>
                     <div className={cl.rows}>
@@ -351,7 +349,7 @@ function MilitaryRank({ rankInfo, militaryRank, setRankInfo, setMilitaryRank, ra
                         
                             </div>
                         ) : (
-                            <Paper className={cl.workerInfoP}>{rankInfo &&  rankInfo.receivedType}</Paper>    
+                            <Paper className={cl.workerInfoP}>{rankInfo && rankInfo.receivedType ? rankInfo.receivedType : 'Нет данных'}</Paper>
                         )}
                     </div>
                     <div className={cl.rows}>
@@ -383,7 +381,7 @@ function MilitaryRank({ rankInfo, militaryRank, setRankInfo, setMilitaryRank, ra
                                 </Box>
                             </div>
                         ) : (
-                            <Paper className={cl.workerInfoP}>{ militaryRank &&  militaryRank.rankTitle}</Paper>    
+                            <Paper className={cl.workerInfoP}>{militaryRank && militaryRank.rankTitle ? militaryRank.rankTitle : 'Нет данных'}</Paper>
                         )}
                     </div>
                 </div>
@@ -409,21 +407,21 @@ function MilitaryRank({ rankInfo, militaryRank, setRankInfo, setMilitaryRank, ra
                             />
                         </div>
                         ) : (
-                            <Paper className={cl.workerInfoP}>{ rankInfo && rankInfo.receivedDate}</Paper>    
+                            <Paper className={cl.workerInfoP}>{rankInfo && rankInfo.receivedDate ? rankInfo.receivedDate : 'Нет данных'}</Paper>
                         )}
                     </div>
                 <div>
             </div>
         </div>      
         <div  style={{ marginTop: '30px' }} className={cl.relativesActionBtns}>
-            {editing ? (
-                <div>
-                    <IconButton className={cl.iconBtn}  onClick={() => handleSaveEdit()}><FaCheck color=' #1565C0' /></IconButton>
-                    <IconButton className={cl.iconBtn} onClick={handleCancelEdit}><IoClose /></IconButton>
-                </div>
-            ) : (
-                <IconButton className={cl.iconBtn} onClick={() => handleEdit(id, editedWorker)}><MdEdit /></IconButton>
-            )}
+        {editing ? (
+            <div>
+                <IconButton className={cl.iconBtn} onClick={() => handleSaveEdit()} disabled={!rankInfo || !militaryRank || !editedWorker.receivedDate}><FaCheck color=' #1B3884' /></IconButton>
+                <IconButton className={cl.iconBtn} onClick={handleCancelEdit}><IoClose /></IconButton>
+            </div>
+        ) : (
+            <IconButton className={cl.iconBtn} onClick={() => handleEdit(id, editedWorker)} disabled={!rankInfo || !militaryRank}><MdEdit /></IconButton>
+        )}
         </div>
             </div>
 

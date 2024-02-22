@@ -24,6 +24,12 @@ import Avatar from '@mui/material/Avatar';
 import Checkbox from '@mui/material/Checkbox';
 import bgBack  from '../../assets/images/bgbgbgbg.svg';
 
+import { FiAlertCircle } from "react-icons/fi";
+
+import { ImUserMinus } from "react-icons/im";
+import { BsFillSuitcase2Fill } from "react-icons/bs";
+import { RiExchangeBoxFill } from "react-icons/ri";
+
 
 function Home(props) {
     const navigate = useNavigate();
@@ -162,30 +168,31 @@ function Home(props) {
     };
 
 
-    // обновление выбранный департнамент при изменении чекбокса
     const handleCheckboxChangeMainDepartments = (department) => {
         if (department) {
             setSelectedMainDepartment(department);
-            sessionStorage.setItem('selectedMainDepartment', JSON.stringify(department));
-
-            setSelectedMainDepartment(department);
-            getEmployeesByDepartmentId(department.id);
-            setSelectedDepartment(department.id);
+            if (department.id) {
+                getEmployeesByDepartmentId(department.id);
+                setSelectedDepartment(department.id);
+            }
             setShowHeadDepartment(false);
             // Дополнительные действия, если необходимо
+        } else {
+            console.log("Department is undefined");
         }
-        
     };
+    
 
-        // Обработчик изменения выбранного управления
-        const handleDepartmentChange = (department, departmentId) => {
-            setSelectedMainDepartment(department);
-            setShowHeadDepartment(false); // Установите showHeadDepartment в false при выборе других групп
-            handleCheckboxChangeMainDepartments(department);
-            sessionStorage.setItem('selectedMainDepartment', JSON.stringify(department));
+
+    // Обработчик изменения выбранного управления
+    const handleDepartmentChange = (department, departmentId) => {
+        setSelectedMainDepartment(department);
+        setShowHeadDepartment(false);
+        if (departmentId) {
             setSelectedDepartment(departmentId);
-                setShowDepartments(!showDepartments);
-        };
+            setShowDepartments(!showDepartments);
+        }
+    };
     
 
     // Выбор все на главной страницу
@@ -387,6 +394,23 @@ function Home(props) {
 
 
 
+    // Определяем состояние для отображения информации о статусе сотрудника при наведении
+    const [statusInfo, setStatusInfo] = useState(null);
+
+    // Определение функции handleMouseEnter
+    const handleMouseEnter = (person) => {
+        setStatusInfo({
+            id: person.id, // сохраняем id сотрудника для идентификации
+            info: (
+                <div className={cl.statusDescription}>
+                    <div className={cl.statusDescriptionInner}>  <ImUserMinus style={{ color: '#1B3884' }} />{person.isFired ? 'Уволен' : 'Не уволен'}</div>
+                    <div className={cl.statusDescriptionInner}> <BsFillSuitcase2Fill style={{ color: '#1B3884' }} />{person.inVacation ? 'В отпуске' : 'Не в отпуске'}</div>
+                    <div className={cl.statusDescriptionInner}> <RiExchangeBoxFill style={{ color: '#1B3884' }} />{person.inKomandirovka ? 'В командировке' : 'Не в командировке'}</div>
+                </div>
+            ),
+        });
+    };
+
     // отображение tab в штаном расписании 
     const renderEmployeeWrapper = () => {
     if (showSchedule) {
@@ -419,7 +443,7 @@ function Home(props) {
                                 onClick={handleDownload}
 
                             >
-                                <MdDownload style={{ color: '#1565C0' }} />
+                                <MdDownload style={{ color: '#1B3884' }} />
                             </IconButton >
                             <NotificationContainer />
                         </div>
@@ -430,29 +454,14 @@ function Home(props) {
                 <div className={cl.groups}>
                     <h1 className={cl.headline}>Штатное расписание</h1>
                     <div className={cl.groups_column}>
-                        {/* {cities.map(city => (
-                            <div key={city.id} className={cl.group_name} style={{ cursor: 'pointer' }}>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
-                                    <div>{city.LocationName}</div>
-                                    <input
-                                        type="radio"
-                                        value={city.LocationName}
-                                        checked={selectedCity === city.LocationName}
-                                        onChange={() => handleCityChange(city.LocationName)}
-                                    />
-                                </div>
-                            </div>
-                        ))} */}
                         <div>
                             {departments.map(department => (
                                 <Button
                                     size="medium"
-                                    style={{ textTransform: 'none' }}
+                                    style={{ textTransform: 'none',  color: '#1B3884', borderColor: '#1B3884', }}
                                     key={department.id}
                                     variant={selectedDepartment === department.id ? "outlined" : "text"}
-                                    onClick={() => handleDepartmentChange(
-                                    selectedDepartment === department.id ? null : department.id
-                                    )}
+                                    onClick={() => handleDepartmentChange(selectedDepartment === department.id ? null : department, department.id)}
                                     className={`${cl.departaments_btn} ${selectedDepartment === department.id ? cl.activeButton : ''}`}
                                 >
                                     {department.DepartmentName}
@@ -504,10 +513,10 @@ function Home(props) {
                                             [positions.find(position => position.id === selectedPosition)].map(positionClicked => (
                                                 <div key={positionClicked.id} className={cl.available_count_wrapper}>
                                                     <p className={cl.headline_3}>Свободные вакансии на должность: {positionClicked.positionTitle}</p>
-                                                    <div style={{ marginTop: '15px' }}>
+                                                    <div style={{ marginTop: '15px',  display: 'flex', flexWrap: 'wrap'  }}>
                                                         {positionClicked.vacancies.length > 0 ? (
                                                             positionClicked.vacancies.map((vacancy, index) => (
-                                                                <Stack key={index} style={{ display: 'inline-block', margin: '0px' }}>
+                                                                <Stack key={index} style={{ display: 'inline-block', marginRight: '10px' }}>
                                                                     <Chip
                                                                         sx={{ height: 'auto', minHeight: '28px' }} // Установка стилей через sx
                                                                         avatar={<Avatar alt="" src="" />}
@@ -550,14 +559,20 @@ function Home(props) {
                                                             </TableRow>
                                                         </TableHead>
                                                         <TableBody>
-                                                            {positions.find(position => position.id === selectedPosition)?.persons.map(person => (
-                                                                <TableRow key={person.id}>
-                                                                    <TableCell><img src={`data:image/jpeg;base64,${person.photo.photoBinary}`} alt="" className={cl.department_workers_img} /></TableCell>
-                                                                    <TableCell>{`${person.surname}`}</TableCell>
-                                                                    <TableCell>{` ${person.firstName} `}</TableCell>
-                                                                    <TableCell> {`${person.patronymic}`}</TableCell>
-                                                                </TableRow>
-                                                            ))}
+                                                        {positions.find(position => position.id === selectedPosition)?.persons.map(person => (
+                                                            <TableRow key={person.id}>
+                                                                <TableCell><img src={`data:image/jpeg;base64,${person.photo.photoBinary}`} alt="" className={cl.department_workers_img} /></TableCell>
+                                                                <TableCell>{`${person.surname}`}</TableCell>
+                                                                <TableCell>{` ${person.firstName} `}</TableCell>
+                                                                <TableCell> {`${person.patronymic}`}</TableCell>
+                                                            </TableRow>
+                                                        ))}
+                                                        {(!positions.find(position => position.id === selectedPosition)?.persons || 
+                                                        positions.find(position => position.id === selectedPosition)?.persons.length === 0) && (
+                                                            <TableRow>
+                                                                <TableCell colSpan={4} align="center">Нет данных</TableCell>
+                                                            </TableRow>
+                                                        )}
                                                         </TableBody>
                                                     </Table>
                                                 </TableContainer>
@@ -577,7 +592,7 @@ function Home(props) {
       return (           
         <div className={cl.employeeWrapper} >
             <div className={cl.groups}>
-                <div className={cl.group_name} style={{ cursor: 'pointer' }}>
+                <div className={cl.group_name} style={{ cursor: 'pointer' }} onClick={handleHeadDepartmentClick}>
                     <p>Руководство</p>
                     <input 
                         type="radio"
@@ -596,7 +611,7 @@ function Home(props) {
                     {/* <p>{selectedMainDepartment ? selectedMainDepartment.DepartmentName : 'Ничего не выбрано'}</p> */}
                   
                     {mainDepartments.map(department => (
-                    <div key={department.id} className={cl.group_name} style={{ cursor: 'pointer' }}>
+                    <div key={department.id} className={cl.group_name} style={{ cursor: 'pointer' }} onClick={() => handleCheckboxChangeMainDepartments(department)}>
                         <label>{department.DepartmentName}</label>
                         <input 
                             type="radio"
@@ -614,7 +629,8 @@ function Home(props) {
 
                             style={{
                             marginRight: '5px', 
-                            borderRadius: '50%'
+                            borderRadius: '50%',
+                            cursor: 'pointer'
                             }}
                         />
                     </div>
@@ -632,19 +648,48 @@ function Home(props) {
                                 <th className={cl.table__headline}></th>
                                 <th className={cl.table__headline}>ФИО</th>
                                 <th className={cl.table__headline}>Должность</th>
+                                <th className={cl.table__headline}>Статус</th>
+
                             </tr>
                         </thead>
+
                         <tbody>
                             {(showHeadDepartment ? headDepartment : 
                                 (showFired ? filteredPeople.filter(person => person.isFired && (selectedDepartment === null || person.positionInfo.department.id === selectedDepartment)) : persons))
                                 .map(person => (
-                                    <tr key={person.id}onClick={() => handleEmployeeClick(person && person.id)}>
+                                    <tr 
+                                        key={person.id}
+                                        onClick={() => handleEmployeeClick(person && person.id)}
+                                        className={`
+                                            ${cl.tableRow} 
+                                            ${person.isFired ? cl.fired : ''} 
+                                            ${person.inVacation ? cl.vacation : ''} 
+                                            ${person.inKomandirovka ? cl.komandirovka : ''}
+                                        `}
+                                        
+                                    >
                                         <td><img src={`data:image/jpeg;base64,${person.photo.photoBinary}`} alt="d" className={cl.profileImg} /></td>
                                         <td>{`${person.surname} ${person.firstName} ${person.patronymic}`}</td>
                                         <td>{person.positionInfo.position.positionTitle}</td>
+                                        <td style={{ position: 'relative' }}>
+                                            <div 
+                                                className={cl.infoIcon} 
+                                                onMouseEnter={() => handleMouseEnter(person)}
+                                                onMouseLeave={() => setStatusInfo(null)} // обработчик для сброса состояния при уходе курсора
+                                            >
+                                                <FiAlertCircle style={{ color: '#1B3884', fontSize: '20px' }} />
+                                                {statusInfo && statusInfo.id === person.id && ( // добавляем условие, чтобы отображать информацию только для выбранного сотрудника
+                                                    <div className={cl.statusInfoOverlay}>{statusInfo.info}</div>
+                                                )}
+                                            </div>
+                                        </td>
+                                        
+
+
                                     </tr>
                                 ))}
                         </tbody>
+                       
                     </table>
                     <div className={cl.bgPicWrapper}>
 
@@ -674,6 +719,7 @@ function Home(props) {
                                             checked={showFired} 
                                             onChange={handleFiredCheckbox} 
                                             inputProps={{ 'aria-label': 'controlled' }}
+                                            style={{ color: '#1B3884' }}
                                         />
                                     </>
                                 )}
@@ -681,7 +727,7 @@ function Home(props) {
                             <Button 
                                 onClick={toggleSchedule}  
                                 size="small" variant="contained" 
-                                style={{ display: 'block',  textTransform: 'none', margin: '6px 0' }}
+                                style={{ display: 'block',  textTransform: 'none', margin: '6px 0', background: '#1B3884' }}
                             >
                                 {showSchedule ? 'Вернуться на главную' : 'Штатное расписание'}
                             </Button>

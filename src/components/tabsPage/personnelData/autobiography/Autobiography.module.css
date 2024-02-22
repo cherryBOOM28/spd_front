@@ -98,7 +98,7 @@
   font-size: 16px;
   width: 32px;
   height: 32px;
-  color: #1565C0;
+  color: #1B3884;
   cursor: pointer;
 }
 
@@ -114,10 +114,12 @@
   align-items: center;
   gap: 10px;
   padding: 10px 12px;
-  background: #1565c01e;
+  background: #1b398429;
   border-radius: 7px;
+  width: 210px;
+  /* margin-top: 20px; */
 }
 
 .alert_text {
-  color: #13539c;
+  color: #1B3884;
 }

@@ -144,7 +144,7 @@ const NewAcademicDegree = (props) => {
                                                                 value={inputData.academicDegree}
                                                                 onChange={(e) => setInputData({ ...inputData, academicDegree: e.target.value })}
                                                                 >
-                                                                    <MenuItem value="">Ученая степень</MenuItem>
+                                                                    <MenuItem value="" disabled>Ученая степень</MenuItem>
                                                                     <MenuItem value="Бакалавр">Бакалавр</MenuItem>
                                                                     <MenuItem value="Магистр">Магистр</MenuItem>
                                                                     <MenuItem value="Кандидат">Кандидат наук</MenuItem>

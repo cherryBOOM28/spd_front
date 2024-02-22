@@ -11,7 +11,7 @@ const override = css`
 const Loader = ({ loading }) => {
   return (
     <div className="sweet-loading">
-      <ClipLoader css={override} size={50} color={'#1565C0'} loading={loading} />
+      <ClipLoader css={override} size={50} color={'#1B3884'} loading={loading} />
     </div>
   );
 };

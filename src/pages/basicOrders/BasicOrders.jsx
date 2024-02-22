@@ -65,14 +65,14 @@ function BasicOrders() {
                         <div className={cl.filters}>
                             <div className={cl.filter_btn}>
                             {isCreateDecreeClicked ? (
-                                <Button  variant="contained" onClick={handleReturnToDecreesClick}>Приказы</Button>
+                                <Button  variant="contained" onClick={handleReturnToDecreesClick} style={{ backgroundColor: '#1b3884' }}>Приказы</Button>
                                 ) : (
                                 <>
                                     {!isDecreeHistoryOpen && (
-                                    <Button  variant="contained"  style={{  textTransform: 'none' }} onClick={handleButtonClick}>Журнал приказов</Button>
+                                    <Button  variant="contained"  style={{  textTransform: 'none', backgroundColor: '#1b3884' }} onClick={handleButtonClick}>Журнал приказов</Button>
                                     )}
                                     {isDecreeHistoryOpen && (
-                                    <Button  variant="contained" style={{  textTransform: 'none' }} onClick={handleButtonClick}>Приказы</Button>
+                                    <Button  variant="contained" style={{  textTransform: 'none', backgroundColor: '#1b3884' }} onClick={handleButtonClick}>Приказы</Button>
                                     )}
                                 </>
                             )}

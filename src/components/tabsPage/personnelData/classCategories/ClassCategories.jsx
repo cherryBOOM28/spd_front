@@ -7,6 +7,7 @@ import { FaPlus } from "react-icons/fa6";
 import { IoClose } from "react-icons/io5";
 import { FaCheck } from "react-icons/fa6";
 import IconButton from '@mui/material/IconButton';
+import { FiAlertCircle } from "react-icons/fi";
 
 import { Button,TextField, Select, Box, InputLabel, MenuItem, FormControl } from '@mui/material';
 import Paper from '@mui/material/Paper';
@@ -219,43 +220,42 @@ function ClassCategories({ classCategoriesInfo, setClassCategoriesInfo }, props)
                         )}
                     </div>
                     <div>
-                        {classCategoriesInfo && classCategoriesInfo.classCategories && classCategoriesInfo.classCategories.map((d, i) => (
+                    {classCategoriesInfo && classCategoriesInfo.classCategories && classCategoriesInfo.classCategories.length > 0 ? (
+                        classCategoriesInfo.classCategories.map((d, i) => (
                             <div key={i} className={cl.workerBlock}>
                                 <div className={cl.column}>
                                     <div className={cl.rows}>
-                                        <label className={cl.label}>Классные категория</label>
+                                        <label className={cl.label}>Классные категории</label>
                                         {editingId === d.id ? 
-                                        <Box>
-                                        {/* <label className={cl.label}>Должность</label> */}
-                                            <FormControl size="small" fullWidth>
-                                                <InputLabel id="demo-simple-select-label">Классные категории</InputLabel>
-                                                <Select
-                                                labelId="demo-simple-select-label"
-                                                id="demo-simple-select"
-                                                label="Классные категории"
-                                                name='categoryType'
-                                                className={cl.workerInfoSelect}
-                                                value={editedData.categoryType}
-                                            onChange={(e) => setEditedData({ ...editedData, categoryType: e.target.value })}
-                                                >
-                                                    <MenuItem value="">Выберите категорию</MenuItem>
-                                                    <MenuItem value="Спец 2 категории">Специалист 2 категории</MenuItem>
-                                                    <MenuItem value="Спец 1 категории">Специалист 1 категории</MenuItem>
-                                                    <MenuItem value="Наставник">Наставник</MenuItem>
-                                                </Select>
-                                            </FormControl>
-                                        </Box>
+                                            <Box>
+                                                <FormControl size="small" fullWidth>
+                                                    <InputLabel id="demo-simple-select-label">Классные категории</InputLabel>
+                                                    <Select
+                                                        labelId="demo-simple-select-label"
+                                                        id="demo-simple-select"
+                                                        label="Классные категории"
+                                                        name='categoryType'
+                                                        className={cl.workerInfoSelect}
+                                                        value={editedData.categoryType}
+                                                        onChange={(e) => setEditedData({ ...editedData, categoryType: e.target.value })}
+                                                    >
+                                                        <MenuItem value="">Выберите категорию</MenuItem>
+                                                        <MenuItem value="Спец 2 категории">Специалист 2 категории</MenuItem>
+                                                        <MenuItem value="Спец 1 категории">Специалист 1 категории</MenuItem>
+                                                        <MenuItem value="Наставник">Наставник</MenuItem>
+                                                    </Select>
+                                                </FormControl>
+                                            </Box>
                                             : 
-                                            // <p className={cl.workerInfoP}>{d.categoryType}</p>
                                             <Paper className={cl.workerInfoP}>{d.categoryType}</Paper>      
                                         }
                                     </div>
                                 </div>
-                           
+                        
                                 <div className={cl.relativesActionBtns} style={{marginTop: '22px'}}>
                                     {editingId === d.id ? (
                                         <div>
-                                            <IconButton className={cl.iconBtn} onClick={() => handleSaveEdit(d.id)}><FaCheck color=' #1565C0' /></IconButton>
+                                            <IconButton className={cl.iconBtn} onClick={() => handleSaveEdit(d.id)}><FaCheck color=' #1B3884' /></IconButton>
                                             <IconButton className={cl.iconBtn} onClick={handleCancelEdit}><IoClose /></IconButton>
                                         </div>
                                     ) : (
@@ -266,7 +266,14 @@ function ClassCategories({ classCategoriesInfo, setClassCategoriesInfo }, props)
                                 </div>
                             </div>
                             
-                        ))}
+                        ))
+                    ) : (
+                        <div className={cl.alert}>
+                            <FiAlertCircle style={{ color: '#1B3884', fontSize: '22px' }} />
+                            <p className={cl.alert_text}>Нет доступных записей</p>
+                        </div>
+                    )}
+
                     </div>
                 </div>
             

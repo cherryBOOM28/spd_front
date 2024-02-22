@@ -224,7 +224,7 @@ function Autobiography({ autobiographyInfo, setAutobiographyInfo }) {
                             )
                         ) : (
                             <div className={cl.alert}>
-                                <FiAlertCircle style={{ color: '#1565C0', fontSize: '22px' }} />
+                                <FiAlertCircle style={{ color: '#1B3884', fontSize: '22px' }} />
                                 <p className={cl.alert_text}>Нет доступных записей</p>
                             </div>
                         )}
@@ -237,7 +237,7 @@ function Autobiography({ autobiographyInfo, setAutobiographyInfo }) {
                                 )}
                                 {editingId && (
                                     <>
-                                        <IconButton className={cl.iconBtn}  onClick={() => handleSaveEdit(id)}><FaCheck color=' #1565C0' /></IconButton>
+                                        <IconButton className={cl.iconBtn}  onClick={() => handleSaveEdit(id)}><FaCheck color=' #1B3884' /></IconButton>
                                         <IconButton className={cl.iconBtn} onClick={handleCancelEdit}><IoClose /></IconButton>
                                     </>
                                 )}

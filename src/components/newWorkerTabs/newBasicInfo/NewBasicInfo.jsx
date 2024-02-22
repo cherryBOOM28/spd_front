@@ -76,6 +76,7 @@ function  NewBasicInfo() {
                 <div className={cl.rows}>
                     <label className={cl.label}>Имя*</label>
                         <TextField
+                            style={{ marginLeft: '12px'  }}
                             size='small'
                             id="outlined-basic" 
                             label="Имя" 
@@ -92,6 +93,7 @@ function  NewBasicInfo() {
                 <div className={cl.rows}>
                     <label className={cl.label}>Фамилия*</label>
                         <TextField
+                            style={{ marginLeft: '12px'  }}
                             size='small'
                             id="outlined-basic" 
                             label="Фамилия" 
@@ -106,6 +108,7 @@ function  NewBasicInfo() {
                 <div className={cl.rows}>
                     <label className={cl.label}>Отчество</label>
                         <TextField
+                            style={{ marginLeft: '12px'  }}
                             size='small'
                             id="outlined-basic" 
                             label="Отчество" 

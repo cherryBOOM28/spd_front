@@ -387,7 +387,7 @@ function AcademicDegree({academicDegree, setAcademicDegree}, props) {
                                                         <TableCell className={cl.relativesActionBtns} style={{}}>
                                                             {editingId === d.id ? (
                                                                 <div>
-                                                                    <IconButton className={cl.iconBtn} onClick={() => handleSaveEdit(d.id)}><FaCheck color=' #1565C0' /></IconButton>
+                                                                    <IconButton className={cl.iconBtn} onClick={() => handleSaveEdit(d.id)}><FaCheck color=' #1B3884' /></IconButton>
                                                                     <IconButton className={cl.iconBtn} onClick={handleCancelEdit}><IoClose /></IconButton>
                                                                 </div>
                                                             ) : (

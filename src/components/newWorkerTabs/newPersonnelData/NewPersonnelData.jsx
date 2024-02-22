@@ -8,6 +8,7 @@ import NewSickLeaves from './sick_leaves/NewSickLeaves';
 import NewAwards from './awards/NewAwards';
 import NewInvestigationRetrievals from './investigation_retrievals/NewInvestigationRetrievals';
 
+import { Button,TextField, Select, Box, InputLabel, MenuItem, FormControl } from '@mui/material';
 
 
 const NewPersonnelData = (props) => {
@@ -123,8 +124,9 @@ const NewPersonnelData = (props) => {
                     <div className={cl.workerBlock}>
                         <div className={cl.column}>
                             <div className={cl.rows}>
-                                <label className={cl.label}>Номер документа</label>
-                                <input
+                                <label className={cl.label} style={{ marginRight: '20px' }}>Номер документа</label>
+                                <TextField
+                                    size='small'
                                     className={cl.workerInfo}
                                     type="text"
                                     name="docNumber"
@@ -136,8 +138,9 @@ const NewPersonnelData = (props) => {
                         </div>
                         <div className={cl.column}>
                             <div className={cl.rows}>
-                                <label className={cl.label}>Дата документа</label>
-                                    <input
+                                <label className={cl.label} style={{ marginRight: '22px' }}>Дата документа</label>
+                                <TextField
+                                    size='small'
                                     type="date"
                                     className={cl.workerInfo}
                                     name='docDate'
@@ -160,9 +163,10 @@ const NewPersonnelData = (props) => {
                     <div className={cl.workerBlock}>
                         <div className={cl.column}>
                             <div className={cl.rows}>
-                                <label className={cl.label}>Дата последннй аттестации</label>
+                                <label className={cl.label} style={{ marginRight: '20px' }}>Дата последннй аттестации</label>
                                     <div className={cl.datePickerContainer}>
-                                        <input
+                                        <TextField
+                                        size='small'
                                             type="date"
                                             className={cl.workerInfo}
                                             name='lastAttDate'
@@ -175,8 +179,9 @@ const NewPersonnelData = (props) => {
                         </div>
                         <div className={cl.column}>
                                 <div className={cl.rows}>
-                                    <label className={cl.label}>Результат аттестации</label>
-                                    <input
+                                    <label className={cl.label} style={{ marginRight: '20px' }}>Результат аттестации</label>
+                                    <TextField
+                                        size='small'
                                         className={cl.workerInfo}
                                         type="text"
                                         name="attResult"
@@ -199,31 +204,35 @@ const NewPersonnelData = (props) => {
                     <div className={cl.workerBlock}>
                         <div className={cl.column}>
                             <div className={cl.rows}>
-                                <label className={cl.label}>Звание</label>
-                                    <select
-                                    className={cl.workerInfoSelect}
-                                    value={rankInfo.militaryRank}
-                                    name='militaryRank'
-                                    onChange={handleInputChangeRank}
-                                >
-                                    <option value="" disabled>Выберите звание</option>
-                                    {/* {departments.map((rank) => (
-                                      <option key={rank.id} value={rank.rankTitle}>
-                                        {rank.rankTitle}
-                                      </option>
-                                    ))} */}
-                                    {departments.map((rank) => (
-                                        <option key={rank.id}>
-                                           {rank.rankTitle}
-                                        </option>
-                                    ))}
-                         
-                                </select>
+                                <label className={cl.label} style={{ marginRight: '20px' }}>Звание</label>
+                                <Box>
+                                    {/* <label className={cl.label}>Должность</label> */}
+                                    <FormControl size="small" fullWidth>
+                                        <InputLabel id="demo-simple-select-label">Звание</InputLabel>
+                                        <Select
+                                        labelId="demo-simple-select-label"
+                                        id="demo-simple-select"
+                                        label="Звание"
+                                        className={cl.workerInfoSelect}
+                                        value={rankInfo.militaryRank}
+                                        name='militaryRank'
+                                        onChange={handleInputChangeRank}
+                                        >
+                                        <MenuItem value=""disabled>Выберите звание</MenuItem>
+                                        {departments.map((rank) => (
+                                            <MenuItem key={rank.id}>
+                                            {rank.rankTitle}
+                                            </MenuItem>
+                                        ))}
+                                        </Select>
+                                    </FormControl>
+                                </Box>
                             </div>
                             <div className={cl.rows}>
-                                <label className={cl.label}>Дата получения</label>
+                                <label className={cl.label} style={{ marginRight: '20px' }}>Дата получения</label>
                                 <div className={cl.datePickerContainer}>
-                                    <input
+                                    <TextField
+                                        size='small'
                                         type="date"
                                         className={cl.workerInfo}
                                         name='receivedDate'
@@ -236,18 +245,28 @@ const NewPersonnelData = (props) => {
                         </div>
                         <div className={cl.column}>
                             <div className={cl.rows}>
-                                <label className={cl.label}>Вид присвоения</label>
-                                    <select
-                                    className={cl.workerInfoSelect}
-                                    value={rankInfo.receivedType}
-                                    name='receivedType'
-                                    onChange={handleInputChangeRank}
-                                    >
-                                    <option value="">Выберите вид присвоения</option>
-                                    <option value="Досрочное присвоение">Досрочное присвоение</option>
-                                    <option value="Внеочередное">Внеочередное</option>
-                                    <option value="На одну ступень выше специального звания">На одну ступень выше специального звания</option>
-                                </select>
+                                <label className={cl.label}  style={{ marginRight: '20px' }}>Вид присвоения</label>
+                                <Box>
+                                    {/* <label className={cl.label}>Должность</label> */}
+                                    <FormControl size="small" fullWidth>
+                                        <InputLabel id="demo-simple-select-label">Вид присвоения</InputLabel>
+                                        <Select
+                                        labelId="demo-simple-select-label"
+                                        id="demo-simple-select"
+                                        label="Вид присвоения"
+                                        className={cl.workerInfoSelect}
+                                        value={rankInfo.receivedType}
+                                        name='receivedType'
+                                        onChange={handleInputChangeRank}
+                                        >
+                                        <MenuItem value="" disabled>Выберите вид присвоения</MenuItem>
+                                        <MenuItem value="Досрочное">Досрочное</MenuItem>
+                                        <MenuItem value="Внеочередное">Внеочередное</MenuItem>
+                                        <MenuItem value="Очередное">Очередное</MenuItem>
+                                        <MenuItem value="На одну ступень выше специального звания">На одну ступень выше специального звания, предусмотренного по занимаемой штатной должности</MenuItem>
+                                        </Select>
+                                    </FormControl>
+                                </Box>
                             </div>
                         </div>
                 
@@ -263,19 +282,27 @@ const NewPersonnelData = (props) => {
                     <div className={cl.workerBlock}>
                         <div className={cl.column}>
                             <div className={cl.rows}>
-                                <label className={cl.label}>Классные категория</label>
-                                    <select
-                                    className={cl.workerInfoSelect}
-                                    value={classCategoriesInfo.categoryType}
-                                    name='categoryType'
-                                    onChange={handleInputChangeClassCategories}
-                                    // onChange={(e) => handleInputChangeClassCategories('categoryType', e.target.value)}
-                                >
-                                    <option value="">Выберите категорию</option>
-                                    <option value="спец 2 категории">Специалист 2 категории</option>
-                                    <option value="спец 1 категории">Специалист 1 категории</option>
-                                    <option value="наставник">Наставник</option>
-                                </select>
+                                <label className={cl.label} style={{ marginRight: '20px' }}>Классные категория</label>
+                                <Box>
+                                    {/* <label className={cl.label}>Должность</label> */}
+                                    <FormControl size="small" fullWidth>
+                                        <InputLabel id="demo-simple-select-label">Классные категория</InputLabel>
+                                        <Select
+                                        labelId="demo-simple-select-label"
+                                        id="demo-simple-select"
+                                        label="Классные категория"
+                                        className={cl.workerInfoSelect}
+                                        value={classCategoriesInfo.categoryType}
+                                        name='categoryType'
+                                        onChange={handleInputChangeClassCategories}
+                                        >
+                                        <MenuItem value="" disabled>Выберите категорию</MenuItem>
+                                        <MenuItem value="спец 2 категории">Специалист 2 категории</MenuItem>
+                                        <MenuItem value="спец 1 категории">Специалист 1 категории</MenuItem>
+                                        <MenuItem value="наставник">Наставник</MenuItem>
+                                        </Select>
+                                    </FormControl>
+                                </Box>
                             </div>
                         
                         </div>
@@ -294,9 +321,10 @@ const NewPersonnelData = (props) => {
                         <div className={cl.column}>
                             <div className={cl.rows}>
                             <label className={cl.label}>Автобиография</label>
-                            <input
+                            <TextField
+
                                 className={cl.workerInfoText}
-                                type="text"
+                                multiline
                                 name="autobiographyText"
                                 value={autobiographyInfo.autobiographyText}
                                 onChange={handleInputChangeAutobiography}

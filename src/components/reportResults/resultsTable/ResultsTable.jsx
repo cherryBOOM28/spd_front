@@ -119,7 +119,7 @@ const ResultTable = ({results, setResults, formData, selected, columns, count, n
                                 <TableCell style={{ display: 'flex', justifyContent: 'flex-end' }}>
                                 <Button 
                                     variant="outlined" 
-                                    style={{ textTransform: 'none', display: 'flex', gap: '10px', cursor: 'pointer', width: '195px' }}
+                                    style={{ textTransform: 'none', display: 'flex', gap: '10px', cursor: 'pointer', width: '195px', color: '#1B3884', borderColor: '#1b3884'  }}
                                     onClick={() => handleRowClick(person.id)}
                                 >
                                     <VscAccount />

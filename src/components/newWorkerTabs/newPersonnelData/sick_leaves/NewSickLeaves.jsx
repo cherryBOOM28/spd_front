@@ -1,7 +1,15 @@
 import React, { useState } from 'react';
 import cl from './NewSickLeaves.module.css';
-import Button from '../../../../components/UI/button/Button';
 import { useForm } from '../../formProvider/FormProvider';
+
+import { Button,TextField, Select, Box, InputLabel, MenuItem, FormControl } from '@mui/material';
+import Table from '@mui/material/Table';
+import TableHead from '@mui/material/TableHead';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
 
 
 function NewSickLeaves(props) {
@@ -44,6 +52,10 @@ function NewSickLeaves(props) {
                 return updatedArray;
               });
 
+              setInputData({
+                sickDocNumber: '',
+                sickDocDate: '',
+            })
             // console.log(
             //     { 'data': [newData] }
             // )
@@ -67,86 +79,62 @@ function NewSickLeaves(props) {
         <div>
             <div>
                 <form onSubmit={handleAddNewData} style={{ marginTop: '10px' }}>
-                        <table className={cl.customTable}>
-                            <tbody >
-                                <tr>
-                                    <td>
-                                        <input
-                                            type="number"
-                                            className={cl.formInput}
-                                            placeholder="Номер приказа"
-                                            name='sickDocNumber'
-                                            value={inputData.sickDocNumber}
-                                            onChange={(e) => setInputData({ ...inputData, sickDocNumber: e.target.value })}
-                                        />
-                                    </td>
-                                    <td>
-                                        <div className={cl.datePickerContainer}>
-                                        <input
-                                            type="date"
-                                            className={cl.formInput}
-                                            name='sickDocDate'
-                                            placeholder="Дата приказа"
-                                            value={inputData.sickDocDate || ''}
-                                            onChange={(e) => {
-                                                const newDate = e.target.value;
-                                                setInputData((prevWorker) => ({
-                                                ...prevWorker,
-                                                sickDocDate: newDate,
-                                                }));
-                                            }}
-                                        />
-                                        </div>
-                                    </td>
-                                    <td><Button type="submit" onClick={handleShowForm}>Добавить</Button></td>
-                                </tr>
-                                
-                            </tbody>
-                        </table>
-                    </form>
-                {showForm && (
-                <div>
-                    <table className={cl.customTable} style={{ marginTop: '20px' }}>
-                        <thead>
-                            <tr>
-                                <td>Номер приказа</td>
-                                <td>Дата приказа</td>
-                            
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {sickLeavesInfo.slice(1).map((d, i) => (
-                                <tr key={i}>
-                                    <td>{editingId === d.id ? <input type="number" className={cl.editInput} value={editedData.sickDocNumber} onChange={(e) => setEditedData({ ...editedData, sickDocNumber: e.target.value })} /> : d.sickDocNumber}</td>
-                                    <td>
-                                    {editingId === d.id ? (
-                                        <div className={cl.datePickerContainer}>
+                    <Paper elevation={2}>
+                        <TableContainer>
+                            <Table className={cl.customTable}>
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell>Номер приказа</TableCell>
+                                        <TableCell>Дата приказа</TableCell>
+                                        <TableCell></TableCell>
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody >
+                                    <TableRow>
+                                        <TableCell>
+                                            <input
+                                                type="number"
+                                                className={cl.formInput}
+                                                placeholder="Номер приказа"
+                                                name='sickDocNumber'
+                                                value={inputData.sickDocNumber}
+                                                onChange={(e) => setInputData({ ...inputData, sickDocNumber: e.target.value })}
+                                            />
+                                        </TableCell>
+                                        <TableCell>
+                                            <div className={cl.datePickerContainer}>
                                             <input
                                                 type="date"
                                                 className={cl.formInput}
                                                 name='sickDocDate'
                                                 placeholder="Дата приказа"
-                                                value={editedData.sickDocDate || ''}
+                                                value={inputData.sickDocDate || ''}
                                                 onChange={(e) => {
                                                     const newDate = e.target.value;
-                                                    setEditedData((prevData) => ({
-                                                    ...prevData,
+                                                    setInputData((prevWorker) => ({
+                                                    ...prevWorker,
                                                     sickDocDate: newDate,
                                                     }));
                                                 }}
                                             />
-                                        </div>
-                                    ) : (
-                                        d.sickDocDate
-                                    )}
-                                    </td>
-                                
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-            </div>
-                )}
+                                            </div>
+                                        </TableCell>
+                                        <TableCell><Button className={cl.submitBtn}  style={{  color: '#1B3884' }}   type='submit'  onClick={handleShowForm}>Добавить</Button></TableCell>
+                                    </TableRow>
+                                    {sickLeavesInfo && sickLeavesInfo.slice(1).map((data, index) => (
+                                        <TableRow>
+                                        <TableCell>{data.sickDocNumber}</TableCell>
+                                        <TableCell>{data.sickDocDate}</TableCell>
+                                        <TableCell></TableCell>
+                                    </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                    </Paper>
+                        
+                    </form>
+             
             </div>
         
         </div>

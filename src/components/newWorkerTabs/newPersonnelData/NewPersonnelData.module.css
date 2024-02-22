@@ -13,46 +13,10 @@
   box-sizing: border-box;
 }
 
-.customTable {
-  width: 100%;
-  border-collapse: collapse;
-  border-spacing: 0;
-}
-
-.customTable th,
-.customTable td {
-  /* border: 1px solid #ccc; */
-  padding: 8px;
-  text-align: left;
-}
-
-.customTable td {
-  border-bottom: none;
-  border-top: none;
-  border-right: 1px solid #ccc;
-}
-
-.customTable td:first-child {
-  
-  border-left: 1px solid #ccc;
-}
-
-.customTable tr {
-  border-bottom: 1px solid #ccc;
-  height: fit-content !important;
-}
-
-.customTable tr:first-child {
-  border-top: 1px solid #ccc;
-}
-
-.customTable th {
-  background-color: #f2f2f2;
-}
 
 .workerCapitalName {
   color: #000;
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 500;
 }
 
@@ -75,6 +39,7 @@
 
 .rows {
   display: flex;
+  align-items: center;
 }
 
 .label {
@@ -86,7 +51,6 @@
 
 .workerInfo {
   border-radius: 5px;
-  border: 1px solid #959595;
   width: 270px;
   /* height: 30px; */
   padding: 6px 9px;
@@ -99,12 +63,9 @@
 }
 
 .workerInfoSelect {
-  border-radius: 5px;
-  border: 1px solid #959595;
-  width: 290px;
-  height: 30px;
-  padding: 2px 9px;
-  margin-left: 12px;
+  width: 270px;
+  padding-left: 8px;
+  /* margin-left: 12px; */
   outline: none;
   font-family: "Helvetica", sans-serif;
   color: #000;
@@ -114,8 +75,8 @@
 
 .workerInfoText {
   border-radius: 5px;
-  border: 1px solid #959595;
-  min-width: 725px;
+  width: 1165px;
+  overflow: auto;
   padding: 6px 9px;
   margin-left: 12px;
   outline: none;

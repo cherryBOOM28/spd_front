@@ -473,13 +473,13 @@ function Transfer() {
             ))}
 
             <div style={{ display: 'flex', justifyContent: 'center' }}>
-                <IconButton onClick={createNewForm} color="primary" aria-label="add an alarm">
+                <IconButton onClick={createNewForm} style={{ color: '#1b3884' }} color="primary" aria-label="add an alarm">
                     <FaPlus />
                 </IconButton>
             </div>
 
             <div style={{ display: 'flex', justifyContent: 'center' }}>
-                <Button variant="contained" style={{ marginTop: '40px' }} onClick={handleFormSubmit} className={cl.btn}>Получить приказ</Button>
+                <Button variant="contained" style={{ marginTop: '40px', backgroundColor: '#1b3884' }} onClick={handleFormSubmit} className={cl.btn}>Получить приказ</Button>
             </div>
             <NotificationContainer />
         </div>

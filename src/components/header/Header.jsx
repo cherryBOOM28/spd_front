@@ -82,7 +82,7 @@ function Header() {
                 <div className={cl.headerContent}>
                     <div className={cl.buttons}>
                         <Link to="/create" className={cl.link}>
-                            <Button variant="contained">Добавить</Button>
+                            <Button variant="contained" style={{ backgroundColor: '#1B3884' }}>Добавить</Button>
                         </Link>
                         {/* <button  onClick={() => setIsClicked(true)} className={cl.btn}>Создать группу</button> */}
                         <Modal visible={isClicked}>
@@ -153,12 +153,12 @@ function Header() {
                         <div>
                             { user ? (
                                 <div>
-                                    <Button variant="text" onClick={handleLogout}>Выйти</Button>
+                                    <Button variant="text" style={{ color: '#1b3884' }} onClick={handleLogout}>Выйти</Button>
                                     {/* <Link to="/login" className={cl.logout}>Войти</Link> */}
                                 </div>
                             ) : (
                                 <p>
-                                    <Button variant="text" onClick={handleLogout}>Выйти</Button>
+                                    <Button variant="text" style={{ color: '#1b3884' }} onClick={handleLogout}>Выйти</Button>
                                 </p>
                             ) }
                         </div>

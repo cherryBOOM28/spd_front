@@ -572,7 +572,7 @@ function Reports(props, queryParams) {
                                         <div className={cl.basic__info}>  
                                             <div className={cl.employees}>
                                                 <div className={cl.dropdown}>
-                                                    <Button variant="contained" style={{ textTransform: 'none', flex: 1 }}  onClick={toggleGeneralDropdown} className={cl.actionBtn}>
+                                                    <Button variant="contained" style={{ textTransform: 'none', flex: 1, backgroundColor: '#1B3884'  }}  onClick={toggleGeneralDropdown} className={cl.actionBtn}>
                                                         Общие данные
                                                         {isOpenGeneral ? <MdExpandLess className={cl.arrow} /> : <MdArrowDropDown className={cl.arrow} />}
                                                     </Button>
@@ -963,11 +963,11 @@ function Reports(props, queryParams) {
                                             </div>
                            
                                             <div style={{ display: 'flex', gap: '10px', justifyContent: 'space-between', marginTop: '15px' }}>
-                                                <Button variant="contained" onClick={handleSubmit} style={{ textTransform: 'none' }} className={cl.submitBtn} >
+                                                <Button variant="contained" onClick={handleSubmit} style={{ textTransform: 'none', backgroundColor: '#1B3884'  }} className={cl.submitBtn} >
                                                     Поиск
                                                 </Button>
                                                 {showExcelButton && (
-                                                    <Button  variant="outlined" style={{ display: 'flex', gap: "10px",  textTransform: 'none' }} >
+                                                    <Button  variant="outlined" style={{ display: 'flex', gap: "10px",  textTransform: 'none', color: '#1B3884', borderColor: '#1b3884'  }} >
                                                         <ExcelGenerator
                                                             results={results} 
                                                             selected={[

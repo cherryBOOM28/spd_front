@@ -1,7 +1,15 @@
 import React, {useState} from 'react';
 import cl from './NewCourses.module.css';
-import Button from '../../UI/button/Button';
 import { useForm } from '../formProvider/FormProvider';
+
+import { Button,TextField, Select, Box, InputLabel, MenuItem, FormControl } from '@mui/material';
+import Table from '@mui/material/Table';
+import TableHead from '@mui/material/TableHead';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
 
 const NewCourses = (props) => {
     // const { id } = useParams();
@@ -93,21 +101,33 @@ const NewCourses = (props) => {
                         <div>
                         {/* <Button onClick={handleShowForm}>Добавить курс</Button> */}
                         <form onSubmit={handleAddCourse} style={{ marginTop: '10px' }}>
-                                    <table className={cl.customTable}>
-                                        <tbody >
-                                            <tr>
-                                                <td>
-                                                    <select
-                                                        className={cl.formInput}
-                                                        value={inputData.courseType}
-                                                        onChange={(e) => setInputData({ ...inputData, courseType: e.target.value })}
-                                                    >
-                                                        <option value="">Выберите переподготовки</option>
-                                                        <option value="Повышение">Повышение</option>
-                                                        <option value="Подготовка">Подготовка</option>
-                                                    </select>
-                                                </td>
-                                                <td>
+                            <Paper>
+                                <TableContainer>
+                                    <Table className={cl.customTable}>
+                                        <TableBody >
+                                            <TableRow>
+                                                <TableCell>
+                                                    <Box>
+                                                            {/* <label className={cl.label}>Должность</label> */}
+                                                            <FormControl size="small" fullWidth>
+                                                                <InputLabel id="demo-simple-select-label">Вид переподготовки</InputLabel>
+                                                                <Select
+                                                                labelId="demo-simple-select-label"
+                                                                id="demo-simple-select"
+                                                                label="Вид переподготовки"
+                                                                name='academicDegree'
+                                                                className={cl.workerInfoSelect}
+                                                                value={inputData.courseType}
+                                                                onChange={(e) => setInputData({ ...inputData, courseType: e.target.value })}
+                                                                >
+                                                                    <MenuItem value="" disabled>Выберите переподготовки</MenuItem>
+                                                                    <MenuItem value="Повышение">Повышение</MenuItem>
+                                                                    <MenuItem value="Подготовка">Подготовка</MenuItem>
+                                                                </Select>
+                                                            </FormControl>
+                                                        </Box>
+                                                </TableCell>
+                                                <TableCell>
                                                     <input
                                                         type="text"
                                                         className={cl.formInput}
@@ -115,8 +135,8 @@ const NewCourses = (props) => {
                                                         value={inputData.courseOrg}
                                                         onChange={(e) => setInputData({ ...inputData, courseOrg: e.target.value })}
                                                     />
-                                                </td>
-                                                <td>
+                                                </TableCell>
+                                                <TableCell>
                                                     <div className={cl.datePickerContainer}>
                                                     <input
                                                         type="date"
@@ -132,8 +152,8 @@ const NewCourses = (props) => {
                                                         }}
                                                     />
                                                     </div>
-                                                </td>
-                                                <td>
+                                                </TableCell>
+                                                <TableCell>
                                                     <div className={cl.datePickerContainer}>
                                                     <input
                                                         type="date"
@@ -149,8 +169,8 @@ const NewCourses = (props) => {
                                                         }}
                                                     />
                                                     </div>
-                                                </td>
-                                                <td>
+                                                </TableCell>
+                                                <TableCell>
                                                     <input
                                                         type="text"
                                                         className={cl.formInput}
@@ -158,8 +178,8 @@ const NewCourses = (props) => {
                                                         value={inputData.documentType}
                                                         onChange={(e) => setInputData({ ...inputData, documentType: e.target.value })}
                                                     />
-                                                </td>
-                                                <td>
+                                                </TableCell>
+                                                <TableCell>
                                                     <input
                                                         type="text"
                                                         className={cl.formInput}
@@ -167,97 +187,30 @@ const NewCourses = (props) => {
                                                         value={inputData.courseName}
                                                         onChange={(e) => setInputData({ ...inputData, courseName: e.target.value })}
                                                     />
-                                                </td>
+                                                </TableCell>
                                                 
-                                                <td><Button type="submit" className={cl.submitBtn} onClick={handleShowForm}>Добавить</Button></td>
-                                            </tr>
+                                                <TableCell><Button className={cl.submitBtn}  style={{  color: '#1B3884' }}   type='submit'  onClick={handleShowForm}>Добавить</Button></TableCell>
+                                            </TableRow>
+                                            {course && course.slice(1).map((data, index) => (
+                                                <TableRow>
+                                                    <TableCell>{data.courseName}</TableCell>
+                                                    <TableCell>{data.courseType}</TableCell>
+                                                    <TableCell>{data.courseOrg}</TableCell>
+                                                    <TableCell>{data.startDate}</TableCell>
+                                                    <TableCell>{data.endDate}</TableCell>
+                                                    <TableCell>{data.documentType}</TableCell>
+
+                                                    <TableCell></TableCell>
+                                                </TableRow>
+                                            ))}
                                             
-                                        </tbody>
-                                    </table>
-                                </form>
-                                {showForm && (
-                                <div>
-                                <table className={cl.customTable} style={{ marginTop: '20px' }}>
-                                    <thead>
-                                        <tr>
-                                            <td>Вид переподготовки</td>
-                                            <td>Учебное заведение </td>
-                                            <td>Дата начала</td>
-                                            <td>Дата окончания</td>
-                                            <td>Вид документа</td>
-                                            <td>Название курса</td>
-                                            {/* <td>Действие</td> */}
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {course.slice(1).map((d, i) => (
-                                            <tr key={i}>
-                                                <td>  
-                                                    {editingId === d.id ? (
-                                                        <select
-                                                            className={cl.selectRelative_type}
-                                                            value={editedData.courseType}
-                                                            onChange={(e) => setEditedData({ ...editedData, courseType: e.target.value })}
-                                                        >
-                                                            <option value="">Выберите переподготовки</option>
-                                                            <option value="Повышение">Повышение</option>
-                                                            <option value="Подготовка">Подготовка</option>
-                                                        </select>
-                                                    ) : (
-                                                        d.courseType
-                                                    )}
-                                                </td>
-                                                <td>{editingId === d.id ? <input type="text" className={cl.editInput} value={editedData.courseOrg} onChange={(e) => setEditedData({ ...editedData, courseOrg: e.target.value })} /> : d.courseOrg}</td>
-                                                <td>
-                                                    {editingId === d.id ? (
-                                                        <div className={cl.datePickerContainer}>
-                                                            <input
-                                                                type="date"
-                                                                className={cl.formInput}
-                                                                placeholder="Дата начала"
-                                                                value={editedData.startDate || ''}
-                                                                onChange={(e) => {
-                                                                    const newDate = e.target.value;
-                                                                    setEditedData((prevData) => ({
-                                                                    ...prevData,
-                                                                    startDate: newDate,
-                                                                    }));
-                                                                }}
-                                                            />
-                                                        </div>
-                                                    ) : (
-                                                        d.startDate
-                                                    )}
-                                                </td>
-                                                <td>
-                                                    {editingId === d.id ? (
-                                                        <div className={cl.datePickerContainer}>
-                                                             <input
-                                                                type="date"
-                                                                className={cl.formInput}
-                                                                placeholder="Дата окончания"
-                                                                value={editedData.endDate || ''}
-                                                                onChange={(e) => {
-                                                                    const newDate = e.endDate.value;
-                                                                    setEditedData((prevData) => ({
-                                                                    ...prevData,
-                                                                    endDate: newDate,
-                                                                    }));
-                                                                }}
-                                                            />
-                                                        </div>
-                                                    ) : (
-                                                        d.endDate
-                                                    )}
-                                                </td>
-                                                <td>{editingId === d.id ? <input type='text' className={cl.editInput}  value={editedData.documentType} onChange={(e) => setEditedData({ ...editedData, documentType: e.target.value })} /> : d.documentType}</td>
-                                                <td>{editingId === d.id ? <input type='text' className={cl.editInput}  value={editedData.courseName} onChange={(e) => setEditedData({ ...editedData, courseName: e.target.value })} /> : d.courseName}</td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
-                            )}
+                                        </TableBody>
+                                    </Table>
+                                </TableContainer>
+                            </Paper>
+                            
+                        </form>
+                      
                         </div>
                       
                     </div>

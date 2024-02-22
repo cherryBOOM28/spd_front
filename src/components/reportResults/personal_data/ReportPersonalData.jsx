@@ -282,7 +282,7 @@ function ReportPersonalData(props) {
     return (
         <div>
             <div className={cl.dropdown}>
-                <Button variant="contained" style={{ textTransform: 'none' }} onClick={togglePersonalDropdown} className={cl.actionBtn}>
+                <Button variant="contained" style={{ textTransform: 'none', backgroundColor: '#1B3884'  }} onClick={togglePersonalDropdown} className={cl.actionBtn}>
                     Личные данные
                     {isOpenPersonal ? <MdExpandLess className={cl.arrow} /> : <MdArrowDropDown className={cl.arrow} />}
                 </Button>
@@ -514,7 +514,7 @@ export function renderFamilyOptions(selectedFamilyOptions, formData, handleInput
     selectedFamilyOptions.length > 0 && (
       <div className={cl.input__container}>
         <p className={cl.headline}>Личные данные</p>
-        <div className={cl.tooltipTextMain}> <BsExclamationCircle style={{ color: '#1565C0' }} /> Заполните все поля</div>
+        <div className={cl.tooltipTextMain}> <BsExclamationCircle style={{ color: '#1B3884' }} /> Заполните все поля</div>
         {selectedFamilyOptions.map((option) => (
           <div key={option} className={cl.wrapper__input}>
             <label className={cl.label__name}>{family_compositions_options.find((o) => o.id === option).label}:</label>
@@ -743,7 +743,7 @@ export function renderEducationOptions(selectedEducationOptions, formData, handl
         selectedEducationOptions.length > 0 && (
             <div className={cl.input__container}>
                 <p className={cl.headline}>Образование</p>
-                <div className={cl.tooltipTextMain}> <BsExclamationCircle style={{ color: '#1565C0' }} /> Заполните все поля</div>
+                <div className={cl.tooltipTextMain}> <BsExclamationCircle style={{ color: '#1B3884' }} /> Заполните все поля</div>
                 {selectedEducationOptions.map((option) => (
                     <div key={option} className={cl.wrapper__input}>
                         <label className={cl.label__name}>{educations_options.find((o) => o.id === option).label}:</label>

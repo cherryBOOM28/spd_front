@@ -52,7 +52,7 @@ function OrdersListData(props) {
     return (
         <div>
             <div className={cl.dropdown}>
-                <Button variant="contained" style={{ textTransform: 'none' }} onClick={toggleOrderListDropdown} className={cl.actionBtn}>
+                <Button variant="contained" style={{ textTransform: 'none', backgroundColor: '#1B3884'  }} onClick={toggleOrderListDropdown} className={cl.actionBtn}>
                     Приказы рапорта
                     {isOpenOrderList ? <MdExpandLess className={cl.arrow} /> : <MdArrowDropDown className={cl.arrow} />}
                 </Button>

@@ -145,7 +145,7 @@ select {
   top: 35px;
   left: 22%;
   z-index: -1;
-  opacity: 0.05;
+  opacity: 0.03;
 }
 
 .bgPic {
@@ -266,4 +266,38 @@ input[type="radio"]:checked + label {
   height: 35px;
   border-radius: 50%;
   object-fit: cover;
+}
+
+.fired {
+  background-color: #ffcccc; /* Цвет для уволенных */
+}
+
+.vacation {
+  background-color: #cceeff; /* Цвет для сотрудников в отпуске */
+}
+
+.komandirovka {
+  background-color: #ffffcc; /* Цвет для сотрудников в командировке */
+}
+
+.statusInfoOverlay {
+  position: absolute;
+  top: -12px;
+  left: -185px;
+  padding: 10px;
+  border: 1px solid rgba(192, 192, 192, 0.853);
+  background-color: #ffffff;
+  border-radius: 8px;
+
+}
+
+.statusDescription {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.statusDescriptionInner {
+  display: flex;
+  gap: 6px;
 }

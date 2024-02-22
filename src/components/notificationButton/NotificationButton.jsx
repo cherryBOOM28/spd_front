@@ -90,7 +90,7 @@ const NotificationButton = () => {
           {showNotifications && (
             <div className={cl.notification_list}>
               <h2 className={cl.notification_headline}>
-                <IoNotifications style={{ color: '#1565C0', fontSize: '30px' }}/>
+                <IoNotifications style={{ color: '#1B3884', fontSize: '30px' }}/>
                 Предстоящие повышения
               </h2>
              

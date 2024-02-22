@@ -692,14 +692,14 @@ function Vacation() {
                                     <MdDelete style={{ color: '#D32F2F' }} />
                                 </IconButton>
 
-                                <IconButton onClick={createNewFormKratko} color="primary" aria-label="add an alarm">
+                                <IconButton onClick={createNewFormKratko} style={{ color: '#1b3884' }} color="primary" aria-label="add an alarm">
                                     <FaPlus />
                                 </IconButton>
                             </div>
 
 
                             <div style={{ display: 'flex', justifyContent: 'center' }}>
-                                <Button variant="contained" style={{ marginTop: '20px' }} onClick={handleFormSubmit} className={cl.btn}>Получить приказ</Button>
+                                <Button variant="contained" style={{ marginTop: '20px', backgroundColor: '#1b3884' }} onClick={handleFormSubmit} className={cl.btn}>Получить приказ</Button>
                             </div>
                             <NotificationContainer />
     
@@ -876,14 +876,14 @@ function Vacation() {
                                     <MdDelete style={{ color: '#D32F2F' }} />
                                 </IconButton>
 
-                                <IconButton onClick={createNewFormOtpusk} color="primary" aria-label="add an alarm">
+                                <IconButton onClick={createNewFormOtpusk} style={{ color: '#1b3884' }} color="primary" aria-label="add an alarm">
                                     <FaPlus />
                                 </IconButton>
                             </div>
 
 
                             <div style={{ display: 'flex', justifyContent: 'center' }}>
-                                <Button variant="contained" style={{ marginTop: '20px' }} onClick={handleFormSubmit} className={cl.btn}>Получить приказ</Button>
+                                <Button variant="contained" style={{ marginTop: '20px', backgroundColor: '#1b3884' }} onClick={handleFormSubmit} className={cl.btn}>Получить приказ</Button>
                             </div>
 
                             </Paper>
@@ -992,14 +992,14 @@ function Vacation() {
                                     <MdDelete style={{ color: '#D32F2F' }} />
                                 </IconButton>
 
-                                <IconButton onClick={createNewFormOtziv} color="primary" aria-label="add an alarm">
+                                <IconButton onClick={createNewFormOtziv} style={{ color: '#1b3884' }} color="primary" aria-label="add an alarm">
                                     <FaPlus />
                                 </IconButton>
                             </div>
 
 
                             <div style={{ display: 'flex', justifyContent: 'center' }}>
-                                <Button variant="contained" style={{ marginTop: '20px' }} onClick={handleFormSubmitOtziv} className={cl.btn}>Получить приказ</Button>
+                                <Button variant="contained" style={{ marginTop: '20px', backgroundColor: '#1b3884' }} onClick={handleFormSubmitOtziv} className={cl.btn}>Получить приказ</Button>
                             </div>
                             <NotificationContainer />
     

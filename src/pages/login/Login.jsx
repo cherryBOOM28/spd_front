@@ -135,11 +135,11 @@ const InputField = ({ name, label, hint, isPassword, formData, handleChange }) =
                         <div className={cl.show_password}> 
                             {
                                 !showPassword ?
-                                    <AiFillEyeInvisible style={{cursor: 'pointer', color: '#1565C0'}} size={23} onClick={() => {
+                                    <AiFillEyeInvisible style={{cursor: 'pointer', color: '#1B3884'}} size={23} onClick={() => {
                                         setShowPassword(prev => !prev)
                                     }}/>
                                 :
-                                    <AiFillEye style={{cursor: 'pointer', color: '#1565C0'}} size={23} onClick={() => {
+                                    <AiFillEye style={{cursor: 'pointer', color: '#1B3884'}} size={23} onClick={() => {
                                         setShowPassword(prev => !prev)
                                     }}/>
                             } 

@@ -1,8 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import cl from './NewSport.module.css';
-import Button from '../../UI/button/Button';
 import listOfSports from '../../data/kindsOfSports';
 import { useForm } from '../formProvider/FormProvider';
+
+import { Button,TextField, Select, Box, InputLabel, MenuItem, FormControl } from '@mui/material';
+import Table from '@mui/material/Table';
+import TableHead from '@mui/material/TableHead';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
 
 const NewSport = (props) => {
     const {sportSkill, setSportSkill} = useForm();
@@ -113,100 +121,83 @@ const NewSport = (props) => {
                     <div>
                         <div>
                         {/* <Button onClick={handleShowForm}>Добавить вил спорта</Button> */}
-                        <form onSubmit={handleAddSport} style={{ marginTop: '10px' }}>
-                                    <table className={cl.customTable}>
-                                        <tbody >
-                                            <tr>
-                                                <td>
-                                                    <select
-                                                        className={cl.formInput}
-                                                        value={inputData.sportType}
-                                                        onChange={(e) => setInputData({ ...inputData, sportType: e.target.value })}
-                                                    >
-                                                        <option value="">Выберите вид спорта</option>
-                                                        {Object.keys(kindsOfSport).map((sportKind, index) => (
-                                                          <option key={index} value={sportKind}>
-                                                            {kindsOfSport[sportKind]}
-                                                          </option>
-                                                        ))}
-                                                    </select>
-                                                </td>
-                                                <td>
-                                                <select
-                                                        className={cl.formInput}
-                                                        value={inputData.sportSkillLvl}
-                                                        onChange={(e) => setInputData({ ...inputData, sportSkillLvl: e.target.value })}
-                                                    >
-                                                        <option value="">Выберите степень владения</option>
-                                                        <option value="Любитель">Любитель</option>
-                                                        <option value="Первый спортивный разряд">Первый спортивный разряд</option>
-                                                        <option value="Второй спортивный разряд">Второй спортивный разряд</option>
-                                                        <option value="Третий спортивный разряд">Третий спортивный разряд</option>
-                                                        <option value="Кандидат мастера спорта">Кандидат мастера спорта</option>
-                                                        <option value="Мастер спорта">Мастер спорта</option>   
-                                                    </select>
-                                                </td>
-                                                <td><Button type="submit" className={cl.submitBtn} onClick={handleShowForm} >Добавить</Button></td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </form>
-                            {showForm && (
-                           <div>
-                           <table className={cl.customTable} style={{ marginTop: '20px' }}>
-                               <thead>
-                                   <tr>
-                                       <td>Вид спорта</td>
-                                       <td>Степень владения</td>
-                                       {/* <td>Действие</td> */}
-                                   </tr>
-                               </thead>
-                               <tbody>
-                                   {sportSkill.slice(1).map((d, i) => (
-                                       <tr key={i}>
-                                           <td>  
-                                               {editingId === d.id ? (
-                                                   <select
-                                                       className={cl.selectRelative_type}
-                                                       value={editedData.sportType}
-                                                       onChange={(e) => setEditedData({ ...editedData, sportType: e.target.value })}
-                                                   >
-                                                       <option value="">Выберите вил спорта</option>
-                                                       {Object.keys(kindsOfSport).map((sportKind, index) => (
-                                                         <option key={index} value={sportKind}>
-                                                           {kindsOfSport[sportKind]}
-                                                         </option>
-                                                       ))}
-                                                   </select>
-                                               ) : (
-                                                   d.sportType
-                                               )}
-                                           </td>
-                                           <td>  
-                                               {editingId === d.id ? (
-                                                   <select
-                                                       className={cl.selectRelative_type}
-                                                       value={editedData.sportSkillLvl}
-                                                       onChange={(e) => setEditedData({ ...editedData, sportSkillLvl: e.target.value })}
-                                                   >
-                                                       <option value="">Выберите степень владения</option>
-                                                       <option value="Любитель">Любитель</option>
-                                                       <option value="Первый спортивный разряд">Первый спортивный разряд</option>
-                                                       <option value="Второй спортивный разряд">Второй спортивный разряд</option>
-                                                       <option value="Третий спортивный разряд">Третий спортивный разряд</option>
-                                                       <option value="Кандидат мастера спорта">Кандидат мастера спорта</option>
-                                                       <option value="Мастер спорта">Мастер спорта</option>   
-                                                   </select>
-                                               ) : (
-                                                   d.sportSkillLvl
-                                               )}
-                                           </td>
-                                       </tr>
-                                   ))}
-                               </tbody>
-                           </table>
-                       </div>
-                            )}
+                            <form onSubmit={handleAddSport} style={{ marginTop: '10px' }}>
+                                <Paper>
+                                    <TableContainer>
+                                        <Table className={cl.customTable}>
+                                            <TableHead>
+                                                <TableRow>
+                                                    <TableCell>Вид спорта </TableCell>
+                                                    <TableCell>Степень владения</TableCell>
+                                                    <TableCell></TableCell>
+                                                </TableRow>
+                                            </TableHead>
+                                            <TableBody >
+                                                <TableRow>
+                                                    <TableCell>
+                                                        <Box>
+                                                            {/* <label className={cl.label}>Должность</label> */}
+                                                            <FormControl size="small" fullWidth>
+                                                                <InputLabel id="demo-simple-select-label">Вид спорта</InputLabel>
+                                                                <Select
+                                                                labelId="demo-simple-select-label"
+                                                                id="demo-simple-select"
+                                                                label="Вид спорта"
+                                                                name='academicDegree'
+                                                                className={cl.workerInfoSelect}
+                                                                value={inputData.sportType}
+                                                                onChange={(e) => setInputData({ ...inputData, sportType: e.target.value })}
+                                                                >
+                                                                    <MenuItem value="" disabled>Выберите вид спорта</MenuItem>
+                                                                    {Object.keys(kindsOfSport).map((sportKind, index) => (
+                                                                        <MenuItem key={index} value={sportKind}>
+                                                                        {kindsOfSport[sportKind]}
+                                                                        </MenuItem>
+                                                                    ))}
+                                                                </Select>
+                                                            </FormControl>
+                                                        </Box>
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        <Box>
+                                                            {/* <label className={cl.label}>Должность</label> */}
+                                                            <FormControl size="small" fullWidth>
+                                                                <InputLabel id="demo-simple-select-label">	Степень владения</InputLabel>
+                                                                <Select
+                                                                labelId="demo-simple-select-label"
+                                                                id="demo-simple-select"
+                                                                label="	Степень владения"
+                                                                name='academicDegree'
+                                                                className={cl.sportSkillLvl}
+                                                                value={inputData.sportSkillLvl}
+                                                                onChange={(e) => setInputData({ ...inputData, sportSkillLvl: e.target.value })}
+                                                                >
+                                                                    <MenuItem value="" disabled>Выберите степень владения</MenuItem>
+                                                                    <MenuItem value="Любитель">Любитель</MenuItem>
+                                                                    <MenuItem value="Первый спортивный разряд">Первый спортивный разряд</MenuItem>
+                                                                    <MenuItem value="Второй спортивный разряд">Второй спортивный разряд</MenuItem>
+                                                                    <MenuItem value="Третий спортивный разряд">Третий спортивный разряд</MenuItem>
+                                                                    <MenuItem value="Кандидат мастера спорта">Кандидат мастера спорта</MenuItem>
+                                                                    <MenuItem value="Мастер спорта">Мастер спорта</MenuItem>   
+                                                                </Select>
+                                                            </FormControl>
+                                                        </Box>
+                                                    </TableCell>
+                                                    <TableCell><Button className={cl.submitBtn}  style={{  color: '#1B3884' }}   type='submit'  onClick={handleShowForm}>Добавить</Button></TableCell>
+                                                </TableRow>
+                                                {sportSkill && sportSkill.slice(1).map((data, index) => (
+                                                    <TableRow>
+                                                    <TableCell>{data.sportType}</TableCell>
+                                                    <TableCell>{data.sportSkillLvl}</TableCell>
+                                                    <TableCell></TableCell>
+                                                </TableRow>
+                                                ))}
+                                            </TableBody>
+                                        </Table>
+                                    </TableContainer>
+                                </Paper>
+                                
+                            </form>
                         </div>
                       
                     </div>

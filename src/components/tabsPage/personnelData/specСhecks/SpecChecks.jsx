@@ -8,6 +8,7 @@ import { Button, Paper } from '@mui/material';
 import { FaPlus } from "react-icons/fa6";
 import { IoClose } from "react-icons/io5";
 import IconButton from '@mui/material/IconButton';
+import { FiAlertCircle } from "react-icons/fi";
 
 import TextField from '@mui/material/TextField';
 import { MdEdit } from "react-icons/md";
@@ -233,16 +234,16 @@ function SpecChecks({ specCheckInfo, setSpecCheckInfo }) {
                         )}
                     </div>
                     <div>
-                        {specCheckInfo && specCheckInfo.specChecks && specCheckInfo.specChecks.map((d, i) => (
+                    {specCheckInfo && specCheckInfo.specChecks && specCheckInfo.specChecks.length > 0 ? (
+                        specCheckInfo.specChecks.map((d, i) => (
                             <div key={i} className={cl.workerBlock}>
                                 <div className={cl.column}>
                                     <div className={cl.rows}>
                                         <label className={cl.label}>Номер документа</label>
                                         {editingId === d.id ? 
                                             <TextField 
-                                            style={{ marginLeft: '12px' }}
+                                                style={{ marginLeft: '12px' }}
                                                 type="number"
-                                                id="outlined-basic" 
                                                 variant="outlined"  
                                                 size="small"
                                                 className={cl.workerInfo}
@@ -260,22 +261,21 @@ function SpecChecks({ specCheckInfo, setSpecCheckInfo }) {
                                         <label className={cl.label}>Дата окончания</label>
                                         {editingId === d.id ? 
                                             <div className={cl.datePickerContainer}>
-                                            <TextField 
-                                                 type="date"
-                                                id="outlined-basic" 
-                                                variant="outlined"  
-                                                size="small"
-                                                className={cl.workerInfo}
-                                                name='docDate' 
-                                                value={editedData.docDate || ''}
-                                                onChange={(e) => {
-                                                    const newData = e.target.value;
-                                                    setEditedData((prevData) => ({
-                                                        ...prevData,
-                                                        docDate: newData,
-                                                    }));
-                                                }}
-                                            />
+                                                <TextField 
+                                                    type="date"
+                                                    variant="outlined"  
+                                                    size="small"
+                                                    className={cl.workerInfo}
+                                                    name='docDate' 
+                                                    value={editedData.docDate || ''}
+                                                    onChange={(e) => {
+                                                        const newData = e.target.value;
+                                                        setEditedData((prevData) => ({
+                                                            ...prevData,
+                                                            docDate: newData,
+                                                        }));
+                                                    }}
+                                                />
                                             </div>
                                             : 
                                             <Paper className={cl.workerInfoP}>{d.docDate}</Paper>      
@@ -285,7 +285,7 @@ function SpecChecks({ specCheckInfo, setSpecCheckInfo }) {
                                 <div className={cl.relativesActionBtns} style={{marginTop: '25px'}}>
                                     {editingId === d.id ? (
                                         <div>
-                                            <IconButton className={cl.iconBtn} onClick={() => handleSaveEdit(d.id)}><FaCheck color=' #1565C0' /></IconButton>
+                                            <IconButton className={cl.iconBtn} onClick={() => handleSaveEdit(d.id)}><FaCheck color='#1B3884' /></IconButton>
                                             <IconButton className={cl.iconBtn} onClick={handleCancelEdit}><IoClose /></IconButton>
                                         </div>
                                     ) : (
@@ -295,7 +295,14 @@ function SpecChecks({ specCheckInfo, setSpecCheckInfo }) {
                                     )}
                                 </div>
                             </div>
-                        ))}
+                        ))
+                    ) : (
+                        <div className={cl.alert}>
+                            <FiAlertCircle style={{ color: '#1B3884', fontSize: '22px' }} />
+                            <p className={cl.alert_text}>Нет доступных записей</p>
+                        </div>
+                    )}
+
                     </div>
                 </div>
             

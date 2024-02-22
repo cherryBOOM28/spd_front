@@ -304,7 +304,7 @@ function StaffInfoData(props) {
     return (
         <div>
             <div className={cl.dropdown}>
-                <Button variant="contained" style={{ textTransform: 'none' }} onClick={toggleStaffInfoDropdown} className={cl.actionBtn}>
+                <Button variant="contained" style={{ textTransform: 'none', backgroundColor: '#1B3884'  }} onClick={toggleStaffInfoDropdown} className={cl.actionBtn}>
                     Кадровые данные
                     {isOpenStaffInfo ? <MdExpandLess className={cl.arrow} /> : <MdArrowDropDown className={cl.arrow} />}
                 </Button>

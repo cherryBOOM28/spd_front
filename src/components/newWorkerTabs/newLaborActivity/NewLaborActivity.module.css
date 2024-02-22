@@ -1,59 +1,38 @@
-/* Personal.module.css */
+
 
 .formInput {
-  padding: 5px;
-  background: #f2f2f2;
-  border: none;
-  outline: none;
+  background: #ffffff;
   font-family: "Helvetica", sans-serif;
-  color: #000;
+  outline: none;
+  border: none;
   font-size: 14px;
   font-weight: 400;
-  width: 100%;
-  box-sizing: border-box;
+  /* width: 100px; */
+  cursor: pointer;
 }
 
 .customTable {
   width: 100%;
-  border-collapse: collapse;
-  border-spacing: 0;
-}
-
-.customTable th,
-.customTable td {
-  /* border: 1px solid #ccc; */
-  padding: 8px;
-  text-align: left;
-}
-
-.customTable td {
-  border-bottom: none;
-  border-top: none;
-  border-right: 1px solid #ccc;
-}
-
-.customTable td:first-child {
-  
-  border-left: 1px solid #ccc;
-}
-
-.customTable tr {
-  border-bottom: 1px solid #ccc;
-  height: fit-content !important;
-}
-
-.customTable tr:first-child {
-  border-top: 1px solid #ccc;
-}
-
-.customTable th {
-  background-color: #f2f2f2;
 }
 
 .workerCapitalName {
   color: #000;
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 500;
+}
+
+.workerInfoSelect {
+  width: 200px;
+  height: 40px;
+  padding: 0px 9px;
+  outline: none;
+  border: none;
+  /* margin-left: 12px; */
+  font-family: "Helvetica", sans-serif;
+  color: #000;
+  font-size: 16px;
+  font-weight: 400;
+  /* margin-left: 12px; */
 }
 
 .actionBtn {
@@ -98,19 +77,7 @@
   font-weight: 400;
 }
 
-.workerInfoSelect {
-  border-radius: 5px;
-  border: 1px solid #959595;
-  width: 290px;
-  height: 30px;
-  padding: 2px 9px;
-  margin-left: 12px;
-  outline: none;
-  font-family: "Helvetica", sans-serif;
-  color: #000;
-  font-size: 16px;
-  font-weight: 400;
-}
+
 
 .workerInfoText {
   border-radius: 5px;
@@ -159,31 +126,4 @@
   color: #000;
   font-size: 16px;
   font-weight: 400;
-}
-
-.relativesActionBtns {
-display: flex;
-flex-direction: row;
-align-items: center;
-gap: 5px;
-}
-
-.relativesActionBtns > div {
-padding: 10px;
-border-radius: 4px;
-cursor: pointer;
-}
-
-.relativesActionBtns > div:first-child {
-background-color: #ccc;
-}
-.relativesActionBtns > div:nth-child(2) {
-background-color: #d36666;
-}
-
-.editInput {
-border: none;
-outline: none;
-background: none;
-width: 100%;
 }

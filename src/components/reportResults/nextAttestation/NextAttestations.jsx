@@ -13,17 +13,19 @@ const NextAttestations = () => {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(false); 
     const navigate = useNavigate();
+
+    const [startDate, setStartDate] = useState('');
+    const [endDate, setEndDate] = useState('');
     
     const handleDateChange = (e) => {
       setSelectedDate(e.target.value);
     };
   
     const handleSubmit = async () => {
-        if (selectedDate) {
+        if (startDate && endDate) {
           try {
             setLoading(true);
-            const response = await axios.get(`http://127.0.0.1:8000/api/v1/close_attestations/?date=${selectedDate}`);
-            setData(response.data.data);
+            const response = await axios.get(`http://127.0.0.1:8000/api/v1/close_attestations/?startDate=${startDate}&endDate=${endDate}`);            setData(response.data.data);
           } catch (error) {
             console.error('Ошибка при получении данных:', error);
           } finally {
@@ -36,8 +38,8 @@ const NextAttestations = () => {
     };
 
     const handleDownloadExcel = () => {
-        if (selectedDate) {
-            window.location.href = `http://127.0.0.1:8000/api/v1/close_attestations_download/?date=${selectedDate}`;
+        if (startDate && endDate) {
+            window.location.href = `http://127.0.0.1:8000/api/v1/close_attestations_download/?startDate=${startDate}&endDate=${endDate}`;
         } else {
             NotificationManager.error('Выберите дату перед скачиванием файла', 'Ошибка', 2000);
             console.log('Выберите дату перед скачиванием файла.');
@@ -51,26 +53,47 @@ const NextAttestations = () => {
         navigate(`/${id}`);
     };
 
-
+    const handleStartDateChange = (e) => {
+        setStartDate(e.target.value);
+    };
+    
+    const handleEndDateChange = (e) => {
+        setEndDate(e.target.value);
+    };
   
     return (
     <div className={cl.wrapper}>
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <div style={{ display: 'flex', alignItems: 'center' }}>
-                <label htmlFor="datePicker" style={{ marginRight: '12px' }}>Выберите дату:</label>
-                <TextField
-                    type="date"
-                    id="datePicker"
-                    size='small'
-                    className={cl.workerInfo}
-                    value={selectedDate}
-                    onChange={handleDateChange}
-                    
-                />
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <label htmlFor="datePicker" style={{ marginRight: '12px' }}>Начальная дата</label>
+                    <TextField
+                        type="date"
+                        id="startDatePicker"
+                        size='small'
+                        className={cl.workerInfo}
+                        value={startDate}
+                        onChange={handleStartDateChange}
+                        // label="Начальная дата"
+                        required
+                    />
+
+                    <label htmlFor="datePicker" style={{ marginRight: '12px' }}>Конечная дата</label>
+                    <TextField
+                        type="date"
+                        id="endDatePicker"
+                        size='small'
+                        className={cl.workerInfo}
+                        value={endDate}
+                        onChange={handleEndDateChange}
+                        // label="Конечная дата"
+                        required
+                    />
+                    </div>
             </div>
             <div style={{ display: 'flex',  gap: "10px"  }}>
-                <Button variant="contained" onClick={handleSubmit} style={{ height: '34.5px', textTransform: 'none' }}>Найти</Button>
-                <Button variant="contained" onClick={handleDownloadExcel} style={{ display: 'flex', gap: "10px", height: '34.5px', textTransform: 'none' }}>
+                <Button variant="contained" onClick={handleSubmit} style={{ height: '34.5px', textTransform: 'none', backgroundColor: '#1B3884'  }}>Найти</Button>
+                <Button variant="contained" onClick={handleDownloadExcel} style={{ display: 'flex', gap: "10px", height: '34.5px', textTransform: 'none', backgroundColor: '#1B3884'  }}>
                     Excel
                     <AiFillPrinter style={{ fontSize: '16px' }} />
                 </Button>

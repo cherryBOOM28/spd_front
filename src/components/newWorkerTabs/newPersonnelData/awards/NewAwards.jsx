@@ -1,8 +1,15 @@
 import React, { useState } from 'react';
 import cl from './NewAwards.module.css';
-import Button from '../../../../components/UI/button/Button';
-
 import { useForm } from '../../formProvider/FormProvider';
+
+import { Button,TextField, Select, Box, InputLabel, MenuItem, FormControl } from '@mui/material';
+import Table from '@mui/material/Table';
+import TableHead from '@mui/material/TableHead';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
 
 
 function NewAwards(props) {
@@ -75,128 +82,92 @@ function NewAwards(props) {
         <div>
             <div>
                 <form onSubmit={handleAddNewData} style={{ marginTop: '10px' }}>
-                    <table className={cl.customTable}>
-                        <tbody >
-                            <tr>
-                                <td>
-                                    <select
-                                        className={cl.formInput}
-                                        value={inputData.rewardType}
-                                        name='rewardType'
-                                        onChange={(e) => setInputData({ ...inputData, rewardType: e.target.value })}
-                                    >
-                                        <option value="">Выберите тип награды</option>
-                                        <option value="Благодарность">Благодарность </option>
-                                        <option value="Грамота">Грамота </option>
-                                        <option value=" Почетная грамота"> Почетная грамота</option>
-                                        <option value="Нагрудной знак">Нагрудной знак - Қаржылық мониторинг органдарының үздігі </option>
-                                        <option value="Медаль ">Медаль - Экономикалық қауіпсіздікті қамтамасыз етуге қосқан үлесі үшін</option>
-                                        <option value=" Мінсіз қызметі үшін ІІІ дәрежелі">Мінсіз қызметі үшін ІІІ дәрежелі</option>
-                                        <option value="Мінсіз қызметі үшін ІІ дәрежелі ">Мінсіз қызметі үшін ІІ дәрежелі</option>
-                                        <option value="Мінсіз қызметі үшін І дәрежелі">Мінсіз қызметі үшін І дәрежелі</option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <input
-                                        type="number"
-                                        className={cl.formInput}
-                                        placeholder="Номер приказа"
-                                        name='rewardDocNumber'
-                                        value={inputData.rewardDocNumber}
-                                        onChange={(e) => setInputData({ ...inputData, rewardDocNumber: e.target.value })}
-                                    />
-                                </td>
-                                <td>
-                                    <div className={cl.datePickerContainer}>
+                    <Paper elevation={2}>
+                            <TableContainer>
+                                <Table className={cl.customTable}>
+                                    <TableHead>
+                                        <TableRow>
+                                            <TableCell>Тип награды</TableCell>
+                                            <TableCell>Номер приказа</TableCell>
+                                            <TableCell>	Дата приказа</TableCell>
+                                            <TableCell></TableCell>
+                                        </TableRow>
+                                    </TableHead>
+                                    <TableBody >
+                                        <TableRow>
+                                            <TableCell>
+                                                <Box>
+                                                    {/* <label className={cl.label}>Должность</label> */}
+                                                    <FormControl size="small" fullWidth>
+                                                        <InputLabel id="demo-simple-select-label">Тип награды</InputLabel>
+                                                        <Select
+                                                        labelId="demo-simple-select-label"
+                                                        id="demo-simple-select"
+                                                        label="Тип награды"
+                                                        className={cl.workerInfoSelect}
+                                                        value={inputData.rewardType}
+                                                        name='rewardType'
+                                                        onChange={(e) => setInputData({ ...inputData, rewardType: e.target.value })}
+                                                        >
+                                                        <MenuItem value="" disabled>Выберите тип награды</MenuItem>
+                                                        <MenuItem value="Благодарность">Благодарность </MenuItem>
+                                                        <MenuItem value="Грамота">Грамота </MenuItem>
+                                                        <MenuItem value=" Почетная грамота"> Почетная грамота</MenuItem>
+                                                        <MenuItem value="Нагрудной знак">Нагрудной знак - Қаржылық мониторинг органдарының үздігі </MenuItem>
+                                                        <MenuItem value="Медаль ">Медаль - Экономикалық қауіпсіздікті қамтамасыз етуге қосқан үлесі үшін</MenuItem>
+                                                        <MenuItem value=" Мінсіз қызметі үшін ІІІ дәрежелі">Мінсіз қызметі үшін ІІІ дәрежелі</MenuItem>
+                                                        <MenuItem value="Мінсіз қызметі үшін ІІ дәрежелі ">Мінсіз қызметі үшін ІІ дәрежелі</MenuItem>
+                                                        <MenuItem value="Мінсіз қызметі үшін І дәрежелі">Мінсіз қызметі үшін І дәрежелі</MenuItem>
+                                                        </Select>
+                                                    </FormControl>
+                                                </Box>
+                                            </TableCell>
+                                            <TableCell>
+                                                <input
+                                                    type="number"
+                                                    className={cl.formInput}
+                                                    placeholder="Номер приказа"
+                                                    name='rewardDocNumber'
+                                                    value={inputData.rewardDocNumber}
+                                                    onChange={(e) => setInputData({ ...inputData, rewardDocNumber: e.target.value })}
+                                                />
+                                            </TableCell>
+                                            <TableCell>
+                                                <div className={cl.datePickerContainer}>
 
-                                    <input
-                                        type="date"
-                                        className={cl.formInput}
-                                        placeholder="Дата приказа"
-                                        name='rewardDate'
-                                        value={inputData.rewardDate || ''}
-                                        onChange={(e) => {
-                                            const newDate = e.target.value;
-                                            setInputData((prevWorker) => ({
-                                            ...prevWorker,
-                                            rewardDate: newDate,
-                                            }));
-                                        }}
-                                    />
-                                    </div>
-                                </td>
-                                <td><Button type="submit" onClick={handleShowForm}>Добавить</Button></td>
-                            </tr>
-                            
-                        </tbody>
-                    </table>
-                </form>
-                {showForm && (
-                        <div>
-                        <table className={cl.customTable} style={{ marginTop: '20px' }}>
-                            <thead>
-                                <tr>
-                                    <td>Тип награды</td>
-                                    <td>Номер приказа</td>
-                                    <td>Дата приказа</td>
-                                
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {rewardsInfo.slice(1).map((d, i) => (
-                                    <tr key={i}>
-                                        <td>  
-                                            {editingId === d.id ? (
-                                                <select
-                                                    className={cl.selectRelative_type}
-                                                    value={editedData.rewardType}
-                                                    name='rewardType'
-                                                    onChange={(e) => setEditedData({ ...editedData, rewardType: e.target.value })}
-                                                >
-                                                    <option value="">Выберите тип награды</option>
-                                                    <option value="Благодарность">Благодарность </option>
-                                                    <option value="Грамота">Грамота </option>
-                                                    <option value=" Почетная грамота"> Почетная грамота</option>
-                                                    <option value="Нагрудной знак"> <span>нагрудной знак</span>Қаржылық мониторинг органдарының үздігі </option>
-                                                    <option value="Медаль "> <span>нагрудной знак</span>Экономикалық қауіпсіздікті қамтамасыз етуге қосқан үлесі үшін</option>
-                                                    <option value=" Мінсіз қызметі үшін ІІІ дәрежелі"> Мінсіз қызметі үшін ІІІ дәрежелі</option>
-                                                    <option value="Мінсіз қызметі үшін ІІ дәрежелі ">Мінсіз қызметі үшін ІІ дәрежелі</option>
-                                                    <option value="Мінсіз қызметі үшін І дәрежелі">Мінсіз қызметі үшін І дәрежелі</option>
-
-                                                </select>
-                                            ) : (
-                                                d.rewardType
-                                            )}
-                                        </td>
-                                        <td>{editingId === d.id ? <input type="text" className={cl.editInput} value={editedData.rewardDocNumber} onChange={(e) => setEditedData({ ...editedData, rewardDocNumber: e.target.value })} /> : d.rewardDocNumber}</td>
-                                        <td>
-                                        {editingId === d.id ? (
-                                            <div className={cl.datePickerContainer}>
                                                 <input
                                                     type="date"
                                                     className={cl.formInput}
+                                                    placeholder="Дата приказа"
                                                     name='rewardDate'
-                                                    value={editedData.rewardDate || ''}
+                                                    value={inputData.rewardDate || ''}
                                                     onChange={(e) => {
-                                                    const newData = e.target.value;
-                                                    setEditedData((prevData) => ({
-                                                        ...prevData,
-                                                        rewardDate: newData,
-                                                    }));
-                                                }}
+                                                        const newDate = e.target.value;
+                                                        setInputData((prevWorker) => ({
+                                                        ...prevWorker,
+                                                        rewardDate: newDate,
+                                                        }));
+                                                    }}
                                                 />
-                                            </div>
-                                        ) : (
-                                            d.rewardDate
-                                        )}
-                                        </td>
-                                    
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-                )}
+                                                </div>
+                                            </TableCell>
+                                            <TableCell><Button className={cl.submitBtn}  style={{  color: '#1B3884' }}   type='submit'  onClick={handleShowForm}>Добавить</Button></TableCell>
+                                        </TableRow>
+                                        {rewardsInfo && rewardsInfo.slice(1).map((data, index) => (
+                                            <TableRow>
+                                            <TableCell>{data.rewardType}</TableCell>
+                                            <TableCell>{data.rewardDocNumber}</TableCell>
+                                            <TableCell>{data.rewardDate}</TableCell>
+                                            <TableCell></TableCell>
+                                        </TableRow>
+                                        ))}
+                                    </TableBody>
+                                </Table>
+                            </TableContainer>
+                        </Paper>
+                    
+                </form>
+               
             </div>
           
         </div>

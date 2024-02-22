@@ -13,7 +13,7 @@
 
 .workerCapitalName {
     color: #000;
-    font-size: 16px;
+    font-size: 18px;
     font-weight: 500;
 }
 
@@ -37,6 +37,7 @@
 
 .rows {
     display: flex;
+    align-items: center;
 }
 
 .label {

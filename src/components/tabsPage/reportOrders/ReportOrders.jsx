@@ -70,7 +70,7 @@ function ReportOrders({ decreeInfo }) {
                                     <div>
                                         <label className={cl.label}>Согласовано:</label>
                                         {decree.isConfirmed ? (
-                                            <span style={{ color: '#1565C0', verticalAlign: 'middle' }}>
+                                            <span style={{ color: '#1B3884', verticalAlign: 'middle' }}>
                                                 <FaCheck style={{ verticalAlign: 'middle', marginRight: '4px' }} /> Да
                                             </span>
                                         ) : (

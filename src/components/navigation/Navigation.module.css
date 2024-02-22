@@ -19,7 +19,7 @@
     /* left: 0;  */
     width: 264px;
     height: 100vh;
-    background: #1565C0;
+    background: #1B3884;
 }
   
 .navigationMenu ul {
@@ -48,7 +48,7 @@
 }
 
 .navLink:hover {
-    color: #1565C0;
+    color: #1B3884;
     background: #FFF;
 }
 

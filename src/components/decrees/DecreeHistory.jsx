@@ -172,7 +172,7 @@ function DecreeHistory() {
        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '25px', marginBottom: '25px' }}>
         <div className={cl.filters}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '8px'}}>
-              <FaFilter style={{ color: '#1565C0', fontSize: '20px' }} />
+              <FaFilter style={{ color: '#1B3884', fontSize: '20px' }} />
               {/* Выпадающий список для выбора вида приказа */}
               <Select
                 labelId="decreeTypeLabel"
@@ -209,7 +209,7 @@ function DecreeHistory() {
               )}
             </div>
         </div>
-        <h1 className={cl.headline}><GoHistory style={{ color: '#1565C0' }} /> Журнал приказов</h1>
+        <h1 className={cl.headline}><GoHistory  /> Журнал приказов</h1>
       </div>
 
       <Paper sx={{ width: '100%', overflow: 'hidden' }}>
@@ -399,7 +399,7 @@ function DecreeHistory() {
                             </div>
 
                             <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
-                              <IoIosArrowDown style={{ fontSize: '28px', color: '#1565C0' }} />
+                              <IoIosArrowDown style={{ fontSize: '28px', color: '#1B3884' }} />
                             </div>
 
                             <div style={{ display: 'flex',   flexDirection: 'column', gap: '10px', marginTop: '10px' }}>
