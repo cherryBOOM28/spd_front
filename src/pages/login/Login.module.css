@@ -71,6 +71,8 @@
     color: #FFF;
     font-size: 14px;
     font-weight: 500;
+    background: #1b3884;
+    margin-top: 20px;
 }
 
 .signInBtn {

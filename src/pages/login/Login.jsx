@@ -102,8 +102,8 @@ const Login = () => {
                         isPassword={true}
                     />
                     {errorMessage && <p className={cl.error}>{errorMessage}</p>}
-                    <p className={cl.passw}>Забыли пароль?</p>
-                    <Button variant="contained" className={cl.button} onClick={handleSubmit}>Войти</Button>
+                    {/* <p className={cl.passw}>Забыли пароль?</p> */}
+                    <Button variant="contained" style={{ backgroundColor: '#1b3884' }} className={cl.button} onClick={handleSubmit}>Войти</Button>
                 </form>
             </div>
         </div>
