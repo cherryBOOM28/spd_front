@@ -124,7 +124,7 @@ export const FormProvider = ({ children }) => {
       educationDateIn: '',
       educationDateOut: '',
       speciality: '',
-      diplomaNumber: ''
+      educationForm: ''
     }
   ]);
 

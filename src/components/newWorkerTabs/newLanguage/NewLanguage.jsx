@@ -1,9 +1,17 @@
 import React, {useState, useEffect} from 'react';
 import cl from './NewLanguage.module.css'
-import Button from '../../UI/button/Button';
 import { useForm } from '../formProvider/FormProvider';
 
 import list from '../../data/languages';
+
+import { Button,TextField, Select, Box, InputLabel, MenuItem, FormControl } from '@mui/material';
+import Table from '@mui/material/Table';
+import TableHead from '@mui/material/TableHead';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
 
 const NewLanguage = (props) => {
 
@@ -11,7 +19,7 @@ const NewLanguage = (props) => {
     const [apiLanguages, setApiLanguages] = useState([]);
 
      // eslint-disable-next-line
-    useEffect(() => {
+    useEffect(() => {   
         fetchData()
     }, []);
 
@@ -139,116 +147,88 @@ const NewLanguage = (props) => {
                 <div>
                     <div>
                         {/* <Button onClick={handleShowForm}>Добавить язык</Button> */}
+                       
                             <form onSubmit={handleAddLanguage} style={{ marginTop: '10px' }}>
-                                <table className={cl.customTable}>
-                                    <tbody >
-                                        <tr>
-                                            <td>
-                                                <select
-                                                    className={cl.formInput}
-                                                    value={inputData.langName}
-                                                    onChange={(e) => setInputData({ ...inputData, langName: e.target.value })}
-                                                >
-                                                    <option value="">Выберите язык</option>
-                                                    {Object.keys(apiLanguages).map((languageCode, index) => (
-                                                      <option key={index} value={languageCode}>
-                                                        {apiLanguages[languageCode]}
-                                                      </option>
-                                                    ))}
-                                                </select>
-                                            </td>
-                                            <td>
-                                            <select
-                                                    className={cl.formInput}
-                                                    value={inputData.skillLvl}
-                                                    onChange={(e) => setInputData({ ...inputData, skillLvl: e.target.value })}
-                                                >
-                                                    <option value="">Выберите уровень владения</option>
-                                                    <option value="Со словарем">Со словарем</option>
-                                                    <option value="Начальный">Начальный</option>
-                                                    <option value="Ниже среднего">Ниже среднего</option>
-                                                    <option value="Средний">Средний</option>
-                                                    <option value="Выше среднего">Выше среднего</option>
-                                                    <option value="Продвинутый">Продвинутый</option>
-                                                    <option value="Профессиональный">Профессиональный уровень владения</option>
-                                                    <option value="Родной">Родной</option>
-                                                </select>
-                                            </td>
-                                            <td><Button type="submit" className={cl.submitBtn}onClick={handleShowForm} >Добавить</Button></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </form>
-                        {showForm && (
-                            <div>
-                            <table className={cl.customTable} style={{ marginTop: '20px' }}>
-                                <thead>
-                                    <tr>
-                                        <td>Язык</td>
-                                        <td>Уровень владения языком </td>
-                                       
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {languageSkill.slice(1).map((d, i) => (
-                                        <tr key={i}>
-                                            <td>  
-                                                {editingId === d.id ? (
-                                                    <select
-                                                        className={cl.selectRelative_type}
-                                                        value={editedData.langName}
-                                                        onChange={(e) => setEditedData({ ...editedData, langName: e.target.value })}
-                                                    >
-                                                        <option value="">Выберите тип образования</option>
-                                                        {Object.keys(apiLanguages).map((languageCode) => (
-                                                          <option key={languageCode} value={languageCode}>
+                            <Paper elevation={2}>
+                            <TableContainer>
+                            <Table className={cl.customTable}>
+                                    <TableHead>
+                                        <TableRow>
+                                            <TableCell>Язык</TableCell>
+                                            <TableCell>	Уровень владения языком</TableCell>
+                                            <TableCell></TableCell>
+                                        </TableRow>
+                                    </TableHead>
+                                    <TableBody >
+                                        <TableRow>
+                                            <TableCell>
+                                                <Box>
+                                                    {/* <label className={cl.label}>Должность</label> */}
+                                                    <FormControl size="small" fullWidth>
+                                                        <InputLabel id="demo-simple-select-label">Вид язык</InputLabel>
+                                                        <Select
+                                                        labelId="demo-simple-select-label"
+                                                        id="demo-simple-select"
+                                                        label="Вид язык"
+                                                        className={cl.workerInfoSelect}
+                                                        name='relativeType'
+                                                        value={inputData.langName}
+                                                        onChange={(e) => setInputData({ ...inputData, langName: e.target.value })}
+                                                        >
+                                                        <MenuItem value="" disabled>Выберите язык</MenuItem>
+                                                        {Object.keys(apiLanguages).map((languageCode, index) => (
+                                                        <MenuItem key={index} value={languageCode}>
                                                             {apiLanguages[languageCode]}
-                                                          </option>
+                                                        </MenuItem>
                                                         ))}
-                                                    </select>
-                                                ) : (
-                                                    d.langName
-                                                )}
-                                            </td>
-                                            <td>  
-                                                {editingId === d.id ? (
-                                                    <select
-                                                        className={cl.selectRelative_type}
-                                                        value={editedData.skillLvl}
-                                                        onChange={(e) => setEditedData({ ...editedData, skillLvl: e.target.value })}
-                                                    >
-                                                        <option value="">Выберите уровень владения</option>
-                                                        <option value="начальный">Начальный</option>
-                                                        <option value="ниже среднего">Ниже среднего</option>
-                                                        <option value="средний">Средний</option>
-                                                        <option value="начальный">Выше среднего</option>
-                                                        <option value="продвинутый">Продвинутый</option>
-                                                        <option value="профессиональный">Профессиональный уровень владения</option>
-                                                    </select>
-                                                ) : (
-                                                    d.skillLvl
-                                                )}
-                                            </td>
+                                                        </Select>
+                                                    </FormControl>
+                                                </Box>
+                                          
+                                            </TableCell>
+                                            <TableCell>
+                                                <Box>
+                                                    {/* <label className={cl.label}>Должность</label> */}
+                                                    <FormControl size="small" fullWidth>
+                                                        <InputLabel id="demo-simple-select-label">Вид язык</InputLabel>
+                                                        <Select
+                                                        labelId="demo-simple-select-label"
+                                                        id="demo-simple-select"
+                                                        label="Вид язык"
+                                                        className={cl.workerInfoSelect}
+                                                        name='relativeType'
+                                                        value={inputData.skillLvl}
+                                                        onChange={(e) => setInputData({ ...inputData, skillLvl: e.target.value })}
+                                                        >
+                                                        <MenuItem value="" disabled>Выберите уровень владения</MenuItem>
+                                                        <MenuItem value="Со словарем">Со словарем</MenuItem>
+                                                        <MenuItem value="Начальный">Начальный</MenuItem>
+                                                        <MenuItem value="Ниже среднего">Ниже среднего</MenuItem>
+                                                        <MenuItem value="Средний">Средний</MenuItem>
+                                                        <MenuItem value="Выше среднего">Выше среднего</MenuItem>
+                                                        <MenuItem value="Продвинутый">Продвинутый</MenuItem>
+                                                        <MenuItem value="Профессиональный">Профессиональный уровень владения</MenuItem>
+                                                        <MenuItem value="Родной">Родной</MenuItem>
+                                                        </Select>
+                                                    </FormControl>
+                                                </Box>
                                            
-                                            {/* <td className={cl.relativesActionBtns} style={{}}>
-                                                {editingId === d.id ? (
-                                                    <>
-                                                        <div onClick={() => handleSaveEdit(d.id)}>&#10003;</div>
-                                                        <div onClick={handleCancelEdit}>&#x2715;</div>
-                                                    </>
-                                                ) : (
-                                                    <>
-                                                        <div onClick={() => handleEdit(d.id)}>&#9998;</div>
-                                                        <div onClick={() => handleDelete(d.id)}>Удалить</div>
-                                                    </>
-                                                )}
-                                            </td> */}
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
-                        )}
+                                            </TableCell>
+                                            <TableCell><Button className={cl.submitBtn}  style={{  color: '#1B3884' }}   type='submit'  onClick={handleShowForm}>Добавить</Button></TableCell>
+                                        </TableRow>
+                                        {languageSkill && languageSkill.slice(1).map((data, index) => (
+                                            <TableRow>
+                                            <TableCell>{data.langName}</TableCell>
+                                            <TableCell>{data.skillLvl}</TableCell>
+                                            <TableCell></TableCell>
+
+                                        </TableRow>
+                                        ))}
+                                    </TableBody>
+                                </Table>
+                            </TableContainer>
+                        </Paper>
+                            </form>
                     </div>
                   
                 </div>

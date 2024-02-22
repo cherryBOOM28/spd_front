@@ -1,7 +1,14 @@
 import React, { useState } from 'react';
 import cl from './NewAcademicDegree.module.css';
 import { useForm } from '../formProvider/FormProvider';
-import Button from '../../UI/button/Button';
+import { Button,TextField, Select, Box, InputLabel, MenuItem, FormControl } from '@mui/material';
+import Table from '@mui/material/Table';
+import TableHead from '@mui/material/TableHead';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
 
 const NewAcademicDegree = (props) => {
     const {academicDegree, setAcademicDegree} = useForm();
@@ -100,125 +107,97 @@ const NewAcademicDegree = (props) => {
                         <div>
                         {/* <Button onClick={handleShowForm}>Добавить ученую степень </Button> */}
                             <form onSubmit={handleAddDegree} style={{ marginTop: '10px' }}>
-                                    <table className={cl.customTable}>
-                                        <tbody >
-                                            <tr>
-                                                <td>
-                                                    <input
-                                                        type="text"
-                                                        className={cl.formInput}
-                                                        placeholder="Учебное заведение "
-                                                        value={inputData.academicPlace}
-                                                        onChange={(e) => setInputData({ ...inputData, academicPlace: e.target.value })}
-                                                    />
-                                                </td>
-                                                <td>
-                                                    <select
-                                                        className={cl.formInput}
-                                                        value={inputData.academicDegree}
-                                                        onChange={(e) => setInputData({ ...inputData, academicDegree: e.target.value })}
-                                                    >
-                                                        <option value="">Ученая степень</option>
-                                                        <option value="Бакалавр">Бакалавр</option>
-                                                        <option value="Магистр">Магистр</option>
-                                                        <option value="Кандидат">Кандидат наук</option>
-                                                        <option value="Доктор">Доктор наук</option>
-                                                    </select>
-                                                </td>
-                                                <td>
-                                                    <input
-                                                        type="number"
-                                                        className={cl.formInput}
-                                                        placeholder="Номер диплома"
-                                                        value={inputData.academicDiplomaNumber}
-                                                        onChange={(e) => setInputData({ ...inputData, academicDiplomaNumber: e.target.value })}
-                                                    />
-                                                </td>
-                                                <td>
-                                                    <div className={cl.datePickerContainer}>
-                                                    <input
-                                                        type="date"
-                                                        className={cl.formInput}
-                                                        placeholder="Дата диплома"
-                                                        value={inputData.academicDiplomaDate || ''}
-                                                        onChange={(e) => {
-                                                            const newDate = e.target.value;
-                                                            setInputData((prevWorker) => ({
-                                                            ...prevWorker,
-                                                            academicDiplomaDate: newDate,
-                                                            }));
-                                                        }}
-                                                    />
-                                                    </div>
-                                                </td>
-                                                <td><Button type="submit" className={cl.submitBtn} onClick={handleShowForm} >Добавить</Button></td>
-                                            </tr>
-                                            
-                                        </tbody>
-                                    </table>
+                                <Paper>
+                                    <TableContainer>
+                                        <Table className={cl.customTable}>
+                                            <TableHead>
+                                                <TableRow>
+                                                    <TableCell>Учебное заведение </TableCell>
+                                                    <TableCell>Ученая степень</TableCell>
+                                                    <TableCell>Номер диплома</TableCell>
+                                                    <TableCell>Дата диплома</TableCell>
+                                                    <TableCell></TableCell>
+                                                </TableRow>
+                                            </TableHead>
+                                            <TableBody >
+                                                <TableRow>
+                                                    <TableCell>
+                                                        <input
+                                                            type="text"
+                                                            className={cl.formInput}
+                                                            placeholder="Учебное заведение "
+                                                            value={inputData.academicPlace}
+                                                            onChange={(e) => setInputData({ ...inputData, academicPlace: e.target.value })}
+                                                        />
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        <Box>
+                                                            {/* <label className={cl.label}>Должность</label> */}
+                                                            <FormControl size="small" fullWidth>
+                                                                <InputLabel id="demo-simple-select-label">Ученая степень</InputLabel>
+                                                                <Select
+                                                                labelId="demo-simple-select-label"
+                                                                id="demo-simple-select"
+                                                                label="Ученая степень"
+                                                                name='academicDegree'
+                                                                className={cl.workerInfoSelect}
+                                                                value={inputData.academicDegree}
+                                                                onChange={(e) => setInputData({ ...inputData, academicDegree: e.target.value })}
+                                                                >
+                                                                    <MenuItem value="">Ученая степень</MenuItem>
+                                                                    <MenuItem value="Бакалавр">Бакалавр</MenuItem>
+                                                                    <MenuItem value="Магистр">Магистр</MenuItem>
+                                                                    <MenuItem value="Кандидат">Кандидат наук</MenuItem>
+                                                                    <MenuItem value="Доктор">Доктор наук</MenuItem>
+                                                                </Select>
+                                                            </FormControl>
+                                                        </Box>
+                                                      
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        <input
+                                                            type="number"
+                                                            className={cl.formInput}
+                                                            placeholder="Номер диплома"
+                                                            value={inputData.academicDiplomaNumber}
+                                                            onChange={(e) => setInputData({ ...inputData, academicDiplomaNumber: e.target.value })}
+                                                        />
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        <div className={cl.datePickerContainer}>
+                                                        <input
+                                                            type="date"
+                                                            className={cl.formInput}
+                                                            placeholder="Дата диплома"
+                                                            value={inputData.academicDiplomaDate || ''}
+                                                            onChange={(e) => {
+                                                                const newDate = e.target.value;
+                                                                setInputData((prevWorker) => ({
+                                                                ...prevWorker,
+                                                                academicDiplomaDate: newDate,
+                                                                }));
+                                                            }}
+                                                        />
+                                                        </div>
+                                                    </TableCell>
+                                                    <TableCell><Button className={cl.submitBtn}  style={{  color: '#1B3884' }}   type='submit'  onClick={handleShowForm}>Добавить</Button></TableCell>
+                                                </TableRow>
+                                                {academicDegree && academicDegree.slice(1).map((data, index) => (
+                                                    <TableRow>
+                                                    <TableCell>{data.academicPlace}</TableCell>
+                                                    <TableCell>{data.academicDegree}</TableCell>
+                                                    <TableCell>{data.academicDiplomaNumber}</TableCell>
+                                                    <TableCell>{data.academicDiplomaDate}</TableCell>
+                                                    <TableCell></TableCell>
+                                                </TableRow>
+                                                ))}
+                                            </TableBody>
+                                        </Table>
+                                    </TableContainer>
+                                </Paper>
+                                   
                                 </form>
-                            {showForm && (
-                                 <div>
-                                 <table className={cl.customTable} style={{ marginTop: '20px' }}>
-                                     <thead>
-                                         <tr>
-                                             <td>Учебное заведение </td>
-                                             <td>Ученая степень</td>
-                                             <td>Номер диплома</td>
-                                             <td>Дата диплома</td>
-                                 
-                                         </tr>
-                                     </thead>
-                                     <tbody>
-                                         {academicDegree.slice(1).map((d, i) => (
-                                             <tr key={i}>
-                                                 <td>{editingId === d.id ? <input type="text" className={cl.editInput} value={editedData.academicPlace} onChange={(e) => setEditedData({ ...editedData, academicPlace: e.target.value })} /> : d.academicPlace}</td>
-                                                 <td>  
-                                                     {editingId === d.id ? (
-                                                         <select
-                                                             className={cl.selectRelative_type}
-                                                             value={editedData.academicDegree}
-                                                             onChange={(e) => setEditedData({ ...editedData, academicDegree: e.target.value })}
-                                                         >
-                                                              <option value="">Ученая степень</option>
-                                                             <option value="Бакалавр">Бакалавр</option>
-                                                             <option value="Магистр">Магистр</option>
-                                                             <option value="Кандидат">Кандидат наук</option>
-                                                             <option value="Доктор">Доктор наук</option>
-                                                         </select>
-                                                     ) : (
-                                                         d.academicDegree
-                                                     )}
-                                                 </td>
-                                                 <td>{editingId === d.id ? <input type='number' className={cl.editInput}  value={editedData.academicDiplomaNumber} onChange={(e) => setEditedData({ ...editedData, academicDiplomaNumber: e.target.value })} /> : d.academicDiplomaNumber}</td>
-                                                 <td>
-                                                     {editingId === d.id ? (
-                                                         <div className={cl.datePickerContainer}>
-                                                             <input
-                                                                 type="date"
-                                                                 className={cl.formInput}
-                                                                 placeholder="Дата диплома"
-                                                                 value={editedData.academicDiplomaDate || ''}
-                                                                 onChange={(e) => {
-                                                                     const newDate = e.target.value;
-                                                                     setEditedData((prevData) => ({
-                                                                     ...prevData,
-                                                                     academicDiplomaDate: newDate,
-                                                                     }));
-                                                                 }}
-                                                             />
-     
-                                                         </div>
-                                                     ) : (
-                                                         d.academicDiplomaDate
-                                                     )}
-                                                 </td>
-                                             </tr>
-                                         ))}
-                                     </tbody>
-                                 </table>
-                             </div>
-                            )}
+                       
                         </div>
                      
                     </div>

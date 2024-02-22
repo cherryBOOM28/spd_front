@@ -10,12 +10,7 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { FaTrash } from "react-icons/fa";
-import { MdEdit } from "react-icons/md";
-import { FaPlus } from "react-icons/fa6";
-import { IoClose } from "react-icons/io5";
-import { FaCheck } from "react-icons/fa6";
-import IconButton from '@mui/material/IconButton';
+
 
 
 const NewFamilyComposition = (props) => {
@@ -238,7 +233,7 @@ const NewFamilyComposition = (props) => {
                                                     onChange={handleInputChange}
                                                 />
                                             </TableCell>
-                                            <TableCell><Button type='submit' className={cl.submitBtn}  onClick={handleShowForm}>Добавить</Button></TableCell>
+                                            <TableCell><Button className={cl.submitBtn}  style={{  color: '#1B3884' }}   type='submit'  onClick={handleShowForm}>Добавить</Button></TableCell>
                                         </TableRow>
                                         
                                         {familyComposition && familyComposition.slice(1).map((familyMember, index) => (

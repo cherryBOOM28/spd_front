@@ -38,28 +38,28 @@ function Personal({
     const [editing, setEditing] = useState(false);
 
     const [editedDepartmentInfo, setEditedDepartmentInfo] = useState({
-        id:positionInfo.id,
-        DepartmentName: positionInfo.DepartmentName
+        id: (positionInfo && positionInfo.id) || '',
+        DepartmentName: (positionInfo && positionInfo.DepartmentName) || ''
     });
 
     const [editedLocationInfo, setEditedLocationInfo] = useState({
-        id: location.id,
-        LocationName: location.LocationName
+        id: location.id || '',
+        LocationName: location.LocationName || ''
     });
 
     const [editedPositionTitleInfo, setEditedPositionTitleInfo] = useState({
-        id: positionTitle.id,
-        positionTitle: positionTitle.positionTitle
+        id: positionTitle.id || '',
+        positionTitle: positionTitle.positionTitle || ''
     });
 
     const [editedReceivedDate, setEditedReceivedDate] = useState({
-        id: receivedDate.id,
-        receivedDate: receivedDate.receivedDate
+        id: receivedDate.id || '',
+        receivedDate: receivedDate.receivedDate || ''
     });
 
     const [editedStatusName, setEditedStatusName] = useState({
-        id: familyStatus.id,
-        statusName: familyStatus.statusName
+        id: familyStatus.id || '',
+        statusName: familyStatus.statusName || ''
     });
 
 
@@ -467,7 +467,9 @@ function Personal({
                                     />
                                     </div>
                                 ) : (
-                                    <Paper className={cl.workerInfo}>{positionInfo.DepartmentName}</Paper>
+                                    <Paper className={cl.workerInfo}>
+                                        {positionInfo && positionInfo.DepartmentName ? positionInfo.DepartmentName : 'Нет данных'}
+                                    </Paper>
                                 )}
                             </div>
                             <div className={cl.rows}>
@@ -489,7 +491,7 @@ function Personal({
                                    
                                 ) : (
 
-                                    <Paper className={cl.workerInfo}>{positionTitle.positionTitle}</Paper>
+                                    <Paper className={cl.workerInfo}> {positionInfo && positionInfo.positionTitle ? positionInfo.positionTitle : 'Нет данных'}</Paper>
                                 )}
                             </div>
                             <div className={cl.rows}>
@@ -514,7 +516,7 @@ function Personal({
                                     />
                                     </div>
                                 ) : (
-                                    <Paper className={cl.workerInfo}>{receivedDate.receivedDate}</Paper>
+                                    <Paper className={cl.workerInfo}>{positionInfo && positionInfo.receivedDate ? positionInfo.receivedDate : 'Нет данных'}</Paper>
                                 )}
                             </div>
                             
@@ -545,8 +547,7 @@ function Personal({
                                    </Box>
                                     
                                 ) : (
-
-                                    <Paper className={cl.workerInfo}>{familyStatus.statusName}</Paper>
+                                    <Paper className={cl.workerInfo}>{positionInfo && positionInfo.statusName ? positionInfo.statusName : 'Нет данных'}</Paper>
                                 )}
                             </div>
                             <div className={cl.rows}>
@@ -566,7 +567,9 @@ function Personal({
                                         />
                                     </div>
                                 ) : (
-                                    <Paper className={cl.workerInfo}>{location.LocationName}</Paper>
+                                    <Paper className={cl.workerInfo}>
+                                        {location && location.LocationName ? location.LocationName : 'Нет данных'}
+                                    </Paper>
                                 )}
                             </div>
                             

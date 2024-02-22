@@ -22,6 +22,7 @@ import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import Avatar from '@mui/material/Avatar';
 import Checkbox from '@mui/material/Checkbox';
+import bgBack  from '../../assets/images/bgbgbgbg.svg';
 
 
 function Home(props) {
@@ -39,6 +40,29 @@ function Home(props) {
 
     useEffect(() => {
         fetchFiredPeople();
+    }, []);
+
+    const [selectedRadio, setSelectedRadio] = useState('default');
+
+    useEffect(() => {
+        const savedRadio = sessionStorage.getItem('selectedRadio');
+        if (savedRadio) {
+            setSelectedRadio(savedRadio);
+        }
+    }, []);
+
+    const handleRadioChange = (event) => {
+        const value = event.target.value;
+        sessionStorage.setItem('selectedRadio', value);
+        setSelectedRadio(value);
+    };
+
+    // Восстановление выбранного управления из sessionStorage при загрузке компонента
+    useEffect(() => {
+        const savedMainDepartment = sessionStorage.getItem('selectedMainDepartment');
+        if (savedMainDepartment) {
+            setSelectedMainDepartment(JSON.parse(savedMainDepartment));
+        }
     }, []);
 
     const fetchFiredPeople = async (departmentId) => {
@@ -112,44 +136,57 @@ function Home(props) {
     const [headDepartment, setHeadDepartment] = useState([]);
     const [showHeadDepartment, setShowHeadDepartment] = useState(false);
 
-    useEffect(() => {
-        if (showHeadDepartment) {
-            getHeadDepartment();
-        }
-    }, [showHeadDepartment]);
 
-    const getHeadDepartment = async () => {
-        try {
-            const response = await axios.get('http://127.0.0.1:8000/api/v1/persons_by_department/?departmentId=Руководство');
+
+    // отображаение руководства
+     useEffect(() => {
+        axios.get(`http://127.0.0.1:8000/api/v1/persons_by_department/?departmentId=Руководство`)
+          .then(response => {
             setHeadDepartment(response.data.persons);
-            // console.log("head for department", response.data);
-            // Обработка данных сотрудников
-        } catch (error) {
-            console.error('Error fetching employees:', error);
-        }
-    };
+             console.log("head for department", response.data);
+        })
+        .catch(error => {
+            console.error("Error fetching personal data:", error);
+        });
+    }, []);
+
 
     // Обработчик изменения радио-переключателя
+    // const handleHeadDepartmentClick = () => {
+    //     setShowHeadDepartment(true);
+    // };
     const handleHeadDepartmentClick = () => {
-        setShowHeadDepartment(true);
+        // setShowHeadDepartment(prevState => !prevState); //  асинхронный колбэк для установки состояния
+        setShowHeadDepartment(true); 
+        setSelectedMainDepartment('Руководство');
     };
 
-      
-    // Пример использования функции с id департамента
-    // getEmployeesByDepartmentId(1);
 
     // обновление выбранный департнамент при изменении чекбокса
     const handleCheckboxChangeMainDepartments = (department) => {
         if (department) {
-            // console.log("Setting selected department:", department);
+            setSelectedMainDepartment(department);
+            sessionStorage.setItem('selectedMainDepartment', JSON.stringify(department));
+
             setSelectedMainDepartment(department);
             getEmployeesByDepartmentId(department.id);
             setSelectedDepartment(department.id);
-            // console.log("Selected department updated:", department.id);
+            setShowHeadDepartment(false);
+            // Дополнительные действия, если необходимо
         }
+        
     };
-    
 
+        // Обработчик изменения выбранного управления
+        const handleDepartmentChange = (department, departmentId) => {
+            setSelectedMainDepartment(department);
+            setShowHeadDepartment(false); // Установите showHeadDepartment в false при выборе других групп
+            handleCheckboxChangeMainDepartments(department);
+            sessionStorage.setItem('selectedMainDepartment', JSON.stringify(department));
+            setSelectedDepartment(departmentId);
+                setShowDepartments(!showDepartments);
+        };
+    
 
     // Выбор все на главной страницу
      const [ selectedGroupId, setSelectedGroupId ] = useState(
@@ -186,7 +223,7 @@ function Home(props) {
             setPatronymic(response.data[0].patronymic);
             setGender(response.data[0].gender.genderName);
             setPositionTitle(response.data[0].positionInfo.position.positionTitle);
-            console.log("data[0][2]",response.data)
+            // console.log("data[0][2]",response.data)
         })
         .catch(error => {
             console.error("Error fetching personal data:", error);
@@ -316,21 +353,12 @@ function Home(props) {
     }, [selectedCity]);
 
 
-  
-    const handleCityChange = (cityId) => {
-        setSelectedCity(cityId);
-        setSelectedDepartment(null);
-        setSelectedPosition(null)
-    };
-
-
     const [showDepartments, setShowDepartments] = useState(true);
-    const [vacancies, setVacancies] = useState([]);
     
-    const handleDepartmentChange = (departmentId) => {
-        setSelectedDepartment(departmentId);
-        setShowDepartments(!showDepartments);
-    };
+    // const handleDepartmentChange = (departmentId) => {
+    //     setSelectedDepartment(departmentId);
+    //     setShowDepartments(!showDepartments);
+    // };
 
     const handlePositionChange = (positionId) => {
         setSelectedPosition(positionId);
@@ -556,18 +584,9 @@ function Home(props) {
                         name="table"
                         value="all"
                         checked={showHeadDepartment}
-                        onChange={() => {
-                            console.log("Before setShowHeadDepartment", showHeadDepartment);
-                            setShowHeadDepartment(prevState => !prevState);
-                            console.log("After setShowHeadDepartment", showHeadDepartment);
-                            if (!showHeadDepartment) {
-                                console.log("Resetting selected department and updating data");
-                                setSelectedMainDepartment(null);
-                                handleCheckboxChangeMainDepartments(null);
-                            }
-                        }}
+                        onChange={handleHeadDepartmentClick}
+                        
                     />
-
 
                 </div>
                 <h1 className={cl.headline} style={{ marginTop: '20px' }}>Управления</h1>
@@ -603,7 +622,10 @@ function Home(props) {
 
                 </div>
             </div>
+
             <div className={cl.employees}>
+               
+                <div className={cl.tableContainer}>
                     <table className={cl.table}>
                         <thead>
                             <tr>
@@ -612,83 +634,24 @@ function Home(props) {
                                 <th className={cl.table__headline}>Должность</th>
                             </tr>
                         </thead>
-                
-
-
-                        {/* Отображение уволенных людей и обычных сотрудников */}
-                        {!showHeadDepartment && (
-                            <tbody>
-                                {showFired ? (
-                                    // Отображение уволенных людей
-                                    (filteredPeople.filter(person => person.isFired && (selectedDepartment === null || person.positionInfo.department.id === selectedDepartment)).length > 0 ? (
-                                        filteredPeople.map(person => (
-                                            (selectedDepartment === null || person.positionInfo.department.id === selectedDepartment) && person.isFired && (
-                                                <tr key={person.id} onClick={() => handleEmployeeClick(person.id)}>
-                                                    <td><img src={`data:image/jpeg;base64,${person.photo.photoBinary}`} alt="d" className={cl.profileImg} /></td>
-                                                    <td>{`${person.surname} ${person.firstName} ${person.patronymic}`}</td>
-                                                    <td>{person.positionInfo.position.positionTitle}</td>
-                                                </tr>
-                                            )
-                                        ))
-                                    ) : (
-                                        <tr>
-                                            <td colSpan='3' style={{ textAlign: 'center' }}>Нет уволенных людей</td>
-                                        </tr>
-                                    ))
-                                ) : (
-                                    // Отображение обычных сотрудников
-                                    persons
-                                    .filter(person => !person.isFired) // Исключить уволенных людей
-                                    .map(person => (
-                                        (selectedDepartment === null || person.positionInfo.department.id === selectedDepartment) && (
-                                            <tr key={person.id} onClick={() => handleEmployeeClick(person.id)}>
-                                                <td><img src={`data:image/jpeg;base64,${person.photo.photoBinary}`} alt="d" className={cl.profileImg} /></td>
-                                                <td>{`${person.surname} ${person.firstName} ${person.patronymic}`}</td>
-                                                <td>{person.positionInfo.position.positionTitle}</td>
-                                            </tr>
-                                        )
-                                    ))
-                                )}
-                            </tbody>
-                        )}
-{/* {console.log("Before head department check")}
-{console.log("showHeadDepartment:", showHeadDepartment)}
-{console.log("headDepartment:", headDepartment)}
-{console.log("headDepartment.persons:", headDepartment && headDepartment.persons)}
-
-{console.log("Before rendering head department tbody")} */}
-
-<div>
-            <button onClick={handleHeadDepartmentClick}>Руководство</button>
-            {showHeadDepartment && (
-                <table>
-                    <thead>
-                        <tr>
-                            <th>ФИО</th>
-                            <th>Должность</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {headDepartment.persons && headDepartment.persons.map(person => (
-                            person && person.id && person.positionInfo && person.positionInfo.position && (
-                                <tr key={person.id} onClick={() => handleEmployeeClick(person.id)}>
-                                    <td>{`${person.surname} ${person.firstName} ${person.patronymic}`}</td>
-                                    <td>{person.positionInfo.position.positionTitle}</td>
-                                </tr>
-                            )
-                        ))}
-                    </tbody>
-
-
-                </table>
-            )}
-        </div>
-
-
+                        <tbody>
+                            {(showHeadDepartment ? headDepartment : 
+                                (showFired ? filteredPeople.filter(person => person.isFired && (selectedDepartment === null || person.positionInfo.department.id === selectedDepartment)) : persons))
+                                .map(person => (
+                                    <tr key={person.id}onClick={() => handleEmployeeClick(person && person.id)}>
+                                        <td><img src={`data:image/jpeg;base64,${person.photo.photoBinary}`} alt="d" className={cl.profileImg} /></td>
+                                        <td>{`${person.surname} ${person.firstName} ${person.patronymic}`}</td>
+                                        <td>{person.positionInfo.position.positionTitle}</td>
+                                    </tr>
+                                ))}
+                        </tbody>
                     </table>
+                    <div className={cl.bgPicWrapper}>
 
-
-
+                        <img src={bgBack} alt="" className={cl.bgPic} />
+                    </div>
+                </div>
+                
             </div>
         </div>
     );

@@ -39,7 +39,7 @@ function Education({ education, setEducation }) {
         educationDateIn: '',
         educationDateOut: '',
         speciality: '',
-        diplomaNumber: ''
+        educationForm: ''
     });
 
     const handleAddEducation = async (e) => {
