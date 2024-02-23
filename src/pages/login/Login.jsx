@@ -1,5 +1,5 @@
 import cl from './Login.module.css';
-import logo from '../../assets/icons/main_logo.svg';
+import logo from '../../assets/icons/blacklogogogo.png';
 import React, {useEffect, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 // import Button from '../../components/UI/button/Button';

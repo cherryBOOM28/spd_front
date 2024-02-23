@@ -268,17 +268,20 @@ input[type="radio"]:checked + label {
   object-fit: cover;
 }
 
-.fired {
-  background-color: #ffcccc; /* Цвет для уволенных */
-}
+/* Цвет для уволенных */
+/* .fired {
+  background-color: #ffcccc; 
+} */
 
-.vacation {
-  background-color: #cceeff; /* Цвет для сотрудников в отпуске */
-}
+/* Цвет для сотрудников в отпуске */
+/* .vacation {
+  background-color: #cceeff; 
+} */
 
-.komandirovka {
-  background-color: #ffffcc; /* Цвет для сотрудников в командировке */
-}
+ /* Цвет для сотрудников в командировке */
+/* .komandirovka {
+  background-color: #ffffcc;
+} */
 
 .statusInfoOverlay {
   position: absolute;
@@ -288,7 +291,6 @@ input[type="radio"]:checked + label {
   border: 1px solid rgba(192, 192, 192, 0.853);
   background-color: #ffffff;
   border-radius: 8px;
-
 }
 
 .statusDescription {

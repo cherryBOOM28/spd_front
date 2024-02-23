@@ -43,30 +43,45 @@ const NewPersonnelData = (props) => {
       }, []);
 
     const handleInputChange = (e) => {
-        // setSpecCheckInfo((prevData) => {
-        //     let obj = prevData[0];
-        //     obj = {...obj, [name]: value}
-        //     return [obj]
-        // });
+     
         const { name, value } = e.target;
-        setSpecCheckInfo((prevData) => {
-            const newData = { ...prevData, [name]: value };
-            console.log(newData); // Log the updated data
-            return newData;
+           setSpecCheckInfo((prevData) => {
+            let obj = prevData[0];
+            obj = {...obj, [name]: value}
+            return [obj]
         });
+
+        // setSpecCheckInfo((prevData) => ({
+        //     ...prevData,
+        //     [name]: value
+        // }));
+
+        // setSpecCheckInfo((prevData) => {
+        //     const newData = { ...prevData, [name]: value };
+        //     console.log(newData); // Log the updated data
+        //     return newData;
+        // });
+
     };
 
     const handleInputChangeAttestation = (e) => {
-        // setAttestationInfo((prevData) => {
-        //     let obj = prevData[0];
-        //     obj = {...obj, [name]: value}
-        //     return [obj]
-        // });
+   
         const { name, value } = e.target;
+        // setAttestationInfo((prevData) => {
+        //     const newData = { ...prevData, [name]: value };
+        //     console.log(newData); // Log the updated data
+        //     return newData;
+        // });
+
+        // setAttestationInfo((prevData) => ({
+        //     ...prevData,
+        //     [name]: value
+        // }));
+
         setAttestationInfo((prevData) => {
-            const newData = { ...prevData, [name]: value };
-            console.log(newData); // Log the updated data
-            return newData;
+            let obj = prevData[0];
+            obj = {...obj, [name]: value}
+            return [obj]
         });
     };
 
@@ -81,33 +96,44 @@ const NewPersonnelData = (props) => {
 
     const handleInputChangeClassCategories = (e) => {
         // console.log(value)
-        // const { name, value } = e.target;
-        // setClassCategoriesInfo((prevData) => {
-        //     let obj = prevData[0];
-        //     obj = {...obj, [name]: value}
-        //     return [obj]
-        // });
         const { name, value } = e.target;
         setClassCategoriesInfo((prevData) => {
-            const newData = { ...prevData, [name]: value };
-            console.log(newData); // Log the updated data
-            return newData;
+            let obj = prevData[0];
+            obj = {...obj, [name]: value}
+            return [obj]
         });
+
+        // setClassCategoriesInfo((prevData) => ({
+        //     ...prevData,
+        //     [name]: value
+        // }));
+
+        // const { name, value } = e.target;
+        // setClassCategoriesInfo((prevData) => {
+        //     const newData = { ...prevData, [name]: value };
+        //     console.log(newData); // Log the updated data
+        //     return newData;
+        // });
     };
 
 
     const handleInputChangeAutobiography = (e) => {
-        // setAutobiographyInfo((prevData) => {
-        //     let obj = prevData[0];
-        //     obj = {...obj, [name]: value}
-        //     return [obj]
-        // });
         const { name, value } = e.target;
         setAutobiographyInfo((prevData) => {
-            const newData = { ...prevData, [name]: value };
-            console.log(newData); // Log the updated data
-            return newData;
+            let obj = prevData[0];
+            obj = {...obj, [name]: value}
+            return [obj]
         });
+
+        // setAutobiographyInfo((prevData) => ({
+        //     ...prevData,
+        //     [name]: value
+        // }));
+        // setAutobiographyInfo((prevData) => {
+        //     const newData = { ...prevData, [name]: value };
+        //     console.log(newData); // Log the updated data
+        //     return newData;
+        // });
     };
    
 
@@ -218,9 +244,9 @@ const NewPersonnelData = (props) => {
                                         name='militaryRank'
                                         onChange={handleInputChangeRank}
                                         >
-                                        <MenuItem value=""disabled>Выберите звание</MenuItem>
+                                        <MenuItem value="">Выберите звание</MenuItem>
                                         {departments.map((rank) => (
-                                            <MenuItem key={rank.id}>
+                                            <MenuItem key={rank.id} value={rank.rankTitle}>
                                             {rank.rankTitle}
                                             </MenuItem>
                                         ))}
@@ -296,7 +322,7 @@ const NewPersonnelData = (props) => {
                                         name='categoryType'
                                         onChange={handleInputChangeClassCategories}
                                         >
-                                        <MenuItem value="" disabled>Выберите категорию</MenuItem>
+                                        <MenuItem value="" >Выберите категорию</MenuItem>
                                         <MenuItem value="спец 2 категории">Специалист 2 категории</MenuItem>
                                         <MenuItem value="спец 1 категории">Специалист 1 категории</MenuItem>
                                         <MenuItem value="наставник">Наставник</MenuItem>

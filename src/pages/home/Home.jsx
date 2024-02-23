@@ -70,6 +70,7 @@ function Home(props) {
             setSelectedMainDepartment(JSON.parse(savedMainDepartment));
         }
     }, []);
+    
 
     const fetchFiredPeople = async (departmentId) => {
         try {
@@ -80,17 +81,26 @@ function Home(props) {
                 }
             })
             setPeople(response.data);
+            // const allPeople = response.data;
+            // const firedPeople = allPeople.filter(person => person.isFired);
+            // fetchFiredPeople(firedPeople);
         } catch (error) {
             console.log("fired", error)
         }
     };
 
+
+
     const handleFiredCheckbox = () => {
         setShowFired(!showFired);
     };
-
-   
+    // const handleFiredCheckbox = () => {
+    //     setShowFired(prevState => !prevState); // Изменение состояния на противоположное
+    // };
     const filteredPeople = showFired ? people.filter(person => person.isFired) : people;
+    // const filteredPeople = showFired ? persons.filter(person => person.isFired) : persons;
+
+
 
     // главная страница - отображение городов
     const accessToken = Cookies.get('jwtAccessToken');
@@ -193,6 +203,11 @@ function Home(props) {
             setShowDepartments(!showDepartments);
         }
     };
+    // const handleDepartmentChange = (department, departmentId) => {
+    //     setSelectedMainDepartment(department);
+    //     setSelectedDepartment(departmentId);
+    //     setShowHeadDepartment(false);
+    // };
     
 
     // Выбор все на главной страницу
@@ -293,23 +308,7 @@ function Home(props) {
     const [selectedPosition, setSelectedPosition] = useState(null);
 
 
-    // все города в меню
-    // useEffect(() => {
-    //     const accessToken = Cookies.get('jwtAccessToken');
-    //     axios.get('http://127.0.0.1:8000/api/v1/location', {
-    //     headers: {
-    //         'Authorization': `Bearer ${accessToken}`,
-    //     }
-    //     })
-    //     .then(response => {
-    //         setCities(response.data)
-    //         // console.log(response.data)
-    //     })
-    //     .catch(error => console.error('Error fetching data:', error));
-        
-    // }, []);
-
-    // Все управления
+   
     
 
     useEffect(() => {
@@ -653,6 +652,7 @@ function Home(props) {
                             </tr>
                         </thead>
 
+ 
                         <tbody>
                             {(showHeadDepartment ? headDepartment : 
                                 (showFired ? filteredPeople.filter(person => person.isFired && (selectedDepartment === null || person.positionInfo.department.id === selectedDepartment)) : persons))
@@ -688,7 +688,46 @@ function Home(props) {
 
                                     </tr>
                                 ))}
+                                {showFired && filteredPeople.filter(person => person.isFired && (selectedDepartment === null || person.positionInfo.department.id === selectedDepartment)).length === 0 && (
+                                    <tr>
+                                        <td colSpan="9">Нет уволенных людей</td>
+                                    </tr>
+                                )}
                         </tbody>
+
+{/* <tbody>
+    {(showFired ? filteredPeople.filter(person => person.isFired && (selectedDepartment === null || person.positionInfo.department.id === selectedDepartment)) : [])
+        .map(person => (
+            <tr 
+                key={person.id}
+                onClick={() => handleEmployeeClick(person && person.id)}
+                className={`
+                    ${cl.tableRow} 
+                    ${person.isFired ? cl.fired : ''} 
+                    ${person.inVacation ? cl.vacation : ''} 
+                    ${person.inKomandirovka ? cl.komandirovka : ''}
+                `}
+            >
+                <td><img src={`data:image/jpeg;base64,${person.photo.photoBinary}`} alt="d" className={cl.profileImg} /></td>
+                <td>{`${person.surname} ${person.firstName} ${person.patronymic}`}</td>
+                <td>{person.positionInfo.position.positionTitle}</td>
+                <td style={{ position: 'relative' }}>
+                    <div 
+                        className={cl.infoIcon} 
+                        onMouseEnter={() => handleMouseEnter(person)}
+                        onMouseLeave={() => setStatusInfo(null)}
+                    >
+                        <FiAlertCircle style={{ color: '#1B3884', fontSize: '20px' }} />
+                        {statusInfo && statusInfo.id === person.id && (
+                            <div className={cl.statusInfoOverlay}>{statusInfo.info}</div>
+                        )}
+                    </div>
+                </td>
+            </tr>
+        ))
+    }
+    {showFired && filteredPeople.length === 0 && <tr><td colSpan="4">Нет уволенных сотрудников</td></tr>}
+</tbody> */}
                        
                     </table>
                     <div className={cl.bgPicWrapper}>

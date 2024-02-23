@@ -274,6 +274,7 @@ export const FormProvider = ({ children }) => {
 
   const [emptyInputs, setEmptyInputs] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  
 
   const handleInputChange = (stateUpdater, name, value) => {
     stateUpdater((prevState) => ({
@@ -344,7 +345,7 @@ export const FormProvider = ({ children }) => {
       },
       RankInfo: rankInfo,
       ClassCategoriesInfo: {
-        classCategoriesInfo: _classCategoriesInfo
+        classCategories: _classCategoriesInfo
       },
       AutobiographyInfo: {
         autobiographies: _autobiographyInfo,

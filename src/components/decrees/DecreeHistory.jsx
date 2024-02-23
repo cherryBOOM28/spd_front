@@ -314,7 +314,7 @@ function DecreeHistory() {
                           onClick={() => handleOpenChildModal(personIndex)} 
                           variant="contained"
                           className={cl.childModalBtn}
-                          style={{ textTransform: 'none', marginBottom: '10px' }}
+                          style={{ textTransform: 'none', marginBottom: '10px', backgroundColor: '#1b3884' }}
                         >
                           {/* Выводим фото и данные о лице */}
                           <img src={`data:image/jpeg;base64,${personInfo.person.photo.photoBinary}`} alt="" style={{ width: '32px', height: '32px', borderRadius: '50%', objectFit: 'cover' }} />
@@ -387,7 +387,7 @@ function DecreeHistory() {
 
                             <div style={{ display: 'flex',   flexDirection: 'column', gap: '10px', marginTop: '40px' }}>
                               <div style={{ display: 'flex', alignItems: 'center', gap: '5px', marginBottom: '15px' }}>
-                                <BsFillBriefcaseFill style={{ color: '#1976D2', fontSize: '20px' }} />
+                                <BsFillBriefcaseFill style={{ color: '#1b3884', fontSize: '20px' }} />
                                 <p className={cl.headline_2}>Предыдущяя должность</p>
                               </div>
                                 <div className={cl.info_text_block}>
@@ -410,7 +410,7 @@ function DecreeHistory() {
 
                             <div style={{ display: 'flex',   flexDirection: 'column', gap: '10px', marginTop: '10px' }}>
                               <div style={{ display: 'flex', alignItems: 'center', gap: '5px', marginBottom: '10px' }}>
-                                <BsFillBriefcaseFill style={{ color: '#1976D2', fontSize: '20px' }} />
+                                <BsFillBriefcaseFill style={{ color: '#1b3884', fontSize: '20px' }} />
                                 <p className={cl.headline_2}>Новая должность</p>
                               </div>
                               <div className={cl.info_text_block}>
@@ -437,8 +437,8 @@ function DecreeHistory() {
 
             
                   <div style={{ display: 'flex', justifyContent: 'space-between', gap: '10px', marginTop: '20px' }}>
-                    <Button variant="contained" style={{ width: '100%' }} onClick={() => handleConfirmation(decreeInfo.transferInfo.decreeInfo.decreeId)}>Согласовать</Button>
-                    <Button variant="outlined" style={{ width: '100%' }} onClick={closeModal}>Отменить</Button>
+                    <Button variant="contained" style={{ width: '100%', backgroundColor: '#1b3884' }} onClick={() => handleConfirmation(decreeInfo.transferInfo.decreeInfo.decreeId)}>Согласовать</Button>
+                    <Button variant="outlined" style={{ width: '100%', color: '#1b3884', borderColor: '#1b3884' }} onClick={closeModal}>Отменить</Button>
                   </div>
                 </div>
               </div>
@@ -490,7 +490,7 @@ function DecreeHistory() {
                             onClick={() => handleOpenChildModal(personIndex)} 
                             variant="contained"
                             className={cl.childModalBtn}
-                            style={{ textTransform: 'none', marginBottom: '10px' }}
+                            style={{ textTransform: 'none', marginBottom: '10px', backgroundColor: '#1b3884' }}
                           >
                             {/* Выводим фото и данные о лице */}
                             <img src={`data:image/jpeg;base64,${personInfo.person.photo.photoBinary}`} alt="" style={{ width: '32px', height: '32px', borderRadius: '50%', objectFit: 'cover' }} />
@@ -563,7 +563,7 @@ function DecreeHistory() {
 
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '30px' }}>
                                   <div style={{ display: 'flex', alignItems: 'center', gap: '5px', marginBottom: '10px' }}>
-                                    <BsFillBriefcaseFill style={{ color: '#1976D2', fontSize: '20px' }} />
+                                    <BsFillBriefcaseFill style={{ color: '#1b3884', fontSize: '20px' }} />
                                     <p className={cl.headline_2}>Новая должность</p>
                                   </div>
                                   <div className={cl.info_text_block}>
@@ -607,8 +607,8 @@ function DecreeHistory() {
 
               
                     <div style={{ display: 'flex', justifyContent: 'space-between', gap: '10px', marginTop: '20px' }}>
-                      <Button variant="contained" style={{ width: '100%' }} onClick={() => handleConfirmation(decreeInfo.appointmentInfo.decreeInfo.decreeId)}>Согласовать</Button>
-                      <Button variant="outlined" style={{ width: '100%' }} onClick={closeModal}>Отменить</Button>
+                      <Button variant="contained" style={{ width: '100%', backgroundColor: '#1b3884' }} onClick={() => handleConfirmation(decreeInfo.appointmentInfo.decreeInfo.decreeId)}>Согласовать</Button>
+                      <Button variant="outlined" style={{ width: '100%', color: '#1b3884', borderColor: '#1b3884' }} onClick={closeModal}>Отменить</Button>
                     </div>
                   </div>
                 </div>
@@ -659,7 +659,7 @@ function DecreeHistory() {
                             onClick={() => handleOpenChildModal(personIndex)} 
                             variant="contained"
                             className={cl.childModalBtn}
-                            style={{ textTransform: 'none', marginBottom: '10px' }}
+                            style={{ textTransform: 'none', marginBottom: '10px', backgroundColor: '#1b3884' }}
                           >
                             {/* Выводим фото и данные о лице */}
                             <img src={`data:image/jpeg;base64,${personInfo.person.photo.photoBinary}`} alt="" style={{ width: '32px', height: '32px', borderRadius: '50%', objectFit: 'cover' }} />
@@ -733,7 +733,7 @@ function DecreeHistory() {
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '30px' }}>
                                   <div style={{ display: 'flex',   flexDirection: 'column', gap: '10px', marginTop: '0px' }}>
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '5px', marginBottom: '15px' }}>
-                                      <GiRank3 style={{ color: '#1976D2', fontSize: '20px' }} />
+                                      <GiRank3 style={{ color: '#1b3884', fontSize: '20px' }} />
                                       <p className={cl.headline_2}>Новое звание</p>
                                     </div>
                                     <div className={cl.info_text_block}>
@@ -759,8 +759,8 @@ function DecreeHistory() {
 
               
                     <div style={{ display: 'flex', justifyContent: 'space-between', gap: '10px', marginTop: '20px' }}>
-                      <Button variant="contained" style={{ width: '100%' }} onClick={() => handleConfirmation(decreeInfo.rankUpInfo.decreeInfo.decreeId)}>Согласовать</Button>
-                      <Button variant="outlined" style={{ width: '100%' }} onClick={closeModal}>Отменить</Button>
+                      <Button variant="contained" style={{ width: '100%', backgroundColor: '#1b3884' }} onClick={() => handleConfirmation(decreeInfo.rankUpInfo.decreeInfo.decreeId)}>Согласовать</Button>
+                      <Button variant="outlined" style={{ width: '100%', color: '#1b3884', borderColor: '#1b3884' }} onClick={closeModal}>Отменить</Button>
                     </div>
                   </div>
                 </div>
@@ -813,7 +813,7 @@ function DecreeHistory() {
                             onClick={() => handleOpenChildModal(personIndex)} 
                             variant="contained"
                             className={cl.childModalBtn}
-                            style={{ textTransform: 'none', marginBottom: '10px' }}
+                            style={{ textTransform: 'none', marginBottom: '10px', backgroundColor: '#1b3884' }}
                           >
                             {/* Выводим фото и данные о лице */}
                             <img src={`data:image/jpeg;base64,${personInfo.person.photo.photoBinary}`} alt="" style={{ width: '32px', height: '32px', borderRadius: '50%', objectFit: 'cover' }} />
@@ -886,7 +886,7 @@ function DecreeHistory() {
 
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '30px' }}>
                                   <div style={{ display: 'flex', alignItems: 'center', gap: '5px', marginBottom: '10px' }}>
-                                    <ImUserMinus style={{ color: '#1976D2', fontSize: '20px' }} />
+                                    <ImUserMinus style={{ color: '#1b3884', fontSize: '20px' }} />
                                     <p className={cl.headline_2}>Дата увольнения</p>
                                   </div>
                                   <div className={cl.info_text_block}>
@@ -908,8 +908,8 @@ function DecreeHistory() {
                     
               
                     <div style={{ display: 'flex', justifyContent: 'space-between', gap: '10px', marginTop: '20px' }}>
-                      <Button variant="contained" style={{ width: '100%' }} onClick={() => handleConfirmation(decreeInfo.firingInfo.decreeInfo.decreeId)}>Согласовать</Button>
-                      <Button variant="outlined" style={{ width: '100%' }} onClick={closeModal}>Отменить</Button>
+                      <Button variant="contained" style={{ width: '100%', backgroundColor: '#1b3884' }} onClick={() => handleConfirmation(decreeInfo.firingInfo.decreeInfo.decreeId)}>Согласовать</Button>
+                      <Button variant="outlined" style={{ width: '100%', color: '#1b3884', borderColor: '#1B3884' }} onClick={closeModal}>Отменить</Button>
                     </div>
                   </div>
                 </div>
@@ -961,7 +961,7 @@ function DecreeHistory() {
                             onClick={() => handleOpenChildModal(personIndex)} 
                             variant="contained"
                             className={cl.childModalBtn}
-                            style={{ textTransform: 'none', marginBottom: '10px' }}
+                            style={{ textTransform: 'none', marginBottom: '10px', backgroundColor: '#1b3884'  }}
                           >
                             {/* Выводим фото и данные о лице */}
                             <img src={`data:image/jpeg;base64,${personInfo.person.photo.photoBinary}`} alt="" style={{ width: '32px', height: '32px', borderRadius: '50%', objectFit: 'cover' }} />
@@ -1034,7 +1034,7 @@ function DecreeHistory() {
 
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '30px' }}>
                                   <div style={{ display: 'flex', alignItems: 'center', gap: '5px', marginBottom: '10px' }}>
-                                    <RiExchangeBoxFill style={{ color: '#1976D2', fontSize: '20px' }} />
+                                    <RiExchangeBoxFill style={{ color: '#1b3884', fontSize: '20px' }} />
                                     <p className={cl.headline_2}>Информация о командировке</p>
                                   </div>
                                   <div className={cl.info_text_block}>
@@ -1084,8 +1084,8 @@ function DecreeHistory() {
                     
               
                     <div style={{ display: 'flex', justifyContent: 'space-between', gap: '10px', marginTop: '20px' }}>
-                      <Button variant="contained" style={{ width: '100%' }} onClick={() => handleConfirmation(decreeInfo.komandirovka_info.decreeInfo.decreeId)}>Согласовать</Button>
-                      <Button variant="outlined" style={{ width: '100%' }} onClick={closeModal}>Отменить</Button>
+                      <Button variant="contained" style={{ width: '100%', backgroundColor: '#1b3884'  }} onClick={() => handleConfirmation(decreeInfo.komandirovka_info.decreeInfo.decreeId)}>Согласовать</Button>
+                      <Button variant="outlined" style={{ width: '100%', color: '#1b3884', borderColor: '#1b3884' }} onClick={closeModal}>Отменить</Button>
                     </div>
                   </div>
                 </div>
@@ -1137,7 +1137,7 @@ function DecreeHistory() {
                             onClick={() => handleOpenChildModal(personIndex)} 
                             variant="contained"
                             className={cl.childModalBtn}
-                            style={{ textTransform: 'none', marginBottom: '10px' }}
+                            style={{ textTransform: 'none', marginBottom: '10px', backgroundColor: '#1b3884' }}
                           >
                             {/* Выводим фото и данные о лице */}
                             <img src={`data:image/jpeg;base64,${personInfo.person.photo.photoBinary}`} alt="" style={{ width: '32px', height: '32px', borderRadius: '50%', objectFit: 'cover' }} />
@@ -1210,7 +1210,7 @@ function DecreeHistory() {
 
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '20px' }}>
                                   <div style={{ display: 'flex', alignItems: 'center', gap: '5px', marginBottom: '10px' }}>
-                                    <BsFillSuitcase2Fill style={{ color: '#1976D2', fontSize: '20px' }} />
+                                    <BsFillSuitcase2Fill style={{ color: '#1b3884', fontSize: '20px' }} />
                                     <p className={cl.headline_2}>Информация об отпуске</p>
                                   </div>
                                   <div className={cl.info_text_block}>
@@ -1249,7 +1249,7 @@ function DecreeHistory() {
                                   )}
 
                                   <div style={{ display: 'flex', alignItems: 'center', gap: '5px', marginBottom: '10px', marginTop: '20px' }}>
-                                    <IoCalendarNumber style={{ color: '#1976D2', fontSize: '20px' }} />
+                                    <IoCalendarNumber style={{ color: '#1b3884', fontSize: '20px' }} />
                                     <p className={cl.headline_2}>Значения отпускных дней</p>
                                   </div>
 
@@ -1285,8 +1285,8 @@ function DecreeHistory() {
                     ))}
               
                     <div style={{ display: 'flex', justifyContent: 'space-between', gap: '10px', marginTop: '20px' }}>
-                      <Button variant="contained" style={{ width: '100%' }} onClick={() => handleConfirmation(decreeInfo.otpuskData.decreeInfo.decreeId)}>Согласовать</Button>
-                      <Button variant="outlined" style={{ width: '100%' }} onClick={closeModal}>Отменить</Button>
+                      <Button variant="contained" style={{ width: '100%', backgroundColor: '#1b3884'  }} onClick={() => handleConfirmation(decreeInfo.otpuskData.decreeInfo.decreeId)}>Согласовать</Button>
+                      <Button variant="outlined" style={{ width: '100%', color: '#1b3884', borderColor: '#1b3884' }} onClick={closeModal}>Отменить</Button>
                     </div>
                   </div>
                 </div>

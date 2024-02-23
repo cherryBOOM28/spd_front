@@ -147,16 +147,16 @@ function BasicInfo({  photo, person, setPerson, birthInfo, setBirthInfo, gender,
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', gap: '5px' }}>
                 {!editing ? (
-                  <Button className={cl.actionBtn} onClick={handleEditClick} style={{ textTransform: 'none' }}>
+                  <Button className={cl.actionBtn} onClick={handleEditClick} style={{ textTransform: 'none', color: '#1b3884' }}>
                     &#9998; Редактировать
                   </Button>
                 ) : (
 
                   <div style={{ display: 'flex', gap: '10px' }}> 
-                    <Button onClick={handleSaveClick} className={cl.actionBtn} style={{ textTransform: 'none' }}>
+                    <Button onClick={handleSaveClick} className={cl.actionBtn} style={{ textTransform: 'none', color: '#1b3884' }}>
                       Сохранить
                     </Button>
-                    <Button className={cl.actionBtn} onClick={handleCancelClick} style={{ textTransform: 'none' }}>Отмена</Button>
+                    <Button className={cl.actionBtn} onClick={handleCancelClick} style={{ textTransform: 'none', color: '#1b3884' }}>Отмена</Button>
                   </div>
                 )}
               </div>

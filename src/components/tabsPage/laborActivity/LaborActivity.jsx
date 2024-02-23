@@ -384,7 +384,7 @@ function LaborActivity({ workingHistory, setWorkingHistory }) {
                         {icon}
                     </IconButton>
                 </div>
-                <Button onClick={handleDownload}  style={{ textTransform: 'none', display: 'flex', alignItems: 'center', gap: '8px' }}> <MdFileDownload style={{ fontSize: '19px' }} /> Скачать данные</Button>
+                <Button onClick={handleDownload}  style={{ textTransform: 'none', display: 'flex', alignItems: 'center', gap: '8px', color: '#1b3884' }}> <MdFileDownload style={{ fontSize: '19px' }} /> Скачать данные</Button>
             </div>
         </div>
         <div>
