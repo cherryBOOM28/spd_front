@@ -659,7 +659,7 @@ function Home(props) {
                                 .map(person => (
                                     <tr 
                                         key={person.id}
-                                        onClick={() => handleEmployeeClick(person && person.id)}
+                                        onClick={() => handleEmployeeClick(person.id)}
                                         className={`
                                             ${cl.tableRow} 
                                             ${person.isFired ? cl.fired : ''} 

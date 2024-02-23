@@ -1,7 +1,7 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import cl from './Navigation.module.css';
-import logo3 from '../../assets/icons/logogogogog.png';
+import logo3 from '../../assets/icons/logo-w.png';
 import { FaFile } from "react-icons/fa6";
 import { IoFileTrayStacked } from "react-icons/io5";
 import { BiSolidHomeAlt2 } from "react-icons/bi";

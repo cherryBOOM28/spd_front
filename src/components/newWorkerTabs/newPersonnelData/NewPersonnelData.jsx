@@ -42,27 +42,40 @@ const NewPersonnelData = (props) => {
         // Запрос данных о департаментах при загрузке компонента
       }, []);
 
-    const handleInputChange = (e) => {
+    // const handleInputChange = (e) => {
      
+    //     const { name, value } = e.target;
+    //        setSpecCheckInfo((prevData) => {
+    //         let obj = prevData[0];
+    //         obj = {...obj, [name]: value}
+    //         return [obj]
+    //     });
+
+    //     // setSpecCheckInfo((prevData) => ({
+    //     //     ...prevData,
+    //     //     [name]: value
+    //     // }));
+
+    //     // setSpecCheckInfo((prevData) => {
+    //     //     const newData = { ...prevData, [name]: value };
+    //     //     console.log(newData); // Log the updated data
+    //     //     return newData;
+    //     // });
+
+    // };
+    const handleInputChange = (e) => {
         const { name, value } = e.target;
-           setSpecCheckInfo((prevData) => {
-            let obj = prevData[0];
-            obj = {...obj, [name]: value}
-            return [obj]
-        });
-
-        // setSpecCheckInfo((prevData) => ({
-        //     ...prevData,
-        //     [name]: value
-        // }));
-
-        // setSpecCheckInfo((prevData) => {
-        //     const newData = { ...prevData, [name]: value };
-        //     console.log(newData); // Log the updated data
-        //     return newData;
-        // });
-
+        setSpecCheckInfo((prevData) => ({
+            ...prevData,
+            specChecks: [
+                {
+                    ...prevData.specChecks[0],
+                    [name]: value
+                }
+            ]
+        }));
     };
+    
 
     const handleInputChangeAttestation = (e) => {
    
@@ -170,7 +183,7 @@ const NewPersonnelData = (props) => {
                                     type="date"
                                     className={cl.workerInfo}
                                     name='docDate'
-                                    value={specCheckInfo.docDate}
+                                    // value={specCheckInfo.docDate}
 
                                     // onChange={(e) => handleInputChange('docDate', e.target.value)}
                                     onChange={handleInputChange}

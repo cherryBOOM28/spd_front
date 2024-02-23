@@ -175,13 +175,15 @@ export const FormProvider = ({ children }) => {
   ]);
 
   // Кадровые данные
-  const [specCheckInfo, setSpecCheckInfo] = useState([
-    {
-      docNumber: '',
-      docDate: '',
-    }
-  ]
-  );
+  const [specCheckInfo, setSpecCheckInfo] = useState({
+    specChecks: [
+        {
+            docNumber: '',
+            docDate: '',
+        }
+    ]
+});
+
 
   const [attestationInfo, setAttestationInfo] = useState([
     {

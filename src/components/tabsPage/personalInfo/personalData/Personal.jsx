@@ -23,6 +23,7 @@ import { updateFamilyCompositions } from '../../../../api/persona_info/family_co
 
 
 function Personal({ 
+    departmentName, setDepartmentName,
     positionInfo, setPositionInfo,
     location, setLocation,
     receivedDate, setReceivedDate,
@@ -66,7 +67,7 @@ function Personal({
     // ИЗМЕНИТЬ ПОЛЯ
     const handleEditClick = () => {
         setEditedDepartmentInfo({
-            DepartmentName: positionInfo.DepartmentName
+            DepartmentName: departmentName.DepartmentName
         });
         setEditedLocationInfo({
             LocationName: location.LocationName
@@ -468,8 +469,10 @@ function Personal({
                                     </div>
                                 ) : (
                                     <Paper className={cl.workerInfo}>
-                                        {positionInfo && positionInfo.DepartmentName ? positionInfo.DepartmentName : 'Нет данных'}
+                                        {departmentName && departmentName.DepartmentName ? departmentName.DepartmentName : 'Нет данных'}                                    
                                     </Paper>
+
+                                    
                                 )}
                             </div>
                             <div className={cl.rows}>
@@ -491,7 +494,7 @@ function Personal({
                                    
                                 ) : (
 
-                                    <Paper className={cl.workerInfo}> {positionInfo && positionInfo.positionTitle ? positionInfo.positionTitle : 'Нет данных'}</Paper>
+                                    <Paper className={cl.workerInfo}>{positionTitle.positionTitle}</Paper>
                                 )}
                             </div>
                             <div className={cl.rows}>
@@ -516,7 +519,11 @@ function Personal({
                                     />
                                     </div>
                                 ) : (
-                                    <Paper className={cl.workerInfo}>{positionInfo && positionInfo.receivedDate ? positionInfo.receivedDate : 'Нет данных'}</Paper>
+                                    <Paper className={cl.workerInfo}>
+                                        {/* {receivedDate.receivedDate} */}
+                                        {receivedDate && receivedDate.receivedDate ? receivedDate.receivedDate : 'Нет данных'}                                    
+
+                                    </Paper>
                                 )}
                             </div>
                             
@@ -547,7 +554,7 @@ function Personal({
                                    </Box>
                                     
                                 ) : (
-                                    <Paper className={cl.workerInfo}>{positionInfo && positionInfo.statusName ? positionInfo.statusName : 'Нет данных'}</Paper>
+                                    <Paper className={cl.workerInfo}>{familyStatus.statusName}</Paper>
                                 )}
                             </div>
                             <div className={cl.rows}>
@@ -568,7 +575,8 @@ function Personal({
                                     </div>
                                 ) : (
                                     <Paper className={cl.workerInfo}>
-                                        {location && location.LocationName ? location.LocationName : 'Нет данных'}
+                                        {location && location.LocationName ? location.LocationName : 'Нет данных'}                                    
+
                                     </Paper>
                                 )}
                             </div>

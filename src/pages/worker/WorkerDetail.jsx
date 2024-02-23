@@ -93,8 +93,8 @@ function WorkerDetail() {
           'Authorization': `Bearer ${accessToken}`,
         }
       });
-      // console.log("response", response.data);
-  
+      console.log("response", response.data);
+      console.log(person);
       if (response.status === 200) {
         setPhoto(response.data.Person.photo);
         setPerson(response.data.Person);
@@ -104,28 +104,27 @@ function WorkerDetail() {
         setIdentityCardInfo(response.data.IdentityCardInfo);
         setResidentInfo(response.data.ResidentInfo);
 
-        setPositionInfo(response.data.Person.positionInfo.department);
-        setLocation(response.data.Person.positionInfo.department.Location);
-        setDepartmentName(response.data.Person.positionInfo.department.DepartmentName);
+        setDepartmentName(response.data.Person.positionInfo.department);
         setReceivedDate(response.data.Person.positionInfo);
         setPositionTitle(response.data.Person.positionInfo.position);
-
+        setPositionInfo(response.data.Person.positionInfo.department);
+        
         setFamilyStatus(response.data.Person.familyStatus);
-
+        
         setFamilyComposition(response.data.FamilyComposition);
         setEducation(response.data.Education);
         setLanguageSkill(response.data.LanguageSkill);
         setCourse(response.data.Course);
         setAcademicDegree(response.data.AcademicDegree);
         setSportSkill(response.data.SportSkill);
-
+        
         setWorkingHistory(response.data.WorkingHistory);
         setRankArchive(response.data.RankArchive);
-
+        
         // console.log("RankArchive",response.data.RankArchive);
-
+        
         // console.log(response.data.WorkingHistory);
-
+        
         setAutobiographyInfo(response.data.AutobiographyInfo);
         setSpecCheckInfo(response.data.SpecCheckInfo);
         setAttestationInfo(response.data.AttestationInfo);
@@ -133,15 +132,20 @@ function WorkerDetail() {
         setRewardsInfo(response.data.RewardsInfo);
         setSickLeavesInfo(response.data.SickLeavesInfo);
         setInvestigationsInfo(response.data.InvestigationsInfo);
-
+        
         setRankInfo(response.data.Person.rankInfo);
         setMilitaryRank(response.data.Person.rankInfo.militaryRank);
-
+        
         setDecreeInfo(response.data.DecreeListInfo);
-
-        console.log(response.data.Person.rankInfo);
-        console.log(response.data.Person.rankInfo.militaryRank);
-
+        
+        // setLocation(response.data.Person.positionInfo.department.Location);
+        if (response.data.Person.positionInfo.department.Location && response.data.Person.positionInfo.department.Location !== "") {
+          setLocation(response.data.Person.positionInfo.department.Location);
+        } 
+        console.log(response.data.Person);
+        console.log(person);
+        // console.log(response.data.Person.rankInfo.militaryRank);
+        
       } else {
         console.log(response.statusText);
       }
@@ -250,6 +254,7 @@ function WorkerDetail() {
                             <Personal 
                               id={id} 
                               iin={iin}
+                              person={person} 
                               positionInfo={positionInfo}
                               setPositionInfo={setPositionInfo}
 
