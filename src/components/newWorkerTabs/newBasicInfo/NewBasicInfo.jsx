@@ -457,7 +457,7 @@ function  NewBasicInfo() {
                 </div>
                 <div className={cl.column}>
                 <div className={cl.rows}>
-                    <label className={cl.label}>Дата рождения*</label>
+                    <label className={cl.label} style={{ marginRight: '12px'  }}>Дата рождения*</label>
                         <TextField
                         size='small'
                         id="outlined-basic" 
@@ -470,7 +470,7 @@ function  NewBasicInfo() {
                         />
                 </div>
                 <div className={cl.rows}>
-                    <label className={cl.label}>Страна*</label>
+                    <label className={cl.label} style={{ marginRight: '12px'  }}>Страна*</label >
                         <TextField
                             size='small'
                             id="outlined-basic" 
@@ -531,7 +531,7 @@ function  NewBasicInfo() {
                 </div>
                 
                 <div className={cl.rows}>
-                    <label className={cl.label}>ИИН*</label>
+                    <label className={cl.label} style={{ marginRight: '12px'  }}>ИИН*</label>
                         <TextField
                             size='small'
                             id="outlined-basic" 
@@ -616,7 +616,7 @@ function  NewBasicInfo() {
                 </div>
                 <div className={cl.column}> 
                     <div className={cl.rows}>
-                        <label className={cl.label}>Страна проживания*</label>
+                        <label className={cl.label} style={{ marginRight: '12px'  }}>Страна проживания*</label>
                             <TextField
                                 size='small'
                                 id="outlined-basic" 

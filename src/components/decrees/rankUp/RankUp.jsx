@@ -421,7 +421,7 @@ function RankUp() {
                         </div>
 
                         <div className={cl.row} style={{ marginBottom: '20px' }}>
-                            <Box sx={{ minWidth: 480 }}>
+                            <Box sx={{ minWidth: 480, maxWidth: 480 }}>
                                 <FormControl size="small" fullWidth>
                                     <InputLabel id="rank-label">Вид присвоения</InputLabel>
                                     <Select
@@ -431,11 +431,16 @@ function RankUp() {
                                         value={form.receivedType}
                                         onChange={e => handleReceivedTypeChange(e, index)}
                                     >
-                                        {receivedType.map((type) => (
+                                        {/* {receivedType.map((type) => (
                                             <MenuItem key={type} value={type}>
                                                 {type}
                                             </MenuItem>
-                                        ))}
+                                        ))} */}
+                                         <MenuItem value="" disabled>Выберите вид присвоения</MenuItem>
+                                        <MenuItem value="Досрочное">Досрочное</MenuItem>
+                                        <MenuItem value="Внеочередное">Внеочередное</MenuItem>
+                                        <MenuItem value="Очередное">Очередное</MenuItem>
+                                        <MenuItem value="На одну ступень выше специального звания">На одну ступень выше специального звания, предусмотренного по занимаемой штатной должности</MenuItem>
                                     </Select>
                                 </FormControl>
                             </Box>
