@@ -3,6 +3,8 @@ import axios from 'axios';
 import cl from './BasicInfo.module.css';
 import { Button,TextField, Paper, Select, Box, InputLabel, MenuItem, FormControl } from '@mui/material';
 import Cookies from 'js-cookie';
+import { NotificationContainer, NotificationManager } from 'react-notifications';
+import 'react-notifications/lib/notifications.css';
 
 
 function BasicInfo({  photo, person, setPerson, birthInfo, setBirthInfo, gender, setGender }) {
@@ -116,6 +118,22 @@ function BasicInfo({  photo, person, setPerson, birthInfo, setBirthInfo, gender,
       [name]: value,
     }));
   };
+
+  const handleInputChangeIin = (e) => {
+    console.log("Handle input change for ИИН field", e.target.value); 
+    const { name, value } = e.target;
+    // проверка на 12 цифр
+    if (name === 'iin' && (value.length < 12 || value.length > 12)) {
+      // console.log('ИИН должен содержать 12 цифр')
+      NotificationManager .error('ИИН должен содержать 12 цифр', 'Ошибка', 3000)
+      return
+    }
+    setEditedPerson((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
 
 
   const handleInputChangeBirth = (e) => {
@@ -373,7 +391,7 @@ function BasicInfo({  photo, person, setPerson, birthInfo, setBirthInfo, gender,
                               name='iin'
                               className={cl.workerInfoText}
                               value={editedPerson.iin}
-                              onChange={handleInputChange}
+                              onChange={handleInputChangeIin}
                             />
                           </div>
                         ) : (
@@ -383,7 +401,7 @@ function BasicInfo({  photo, person, setPerson, birthInfo, setBirthInfo, gender,
   
                   </div>
               </div>
-              
+              <NotificationContainer /> 
           </div>
       </div>
     )

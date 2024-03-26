@@ -13,6 +13,8 @@
 
 .customTable {
   width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
 }
 
 .workerCapitalName {
@@ -22,7 +24,7 @@
 }
 
 .workerInfoSelect {
-  width: 200px;
+  width: 180px;
   height: 40px;
   padding: 0px 9px;
   outline: none;
@@ -35,90 +37,11 @@
   /* margin-left: 12px; */
 }
 
-.actionBtn {
-  padding: 5px 9px;
-  font-weight: 400;
-}
-
-.workerBlock {
-  display: flex;
-  gap: 30px;
-}
-
-.column {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-top: 25px;
-}
-
-.rows {
-  display: flex;
-}
-
-.label {
-  color: #000;
-  font-size: 16px;
-  font-weight: 400;
-  width: 127px;
-}
-
-.workerInfo {
-  border-radius: 5px;
-  border: 1px solid #959595;
-  width: 270px;
-  /* height: 30px; */
-  padding: 6px 9px;
-  margin-left: 12px;
-  outline: none;
-  font-family:"Helvetica", sans-serif;
-  color: #000;
-  font-size: 16px;
-  font-weight: 400;
-}
-
-
 
 .workerInfoText {
   border-radius: 5px;
   border: 1px solid #959595;
   min-width: 725px;
-  padding: 6px 9px;
-  margin-left: 12px;
-  outline: none;
-  font-family: "Helvetica", sans-serif;
-  color: #000;
-  font-size: 16px;
-  font-weight: 400;
-}
-
-.totalInfo {
-  border-radius: 5px;
-  background: #F3F3F3;
-  padding: 14px;
-  margin-top: 15px;
-}
-
-/* calendar */
-.datePickerContainer {
-  position: relative;
-}
-.dateLogo {
-  position: absolute;
-  z-index: 12;
-  right: 9px;
-  top: 8px;
-}
-
-.checkboxDiv {
-  display: flex;
-  gap: 5px;
-}
-
-.inputText {
-  border-radius: 5px;
-  border: 1px solid #959595;
-  line-height: 23px;
   padding: 6px 9px;
   margin-left: 12px;
   outline: none;

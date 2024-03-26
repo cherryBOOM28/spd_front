@@ -83,7 +83,7 @@ function ReportOrders({ decreeInfo }) {
                                     variant="contained"
                                     color="primary"
                                     className={cl.card_button}
-                                    style={{ textTransform: 'none' }}
+                                    style={{ textTransform: 'none', backgroundColor: '#1b3884' }}
                                     onClick={() => handleDownload(decree.id)}
                                 >
                                     <IoMdDownload />

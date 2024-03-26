@@ -65,13 +65,10 @@
 }
 
 .workerInfoSelect {
-  border-radius: 5px;
-  border: 1px solid #959595;
   width: 220px;
-  height: 32px;
-  padding: 4px 9px;
-  margin-left: 12px;
-  outline: none;
+  /* margin-left: 12px; */
+  /* padding-left: 12px; */
+  /* outline: none; */
   font-family: "Helvetica", sans-serif, sans-serif;
   color: #000;
   font-size: 16px;

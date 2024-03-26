@@ -16,7 +16,7 @@ import { renderCourseOptions } from '../../components/reportResults/personal_dat
 import { renderAcademicDegreeOptions } from '../../components/reportResults/personal_data/ReportPersonalData';
 import { renderSportOptions } from '../../components/reportResults/personal_data/ReportPersonalData';
 import WorkingHistoryData from '../../components/reportResults/working_history/WorkingHistoryData';
-import { renderWorkingHistoryOptions } from '../../components/reportResults/working_history/WorkingHistoryData';
+import { RenderWorkingHistoryOptions } from '../../components/reportResults/working_history/WorkingHistoryData';
 import StaffInfoData from '../../components/reportResults/staff_info/StaffInfoData';
 import { renderSpecChecksOptions } from '../../components/reportResults/staff_info/StaffInfoData';
 import { renderAttestationOptions } from '../../components/reportResults/staff_info/StaffInfoData';
@@ -206,12 +206,200 @@ function Reports(props, queryParams) {
 
         { id: "birthinfo:birth_date", label: "Дата рождения", isRange: true },
         { id: "birthinfo:country", label: "Страна рождения", selectOptions: ["Россия", "Украина", "Беларусь", "Казахстан", "Армения", "Узбекистан", "Туркменистан", "Молдова", "Киргизия", "Таджикистан"], isRange: false },
-        { id: "birthinfo:city", label: "Город рождения", selectOptions: ["Астана", "Алматы", "Шымкент", "Актобе", "Караганда", "Тараз", "Павлодар", "Уральск", "Семей", "Костанай", "Атырау", "Кызылорда", "Актау", "Туркестан", "Кокшетау", "Талдыкорган", "Экибастуз", "Рудный", "Темиртау", "Жезказган", "Аксай", "Байконур"], isRange: false },
-        { id: "birthinfo:region", label: "Регион/район рождения", isRange: false },
+        { id: "birthinfo:city", label: "Город рождения", 
+        selectOptions: [
+                        "Абай",
+                        "Акколь",
+                        "Аксай",
+                        "Аксу",
+                        "Актау",
+                        "Актобе",
+                        "Алга",
+                        "Алматы",
+                        "Арал",
+                        "Аркалык",
+                        "Аркалык",
+                        "Арыс",
+                        "Астана",
+                        "Атбасар",
+                        "Атырау",
+                        "Аягоз",
+                        "Байконыр",
+                        "Балхаш",
+                        "Булаев",
+                        "Булаев",
+                        "Державинск",
+                        "Ерейментау",
+                        "Есиль",
+                        "Есик",
+                        "Жанаозен",
+                        "Жанатас",
+                        "Жаркент",
+                        "Жем",
+                        "Жезказган",
+                        "Жетысай",
+                        "Житикара",
+                        "Житикара",
+                        "Зайсан",
+                        "Казалинск",
+                        "Кандыагаш",
+                        "Каратау",
+                        "Караганды",
+                        "Каркаралинск",
+                        "Каскелен",
+                        "Кентау",
+                        "Кокшетау",
+                        "Кондыр",
+                        "Костанай",
+                        "Костанай",
+                        "Кулсары",
+                        "Курчатов",
+                        "Кызылорда",
+                        "Ленгер",
+                        "Лисаковск",
+                        "Лисаковск",
+                        "Макинск",
+                        "Мамлют",
+                        "Мулын",
+                        "Павлодар",
+                        "Петропавловск",
+                        "Приозёрск",
+                        "Риддер",
+                        "Рудный",
+                        "Рудный",
+                        "Сарань",
+                        "Сарканд",
+                        "Сарыагаш",
+                        "Сатпаев",
+                        "Семей",
+                        "Сергеев",
+                        "Серебрянск",
+                        "Степногорск",
+                        "Степняк",
+                        "Тараз",
+                        "Талгар",
+                        "Талдыкорган",
+                        "Темир",
+                        "Темиртау",
+                        "Текели",
+                        "Тобыл",
+                        "Тобыл",
+                        "Туркестан",
+                        "Туркестан",
+                        "Тайынша",
+                        "Уральск",
+                        "Ушарал",
+                        "Уштобе",
+                        "Усть-Каменогорск",
+                        "Форт-Шевченко",
+                        "Хромтау",
+                        "Шахтинск",
+                        "Шар",
+                        "Шардара",
+                        "Шемонаиха",
+                        "Шу",
+                        "Щучинск",
+                        "Экибастуз"
+                        ], 
+        isRange: false },
+        { id: "birthinfo:region", label: "Регион рождения",selectOptions: ["Астана", "Алматы", "Шымкент", "Абайская область", "Акмолинская область", "Актюбинская область", "Алматинская область", "Атырауская область", "Восточно-Казахстанская область", "Жамбылская область", "Жетысуская область", "Западно-Казахстанская область", "Карагандинская область", "Костанайская область", "Кызылординская область", "Мангистауская область", "Павлодарская область", "Северо-Казахстанская область", "Туркестанская область", "Улытауская область"], isRange: false },
 
         { id: "residentinfo:resCountry", label: "Страна прожвания", selectOptions: ["Россия", "Украина", "Беларусь", "Казахстан", "Армения", "Узбекистан", "Туркменистан", "Молдова", "Киргизия", "Таджикистан"], isRange: false },
-        { id: "residentinfo:resCity", label: "Город прожвания", selectOptions: ["Астана", "Алматы", "Шымкент", "Актобе", "Караганда", "Тараз", "Павлодар", "Уральск", "Семей", "Костанай", "Атырау", "Кызылорда", "Актау", "Туркестан", "Кокшетау", "Талдыкорган", "Экибастуз", "Рудный", "Темиртау", "Жезказган", "Аксай", "Байконур"], isRange: false },
-        { id: "residentinfo:resRegion", label: "Регион/район проживания", isRange: false  },
+        { id: "residentinfo:resCity", label: "Город прожвания", selectOptions: [
+            "Абай",
+            "Акколь",
+            "Аксай",
+            "Аксу",
+            "Актау",
+            "Актобе",
+            "Алга",
+            "Алматы",
+            "Арал",
+            "Аркалык",
+            "Аркалык",
+            "Арыс",
+            "Астана",
+            "Атбасар",
+            "Атырау",
+            "Аягоз",
+            "Байконыр",
+            "Балхаш",
+            "Булаев",
+            "Булаев",
+            "Державинск",
+            "Ерейментау",
+            "Есиль",
+            "Есик",
+            "Жанаозен",
+            "Жанатас",
+            "Жаркент",
+            "Жем",
+            "Жезказган",
+            "Жетысай",
+            "Житикара",
+            "Житикара",
+            "Зайсан",
+            "Казалинск",
+            "Кандыагаш",
+            "Каратау",
+            "Караганды",
+            "Каркаралинск",
+            "Каскелен",
+            "Кентау",
+            "Кокшетау",
+            "Кондыр",
+            "Костанай",
+            "Костанай",
+            "Кулсары",
+            "Курчатов",
+            "Кызылорда",
+            "Ленгер",
+            "Лисаковск",
+            "Лисаковск",
+            "Макинск",
+            "Мамлют",
+            "Мулын",
+            "Павлодар",
+            "Петропавловск",
+            "Приозёрск",
+            "Риддер",
+            "Рудный",
+            "Рудный",
+            "Сарань",
+            "Сарканд",
+            "Сарыагаш",
+            "Сатпаев",
+            "Семей",
+            "Сергеев",
+            "Серебрянск",
+            "Степногорск",
+            "Степняк",
+            "Тараз",
+            "Талгар",
+            "Талдыкорган",
+            "Темир",
+            "Темиртау",
+            "Текели",
+            "Тобыл",
+            "Тобыл",
+            "Туркестан",
+            "Туркестан",
+            "Тайынша",
+            "Уральск",
+            "Ушарал",
+            "Уштобе",
+            "Усть-Каменогорск",
+            "Форт-Шевченко",
+            "Хромтау",
+            "Шахтинск",
+            "Шар",
+            "Шардара",
+            "Шемонаиха",
+            "Шу",
+            "Щучинск",
+            "Экибастуз"
+            ], isRange: false },
+        { id: "residentinfo:resRegion", label: "Регион проживания",selectOptions: ["Астана", "Алматы", "Шымкент", "Абайская область", "Акмолинская область", "Актюбинская область", "Алматинская область", "Атырауская область", "Восточно-Казахстанская область", "Жамбылская область", "Жетысуская область", "Западно-Казахстанская область", "Карагандинская область", "Костанайская область", "Кызылординская область", "Мангистауская область", "Павлодарская область", "Северо-Казахстанская область", "Туркестанская область", "Улытауская область"], isRange: false  },
 
         { id: "identitycardinfo:identityCardNumber", label: "Номер удостоверения", isRange: false },
         { id: "identitycardinfo:issuedBy", label: "Выдан", isRange: false },
@@ -515,7 +703,7 @@ function Reports(props, queryParams) {
     const courseDataOptions = renderCourseOptions(selectedCoursesOptions, formData, handleInputChange, courses_options);
     const academicDegreeDataOptions = renderAcademicDegreeOptions(selectedAcademicDegreeOptions, formData, handleInputChange, academic_degree_options);
     const sportDataOptions = renderSportOptions(selectedSportOptions, formData, handleInputChange, sport_results_options);
-    const workingHistoryDataOptions = renderWorkingHistoryOptions(selectedWorkingHistoryOptions, formData, handleInputChange, working_history_options);
+    const workingHistoryDataOptions = RenderWorkingHistoryOptions(selectedWorkingHistoryOptions, formData, handleInputChange, working_history_options);
     const specChecksDataOptions = renderSpecChecksOptions(selectedSpecChecksOptions, formData, handleInputChange, spec_checks_options);
     const attestationsDataOptions = renderAttestationOptions(selectedAttestationsOptions, formData, handleInputChange, attestations_options);
     const classCategoryDataOptions = renderCategoryOptions(selectedCategoryOptions, formData, handleInputChange, class_categories_options);
@@ -787,14 +975,34 @@ function Reports(props, queryParams) {
                                                                                             ))}
                                                                                         </Select>
                                                                                     </FormControl>
-                                                                                    <TextField
-                                                                                        type="text"
-                                                                                        size='small'
-                                                                                        style={{ marginTop: '12px', marginLeft: '12px' }}
-                                                                                        className={cl.workerInfo}
-                                                                                        placeholder={`${options.find((o) => o.id === option).label}`}
-                                                                                        onChange={(e) => handleInputChange(option, e.target.value)}
-                                                                                    />
+                                                                                   
+                                                                                </Box>
+                                                                            )
+                                                                            : option === "birthinfo:region" ? (
+                                                                                <Box>
+                                                                                    <FormControl fullWidth >
+                                                                                        {/* <InputLabel id="demo-simple-select-label">{options.find((o) => o.id === option).label}</InputLabel> */}
+                                                                                        <Select
+                                                                                            labelId="demo-simple-select-label"
+                                                                                            id="demo-simple-select"
+                                                                                            // label='Страна рождения'
+                                                                                            value={formData[option] || ''}
+                                                                                            onChange={(e) => handleInputChange(option, e.target.value)}
+                                                                                            size='small'
+                                                                                            style={{ marginLeft: '12px' }}
+                                                                                            className={cl.workerInfoSelect}
+                                                                                        >
+                                                                                            <MenuItem value="" disabled hidden>
+                                                                                            Выберите регион рождения
+                                                                                            </MenuItem>
+                                                                                            {options.find((o) => o.id === option).selectOptions.map((countryOption) => (
+                                                                                                <MenuItem key={countryOption} value={countryOption}>
+                                                                                                    {countryOption}
+                                                                                                </MenuItem>
+                                                                                            ))}
+                                                                                        </Select>
+                                                                                    </FormControl>
+                                                                                   
                                                                                 </Box>
                                                                             )
                                                                               : option === "residentinfo:resCountry" ? (
@@ -812,7 +1020,7 @@ function Reports(props, queryParams) {
                                                                                             className={cl.workerInfoSelect}
                                                                                         >
                                                                                             <MenuItem value="" disabled hidden>
-                                                                                                Выберите страну прожвания
+                                                                                                Выберите страну проживания
                                                                                             </MenuItem>
                                                                                             {options.find((o) => o.id === option).selectOptions.map((countryOption) => (
                                                                                                 <MenuItem key={countryOption} value={countryOption}>
@@ -842,12 +1050,12 @@ function Reports(props, queryParams) {
                                                                                             value={formData[option] || ''}
                                                                                             onChange={(e) => handleInputChange(option, e.target.value)}
                                                                                             size='small'
-                                                                                            title="Выберите город прожвания"
+                                                                                            title="Выберите город проживания"
                                                                                             style={{ marginLeft: '12px' }}
                                                                                             className={cl.workerInfoSelect}
                                                                                         >
                                                                                             <MenuItem value="" disabled hidden>
-                                                                                                Выберите город прожвания
+                                                                                                Выберите город проживания
                                                                                             </MenuItem>
                                                                                             {options.find((o) => o.id === option).selectOptions.map((countryOption) => (
                                                                                                 <MenuItem key={countryOption} value={countryOption}>
@@ -856,14 +1064,33 @@ function Reports(props, queryParams) {
                                                                                             ))}
                                                                                         </Select>
                                                                                     </FormControl>
-                                                                                    <TextField
-                                                                                        type="text"
-                                                                                        size='small'
-                                                                                        style={{ marginTop: '12px', marginLeft: '12px' }}
-                                                                                        className={cl.workerInfo}
-                                                                                        placeholder={`${options.find((o) => o.id === option).label}`}
-                                                                                        onChange={(e) => handleInputChange(option, e.target.value)}
-                                                                                    />
+                                                                                </Box>
+                                                                            )
+                                                                            : option === "residentinfo:resRegion" ? (
+                                                                                <Box>
+                                                                                    <FormControl fullWidth >
+                                                                                        {/* <InputLabel id="demo-simple-select-label">{options.find((o) => o.id === option).label}</InputLabel> */}
+                                                                                        <Select
+                                                                                            labelId="demo-simple-select-label"
+                                                                                            id="demo-simple-select"
+                                                                                            // label='Страна рождения'
+                                                                                            value={formData[option] || ''}
+                                                                                            onChange={(e) => handleInputChange(option, e.target.value)}
+                                                                                            size='small'
+                                                                                            title="Выберите регион проживания"
+                                                                                            style={{ marginLeft: '12px' }}
+                                                                                            className={cl.workerInfoSelect}
+                                                                                        >
+                                                                                            <MenuItem value="" disabled hidden>
+                                                                                                Выберите регион проживания
+                                                                                            </MenuItem>
+                                                                                            {options.find((o) => o.id === option).selectOptions.map((countryOption) => (
+                                                                                                <MenuItem key={countryOption} value={countryOption}>
+                                                                                                    {countryOption}
+                                                                                                </MenuItem>
+                                                                                            ))}
+                                                                                        </Select>
+                                                                                    </FormControl>
                                                                                 </Box>
                                                                             )
                                                                              : option === "birthinfo:birth_date" ? (

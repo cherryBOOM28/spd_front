@@ -12,7 +12,7 @@ const FormContext = createContext();
 export const FormProvider = ({ children }) => {
 
   const getSpecCheckInfo = (specCheckInfo) => {
-    // console.log("fff", specCheckInfo);
+    console.log("fff", specCheckInfo);
     let newSpecCheckInfo = []
 
     specCheckInfo.map((item) => {

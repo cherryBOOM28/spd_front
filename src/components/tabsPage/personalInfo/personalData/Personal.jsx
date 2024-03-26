@@ -44,7 +44,7 @@ function Personal({
     });
 
     const [editedLocationInfo, setEditedLocationInfo] = useState({
-        id: location.id || '',
+        id: (location && location.id) || '',
         LocationName: location.LocationName || ''
     });
 

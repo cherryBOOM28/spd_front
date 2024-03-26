@@ -65,15 +65,11 @@ const NewPersonnelData = (props) => {
     // };
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setSpecCheckInfo((prevData) => ({
-            ...prevData,
-            specChecks: [
-                {
-                    ...prevData.specChecks[0],
-                    [name]: value
-                }
-            ]
-        }));
+           setSpecCheckInfo((prevData) => {
+            let obj = prevData[0];
+            obj = {...obj, [name]: value}
+            return [obj]
+        });
     };
     
 
@@ -219,7 +215,7 @@ const NewPersonnelData = (props) => {
                         <div className={cl.column}>
                                 <div className={cl.rows}>
                                     <label className={cl.label} style={{ marginRight: '20px' }}>Результат аттестации</label>
-                                    <TextField
+                                    {/* <TextField
                                         size='small'
                                         className={cl.workerInfo}
                                         type="text"
@@ -228,7 +224,28 @@ const NewPersonnelData = (props) => {
                                         onChange={handleInputChangeAttestation}
                                         // onChange={(e) => handleInputChangeAttestation('attResult', e.target.value)}
 
-                                    />
+                                    /> */}
+                                    <Box>
+                                    {/* <label className={cl.label}>Должность</label> */}
+                                    <FormControl size="small" fullWidth>
+                                            <InputLabel id="demo-simple-select-label">Вид присвоения</InputLabel>
+                                            <Select
+                                            labelId="demo-simple-select-label"
+                                            id="demo-simple-select"
+                                            label="Результат аттестации"
+                                            className={cl.workerInfoSelect}
+                                            size='small'
+                                            type="text"
+                                            name="attResult"
+                                            value={attestationInfo.attResult}
+                                            onChange={handleInputChangeAttestation}
+                                            >
+                                            <MenuItem value="" disabled>Выберите результат аттестации</MenuItem>
+                                            <MenuItem value="Соответсвует">Соответсвует</MenuItem>
+                                            <MenuItem value="Не соответсвует">Не соответсвует</MenuItem>
+                                            </Select>
+                                        </FormControl>
+                                    </Box>
                                 </div>
                             </div>
                     </div>

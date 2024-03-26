@@ -139,11 +139,10 @@ const NewLaborActivity = (props) => {
         </div>
         <div>
             <div>
-            {/* <Button onClick={handleShowForm}>Добавить трудовую деятельность </Button> */}
                 <form onSubmit={handleAddNewData} style={{ marginTop: '10px' }}>
-                    <Paper elevation={2} >
-                        <TableContainer>
-                            <Table className={cl.customTable}>
+                    <Paper elevation={2} className={cl.customTable}>
+                        <TableContainer >
+                            <Table >
                                 <TableHead>
                                     <TableRow>
                                         <TableCell>Начало периода</TableCell>
@@ -157,6 +156,7 @@ const NewLaborActivity = (props) => {
                                         <TableCell></TableCell>
                                     </TableRow>
                                 </TableHead>
+
                                 <TableBody >
                                     <TableRow>   
                                     <TableCell>
@@ -281,7 +281,7 @@ const NewLaborActivity = (props) => {
                                         <TableCell><Button className={cl.submitBtn}  style={{  color: '#1B3884' }}   type='submit'  onClick={handleShowForm}>Добавить</Button></TableCell>
                                     </TableRow>
                                     {workingHistory && workingHistory.slice(1).map((data, index) => (
-                                        <TableRow>
+                                    <TableRow key={index}>
                                         <TableCell>{data.positionName}</TableCell>
                                         <TableCell>{data.startDate}</TableCell>
                                         <TableCell>{data.endDate}</TableCell>

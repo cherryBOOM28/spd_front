@@ -100,8 +100,8 @@ function Create(props) {
                                 </div>
                                 }
                                 {
-                                    activeTab === 3 &&                       
-                                    <div className={cl.basic__info}>
+                                activeTab === 3 &&                       
+                                <div className={cl.basic__info}>
                                     <div className={cl.totalInfo}>
                                         <NewLaborActivity />
                                     </div>                 

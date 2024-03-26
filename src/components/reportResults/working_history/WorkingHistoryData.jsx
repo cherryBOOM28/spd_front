@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import cl from './WorkingHistoryData.module.css'
 import { MdArrowDropDown, MdExpandLess } from 'react-icons/md';
 import {Paper,  Button, TextField, Select, InputLabel, FormControl, MenuItem, Box } from '@mui/material';
+import Cookies from 'js-cookie';
+import axios from 'axios';
 
 
 function WorkingHistoryData(props) {
@@ -88,7 +90,29 @@ function WorkingHistoryData(props) {
 
 export default WorkingHistoryData;
 
-export function renderWorkingHistoryOptions(selectedWorkingHistoryOptions, formData, handleInputChange, working_history_options) {
+export function RenderWorkingHistoryOptions(selectedWorkingHistoryOptions, formData, handleInputChange, working_history_options) {
+    const [positions, setPositions] = useState([]); // для отображении должностей в личных данных
+
+
+    useEffect(() => {
+        // Функция для загрузки списка городов из API
+        const accessToken = Cookies.get('jwtAccessToken');
+        const fetchLocations = async () => {
+          try {
+            const response = await axios.get('http://127.0.0.1:8000/api/v1/position', {
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`,
+                }
+            });
+            setPositions(response.data.map(position => position.positionTitle));
+          } catch (error) {
+            console.error('Ошибка при загрузке:', error);
+          }
+        };
+    
+        fetchLocations(); // Вызываем функцию загрузки при монтировании компонента
+    }, []);
+
     return(
         selectedWorkingHistoryOptions.length > 0 && (
             <div className={cl.input__container}>
@@ -146,7 +170,34 @@ export function renderWorkingHistoryOptions(selectedWorkingHistoryOptions, formD
                                     />
                                 </div>
                             </div>
-                         ) : ( 
+                         )
+                         :  option === "workinghistory:positionName" ? (
+                            <div className={cl.data__wrapper}>
+                                <FormControl fullWidth >
+                                    {/* <InputLabel id="demo-simple-select-label">{options.find((o) => o.id === option).label}</InputLabel> */}
+                                    <Select
+                                        labelId="demo-simple-select-label"
+                                        id="demo-simple-select"
+                                        // label='Страна рождения'
+                                        value={formData[option] || ''}
+                                        className={cl.workerInfoSelect}
+                                        onChange={(e) => handleInputChange(option, e.target.value)}
+                                        size='small'
+                                        style={{ marginLeft: '32px' }}
+                                    >
+                                        <MenuItem value="" disabled hidden>
+                                        Выберите должность
+                                        </MenuItem>
+                                        {positions.map((position) => (
+                                            <MenuItem key={position} value={position}>
+                                                {position}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                            </div>
+                         )
+                          : ( 
                         <TextField
                             type="text"
                             size='small'
